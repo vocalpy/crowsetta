@@ -3,9 +3,8 @@ import csv
 import wave
 
 import numpy as np
-
 import evfuncs
-from ..koumura import parse_xml
+from koumura import parse_xml
 
 # fields that must be present for each syllable that is annotated.
 # these field names are used below by annot_list_to_csv and csv_to_annot_list
@@ -78,7 +77,6 @@ def notmat_to_annot_dict(notmat,
     due to floating point error, e.g. when loading .not.mat files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-
     if not notmat.endswith('.not.mat'):
         raise ValueError("notmat filename should end with  '.not.mat',"
                          "but '{}' does not".format(notmat))
@@ -141,7 +139,8 @@ def koumura_xml_to_annot_list(xml_file='Annotation.xml', convert_seqs_into_songs
 
     Returns
     -------
-
+    annot_list : list
+        of annot_dict
     """
     seq_list = koumura.parse_xml(xml_file, 
                                  concat_seqs_into_songs = convert_seqs_into_songs)
@@ -406,7 +405,6 @@ def xml_to_annot_list(annotation_file, concat_seqs_into_songs=True,
     annot_list : list
         of annotation dicts
     """
-
     wavpath = os.path.normpath(wavpath)
     if not os.path.isdir(wavpath):
         raise NotADirectoryError('Path specified for wavpath, {}, not recognized as an '
@@ -466,7 +464,6 @@ def xml_to_csv(annotation_file, concat_seqs_into_songs=True, csv_filename=None):
         in which case name is name .xml file, but with 
         extension changed to .csv.
     """
-
     annot_list = xml_to_annot_list(annotation_file,
                                    concat_seqs_into_songs=concat_seqs_into_songs)
     if csv_filename is None:
