@@ -27,7 +27,7 @@ VERSION = '0.1.1a1'
 LICENSE='BSD'
 
 REQUIRED = [
-    'numpy', 'evfuncs',
+    'numpy', 'evfuncs', 'koumura',
 ]
 
 # What packages are optional?
