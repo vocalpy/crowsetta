@@ -3,9 +3,8 @@ import csv
 import wave
 
 import numpy as np
-import scipy.io
 
-from .. import evfuncs
+import evfuncs
 from ..koumura import parse_xml
 
 # fields that must be present for each syllable that is annotated.
@@ -38,7 +37,7 @@ SONG_ANNOT_TYPE_MAPPING = {'onsets_Hz': int,
 
 
 def notmat_to_annot_dict(notmat,
-                         abspath=False, 
+                         abspath=False,
                          basename=False,
                          round_times=True,
                          decimals=3):
@@ -130,6 +129,37 @@ def notmat_to_annot_dict(notmat,
         'offsets_Hz': offsets_Hz,
     }
     return annotation_dict
+
+
+def koumura_xml_to_annot_list(xml_file='Annotation.xml', convert_seqs_into_songs=True):
+    """converts Annotation.xml from [1]_ into an annotation list
+
+    Parameters
+    ----------
+    xml_file : str
+        Path to Annotation.xml
+
+    Returns
+    -------
+
+    """
+    seq_list = koumura.parse_xml(xml_file, 
+                                 concat_seqs_into_songs = convert_seqs_into_songs)
+    annot_list = []
+    for seq in seq_list:
+        onsets_Hz = np.asarray([syl.position for syl in seq.syls])
+        offsets_Hz = np.asarray([syl.position + syl.length for syl in seq.syls])
+        labels = [syl.label for syl in seq.syls]
+        annot_dict = {
+            'filename': wav_file, 
+            'onsets_Hz': onsets_Hz,
+            'offsets_Hz': offsets_Hz,
+            'onsets_s': None,
+            'offsets_s': None,
+            'labels': labels
+        }
+        annot_list.append(annot_dict)
+    return annot_list
 
 
 def annot_list_to_csv(annot_list,
