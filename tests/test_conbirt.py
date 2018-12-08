@@ -28,7 +28,7 @@ class TestAnnotation(unittest.TestCase):
                               os.path.normpath(
                                   'cbins/gy6or6/032412/'
                                   'gy6or6_baseline_240312_0811.1165.cbin.not.mat'))
-        annot_dict = annotation.notmat_to_annot_dict(notmat)
+        annot_dict = conbirt.notmat_to_annot_dict(notmat)
         for fieldname, fieldtype in ANNOT_DICT_FIELDNAMES.items():
             assert fieldname in annot_dict
             assert type(annot_dict[fieldname]) == fieldtype
@@ -44,12 +44,12 @@ class TestAnnotation(unittest.TestCase):
         notmat_list = sorted(notmat_list)
         annot_list = []
         for notmat in notmat_list:
-            annot_list.append(annotation.notmat_to_annot_dict(notmat))
+            annot_list.append(conbirt.notmat_to_annot_dict(notmat))
         csv_filename = os.path.join(str(tmp_output_dir),
                                     'test.csv')
         # below, set basename to True so we can easily run tests on any system without
         # worrying about where audio files are relative to root of directory tree
-        annotation.annot_list_to_csv(annot_list,
+        conbirt.annot_list_to_csv(annot_list,
                                      csv_filename,
                                      basename=True)
         assert os.path.isfile(csv_filename)
@@ -81,7 +81,7 @@ class TestAnnotation(unittest.TestCase):
         notmat_list = sorted(notmat_list)
         csv_filename = os.path.join(str(tmp_output_dir),
                                     'test.csv')
-        annotation.notmat_list_to_csv(notmat_list, csv_filename)
+        conbirt.notmat_list_to_csv(notmat_list, csv_filename)
         # make sure file was created
         assert os.path.isfile(csv_filename)
 
@@ -105,8 +105,8 @@ class TestAnnotation(unittest.TestCase):
     def test_csv_to_annot_list(test_data_dir):
         csv_fname = os.path.join(test_data_dir,
                                  os.path.normpath('csv/gy6or6_032312.csv'))
-        # convert csv to annotation list -- this is what we're testing
-        annot_list_from_csv = annotation.csv_to_annot_list(csv_fname)
+        # convert csv to conbirt list -- this is what we're testing
+        annot_list_from_csv = conbirt.csv_to_annot_list(csv_fname)
         cbin_dir = os.path.join(test_data_dir,
                                 os.path.normpath('cbins/gy6or6/032312/'))
 
@@ -117,7 +117,7 @@ class TestAnnotation(unittest.TestCase):
         notmat_list = sorted(notmat_list)
         annot_list_from_notmats = []
         for notmat in notmat_list:
-            annot_list_from_notmats.append(annotation.notmat_to_annot_dict(notmat,
+            annot_list_from_notmats.append(conbirt.notmat_to_annot_dict(notmat,
                                                                            basename=True))
 
         # make sure everything is the same in the two annotation lists
