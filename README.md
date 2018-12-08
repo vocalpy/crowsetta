@@ -17,3 +17,12 @@ You might find it useful in any situation where you want
 to share audio files of song and some associated annotations, 
 but you don't want to require the user to install a large 
 application in order to get access to the annotation files.
+
+## installation
+`pip install conbirt`
+
+## usage
+
+
+## citation
+If you use `conbirt`, please cite the DOI:
