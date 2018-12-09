@@ -45,9 +45,8 @@ class TestAnnotation(unittest.TestCase):
             assert type(annot_dict[fieldname]) == fieldtype
 
     def test_annot_list_to_csv(self):
-        """compares csv created by annot_list_to_csv
-        with correctly generated csv saved in hvc/tests/test_data
-        """
+        # compare csv created by annot_list_to_csv
+        # with correctly generated csv saved in conbirt/tests/test_data
         cbin_dir = os.path.join(self.test_data_dir,
                                 os.path.normpath('cbins/gy6or6/032312/'))
         notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
