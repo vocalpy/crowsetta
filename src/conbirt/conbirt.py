@@ -41,8 +41,8 @@ def notmat_to_annot_dict(notmat,
                          round_times=True,
                          decimals=3):
     """open .not.mat file and return as annotation dict,
-    the data structure that hybrid-vocal-classifier uses
-    internally to represent annotation for one audio file
+    the data structure that used internally to represent
+    annotation for one audio file
 
     Parameters
     ----------
@@ -129,13 +129,16 @@ def notmat_to_annot_dict(notmat,
     return annotation_dict
 
 
-def koumura_xml_to_annot_list(xml_file='Annotation.xml', convert_seqs_into_songs=True):
+def koumura_xml_to_annot_list(xml_file='Annotation.xml', concat_seqs_into_songs=True):
     """converts Annotation.xml from [1]_ into an annotation list
 
     Parameters
     ----------
     xml_file : str
         Path to Annotation.xml
+    concat_seqs_into_songs : bool
+        if True, concatenate sequences from xml_file, so that
+        one sequence = one song / .wav file. Default is True.
 
     Returns
     -------
@@ -485,7 +488,7 @@ def _fix_annot_dict_types(annot_dict):
             pass
         else:
             raise TypeError('Unexpected type {} specified in '
-                            'hvc.utils.annotation'
+                            'conbirt'
                             .format(type_to_convert))
         annot_dict[key] = list_from_key
     # convert all lists to ndarray
