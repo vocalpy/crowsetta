@@ -4,6 +4,8 @@ import csv
 
 import numpy as np
 
+from .tuples import Sequence
+
 
 def _fix_annot_dict_types(annot_dict):
     """helper function that converts items in lists of annot dict
@@ -28,39 +30,21 @@ def _fix_annot_dict_types(annot_dict):
     return annot_dict
 
 
-
-def seq2csv(seq_list,
+def seq2csv(seq,
             csv_fname,
             abspath=False,
             basename=False):
-    """writes annotations from files to a comma-separated value (csv) file.
+    """write annotations from files to a comma-separated value (csv) file.
 
     Parameters
     ----------
-    seq_list : list
-        list of Sequence objects, each of which has the following fields:
-            file : str
-                name of audio file with which annotation is associated.
-                See parameter abspath and basename below that allow for specifying how
-                filename is saved.
-            onsets_Hz : numpy.ndarray
-                of type int, onset of each annotated syllable in samples/second
-            offsets_Hz : numpy.ndarray
-                of type int, offset of each annotated syllable in samples/second
-            onsets_s : numpy.ndarray
-                of type float, onset of each annotated syllable in seconds
-            offsets_s : numpy.ndarray
-                of type float, offset of each annotated syllable in seconds
-            labels : numpy.ndarray
-                of type str, label for each annotated syllable
+    seq : Sequence or list of Sequence objects
     csv_fname : str
         name of csv file to write to, will be created
         (or overwritten if it exists already)
 
-    The following two parameters specify how file names for audio files are saved. These
-    options are useful for working with multiple copies of files and for reproducibility.
-    Default for both is False, in which case the filename is saved just as it is passed to
-    this function.
+    Other Parameters
+    ----------------
     abspath : bool
         if True, converts filename for each audio file into absolute path.
         Default is False.
@@ -71,7 +55,25 @@ def seq2csv(seq_list,
     Returns
     -------
     None
+
+    Notes
+    -----
+    The abspath and basename parameters specify how file names for audio files are saved.
+    These options are useful when working with multiple copies of files, and for
+    reproducibility (so you know which copy of a file you were working with).
+    Default for both is False, in which case the filename is saved just as it is passed to
+    this function in a Sequence object.
     """
+    if type(seq) == Sequence:
+        # put in a list so we can iterate over it
+        seq = [seq]
+    elif type(seq) == list:
+        if not all([type(curr_seq) == Sequence for curr_seq in seq]):
+            raise TypeError('not all objects in seq are of type Sequence')
+    else:
+        raise TypeError('seq must be Sequence or list of Sequence objects, '
+                        f'not type {type(seq)})')
+
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
@@ -84,18 +86,18 @@ def seq2csv(seq_list,
         writer = csv.DictWriter(csvfile, fieldnames=SYL_ANNOT_COLUMN_NAMES)
 
         writer.writeheader()
-        for seq in seq_list:
-            song_filename = seq.file
+        for curr_seq in seq:
+            song_filename = curr_seq.file
             if abspath:
                 song_filename = os.path.abspath(song_filename)
             elif basename:
                 song_filename = os.path.basename(song_filename)
 
-            annot_dict_zipped = zip(seq.onsets_Hz,
-                                    seq.offsets_Hz,
-                                    seq.onsets_s,
-                                    seq.offsets_s,
-                                    seq.labels,
+            annot_dict_zipped = zip(curr_seq.onsets_Hz,
+                                    curr_seq.offsets_Hz,
+                                    curr_seq.onsets_s,
+                                    curr_seq.offsets_s,
+                                    curr_seq.labels,
                                     )
             for onset_Hz, offset_Hz, onset_s, offset_s, label in annot_dict_zipped:
                 syl_annot_dict = {'filename': song_filename,
