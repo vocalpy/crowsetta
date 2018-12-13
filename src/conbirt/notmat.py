@@ -1,6 +1,7 @@
 """module with functions that handle .not.mat annotation files
 produced by evsonganaly GUI
 """
+import numpy as np
 import evfuncs
 
 from .tuples import Sequence
