@@ -34,24 +34,24 @@ class TestAnnotation(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp_output_dir)
 
-    def test_annot_list_to_csv(self):
-        # compare csv created by annot_list_to_csv
+    def test_seq2csv(self):
+        # compare csv created by seq2csv
         # with correctly generated csv saved in conbirt/tests/test_data
         cbin_dir = os.path.join(self.test_data_dir,
                                 os.path.normpath('cbins/gy6or6/032312/'))
         notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
         # below, sorted() so it's the same order on different platforms
         notmat_list = sorted(notmat_list)
-        annot_list = []
+        seq_list = []
         for notmat in notmat_list:
-            annot_list.append(conbirt.notmat_to_annot_dict(notmat))
+            seq_list.append(conbirt.notmat.notmat2seq(notmat))
         csv_filename = os.path.join(str(self.tmp_output_dir),
                                     'test.csv')
         # below, set basename to True so we can easily run tests on any system without
         # worrying about where audio files are relative to root of directory tree
-        conbirt.annot_list_to_csv(annot_list,
-                                  csv_filename,
-                                  basename=True)
+        conbirt.csv.seq2csv(seq_list,
+                            csv_filename,
+                            basename=True)
         assert os.path.isfile(csv_filename)
         test_rows = []
         with open(csv_filename, 'r', newline='') as csvfile:
@@ -73,7 +73,7 @@ class TestAnnotation(unittest.TestCase):
         csv_fname = os.path.join(self.test_data_dir,
                                  os.path.normpath('csv/gy6or6_032312.csv'))
         # convert csv to conbirt list -- this is what we're testing
-        annot_list_from_csv = conbirt.csv_to_annot_list(csv_fname)
+        annot_list_from_csv = conbirt.csv.csv_to_annot_list(csv_fname)
         cbin_dir = os.path.join(self.test_data_dir,
                                 os.path.normpath('cbins/gy6or6/032312/'))
 
