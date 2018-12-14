@@ -26,7 +26,7 @@ SYL_DICT_FIELDNAMES = ['filename',
                        'label']
 
 
-class TestAnnotation(unittest.TestCase):
+class TestNotmat(unittest.TestCase):
     def setUp(self):
         self.test_data_dir = os.path.join(TESTS_DIR, 'test_data')
         self.tmp_output_dir = tempfile.mkdtemp()
