@@ -86,7 +86,8 @@ def koumura2seqlist(xml_file='Annotation.xml', concat_seqs_into_songs=True,
     return seq_list_out
 
 
-def koumura2csv(xml_file, concat_seqs_into_songs=True, csv_filename=None):
+def koumura2csv(xml_file, concat_seqs_into_songs=True, csv_filename=None,
+                abspath=False, basename=False):
     """takes Annotation.xml file from Koumura dataset into and saves the
     annotation from all files in one comma-separated values (csv)
     file, where each row represents one syllable from one of the
@@ -105,12 +106,26 @@ def koumura2csv(xml_file, concat_seqs_into_songs=True, csv_filename=None):
         in which case name is xml_file, but with
         extension changed to .csv.
 
+    Other Parameters
+    ----------------
+    abspath : bool
+        if True, converts filename for each audio file into absolute path.
+        Default is False.
+    basename : bool
+        if True, discard any information about path and just use file name.
+        Default is False.
+
     Returns
     -------
     None
+
+    Notes
+    -----
+    see seq2scv function for explanation of when you would want to use
+    the abspath and basename parameters
     """
     seq_list = koumura2seqlist(xml_file, concat_seqs_into_songs=concat_seqs_into_songs)
     if csv_filename is None:
         csv_filename = os.path.abspath(xml_file)
         csv_filename = csv_filename.replace('xml', 'csv')
-    csv.seq2csv(seq_list, csv_filename)
+    csv.seq2csv(seq_list, csv_filename, abspath=abspath, basename=basename)
