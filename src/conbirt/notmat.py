@@ -2,9 +2,11 @@
 produced by evsonganaly GUI
 """
 import numpy as np
+import scipy.io
 import evfuncs
 
 from .tuples import Sequence
+from .csv import seq2csv
 
 
 def notmat2seq(notmat,
@@ -137,10 +139,10 @@ def notmat_list_to_csv(notmat_list, csv_fname, abspath=False, basename=False):
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    annot_list = []
+    seq_list = []
     for notmat in notmat_list:
-        annot_list.append(notmat_to_annot_dict(notmat))
-    annot_list_to_csv(annot_list, csv_fname, abspath=abspath, basename=basename)
+        seq_list.append(notmat2seq(notmat))
+    seq2csv(seq_list, csv_fname, abspath=abspath, basename=basename)
 
 
 def make_notmat(filename,
@@ -151,8 +153,8 @@ def make_notmat(filename,
                 threshold,
                 min_syl_dur,
                 min_silent_dur,
-                clf_file,
-                alternate_path=None):
+                alternate_path=None,
+                other_vars=None):
     """make a .not.mat file
     that can be read by evsonganaly (MATLAB GUI for labeling song)
 
@@ -180,9 +182,6 @@ def make_notmat(filename,
         minimum duration of a segment. default is 0.02, i.e. 20 ms.
     min_silent_dur : float
         minimum duration of silent gap between segment. default is 0.002, i.e. 2 ms.
-    clf_file : str
-        name of file from which model / classifier was loaded
-        so that user of .not.mat file knows which model/classifier was used to predict labels
     alternate_path : str
         Alternate path to which .not.mat files should be saved
         if .not.mat files with same name already exist in directory
@@ -190,11 +189,21 @@ def make_notmat(filename,
         Default is None.
         Labelpredict assigns the output_dir from the
         predict.config.yml file as an alternate.
+    other_vars : dict
+        mapping from variable names to other variables that should be saved
+        in the .not.mat file, e.g. if you need to add a variable named 'pitches'
+        that is an numpy array of float values
 
     Returns
     -------
     None
     """
+    if other_vars is not None:
+        if type(other_vars) != dict:
+            raise TypeError(f'other_vars must be a dict, not a {type(other_vars)}')
+        if not all(type(key) == str for key in other_vars.keys()):
+            raise TypeError('all keys for other_vars dict must be of type str')
+
     # chr() to convert back to character from uint32
     if labels.dtype == 'int32':
         labels = [chr(val) for val in labels]
@@ -221,7 +230,10 @@ def make_notmat(filename,
                    'threshold': float(threshold)
                    }
     notmat_dict['labels'] = labels
-    notmat_dict['classifier_file'] = clf_file
+
+    if other_vars:
+        for var_name, var in other_vars.items():
+            notmat_dict[var_name] = var
 
     notmat_name = filename + '.not.mat'
     if os.path.exists(notmat_name):
