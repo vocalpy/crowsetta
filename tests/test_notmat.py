@@ -70,8 +70,9 @@ class TestNotmat(unittest.TestCase):
             header = next(reader)
             for row in reader:
                 filenames_from_csv.append(row['filename'])
-        for fname_from_csv in filenames_from_csv:
-            assert(fname_from_csv + '.not.mat' in notmat_list)
+        for notmat_name in notmat_list:
+            cbin_name = notmat_name.replace('.not.mat', '')
+            assert(cbin_name in filenames_from_csv)
 
     def test_make_notmat(self):
         cbin_dir = os.path.join(self.test_data_dir,
