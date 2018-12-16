@@ -138,8 +138,8 @@ def seq2csv(seq,
 
 
 def csv2seqlist(csv_fname):
-    """loads a comma-separated values (csv) file containing
-    annotations for song files and returns an annot_list
+    """loads a comma-separated values (csv) file containing annotations
+    for song files, returns contents as a list of Sequence objects
 
     Parameters
     ----------
@@ -148,10 +148,10 @@ def csv2seqlist(csv_fname):
 
     Returns
     -------
-    annot_list : list
-        list of dicts
+    seq_list : list
+        list of conbirt.tuples.Sequence objects
     """
-    annot_list = []
+    seq_list = []
 
     with open(csv_fname, 'r', newline='') as csv_file:
         reader = csv.reader(csv_file)
@@ -192,7 +192,13 @@ def csv2seqlist(csv_fname):
                         row[column_name_index_mapping[col_name]])
             else:
                 annot_dict = _fix_annot_dict_types(annot_dict)
-                annot_list.append(annot_dict)
+                seq = Sequence(file=annot_dict['filename'],
+                               onsets_Hz=annot_dict['onsets_Hz'],
+                               offsets_Hz=annot_dict['offsets_Hz'],
+                               onsets_s=annot_dict['onsets_s'],
+                               offsets_s=annot_dict['offsets_s'],
+                               labels=annot_dict['labels'])
+                seq_list.append(seq)
                 # and start a new annot_dict
                 curr_filename = row_filename
                 annot_dict = {'filename': curr_filename,
@@ -207,6 +213,12 @@ def csv2seqlist(csv_fname):
         # lines below appends annot_dict corresponding to last file
         # since there won't be another file after it to trigger the 'else' logic above
         annot_dict = _fix_annot_dict_types(annot_dict)
-        annot_list.append(annot_dict)
+        seq = Sequence(file=annot_dict['filename'],
+                       onsets_Hz=annot_dict['onsets_Hz'],
+                       offsets_Hz=annot_dict['offsets_Hz'],
+                       onsets_s=annot_dict['onsets_s'],
+                       offsets_s=annot_dict['offsets_s'],
+                       labels=annot_dict['labels'])
+        seq_list.append(seq)
 
-    return annot_list
+    return seq_list
