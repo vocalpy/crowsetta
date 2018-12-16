@@ -34,7 +34,7 @@ class TestAnnotation(unittest.TestCase):
                                                    concat_seqs_into_songs=True,
                                                    wavpath=os.path.join(self.test_data_dir, 'Wave'))
         self.assertTrue(type(seq_list) == list)
-        self.assertTrue(all([type(seq) == conbirt.tuples.Sequence
+        self.assertTrue(all([type(seq) == conbirt.sequence.Sequence
                             for seq in seq_list]))
 
     def test_koumura2csv(self):
