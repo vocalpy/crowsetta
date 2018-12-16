@@ -1,6 +1,8 @@
 """module with functions that handle .not.mat annotation files
 produced by evsonganaly GUI
 """
+import os
+
 import numpy as np
 import scipy.io
 import evfuncs
