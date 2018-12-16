@@ -11,20 +11,6 @@ import conbirt
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
-ANNOT_DICT_FIELDNAMES = {'filename': str,
-                         'onsets_Hz': np.ndarray,
-                         'offsets_Hz': np.ndarray,
-                         'onsets_s': np.ndarray,
-                         'offsets_s': np.ndarray,
-                         'labels': np.ndarray}
-
-SYL_DICT_FIELDNAMES = ['filename', 
-                       'onset_Hz', 
-                       'offset_Hz', 
-                       'onset_s', 
-                       'offset_s', 
-                       'label']
-
 
 class TestAnnotation(unittest.TestCase):
     def setUp(self):
