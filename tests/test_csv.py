@@ -6,6 +6,7 @@ import csv
 import unittest
 
 import numpy as np
+import attr
 
 import conbirt
 
@@ -75,8 +76,8 @@ class TestAnnotation(unittest.TestCase):
 
         # make sure everything is the same in the two annotation lists
         for from_csv, from_notmat in zip(seq_list_from_csv, seq_list_from_notmats):
-            from_csv = from_csv._asdict()
-            from_notmat = from_notmat._asdict()
+            from_csv = attr.asdict(from_csv)
+            from_notmat = attr.asdict(from_notmat)
             for from_csv_key, from_csv_val in from_csv.items():
                 if type(from_csv_val) == str:
                     assert from_csv_val == from_notmat[from_csv_key]
