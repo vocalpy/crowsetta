@@ -7,7 +7,7 @@ import numpy as np
 import scipy.io
 import evfuncs
 
-from .tuples import Sequence
+from .sequence import Sequence
 from .csv import seq2csv
 
 
