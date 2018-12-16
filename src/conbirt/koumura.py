@@ -62,7 +62,7 @@ def koumura2seqlist(xml_file='Annotation.xml', concat_seqs_into_songs=True,
         offsets_Hz = np.asarray([syl.position + syl.length for syl in seq_xml.syls])
         labels = [syl.label for syl in seq_xml.syls]
 
-        wav_filename = os.path.join(wavpath, seq_xml.wavFile)
+        wav_filename = os.path.join(wavpath, seq_xml.wav_file)
         wav_filename = os.path.abspath(wav_filename)
         if not os.path.isfile(wav_filename):
             raise FileNotFoundError('.wav file {} specified in annotation file {} is not found'
@@ -86,8 +86,8 @@ def koumura2seqlist(xml_file='Annotation.xml', concat_seqs_into_songs=True,
     return seq_list_out
 
 
-def koumura2csv(xml_file, concat_seqs_into_songs=True, csv_filename=None,
-                abspath=False, basename=False):
+def koumura2csv(xml_file, concat_seqs_into_songs=True, wavpath='./Wave',
+                csv_filename=None, abspath=False, basename=False):
     """takes Annotation.xml file from Koumura dataset into and saves the
     annotation from all files in one comma-separated values (csv)
     file, where each row represents one syllable from one of the
@@ -101,6 +101,10 @@ def koumura2csv(xml_file, concat_seqs_into_songs=True, csv_filename=None,
         if True, concatenate 'sequences' from annotation file
         by song (i.e., .wav file that sequences are found in).
         Default is True.
+    wavpath : str
+        Path in which .wav files listed in Annotation.xml file are found.
+        By default this is './Wave' to match the structure of the original
+        repository.
     csv_filename : str
         Optional, name of .csv file to save. Defaults to None,
         in which case name is xml_file, but with
@@ -124,7 +128,8 @@ def koumura2csv(xml_file, concat_seqs_into_songs=True, csv_filename=None,
     see seq2scv function for explanation of when you would want to use
     the abspath and basename parameters
     """
-    seq_list = koumura2seqlist(xml_file, concat_seqs_into_songs=concat_seqs_into_songs)
+    seq_list = koumura2seqlist(xml_file, concat_seqs_into_songs=concat_seqs_into_songs,
+                               wavpath=wavpath)
     if csv_filename is None:
         csv_filename = os.path.abspath(xml_file)
         csv_filename = csv_filename.replace('xml', 'csv')
