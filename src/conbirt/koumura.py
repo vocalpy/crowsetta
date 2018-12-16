@@ -14,6 +14,7 @@ import wave
 import koumura
 
 from .tuples import Sequence
+from . import csv
 
 
 def koumura2seqlist(xml_file='Annotation.xml', concat_seqs_into_songs=True,
@@ -85,7 +86,7 @@ def koumura2seqlist(xml_file='Annotation.xml', concat_seqs_into_songs=True,
     return seq_list_out
 
 
-def koumura2csv(annotation_file, concat_seqs_into_songs=True, csv_filename=None):
+def koumura2csv(xml_file, concat_seqs_into_songs=True, csv_filename=None):
     """takes Annotation.xml file from Koumura dataset into and saves the
     annotation from all files in one comma-separated values (csv)
     file, where each row represents one syllable from one of the
@@ -93,24 +94,23 @@ def koumura2csv(annotation_file, concat_seqs_into_songs=True, csv_filename=None)
 
     Parameters
     ----------
-    annotation_file : str
-        filename of annotation file
+    xml_file : str
+        filename of 'Annotation.xml' file
     concat_seqs_into_songs : bool
         if True, concatenate 'sequences' from annotation file
         by song (i.e., .wav file that sequences are found in).
         Default is True.
     csv_filename : str
         Optional, name of .csv file to save. Defaults to None,
-        in which case name is name .xml file, but with
+        in which case name is xml_file, but with
         extension changed to .csv.
 
     Returns
     -------
     None
     """
-    seq_list = koumura2seqlist(annotation_file,
-                                 concat_seqs_into_songs=concat_seqs_into_songs)
+    seq_list = koumura2seqlist(xml_file, concat_seqs_into_songs=concat_seqs_into_songs)
     if csv_filename is None:
-        csv_filename = os.path.abspath(annotation_file)
+        csv_filename = os.path.abspath(xml_file)
         csv_filename = csv_filename.replace('xml', 'csv')
-    seq2csv(seq_list, csv_filename)
+    csv.seq2csv(seq_list, csv_filename)
