@@ -6,7 +6,7 @@ import csv
 import unittest
 from pathlib import Path
 
-import conbirt
+import crowsetta
 
 SYL_DICT_FIELDNAMES = ['filename',
                        'onset_Hz',
@@ -30,12 +30,12 @@ class TestAnnotation(unittest.TestCase):
 
     def test_koumura2seqlist(self):
         xml_file = os.path.join(self.test_data_dir, 'Annotation.xml')
-        seq_list = conbirt.koumura.koumura2seqlist(xml_file=xml_file,
-                                                   concat_seqs_into_songs=True,
-                                                   wavpath=os.path.join(self.test_data_dir, 'Wave'))
+        seq_list = crowsetta.koumura.koumura2seqlist(xml_file=xml_file,
+                                                     concat_seqs_into_songs=True,
+                                                     wavpath=os.path.join(self.test_data_dir, 'Wave'))
         self.assertTrue(type(seq_list) == list)
-        self.assertTrue(all([type(seq) == conbirt.sequence.Sequence
-                            for seq in seq_list]))
+        self.assertTrue(all([type(seq) == crowsetta.sequence.Sequence
+                             for seq in seq_list]))
 
     def test_koumura2csv(self):
         # since koumura2csv is basically a wrapper around
@@ -46,10 +46,10 @@ class TestAnnotation(unittest.TestCase):
         wavpath = os.path.join(self.test_data_dir, 'Wave')
         csv_filename = os.path.join(str(self.tmp_output_dir),
                                     'test.csv')
-        conbirt.koumura.koumura2csv(xml_file=xml_file,
-                                    wavpath=wavpath,
-                                    csv_filename=csv_filename,
-                                    basename=True)
+        crowsetta.koumura.koumura2csv(xml_file=xml_file,
+                                      wavpath=wavpath,
+                                      csv_filename=csv_filename,
+                                      basename=True)
         # make sure file was created
         assert os.path.isfile(csv_filename)
 

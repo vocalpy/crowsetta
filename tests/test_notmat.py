@@ -9,7 +9,7 @@ from pathlib import Path, PureWindowsPath
 import numpy as np
 import evfuncs
 
-import conbirt
+import crowsetta
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -41,7 +41,7 @@ class TestNotmat(unittest.TestCase):
                               os.path.normpath(
                                   'cbins/gy6or6/032312/'
                                   'gy6or6_baseline_230312_0808.138.cbin.not.mat'))
-        seq = conbirt.notmat.notmat2seq(notmat)
+        seq = crowsetta.notmat.notmat2seq(notmat)
         for fieldname, fieldtype in ANNOT_DICT_FIELDNAMES.items():
             self.assertTrue(hasattr(seq, fieldname))
             self.assertTrue(type(getattr(seq, fieldname)) == fieldtype)
@@ -58,7 +58,7 @@ class TestNotmat(unittest.TestCase):
         notmat_list = sorted(notmat_list)
         csv_filename = os.path.join(str(self.tmp_output_dir),
                                     'test.csv')
-        conbirt.notmat.notmat_list_to_csv(notmat_list, csv_filename)
+        crowsetta.notmat.notmat_list_to_csv(notmat_list, csv_filename)
         # make sure file was created
         assert os.path.isfile(csv_filename)
 
@@ -79,19 +79,19 @@ class TestNotmat(unittest.TestCase):
                                 os.path.normpath('cbins/gy6or6/032312/'))
         notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
         for notmat in notmat_list:
-            seq = conbirt.notmat.notmat2seq(notmat)
+            seq = crowsetta.notmat.notmat2seq(notmat)
             notmat_dict = evfuncs.load_notmat(notmat)
-            conbirt.notmat.make_notmat(filename=seq.file,
-                                       onsets_Hz=seq.onsets_Hz,
-                                       offsets_Hz=seq.offsets_Hz,
-                                       labels=np.asarray(list(notmat_dict['labels'])),
-                                       samp_freq=notmat_dict['Fs'],
-                                       threshold=notmat_dict['threshold'],
-                                       min_syl_dur=notmat_dict['min_dur']/1000,
-                                       min_silent_dur=notmat_dict['min_int']/1000,
-                                       alternate_path=self.tmp_output_dir,
-                                       other_vars=None
-                                       )
+            crowsetta.notmat.make_notmat(filename=seq.file,
+                                         onsets_Hz=seq.onsets_Hz,
+                                         offsets_Hz=seq.offsets_Hz,
+                                         labels=np.asarray(list(notmat_dict['labels'])),
+                                         samp_freq=notmat_dict['Fs'],
+                                         threshold=notmat_dict['threshold'],
+                                         min_syl_dur=notmat_dict['min_dur']/1000,
+                                         min_silent_dur=notmat_dict['min_int']/1000,
+                                         alternate_path=self.tmp_output_dir,
+                                         other_vars=None
+                                         )
             notmat_made = evfuncs.load_notmat(os.path.join(self.tmp_output_dir,
                                                            os.path.basename(notmat)))
             # can't do assert(new_dict == old_dict)

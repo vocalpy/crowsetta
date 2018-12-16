@@ -8,7 +8,7 @@ import unittest
 import numpy as np
 import attr
 
-import conbirt
+import crowsetta
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -23,7 +23,7 @@ class TestAnnotation(unittest.TestCase):
 
     def test_seq2csv(self):
         # compare csv created by seq2csv
-        # with correctly generated csv saved in conbirt/tests/test_data
+        # with correctly generated csv saved in crowsetta/tests/test_data
         cbin_dir = os.path.join(self.test_data_dir,
                                 os.path.normpath('cbins/gy6or6/032312/'))
         notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
@@ -31,14 +31,14 @@ class TestAnnotation(unittest.TestCase):
         notmat_list = sorted(notmat_list)
         seq_list = []
         for notmat in notmat_list:
-            seq_list.append(conbirt.notmat.notmat2seq(notmat))
+            seq_list.append(crowsetta.notmat.notmat2seq(notmat))
         csv_filename = os.path.join(str(self.tmp_output_dir),
                                     'test.csv')
         # below, set basename to True so we can easily run tests on any system without
         # worrying about where audio files are relative to root of directory tree
-        conbirt.csv.seq2csv(seq_list,
-                            csv_filename,
-                            basename=True)
+        crowsetta.csv.seq2csv(seq_list,
+                              csv_filename,
+                              basename=True)
         assert os.path.isfile(csv_filename)
         test_rows = []
         with open(csv_filename, 'r', newline='') as csvfile:
@@ -59,8 +59,8 @@ class TestAnnotation(unittest.TestCase):
     def test_csv2seqlist(self):
         csv_fname = os.path.join(self.test_data_dir,
                                  os.path.normpath('csv/gy6or6_032312.csv'))
-        # convert csv to conbirt list -- this is what we're testing
-        seq_list_from_csv = conbirt.csv.csv2seqlist(csv_fname)
+        # convert csv to crowsetta list -- this is what we're testing
+        seq_list_from_csv = crowsetta.csv.csv2seqlist(csv_fname)
         cbin_dir = os.path.join(self.test_data_dir,
                                 os.path.normpath('cbins/gy6or6/032312/'))
 
@@ -71,8 +71,8 @@ class TestAnnotation(unittest.TestCase):
         notmat_list = sorted(notmat_list)
         seq_list_from_notmats = []
         for notmat in notmat_list:
-            seq_list_from_notmats.append(conbirt.notmat.notmat2seq(notmat,
-                                                                   basename=True))
+            seq_list_from_notmats.append(crowsetta.notmat.notmat2seq(notmat,
+                                                                     basename=True))
 
         # make sure everything is the same in the two annotation lists
         for from_csv, from_notmat in zip(seq_list_from_csv, seq_list_from_notmats):
