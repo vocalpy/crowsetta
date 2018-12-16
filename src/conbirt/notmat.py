@@ -223,7 +223,8 @@ def make_notmat(filename,
     # same goes for min_int and min_dur
     # also wrap everything in float so Matlab loads it as double
     # because evsonganaly expects doubles
-    notmat_dict = {'Fs': float(samp_freq),
+    notmat_dict = {'fname': filename,
+                   'Fs': float(samp_freq),
                    'min_dur': float(min_syl_dur * 1e3),
                    'min_int': float(min_silent_dur * 1e3),
                    'offsets': offsets,
