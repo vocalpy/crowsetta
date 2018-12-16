@@ -48,7 +48,7 @@ def _fix_annot_dict_types(annot_dict):
             pass
         else:
             raise TypeError('Unexpected type {} specified in '
-                            'conbirt'
+                            'crowsetta'
                             .format(type_to_convert))
         annot_dict[key] = list_from_key
     # convert all lists to ndarray
@@ -149,7 +149,7 @@ def csv2seqlist(csv_fname):
     Returns
     -------
     seq_list : list
-        list of conbirt.tuples.Sequence objects
+        list of crowsetta.tuples.Sequence objects
     """
     seq_list = []
 

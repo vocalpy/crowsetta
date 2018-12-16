@@ -17,9 +17,9 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'conbirt'
+NAME = 'crowsetta'
 DESCRIPTION = 'converts different formats for birdsong annotation to csv',
-URL = 'https://github.com/NickleDave/conbirt'
+URL = 'https://github.com/NickleDave/crowsetta'
 EMAIL = 'nicholdav@gmail.com'
 AUTHOR = 'David Nicholson'
 REQUIRES_PYTHON = '>=3.6.0'
@@ -111,9 +111,9 @@ setup(
     packages=find_packages(where="src", exclude=('tests',)),
     package_dir={"": "src"},
     package_data={'': ['*.csv']},  # install with yml files e.g. from hvc.parse
-    # scripts=['src/bin/conbirt-cli.py'],
+    # scripts=['src/bin/crowsetta-cli.py'],
     # entry_points={
-    #     'console_scripts': ['conbirt-cli=conbirt.__main__:main'],
+    #     'console_scripts': ['crowsetta-cli=crowsetta.__main__:main'],
     # },
     install_requires=REQUIRED,
     extras_require=EXTRAS,
