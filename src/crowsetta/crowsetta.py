@@ -3,22 +3,18 @@ from configparser import ConfigParser
 from importlib import import_module
 
 HERE = os.path.dirname(__file__)
-CONBIRT_CONFIG = ConfigParser()
-CONBIRT_CONFIG.read(os.path.join(HERE, 'config.ini'))
+CROWSETTA_CONFIG = ConfigParser()
+CROWSETTA_CONFIG.read(os.path.join(HERE, 'config.ini'))
 
 
 CONFIG_DICT_KEYS = {'module', 'to_seq', 'to_csv'}
 
+
 class Crowsetta:
     """class that handles conversion from different annotation formats into
     lists of Sequence objects and/or csv files"""
-    def __init__(self, format=None, extra_config=None):
-        self._config = CONBIRT_CONFIG
-        if format is not None:
-            if type(format) != str:
-                raise TypeError(f'format should be a string, not {type(format}')
-            _validate_format(format)
-        self.format = format
+    def __init__(self, extra_config=None):
+        self._config = CROWSETTA_CONFIG
 
         if extra_config is not None:
             if type(extra_config) != list and type(extra_config) != dict:
@@ -47,6 +43,8 @@ class Crowsetta:
                 for option, value in config_dict.items():
                     self._config.set(config_name, option=option, value=value)
 
+        self.file_formats = self._config.sections()
+
         self._funcmap = {}
         for section in self._config.sections():
             this_format_funcmap = {}
@@ -56,23 +54,50 @@ class Crowsetta:
             this_format_funcmap['to_csv'] = getattr(this_format_module,
                                                     self._config[section]['to_csv'])
 
+    def _validate_format(self, file_format):
+        if file_format.lower() not in self.file_formats:
+            raise ValueError(f'format {file_format} is not recognized.\n'
+                             f'Valid formats are: {self.file_formats}')
 
-    def _validate_format(self, format):
-        if format.lower() not in self.config.keys()
+    def _guess_format(self, file):
+        if type(file) == str:
+            file = [file]
 
-    def _to_seq(self, format):
-
-    def to_seq(self, file, format=None):
-        if format is None:
-            format = _guess_format(file)
+        if all([filename.endswith('.not.mat') for filename in file]):
+            return 'notmat'
+        elif all([filename.endswith('.xml') for filename in file]):
+            return 'koumura'
         else:
-            _validate_format(format)
+            raise ValueError('format not recognized')
 
-        for file in files:
-            seq = func(file)
+    def to_seq(self, file, file_format=None, **kwargs):
+        if file_format is None:
+            file_format = self._guess_format(file)
+        else:
+            self._validate_format(file_format)
 
-    def to_csv(self, file, format=None):
-        pass
+        return self._funcmap[file_format]['to_seq'](file)
 
-    def to_format(self, file, to_format, format=None):
-        pass
+    def to_csv(self, file, file_format=None, **kwargs):
+        if file_format is None:
+            file_format = self._guess_format(file)
+        else:
+            self._validate_format(file_format)
+
+        return self._funcmap[file_format]['to_csv'](file)
+
+    def to_format(self, file, to_format, file_format=None, **kwargs):
+        if to_format not in self.file_formats:
+            raise ValueError(f"cannot convert to format '{to_format}', "
+                             f"file format not recognized.\n"
+                             f"Valid file formats are: {self.file_formats}")
+        elif self._funcmap['to_format'] is None:
+            raise ValueError("the current configuration does not define a function mapping "
+                             f"Sequences to the format '{to_format}'.")
+
+        if file_format is None:
+            file_format = self._guess_format(file)
+        else:
+            self._validate_format(file_format)
+        seq = self._funcmap[file_format]['to_seq'](file)
+        return self._funcmap[to_format]['to_format'](seq)
