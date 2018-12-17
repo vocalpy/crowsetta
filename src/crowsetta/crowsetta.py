@@ -154,7 +154,7 @@ class Crowsetta:
         >>> crow = Crowsetta()
         >>> seq = crow.to_seq(file='Annotation.xml', file_format='koumura', wavpath='./Data/Wave')
         >>> print(seq[1])
-        Sequence(file='0.wav', onsets_Hz=...
+        Sequence(file='0.wav', onsets_Hz=array([ 34240,  40256,  46944,  ...
         """
         if file_format is None:
             file_format = self._guess_format(file)
@@ -180,6 +180,21 @@ class Crowsetta:
         Returns
         -------
         None
+
+        Examples
+        --------
+        >>> crow = Crowsetta()
+        >>> crow.to_csv(file='Annotation.xml', file_format='koumura')
+        >>> import csv
+        >>> with open('Annotation.csv', 'r', newline='') as csv_file:
+        ...     reader = csv.reader(csv_file)
+        ...     for _ in range(4):
+        ...         print(next(reader))
+        ...
+        ['filename', 'onset_Hz', 'offset_Hz', 'onset_s', 'offset_s', 'label']
+        ['0.wav', '34240', '36928', '1.07', '1.154', '0']
+        ['0.wav', '40256', '43040', '1.258', '1.345', '0']
+        ['0.wav', '46944', '49760', '1.467', '1.555', '0']
         """
         if file_format is None:
             file_format = self._guess_format(file)
