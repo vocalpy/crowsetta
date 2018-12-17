@@ -105,7 +105,7 @@ class Crowsetta:
             self.format_functions[section] = FormatFunctions(
                 to_seq=getattr(this_format_module, self._config[section]['to_seq']),
                 to_csv=getattr(this_format_module, self._config[section]['to_csv']),
-                to_format=getattr(this_format_module, self._config[section]['to_format']),
+                to_format=getattr(this_format_module, self._config[section]['to_format'], None),
             )
 
     def _validate_format(self, file_format):
