@@ -110,7 +110,7 @@ setup(
     url=URL,
     packages=find_packages(where="src", exclude=('tests',)),
     package_dir={"": "src"},
-    package_data={'': ['*.csv', '*.ini']},  # files types to install
+    package_data={'': ['*.csv', '*.ini', '*.mat']},  # files types to install
     # scripts=['src/bin/crowsetta-cli.py'],
     # entry_points={
     #     'console_scripts': ['crowsetta-cli=crowsetta.__main__:main'],
