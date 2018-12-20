@@ -30,9 +30,13 @@ REQUIRED = [
     'numpy', 'attrs', 'evfuncs', 'koumura',
 ]
 
+DEV_DEPS = [
+    'sphinx', 'ipython',
+]
+
 # What packages are optional?
 EXTRAS = {
-    # 'fancy feature': ['django'],
+    'dev': DEV_DEPS,
 }
 
 # The rest you shouldn't have to touch too much :)
