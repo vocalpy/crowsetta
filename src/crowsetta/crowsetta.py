@@ -67,7 +67,7 @@ class Crowsetta:
                     name of function in module that converts Sequence objects to
                     this format. Can be None, in which case trying to convert to
                     this format will raise an error.
-        
+
         Examples
         --------
         >>> extra_config = {
@@ -87,9 +87,6 @@ class Crowsetta:
             if type(extra_config) != list and type(extra_config) != dict:
                 raise TypeError(f'config_dict should be a dictionary '
                                 f'or list of dictionaries, not {type(config_dict)}')
-
-            if type(extra_config) is dict:
-                extra_config = [extra_config]
 
             if not all([type(config_dict) == dict for config_dict in extra_config]):
                 raise TypeError('all elements in extra_config should be dictionaries '
