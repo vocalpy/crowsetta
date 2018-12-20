@@ -67,6 +67,19 @@ class Crowsetta:
                     name of function in module that converts Sequence objects to
                     this format. Can be None, in which case trying to convert to
                     this format will raise an error.
+        
+        Examples
+        --------
+        >>> extra_config = {
+        ...     'myformat_name': {
+        ...         'module': convert_myformat.py
+        ...         'to_seq': 'myformat2seq',
+        ...         'to_csv': 'myformat2csv',
+        ...         'to_format': 'to_myformat'
+        ...     }
+        ... }
+        >>> crow = crowsetta.Crowsetta(extra_config=extra_config)
+        >>> seq = crow.toseq(file='my_annotation.mat', file_format='myformat_name')
         """
         self._config = CROWSETTA_CONFIG
 
@@ -82,7 +95,7 @@ class Crowsetta:
                 raise TypeError('all elements in extra_config should be dictionaries '
                                 f'with the following keys: {CONFIG_DICT_KEYS}')
 
-            for config_name, config_dict in config_dict.items():
+            for config_name, config_dict in extra_config.items():
                 this_config_keys = set(config_dict.keys())
                 if this_config_keys != CONFIG_DICT_KEYS:
                     if this_config_keys < CONFIG_DICT_KEYS:
