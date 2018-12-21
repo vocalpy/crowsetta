@@ -23,7 +23,7 @@ def koumura2seqlist(xml_file='Annotation.xml', concat_seqs_into_songs=True,
 
     Parameters
     ----------
-    xml_file : str
+    xml_file : str or pathlib.Path
         Path to Annotation.xml
     concat_seqs_into_songs : bool
         if True, concatenate sequences from xml_file, so that
