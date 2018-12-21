@@ -103,7 +103,7 @@ def notmat2seq(notmat,
                     )
 
 
-def notmat_list_to_csv(notmat_list, csv_fname, abspath=False, basename=False):
+def notmat_list_to_csv(notmat_list, csv_filename, abspath=False, basename=False):
     """takes a list of .not.mat filenames and saves the
     annotation from all files in one comma-separated values (csv)
     file, where each row represents one syllable from one of the
@@ -113,7 +113,7 @@ def notmat_list_to_csv(notmat_list, csv_fname, abspath=False, basename=False):
     ----------
     notmat_list : list
         list of str, where eachs tr is a .not.mat file
-    csv_fname : str
+    csv_filename : str
         name for csv file that is created
 
     The following two parameters specify how file names for audio files are saved. These
@@ -144,7 +144,7 @@ def notmat_list_to_csv(notmat_list, csv_fname, abspath=False, basename=False):
     seq_list = []
     for notmat in notmat_list:
         seq_list.append(notmat2seq(notmat))
-    seq2csv(seq_list, csv_fname, abspath=abspath, basename=basename)
+    seq2csv(seq_list, csv_filename, abspath=abspath, basename=basename)
 
 
 def make_notmat(filename,
