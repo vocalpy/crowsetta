@@ -1,14 +1,12 @@
 import os
 from configparser import ConfigParser
 from importlib import import_module
+import importlib.util
 import typing
 
 import attr
 
 HERE = os.path.dirname(__file__)
-CROWSETTA_CONFIG = ConfigParser()
-CROWSETTA_CONFIG.read(os.path.join(HERE, 'config.ini'))
-
 
 CONFIG_DICT_KEYS = {'module', 'to_seq', 'to_csv', 'to_format'}
 
@@ -81,16 +79,26 @@ class Crowsetta:
         >>> crow = crowsetta.Crowsetta(extra_config=extra_config)
         >>> seq = crow.toseq(file='my_annotation.mat', file_format='myformat_name')
         """
-        self._config = CROWSETTA_CONFIG
+        # read default config declared in src/crowsetta/config.ini
+        # have to read in __init__ so config doesn't live at module level;
+        # otherwise it will be shared across instances
+        crowsetta_config = ConfigParser()
+        crowsetta_config.read(os.path.join(HERE, 'config.ini'))
+        self._config = crowsetta_config
 
         if extra_config is not None:
-            if type(extra_config) != list and type(extra_config) != dict:
+            if type(extra_config) != dict:
                 raise TypeError(f'config_dict should be a dictionary '
-                                f'or list of dictionaries, not {type(config_dict)}')
+                                f', not {type(extra_config)}')
 
-            if not all([type(config_dict) == dict for config_dict in extra_config]):
-                raise TypeError('all elements in extra_config should be dictionaries '
-                                f'with the following keys: {CONFIG_DICT_KEYS}')
+            if not all([type(config_dict) == dict 
+                        for config_dict in extra_config.values()]):
+                raise TypeError('all values in extra_config should be dictionaries')
+
+            if not all([set(config_dict.keys()) == CONFIG_DICT_KEYS 
+                        for config_dict in extra_config.values()]):
+                raise KeyError(f'All dictionaries in extra_config must have '
+                               f'the following keys: {CONFIG_DICT_KEYS}')
 
             for config_name, config_dict in extra_config.items():
                 this_config_keys = set(config_dict.keys())
@@ -105,17 +113,40 @@ class Crowsetta:
                                        f'invalid keys: {extra_keys}')
                 self._config.add_section(config_name)
                 for option, value in config_dict.items():
-                    self._config.set(config_name, option=option, value=value)
+                    self._config[config_name][option] = value
 
         self.file_formats = self._config.sections()
 
         self.format_functions = {}
         for section in self._config.sections():
-            this_format_module = import_module(self._config[section]['module'])
+            try:
+                this_format_module = import_module(self._config[section]['module'])
+            except ModuleNotFoundError:
+                if os.path.isfile(self._config[section]['module']):
+                    module_name = os.path.basename(self._config[section]['module'])
+                    if module_name.endswith('.py'):
+                        module_name = module_name.replace('.py', '')
+                else:
+                    module_name = self._config[section]['module']
+                    raise FileNotFoundError(
+                        f'{module_name} could not be imported, '
+                        'and not recognized as a file')
+                spec = importlib.util.spec_from_file_location(name=module_name,
+                                                              location=self._config[section]['module'])
+                this_format_module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(this_format_module)
+            # insert error checking for module attributes (i.e. functions) here
+            # so we can give user human-interpretable error messages
             self.format_functions[section] = FormatFunctions(
-                to_seq=getattr(this_format_module, self._config[section]['to_seq']),
-                to_csv=getattr(this_format_module, self._config[section]['to_csv']),
-                to_format=getattr(this_format_module, self._config[section]['to_format'], None),
+                to_seq=getattr(this_format_module,
+                               self._config[section]['to_seq'],
+                               None),
+                to_csv=getattr(this_format_module,
+                               self._config[section]['to_csv'],
+                               None),
+                to_format=getattr(this_format_module,
+                                  self._config[section]['to_format'],
+                                  None),
             )
 
     def _validate_format(self, file_format):
@@ -143,7 +174,7 @@ class Crowsetta:
 
         Parameters
         ----------
-        file : str or list
+        file : str, pathlib.Path, or list
             Name or full path to one annotation file, or a list of such file names or paths
         file_format : str
             Format of file(s). Default is None, in which case an attempt is made to determine
