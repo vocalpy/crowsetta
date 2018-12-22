@@ -2,6 +2,7 @@
 produced by evsonganaly GUI
 """
 import os
+from pathlib import Path
 
 import numpy as np
 import scipy.io
@@ -9,6 +10,29 @@ import evfuncs
 
 from .sequence import Sequence
 from .csv import seq2csv
+
+
+def _parse_notmat(notmat):
+    """helper function that parses/validates value for notmat argument;
+    puts a single string or Path into a list to iterate over it (cheap hack
+    that lets functions accept multiple types), and checks list to make sure
+    all types are consistent
+    """
+    if type(notmat) == str or type(notmat) == Path:
+        # put in a list to iterate over
+        notmat = [notmat]
+
+    for a_notmat in notmat:
+        if type(a_notmat) == str:
+            if not a_notmat.endswith('.not.mat'):
+                raise ValueError("all filenames in .not.mat must end with '.not.mat' "
+                                 f"but {a_notmat} does not")
+        elif type(a_notmat) == Path:
+            if not a_notmat.suffixes == ['.not', '.mat']:
+                raise ValueError("all filenames in .not.mat must end with '.not.mat' "
+                                 f"but {a_notmat} does not")
+
+    return notmat
 
 
 def notmat2seq(notmat,
@@ -22,7 +46,7 @@ def notmat2seq(notmat,
 
     Parameters
     ----------
-    notmat : str
+    notmat : str, Path, or list
         filename of a .not.mat annotation file,
         created by the evsonganaly GUI for MATLAB
     abspath : bool
@@ -53,66 +77,70 @@ def notmat2seq(notmat,
     due to floating point error, e.g. when loading .not.mat files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    if not notmat.endswith('.not.mat'):
-        raise ValueError("notmat filename should end with  '.not.mat',"
-                         "but '{}' does not".format(notmat))
+    notmat = _parse_notmat(notmat)
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    notmat_dict = evfuncs.load_notmat(notmat)
-    # in .not.mat files saved by evsonganaly,
-    # onsets and offsets are in units of ms, have to convert to s
-    onsets_s = notmat_dict['onsets'] / 1000
-    offsets_s = notmat_dict['offsets'] / 1000
+    seq = []
+    for a_notmat in notmat:
+        notmat_dict = evfuncs.load_notmat(a_notmat)
+        # in .not.mat files saved by evsonganaly,
+        # onsets and offsets are in units of ms, have to convert to s
+        onsets_s = notmat_dict['onsets'] / 1000
+        offsets_s = notmat_dict['offsets'] / 1000
+    
+        # convert to Hz using sampling frequency
+        audio_filename = a_notmat.replace('.not.mat','')
+        if audio_filename.endswith('.cbin'):
+            rec_filename = audio_filename.replace('.cbin','.rec')
+        elif audio_filename.endswith('.wav'):
+            rec_filename = audio_filename.replace('.wav', '.rec')
+        else:
+            raise ValueError("Can't find .rec file for {}."
+                             .format(a_notmat))
+        rec_dict = evfuncs.readrecf(rec_filename)
+        sample_freq = rec_dict['sample_freq']
+        # subtract one because of Python's zero indexing (first sample is sample zero)
+        onsets_Hz = np.round(onsets_s * sample_freq).astype(int) - 1
+        offsets_Hz = np.round(offsets_s * sample_freq).astype(int)
+    
+        # do this *after* converting onsets_s and offsets_s to onsets_Hz and offsets_Hz
+        # probably doesn't matter but why introduce more noise?
+        if round_times:
+            onsets_s = np.around(onsets_s, decimals=decimals)
+            offsets_s = np.around(offsets_s, decimals=decimals)
+    
+        if abspath:
+            audio_filename = os.path.abspath(audio_filename)
+        elif basename:
+            audio_filename = os.path.basename(audio_filename)
 
-    # convert to Hz using sampling frequency
-    audio_filename = notmat.replace('.not.mat','')
-    if audio_filename.endswith('.cbin'):
-        rec_filename = audio_filename.replace('.cbin','.rec')
-    elif audio_filename.endswith('.wav'):
-        rec_filename = audio_filename.replace('.wav', '.rec')
+        seq.append(Sequence(file=audio_filename,
+                            labels=np.asarray(list(notmat_dict['labels'])),
+                            onsets_s=onsets_s,
+                            offsets_s=offsets_s,
+                            onsets_Hz=onsets_Hz,
+                            offsets_Hz=offsets_Hz)
+                   )
+
+    if len(seq) == 1:
+        return seq[0]
     else:
-        raise ValueError("Can't find .rec file for {}."
-                         .format(notmat))
-    rec_dict = evfuncs.readrecf(rec_filename)
-    sample_freq = rec_dict['sample_freq']
-    # subtract one because of Python's zero indexing (first sample is sample zero)
-    onsets_Hz = np.round(onsets_s * sample_freq).astype(int) - 1
-    offsets_Hz = np.round(offsets_s * sample_freq).astype(int)
-
-    # do this *after* converting onsets_s and offsets_s to onsets_Hz and offsets_Hz
-    # probably doesn't matter but why introduce more noise?
-    if round_times:
-        onsets_s = np.around(onsets_s, decimals=decimals)
-        offsets_s = np.around(offsets_s, decimals=decimals)
-
-    if abspath:
-        audio_filename = os.path.abspath(audio_filename)
-    elif basename:
-        audio_filename = os.path.basename(audio_filename)
-
-    return Sequence(file=audio_filename,
-                    labels=np.asarray(list(notmat_dict['labels'])),
-                    onsets_s=onsets_s,
-                    offsets_s=offsets_s,
-                    onsets_Hz=onsets_Hz,
-                    offsets_Hz=offsets_Hz,
-                    )
+        return seq 
 
 
-def notmat_list_to_csv(notmat_list, csv_filename, abspath=False, basename=False):
-    """takes a list of .not.mat filenames and saves the
-    annotation from all files in one comma-separated values (csv)
-    file, where each row represents one syllable from one of the
-    .not.mat files.
+def notmat2csv(notmat, csv_filename, abspath=False, basename=False):
+    """saves annotation from .not.mat file(s) in a comma-separated values
+    (csv) file, where each row represents one syllable from one
+    .not.mat file.
 
     Parameters
     ----------
-    notmat_list : list
-        list of str, where eachs tr is a .not.mat file
+    notmat : str, Path, or list
+        if list, list of strings or Path objects pointing to .not.mat files
     csv_filename : str
         name for csv file that is created
 
@@ -131,20 +159,15 @@ def notmat_list_to_csv(notmat_list, csv_filename, abspath=False, basename=False)
     -------
     None
     """
-    if not all([notmat.endswith('.not.mat')
-                for notmat in notmat_list]
-               ):
-        raise ValueError("all filenames in .not.mat must end with '.not.mat'")
+    notmat = _parse_notmat(notmat)
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    seq_list = []
-    for notmat in notmat_list:
-        seq_list.append(notmat2seq(notmat))
-    seq2csv(seq_list, csv_filename, abspath=abspath, basename=basename)
+    seq = notmat2seq(notmat)
+    seq2csv(seq, csv_filename, abspath=abspath, basename=basename)
 
 
 def make_notmat(filename,
