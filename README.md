@@ -40,3 +40,6 @@ application in order to work with the annotation files.
 
 ## citation
 If you use `crowsetta`, please cite the DOI:
+
+## build status
+[![Build Status](https://travis-ci.com/NickleDave/crowsetta.svg?branch=master)](https://travis-ci.com/NickleDave/crowsetta)
