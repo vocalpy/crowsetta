@@ -17,8 +17,8 @@ from .sequence import Sequence
 from . import csv
 
 
-def koumura2seqlist(xml_file='Annotation.xml', concat_seqs_into_songs=True,
-                    wavpath='./Wave'):
+def koumura2seq(xml_file='Annotation.xml', concat_seqs_into_songs=True,
+                wavpath='./Wave'):
     """converts Annotation.xml from [1]_ into an annotation list
 
     Parameters
@@ -128,8 +128,8 @@ def koumura2csv(xml_file, concat_seqs_into_songs=True, wavpath='./Wave',
     see seq2scv function for explanation of when you would want to use
     the abspath and basename parameters
     """
-    seq_list = koumura2seqlist(xml_file, concat_seqs_into_songs=concat_seqs_into_songs,
-                               wavpath=wavpath)
+    seq_list = koumura2seq(xml_file, concat_seqs_into_songs=concat_seqs_into_songs,
+                           wavpath=wavpath)
     if csv_filename is None:
         csv_filename = os.path.abspath(xml_file)
         csv_filename = csv_filename.replace('xml', 'csv')
