@@ -36,17 +36,45 @@ class TestNotmat(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp_output_dir)
 
-    def test_notmat2seq(self):
+    def test_notmat2seq_single_str(self):
         notmat = os.path.join(self.test_data_dir,
                               os.path.normpath(
                                   'cbins/gy6or6/032312/'
                                   'gy6or6_baseline_230312_0808.138.cbin.not.mat'))
         seq = crowsetta.notmat.notmat2seq(notmat)
+        self.assertTrue(type(seq) == crowsetta.sequence.Sequence)
         for fieldname, fieldtype in ANNOT_DICT_FIELDNAMES.items():
             self.assertTrue(hasattr(seq, fieldname))
             self.assertTrue(type(getattr(seq, fieldname)) == fieldtype)
 
-    def test_notmat_list_to_csv(self):
+    def test_notmat2seq_list_of_str(self):
+        notmat = glob(os.path.join(self.test_data_dir,
+                                   os.path.normpath(
+                                  'cbins/gy6or6/032312/*.not.mat')))
+        seq = crowsetta.notmat.notmat2seq(notmat)
+        self.assertTrue(type(seq) == list)
+        self.assertTrue(len(seq) == len(notmat))
+        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
+                            for a_seq in seq]))
+        for fieldname, fieldtype in ANNOT_DICT_FIELDNAMES.items():
+            self.assertTrue(all([hasattr(a_seq, fieldname) for a_seq in seq]))
+            self.assertTrue(all([type(getattr(a_seq, fieldname)) == fieldtype
+                            for a_seq in seq]))
+
+    def test_notmat2seq_list_of_Path(self):
+        notmat = Path(self.test_data_dir).joinpath(
+            'cbins/gy6or6/032312/').glob('*.not.mat')
+        seq = crowsetta.notmat.notmat2seq(notmat)
+        self.assertTrue(type(seq) == list)
+        self.assertTrue(len(seq) == len(list(notmat)))
+        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
+                            for a_seq in seq]))
+        for fieldname, fieldtype in ANNOT_DICT_FIELDNAMES.items():
+            self.assertTrue(all([hasattr(a_seq, fieldname) for a_seq in seq]))
+            self.assertTrue(all([type(getattr(a_seq, fieldname)) == fieldtype
+                            for a_seq in seq]))
+
+    def test_notmat2csv(self):
         # since notmat_list_to_csv is basically a wrapper around
         # notmat2seq and seq2csv,
         # and those are tested above and in other test modules,
@@ -58,7 +86,7 @@ class TestNotmat(unittest.TestCase):
         notmat_list = sorted(notmat_list)
         csv_filename = os.path.join(str(self.tmp_output_dir),
                                     'test.csv')
-        crowsetta.notmat.notmat_list_to_csv(notmat_list, csv_filename)
+        crowsetta.notmat.notmat2csv(notmat_list, csv_filename)
         # make sure file was created
         assert os.path.isfile(csv_filename)
 
