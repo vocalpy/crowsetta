@@ -165,11 +165,11 @@ def csv2seqlist(csv_fname):
             if not_in_FIELDNAMES:
                 raise ValueError('The following column names in {} are not recognized: {}'
                                  .format(csv_fname, not_in_FIELDNAMES))
-            not_in_header = set_FIELDNAMES.difference(set_header)
-            if not_in_header:
-                raise ValueError(
-                    'The following column names in {} are required but missing: {}'
-                    .format(csv_fname, not_in_header))
+        not_in_header = set_SYL_ANNOT_COLUMN_NAMES.difference(set_header)
+        if not_in_header:
+            raise ValueError(
+                'The following column names in {} are required but missing: {}'
+                .format(csv_fname, not_in_header))
 
         column_name_index_mapping = {column_name: header.index(column_name)
                                      for column_name in SYL_ANNOT_COLUMN_NAMES}
