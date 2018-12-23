@@ -39,7 +39,23 @@ To learn how to use `crowsetta`, please see the documentation at:
 
 ## Project Information
 
-## citation
-If you use `crowsetta`, please cite the DOI:
+### Support
 
-## build status
+If you are having issues, please let us know.
+
+- Issue Tracker: https://github.com/NickleDave/crowsetta/issues
+
+### Contribute
+
+- Issue Tracker: https://github.com/NickleDave/crowsetta/issues
+- Source Code: https://github.com/NickleDave/crowsetta
+
+### CHANGELOG
+You can see project history and work in progress in the [CHANGELOG](./doc/CHANGELOG.md)
+
+### License
+
+The project is licensed under the [BSD license](./LICENSE).
+
+### Citation
+If you use `crowsetta`, please cite the DOI:
