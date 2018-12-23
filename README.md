@@ -1,7 +1,7 @@
 # crowsetta
 A tool to ~~conbirt~~ work with any format for annotating birdsong.
 **The goal of `crowsetta` is to make sure that your ability to work with a 
-dataset does not depend on your ability to work with any given format for 
+birdsong dataset does not depend on your ability to work with any given format for 
 annotating that dataset. `crowsetta` does not to provide yet another format 
 for annotating birdsong!** (I promise.) 
 
