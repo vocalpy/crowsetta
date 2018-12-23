@@ -96,11 +96,13 @@ def seq2csv(seq,
         # put in a list so we can iterate over it
         seq = [seq]
     elif type(seq) == list:
-        if not all([type(curr_seq) == Sequence for curr_seq in seq]):
-            raise TypeError('not all objects in seq are of type Sequence')
+        pass
     else:
         raise TypeError('seq must be Sequence or list of Sequence objects, '
                         f'not type {type(seq)})')
+
+    if not all([type(curr_seq) == Sequence for curr_seq in seq]):
+        raise TypeError('not all objects in seq are of type Sequence')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
