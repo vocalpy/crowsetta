@@ -1,28 +1,26 @@
 # crowsetta
-A tool to ~~conbirt~~ work with any format for annotating birdsong.
+[![Build Status](https://travis-ci.com/NickleDave/crowsetta.svg?branch=master)](https://travis-ci.com/NickleDave/crowsetta)
+[![Documentation Status](https://readthedocs.org/projects/crowsetta/badge/?version=latest)](https://crowsetta.readthedocs.io/en/latest/?badge=latest)
+
+A tool to work with any format for annotating birdsong.
 **The goal of `crowsetta` is to make sure that your ability to work with a 
 birdsong dataset does not depend on your ability to work with any given format for 
-annotating that dataset. `crowsetta` does not to provide yet another format 
-for annotating birdsong!** (I promise.) 
+annotating that dataset.
 
-Internally, `crowsetta` takes whatever format you give it for a pile of files, 
-and turns that into a bunch of `Sequences` made up of `Segments`. 99.99% of
-the time, the `Sequences` will be single audio files / song bouts, and the 
-`Segments` will be syllables in those song bouts. Then, if you need it to, 
-`crowsetta` can spit out your `Sequences` of `Segments` in a simple text file 
-with a comma-separated value (csv) format. This file format was chosen because 
-it is widely considered to be the most robust way to share data.
-
-So the csv file would look something like this:
-```
-label, onset_s, offset_s, onset_Hz, offset_Hz, index, file
-a, 1.01, 1.52, 32002, 33003, 1, bird_27_2018_11_28.wav
-a, 2.01, 2.53, 64002, 65003, 2, bird_27_2018_11_28.wav
-...
+```python
+    from crowsetta import Crowsetta
+    crow = Crowsetta(extra_config=your_config_info)
+    crow.to_csv(file_'your_annotation_file.mat',
+                csv_filename='your_annotation.csv')
 ```
 
-Now that you have that, you can load it into a `pandas` dataframe or an Excel 
-spreadsheet or a SQL database, or whatever you want.
+## Features
+
+- convert annotation formats to ``Sequence`` objects that can be easily used in a Python program
+- convert ``Sequence`` objects to comma-separated value text files that can be read on any system
+- load comma-separated values files back into Python and convert to other formats
+- easily use with your own annotation format
+
 
 `crowsetta` is used by the `hybrid-vocal-classifier` and `songdeck` 
 libraries.
@@ -32,14 +30,16 @@ to share audio files of song and some associated annotations,
 but you don't want to require the user to install a large 
 application in order to work with the annotation files.
 
-## installation
-`pip install crowsetta`
+## Getting Started
+You can install with pip:
+`$ pip install crowsetta`
 
-## usage
+To learn how to use `crowsetta`, please see the documentation at:  
+<https://crowsetta.readthedocs.io/en/latest/index.html>
 
+## Project Information
 
 ## citation
 If you use `crowsetta`, please cite the DOI:
 
 ## build status
-[![Build Status](https://travis-ci.com/NickleDave/crowsetta.svg?branch=master)](https://travis-ci.com/NickleDave/crowsetta)
