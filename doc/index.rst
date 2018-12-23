@@ -11,10 +11,11 @@ Crowsetta
    :caption: Contents:
 
 ``crowsetta`` is a tool to work with any format for annotating birdsong.
-**The goal of ``crowsetta`` is to make sure that your ability to work with a dataset 
+**The goal of** ``crowsetta`` **is to make sure that your ability to work with a dataset 
 of birdsong does not depend on your ability to work with any given format for 
-annotating that dataset.** ``crowsetta`` does not to provide yet another format 
-for annotating birdsong! (I promise.):: 
+annotating that dataset.** 
+
+.. code-block:: python
 
     from crowsetta import Crowsetta
     crow = Crowsetta(extra_config=your_config_info)
@@ -32,31 +33,52 @@ Features
 Getting Started
 ---------------
 
-Install `crowsetta` by running:
+Install ``crowsetta`` by running:
 
 .. code-block:: console
 
     $ pip install crowsetta
     
 
-If you haven't used the library before, you can start with :doc:`intro`.
+If you are new to the library, start with :doc:`intro`.
 
-And after that you can read an :doc:`example`.
+To see an example of using ``crowsetta`` to work with your own annotation format, 
+see :doc:`example`.
 
-Contribute
-----------
-
-- Issue Tracker: https://github.com/NickleDave/crowsetta/issues
-- Source Code: https://github.com/NickleDave/crowsetta
+Project Information
+-------------------
 
 Support
--------
+~~~~~~~
 
 If you are having issues, please let us know.
 
 - Issue Tracker: https://github.com/NickleDave/crowsetta/issues
 
-License
--------
+Contribute
+~~~~~~~~~~
 
-The project is licensed under the BSD license.
+- Issue Tracker: https://github.com/NickleDave/crowsetta/issues
+- Source Code: https://github.com/NickleDave/crowsetta
+
+License
+~~~~~~~
+
+The project is licensed under the 
+`BSD license <https://github.com/NickleDave/crowsetta/blob/master/LICENSE>`_.
+
+CHANGELOG
+~~~~~~~~~
+You can see project history and work in progress in the 
+`CHANGELOG <https://github.com/NickleDave/crowsetta/blob/master/doc/CHANGELOG.md>`_.
+
+Citation
+~~~~~~~~
+If you use ``crowsetta``, please cite the DOI:
+
+
+Table of Contents
+-----------------
+.. toctree::
+   intro
+   example
