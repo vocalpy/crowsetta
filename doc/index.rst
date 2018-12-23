@@ -27,6 +27,7 @@ Features
 - convert annotation formats to `Sequence` objects that can be easily used in a Python program
 - convert `Sequence` objects to comma-separated value text files that can be read on any system
 - load comma-separated values files back into Python and convert to other formats
+- easily use with your own annotation format
 
 Installation
 ------------
