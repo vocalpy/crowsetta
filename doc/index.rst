@@ -76,6 +76,8 @@ Citation
 ~~~~~~~~
 If you use ``crowsetta``, please cite the DOI:
 
+.. image:: https://zenodo.org/badge/159904494.svg
+   :target: https://zenodo.org/badge/latestdoi/159904494
 
 Table of Contents
 -----------------
