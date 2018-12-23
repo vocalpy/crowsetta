@@ -5,28 +5,55 @@ import numpy as np
 import attr
 
 
-Segment = namedtuple('Segment', ['onset_Hz',
-                                 'offset_Hz',
-                                 'onset_s',
-                                 'offset_s',
-                                 'label',
-                                 'file',
-                                 ]
-                     )
+# Segment = namedtuple('Segment', ['onset_Hz',
+#                                  'offset_Hz',
+#                                  'onset_s',
+#                                  'offset_s',
+#                                  'label',
+#                                  'file',
+#                                  ]
+#                      )
 
-@attr.s
-class Segment(object):
+
+class SegmentClass(object):
     """object that represents a segment of a time series,
      usually a syllable in a bout of birdsong"""
-    label = attr.ib()
-    onset_s = attr.ib()
-    offset_s = attr.ib()
-    onset_Hz = attr.ib()
-    offset_Hz = attr.ib()
-    file = attr.ib()
+    def __init__(self, label, file, onset_s=None, offset_s=None,
+                 onset_Hz=None, offset_Hz=None):
+        if ((onset_Hz is None and offset_Hz is None) and
+                (onset_s is None and offset_s is None)):
+            raise ValueError('must provide either onset_Hz and offset_Hz, or '
+                             'onsets_s and offsets_s')
+
+        if onset_Hz and offset_Hz is None:
+            raise ValueError(f'onset_Hz specified as {onset_Hz} but offset_Hz is None')
+        if onset_Hz is None and offset_Hz:
+            raise ValueError(f'offset_Hz specified as {offset_Hz} but onset_Hz is None')
+        if onset_s and offset_s is None:
+            raise ValueError(f'onset_s specified as {onset_s} but offset_s is None')
+        if onset_s is None and offset_s:
+            raise ValueError(f'offset_s specified as {offset_Hz} but onset_s is None')
+
+        self.label = label
+        self.file = file
+        self.onset_s = onset_s
+        self.offset_s = offset_s
+        self.onset_Hz = onset_Hz
+        self.offset_Hz = offset_Hz
 
 
-class Sequence:
+Segment = attr.s(
+    these={
+        'file': attr.ib(type=str),
+        'onset_Hz': attr.ib(type=int),
+        'offset_Hz': attr.ib(type=int),
+        'onset_s': attr.ib(type=float),
+        'offset_s': attr.ib(type=float),
+        'label': attr.ib(type=str),
+    }, init=False)(SegmentClass)
+
+
+class SequenceClass:
     """object that represents a sequence of segments, such as a bout of birdsong made
     up of syllables, with the following fields:
         file : str
@@ -74,6 +101,4 @@ Sequence = attr.s(
         'onsets_s': attr.ib(type=np.ndarray),
         'offsets_s': attr.ib(type=np.ndarray),
         'labels': attr.ib(type=np.ndarray),
-    }, init=False)(Sequence)
-
-
+    }, init=False)(SequenceClass)
