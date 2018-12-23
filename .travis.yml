@@ -5,7 +5,7 @@ language: python
 matrix:
   include:
     - python: "3.6"
-      env: DEPS="numpy" PIPDEPS="evfuncs"
+      env: DEPS="numpy"
 
 before_install:
   - sudo apt-get update
@@ -24,8 +24,7 @@ install:
   - conda config --append channels conda-forge
   - conda create -n testenv --yes $DEPS pip setuptools python=$TRAVIS_PYTHON_VERSION
   - source activate testenv
-  - pip install $PIPDEPS
-  - python setup.py install
+  - pip install .
 
 script:
   - python -m  unittest
