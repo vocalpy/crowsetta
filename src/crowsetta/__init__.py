@@ -1,5 +1,5 @@
 from . import notmat
 from . import koumura
 from .transcriber import Transcriber
-from . import sequence
+from .classes import Segment, Sequence
 from . import csv
