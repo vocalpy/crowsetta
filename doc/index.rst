@@ -11,10 +11,10 @@ Crowsetta
    :caption: Contents:
 
 Crowsetta is a tool to work with any format for annotating birdsong.
-**The goal of `crowsetta` is to make sure that your ability to work with a dataset 
+**The goal of Crowsetta is to make sure that your ability to work with a dataset 
 of birdsong does not depend on your ability to work with any given format for 
-annotating that dataset.** `crowsetta` does not to provide yet another format 
-for annotating birdsong! (Promise.):: 
+annotating that dataset.** Crowsetta does not to provide yet another format 
+for annotating birdsong! (I promise.):: 
 
     from crowsetta import Crowsetta
     crow = Crowsetta(extra_config=your_config_info)
@@ -24,19 +24,24 @@ for annotating birdsong! (Promise.)::
 Features
 --------
 
-- convert annotation formats to `Sequence` objects that can be easily used in a Python program
-- convert `Sequence` objects to comma-separated value text files that can be read on any system
+- convert annotation formats to ``Sequence`` objects that can be easily used in a Python program
+- convert ``Sequence`` objects to comma-separated value text files that can be read on any system
 - load comma-separated values files back into Python and convert to other formats
 - easily use with your own annotation format
 
-Installation
-------------
+Getting Started
+---------------
 
 Install `crowsetta` by running:
 
-::
+.. code-block:: console
 
     $ pip install crowsetta
+    
+
+:doc:`intro` is a gentle introduction to working with Crowsetta.
+
+And :doc:`example` is an example of how to use Crowsetta with your own annotation format.
 
 Contribute
 ----------
@@ -55,10 +60,3 @@ License
 -------
 
 The project is licensed under the BSD license.
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
