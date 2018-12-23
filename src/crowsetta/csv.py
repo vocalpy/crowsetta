@@ -4,7 +4,7 @@ import csv
 
 import numpy as np
 
-from .sequence import Sequence
+from .classes import Sequence
 
 # fields that must be present for each syllable that is annotated.
 # these field names are used below by annot_list_to_csv and csv_to_annot_list
