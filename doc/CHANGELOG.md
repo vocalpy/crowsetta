@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add Crowsetta class with simple interface for converting any annotation to
 - add ability to work with user-defined functions
   + user passes an `extra_config` dict when instantiating Crowsetta
+- add docs
 
 ### changed
 - change package name to Crowsetta
