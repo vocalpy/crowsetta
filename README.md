@@ -3,9 +3,9 @@
 [![Documentation Status](https://readthedocs.org/projects/crowsetta/badge/?version=latest)](https://crowsetta.readthedocs.io/en/latest/?badge=latest)
 
 A tool to work with any format for annotating birdsong.
-**The goal of `crowsetta` is to make sure that your ability to work with a 
+**The goal of** `crowsetta` **is to make sure that your ability to work with a 
 birdsong dataset does not depend on your ability to work with any given format for 
-annotating that dataset.
+annotating that dataset.**
 
 ```python
     from crowsetta import Crowsetta
@@ -59,3 +59,4 @@ The project is licensed under the [BSD license](./LICENSE).
 
 ### Citation
 If you use `crowsetta`, please cite the DOI:
+[![DOI](https://zenodo.org/badge/159904494.svg)](https://zenodo.org/badge/latestdoi/159904494)
