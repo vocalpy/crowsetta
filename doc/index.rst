@@ -10,10 +10,10 @@ Crowsetta
    :maxdepth: 2
    :caption: Contents:
 
-Crowsetta is a tool to work with any format for annotating birdsong.
-**The goal of Crowsetta is to make sure that your ability to work with a dataset 
+``crowsetta`` is a tool to work with any format for annotating birdsong.
+**The goal of ``crowsetta`` is to make sure that your ability to work with a dataset 
 of birdsong does not depend on your ability to work with any given format for 
-annotating that dataset.** Crowsetta does not to provide yet another format 
+annotating that dataset.** ``crowsetta`` does not to provide yet another format 
 for annotating birdsong! (I promise.):: 
 
     from crowsetta import Crowsetta
@@ -39,9 +39,9 @@ Install `crowsetta` by running:
     $ pip install crowsetta
     
 
-:doc:`intro` is a gentle introduction to working with Crowsetta.
+If you haven't used the library before, you can start with :doc:`intro`.
 
-And :doc:`example` is an example of how to use Crowsetta with your own annotation format.
+And after that you can read an :doc:`example`.
 
 Contribute
 ----------
