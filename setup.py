@@ -31,7 +31,7 @@ REQUIRED = [
 ]
 
 DEV_DEPS = [
-    'sphinx', 'ipython',
+    'sphinx', 'ipython', 'coverage'
 ]
 
 # What packages are optional?
