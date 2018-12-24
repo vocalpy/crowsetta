@@ -44,14 +44,14 @@ class Transcriber:
     to_csv : maps a file of a specified format to a comma-separate values (csv) file
     to_format : maps a file of a specified format to another format
     """
-    def __init__(self, extra_config=None):
+    def __init__(self, user_config=None):
         """__init__ method of Transciber class
 
         Parameters
         ----------
-        extra_config : dict
-            a user-provided dictionary that maps format names to a `config_dict`
-            that defines the following key-value pairs:
+        user_config : dict
+            a user-provided dictionary that maps format names to a another
+            dictionary that defines the following key-value pairs:
                 module: str
                     name of module from which functions for this format can be
                     imported
@@ -68,7 +68,7 @@ class Transcriber:
 
         Examples
         --------
-        >>> extra_config = {
+        >>> my_config = {
         ...     'myformat_name': {
         ...         'module': convert_myformat.py
         ...         'to_seq': 'myformat2seq',
@@ -76,7 +76,7 @@ class Transcriber:
         ...         'to_format': 'to_myformat'
         ...     }
         ... }
-        >>> scribe = crowsetta.Transcriber(extra_config=extra_config)
+        >>> scribe = crowsetta.Transcriber(user_config=my_config)
         >>> seq = scribe.toseq(file='my_annotation.mat', file_format='myformat_name')
         """
         # read default config declared in src/crowsetta/config.ini
@@ -86,21 +86,21 @@ class Transcriber:
         crowsetta_config.read(os.path.join(HERE, 'config.ini'))
         self._config = crowsetta_config
 
-        if extra_config is not None:
-            if type(extra_config) != dict:
+        if user_config is not None:
+            if type(user_config) != dict:
                 raise TypeError(f'config_dict should be a dictionary '
-                                f', not {type(extra_config)}')
+                                f', not {type(user_config)}')
 
             if not all([type(config_dict) == dict 
-                        for config_dict in extra_config.values()]):
-                raise TypeError('all values in extra_config should be dictionaries')
+                        for config_dict in user_config.values()]):
+                raise TypeError('all values in user_config should be dictionaries')
 
             if not all([set(config_dict.keys()) == CONFIG_DICT_KEYS 
-                        for config_dict in extra_config.values()]):
-                raise KeyError(f'All dictionaries in extra_config must have '
+                        for config_dict in user_config.values()]):
+                raise KeyError(f'All dictionaries in user_config must have '
                                f'the following keys: {CONFIG_DICT_KEYS}')
 
-            for config_name, config_dict in extra_config.items():
+            for config_name, config_dict in user_config.items():
                 this_config_keys = set(config_dict.keys())
                 if this_config_keys != CONFIG_DICT_KEYS:
                     if this_config_keys < CONFIG_DICT_KEYS:
