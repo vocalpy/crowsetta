@@ -59,7 +59,7 @@ class TestTranscriber(unittest.TestCase):
 
     def test_example_to_seq_name_import(self):
         sys.path.append(str(self.example_script_dir))
-        extra_config = {
+        user_config = {
             'example': {
                 'module': 'example',
                 'to_seq': 'example2seq',
@@ -67,11 +67,11 @@ class TestTranscriber(unittest.TestCase):
                 'to_format': 'None',
             }
         }
-        scribe = crowsetta.Transcriber(extra_config=extra_config)
+        scribe = crowsetta.Transcriber(user_config=user_config)
         annotation = os.path.join(TESTS_DIR, '..', 'src', 'bin', 'bird1_annotation.mat')
 
     def test_example_to_seq_path_import(self):
-        extra_config = {
+        user_config = {
             'example': {
                 'module': str(self.example_script_dir.joinpath('example.py')),
                 'to_seq': 'example2seq',
@@ -79,13 +79,13 @@ class TestTranscriber(unittest.TestCase):
                 'to_format': 'None',
             }
         }
-        scribe = crowsetta.Transcriber(extra_config=extra_config)
+        scribe = crowsetta.Transcriber(user_config=user_config)
         annotation = TESTS_DIR.joinpath('../src/bin/bird1_annotation.mat')
 
-    def test_extra_config_wrong_types_raise(self):
-        # should raise an error because extra_config should be dict of dicts
+    def test_user_config_wrong_types_raise(self):
+        # should raise an error because user_config should be dict of dicts
         # not list of dicts
-        extra_config = list(
+        user_config = list(
             {'example': {
                 'module': 'example',
                 'to_seq': 'example2seq',
@@ -95,10 +95,10 @@ class TestTranscriber(unittest.TestCase):
             }}
         )
         with self.assertRaises(TypeError):
-            crowsetta.Transcriber(extra_config=extra_config)
+            crowsetta.Transcriber(user_config=user_config)
 
     def test_missing_keys_in_config_raises(self):
-        extra_config = {
+        user_config = {
             'example': {
                 # missing 'module' key
                 'to_seq': 'example2seq',
@@ -107,10 +107,10 @@ class TestTranscriber(unittest.TestCase):
             }
         }
         with self.assertRaises(KeyError):
-            crowsetta.Transcriber(extra_config=extra_config)
+            crowsetta.Transcriber(user_config=user_config)
 
     def test_extra_keys_in_config_raises(self):
-        extra_config = {
+        user_config = {
             'example': {
                 'module': 'example',
                 'to_seq': 'example2seq',
@@ -120,7 +120,7 @@ class TestTranscriber(unittest.TestCase):
             }
         }
         with self.assertRaises(KeyError):
-            crowsetta.Transcriber(extra_config=extra_config)
+            crowsetta.Transcriber(user_config=user_config)
 
 if __name__ == '__main__':
     unittest.main()
