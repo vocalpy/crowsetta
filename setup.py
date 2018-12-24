@@ -18,7 +18,7 @@ from setuptools import find_packages, setup, Command
 
 # Package meta-data.
 NAME = 'crowsetta'
-DESCRIPTION = 'converts different formats for birdsong annotation to csv',
+DESCRIPTION = 'A tool to work with any format for annotating birdsong'
 URL = 'https://github.com/NickleDave/crowsetta'
 EMAIL = 'nicholdav@gmail.com'
 AUTHOR = 'David Nicholson'
