@@ -5,21 +5,26 @@ import numpy as np
 import attr
 
 
-# Segment = namedtuple('Segment', ['onset_Hz',
-#                                  'offset_Hz',
-#                                  'onset_s',
-#                                  'offset_s',
-#                                  'label',
-#                                  'file',
-#                                  ]
-#                      )
-
-
-class SegmentClass(object):
+@attr.s
+class Segment(object):
     """object that represents a segment of a time series,
      usually a syllable in a bout of birdsong"""
-    def __init__(self, label, file, onset_s=None, offset_s=None,
-                 onset_Hz=None, offset_Hz=None):
+    label = attr.ib(converter=str)
+    onset_s = attr.ib(converter=attr.converters.optional(float))
+    offset_s = attr.ib(converter=attr.converters.optional(float))
+    onset_Hz = attr.ib(converter=attr.converters.optional(int))
+    offset_Hz = attr.ib(converter=attr.converters.optional(int))
+    file = attr.ib(converter=str)
+    asdict = attr.asdict
+
+    @classmethod
+    def from_row(cls, row, header):
+        row_dict = dict(zip(header, row))
+        return cls.from_keyword(**row_dict)
+
+    @classmethod
+    def from_keyword(cls, label, file, onset_s=None, offset_s=None,
+                     onset_Hz=None, offset_Hz=None):
         if ((onset_Hz is None and offset_Hz is None) and
                 (onset_s is None and offset_s is None)):
             raise ValueError('must provide either onset_Hz and offset_Hz, or '
@@ -34,23 +39,8 @@ class SegmentClass(object):
         if onset_s is None and offset_s:
             raise ValueError(f'offset_s specified as {offset_Hz} but onset_s is None')
 
-        self.label = label
-        self.file = file
-        self.onset_s = onset_s
-        self.offset_s = offset_s
-        self.onset_Hz = onset_Hz
-        self.offset_Hz = offset_Hz
-
-
-Segment = attr.s(
-    these={
-        'file': attr.ib(type=str),
-        'onset_Hz': attr.ib(type=int),
-        'offset_Hz': attr.ib(type=int),
-        'onset_s': attr.ib(type=float),
-        'offset_s': attr.ib(type=float),
-        'label': attr.ib(type=str),
-    }, init=False)(SegmentClass)
+        return cls(label=label, file=file, onset_s=onset_s, offset_s=offset_s, 
+                   onset_Hz=onset_Hz, offset_Hz=offset_Hz)
 
 
 class SequenceClass:
