@@ -19,18 +19,18 @@ class FormatFunctions:
     to_format: typing.Callable
 
 
-class Crowsetta:
-    """converts birdsong annotation files into comma-separated values (csv) files,
-    other annotation formats, or Sequences (the data structure used to enable
-    conversion between formats).
+class Transcriber:
+    """converts birdsong annotation files into Sequences (the data structure used to enable
+    conversion between formats), comma-separated values (csv) files,
+    other annotation formats.
 
     Attributes
     ----------
     _config : ConfigParser
-        contains configuration that tells Crowsetta which functions to use for
+        contains configuration that tells Transciber which functions to use for
         which formats
     file_formats : list
-        of str, the formats that an instance of the Crowsetta class knows how
+        of str, the formats that an instance of the Transcriber class knows how
         to parse and convert
     format_functions : dict
         that maps each format from file_formats to three functions: a 'to_csv'
@@ -45,7 +45,7 @@ class Crowsetta:
     to_format : maps a file of a specified format to another format
     """
     def __init__(self, extra_config=None):
-        """__init__ method of Crowsetta class
+        """__init__ method of Transciber class
 
         Parameters
         ----------
@@ -76,8 +76,8 @@ class Crowsetta:
         ...         'to_format': 'to_myformat'
         ...     }
         ... }
-        >>> crow = crowsetta.Crowsetta(extra_config=extra_config)
-        >>> seq = crow.toseq(file='my_annotation.mat', file_format='myformat_name')
+        >>> scribe = crowsetta.Transcriber(extra_config=extra_config)
+        >>> seq = scribe.toseq(file='my_annotation.mat', file_format='myformat_name')
         """
         # read default config declared in src/crowsetta/config.ini
         # have to read in __init__ so config doesn't live at module level;
@@ -192,8 +192,8 @@ class Crowsetta:
 
         Examples
         --------
-        >>> crow = Crowsetta()
-        >>> seq = crow.to_seq(file='Annotation.xml', file_format='koumura', wavpath='./Data/Wave')
+        >>> scribe = crowsetta.Transcriber()
+        >>> seq = scribe.to_seq(file='Annotation.xml', file_format='koumura', wavpath='./Data/Wave')
         >>> print(seq[1])
         Sequence(file='0.wav', onsets_Hz=array([ 34240,  40256,  46944,  ...
         """
@@ -224,8 +224,8 @@ class Crowsetta:
 
         Examples
         --------
-        >>> crow = Crowsetta()
-        >>> crow.to_csv(file='Annotation.xml', file_format='koumura')
+        >>> scribe = crowsetta.Transcriber()
+        >>> scribe.to_csv(file='Annotation.xml', file_format='koumura')
         >>> import csv
         >>> with open('Annotation.csv', 'r', newline='') as csv_file:
         ...     reader = csv.reader(csv_file)
