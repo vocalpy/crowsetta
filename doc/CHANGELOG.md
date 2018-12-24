@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### added
-- `Segment` object
+- `Segment` class, attrs-based
+
+### changed
+- `Sequence` class is now attrs-based, has factory functions, is itself
+just a list of `Segment`s
 
 ## 0.2.0a1
 ### added
