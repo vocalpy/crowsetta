@@ -55,6 +55,10 @@ class Sequence:
             raise TypeError('Not all elements are Segments in ')
 
     @classmethod
+    def from_segments(cls, segments):
+        return cls(segments)
+
+    @classmethod
     def from_keyword(cls, file, labels, onsets_Hz=None, offsets_Hz=None,
                      onsets_s=None, offsets_s=None):
         """construct a Sequence from keyword arguments
@@ -182,5 +186,40 @@ class Sequence:
         return cls.from_segments(segments)
 
     @classmethod
-    def from_segments(cls, segments):
-        return cls(segments)
+    def from_dict(cls, annot_dict):
+        """returns a Sequence, given a Python dictionary
+        where keys of dictionary are arguments to Sequence.from_keyword()
+
+        Parameters
+        ----------
+        annot_dict : dict
+            with following key, value pairs
+            file : str
+                name of audio file with which annotation is associated.
+            onsets_Hz : numpy.ndarray or None
+                of type int, onset of each annotated segment in samples/second
+            offsets_Hz : numpy.ndarray or None
+                of type int, offset of each annotated segment in samples/second
+            onsets_s : numpy.ndarray or None
+                of type float, onset of each annotated segment in seconds
+            offsets_s : numpy.ndarray or None
+                of type float, offset of each annotated segment in seconds
+            labels : str, list, or numpy.ndarray
+                of type str, label for each annotated segment
+
+        annot_dict must specify both onsets and offsets, either in units of Hz or seconds 
+        (or both).
+
+        Examples
+        --------
+        >>> annot_dict = {
+        ...     'labels': 'abc',
+        ...     'onsets_Hz': np.asarray([16005, 17925, 19837]),
+        ...     'offsets_Hz': np.asarray([17602, 19520, 21435]),
+        ...     'file': 'bird0.wav',
+        ...     }
+        >>> seq = Sequence.from_dict(annot_dict)
+        """
+        # basically a convenience method
+        # so user doesn't have to grok the concept of 'dictionary unpacking operator'
+        return cls.from_keyword(**annot_dict)
