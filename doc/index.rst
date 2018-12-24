@@ -17,10 +17,10 @@ annotating that dataset.**
 
 .. code-block:: python
 
-    from crowsetta import Crowsetta
-    crow = Crowsetta(extra_config=your_config_info)
-    crow.to_csv(file_'your_annotation_file.mat',
-                csv_filename='your_annotation.csv')
+    from crowsetta import Transcriber
+    scribe = Transciber(user_config=your_config)
+    scribe.to_csv(file_'your_annotation_file.mat',
+                  csv_filename='your_annotation.csv')
 
 Features
 --------
