@@ -1,9 +1,9 @@
 import unittest
 
-from crowsetta.classes import Segment, Sequence
+from crowsetta.classes import Segment
 
 
-class TestClasses(unittest.TestCase):
+class TestSegment(unittest.TestCase):
     def test_Segment_init_onset_offset_in_seconds_from_keyword(self):
         a_segment = Segment.from_keyword(label='a',
                                          onset_s=0.123,
@@ -70,10 +70,6 @@ class TestClasses(unittest.TestCase):
             a_segment = Segment.from_keyword(label='a',
                                              offset_Hz=0.177,
                                              file='bird21.wav')
-
-    def test_Sequence_init(self):
-        a_sequence = Sequence()
-        assert False
 
 
 if __name__ == '__main__':
