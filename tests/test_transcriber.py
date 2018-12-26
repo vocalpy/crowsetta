@@ -25,7 +25,7 @@ class TestTranscriber(unittest.TestCase):
         wavpath = str(self.test_data_dir.joinpath('koumura/Bird0/Wave'))
         seq = scribe.to_seq(file=xml_file, file_format='koumura', wavpath=wavpath)
         self.assertTrue(type(seq) == list)
-        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
+        self.assertTrue(all([type(a_seq) == crowsetta.classes.Sequence
                              for a_seq in seq]))
 
     def test_koumura_to_csv(self):
@@ -45,7 +45,7 @@ class TestTranscriber(unittest.TestCase):
         )
         for notmat in notmats:
             seq = scribe.to_seq(file=notmat, file_format='notmat')
-            self.assertTrue(type(seq) == crowsetta.sequence.Sequence)
+            self.assertTrue(type(seq) == crowsetta.classes.Sequence)
 
     def test_notmat_to_csv(self):
         scribe = crowsetta.Transcriber()
