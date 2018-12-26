@@ -7,14 +7,7 @@ import unittest
 from pathlib import Path
 
 import crowsetta
-
-SYL_DICT_FIELDNAMES = ['file',
-                       'onset_Hz',
-                       'offset_Hz',
-                       'onset_s',
-                       'offset_s',
-                       'label']
-
+from crowsetta.classes import Segment
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -57,7 +50,7 @@ class TestAnnotation(unittest.TestCase):
         # to be extra sure, make sure all .wav files filenames from are in csv
         filenames_from_csv = []
         with open(csv_filename, 'r', newline='') as csvfile:
-            reader = csv.DictReader(csvfile, fieldnames=SYL_DICT_FIELDNAMES)
+            reader = csv.DictReader(csvfile, fieldnames=Segment._FIELDS)
             header = next(reader)
             for row in reader:
                 filenames_from_csv.append(row['file'])
