@@ -53,8 +53,9 @@ def check_consistent_length(arrays):
                          " samples: %r" % [int(l) for l in lengths])
 
 
-def column_or_1d(y):
-    """Ravel column or 1d numpy array, else raises an error
+def column_or_row_or_1d(y):
+    """Ravel column or row vector or 1d numpy array, else raises an error
+
     Parameters
     ----------
     y : array-like
@@ -64,7 +65,7 @@ def column_or_1d(y):
     y : array
     """
     shape = np.shape(y)
-    if (len(shape) == 1) or (len(shape) == 2 and shape[1] == 1):
+    if (len(shape) == 1) or (len(shape) == 2 and (shape[1] == 1 or shape[0] == 1)):
         return np.ravel(y)
     else:
         raise ValueError("bad input shape {0}".format(shape))
