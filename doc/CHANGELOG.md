@@ -3,11 +3,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## 0.2.0a3
+### changed
+- fix failing tests
 
 ## 0.2.0a2
 ### added
 - `Segment` class, attrs-based
   + has `asdict` method (wrapper around `attrs` function)
+  + has class variable `_FIELDS` which is used in any place 
+  where we need to know how to go from `Segment` attributes to rows of
+  a csv file, e.g. in src/crowsetta/csv.py and in tests
 
 ### changed
 - `Sequence` class is now attrs-based, has factory functions, is itself
