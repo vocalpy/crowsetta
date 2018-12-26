@@ -71,6 +71,5 @@ class TestSegment(unittest.TestCase):
                                              offset_Hz=0.177,
                                              file='bird21.wav')
 
-
 if __name__ == '__main__':
     unittest.main()
