@@ -13,7 +13,7 @@ import wave
 
 import koumura
 
-from .sequence import Sequence
+from .classes import Sequence
 from . import csv
 
 
@@ -74,7 +74,7 @@ def koumura2seq(xml_file='Annotation.xml', concat_seqs_into_songs=True,
         onsets_s = np.round(onsets_Hz / samp_freq, decimals=3)
         offsets_s = np.round(offsets_Hz / samp_freq, decimals=3)
 
-        seq_obj = Sequence(
+        seq_obj = Sequence.from_keyword(
             file=seq_xml.wav_file,
             onsets_Hz=onsets_Hz,
             offsets_Hz=offsets_Hz,

@@ -8,7 +8,7 @@ import numpy as np
 import scipy.io
 import evfuncs
 
-from .sequence import Sequence
+from .classes import Sequence
 from .csv import seq2csv
 
 
@@ -91,7 +91,7 @@ def notmat2seq(notmat,
         # onsets and offsets are in units of ms, have to convert to s
         onsets_s = notmat_dict['onsets'] / 1000
         offsets_s = notmat_dict['offsets'] / 1000
-    
+
         # convert to Hz using sampling frequency
         audio_filename = a_notmat.replace('.not.mat','')
         if audio_filename.endswith('.cbin'):
@@ -106,30 +106,30 @@ def notmat2seq(notmat,
         # subtract one because of Python's zero indexing (first sample is sample zero)
         onsets_Hz = np.round(onsets_s * sample_freq).astype(int) - 1
         offsets_Hz = np.round(offsets_s * sample_freq).astype(int)
-    
+
         # do this *after* converting onsets_s and offsets_s to onsets_Hz and offsets_Hz
         # probably doesn't matter but why introduce more noise?
         if round_times:
             onsets_s = np.around(onsets_s, decimals=decimals)
             offsets_s = np.around(offsets_s, decimals=decimals)
-    
+
         if abspath:
             audio_filename = os.path.abspath(audio_filename)
         elif basename:
             audio_filename = os.path.basename(audio_filename)
 
-        seq.append(Sequence(file=audio_filename,
-                            labels=np.asarray(list(notmat_dict['labels'])),
-                            onsets_s=onsets_s,
-                            offsets_s=offsets_s,
-                            onsets_Hz=onsets_Hz,
-                            offsets_Hz=offsets_Hz)
-                   )
+        notmat_seq = Sequence.from_keyword(file=audio_filename,
+                                           labels=np.asarray(list(notmat_dict['labels'])),
+                                           onsets_s=onsets_s,
+                                           offsets_s=offsets_s,
+                                           onsets_Hz=onsets_Hz,
+                                           offsets_Hz=offsets_Hz)
+        seq.append(notmat_seq)
 
     if len(seq) == 1:
         return seq[0]
     else:
-        return seq 
+        return seq
 
 
 def notmat2csv(notmat, csv_filename, abspath=False, basename=False):

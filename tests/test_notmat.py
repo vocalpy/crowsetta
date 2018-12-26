@@ -13,14 +13,7 @@ import crowsetta
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
-ANNOT_DICT_FIELDNAMES = {'file': str,
-                         'onsets_Hz': np.ndarray,
-                         'offsets_Hz': np.ndarray,
-                         'onsets_s': np.ndarray,
-                         'offsets_s': np.ndarray,
-                         'labels': np.ndarray}
-
-SYL_DICT_FIELDNAMES = ['filename',
+SYL_DICT_FIELDNAMES = ['file',
                        'onset_Hz',
                        'offset_Hz',
                        'onset_s',
@@ -42,24 +35,19 @@ class TestNotmat(unittest.TestCase):
                                   'cbins/gy6or6/032312/'
                                   'gy6or6_baseline_230312_0808.138.cbin.not.mat'))
         seq = crowsetta.notmat.notmat2seq(notmat)
-        self.assertTrue(type(seq) == crowsetta.sequence.Sequence)
-        for fieldname, fieldtype in ANNOT_DICT_FIELDNAMES.items():
-            self.assertTrue(hasattr(seq, fieldname))
-            self.assertTrue(type(getattr(seq, fieldname)) == fieldtype)
+        self.assertTrue(type(seq) == crowsetta.classes.Sequence)
+        self.assertTrue(hasattr(seq, 'segments'))
 
     def test_notmat2seq_list_of_str(self):
         notmat = glob(os.path.join(self.test_data_dir,
                                    os.path.normpath(
-                                  'cbins/gy6or6/032312/*.not.mat')))
+                                       'cbins/gy6or6/032312/*.not.mat')))
         seq = crowsetta.notmat.notmat2seq(notmat)
         self.assertTrue(type(seq) == list)
         self.assertTrue(len(seq) == len(notmat))
-        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
+        self.assertTrue(all([type(a_seq) == crowsetta.classes.Sequence
                             for a_seq in seq]))
-        for fieldname, fieldtype in ANNOT_DICT_FIELDNAMES.items():
-            self.assertTrue(all([hasattr(a_seq, fieldname) for a_seq in seq]))
-            self.assertTrue(all([type(getattr(a_seq, fieldname)) == fieldtype
-                            for a_seq in seq]))
+        self.assertTrue(all([hasattr(a_seq, 'segments') for a_seq in seq]))
 
     def test_notmat2seq_list_of_Path(self):
         notmat = Path(self.test_data_dir).joinpath(
@@ -67,12 +55,9 @@ class TestNotmat(unittest.TestCase):
         seq = crowsetta.notmat.notmat2seq(notmat)
         self.assertTrue(type(seq) == list)
         self.assertTrue(len(seq) == len(list(notmat)))
-        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
+        self.assertTrue(all([type(a_seq) == crowsetta.classes.Sequence
                             for a_seq in seq]))
-        for fieldname, fieldtype in ANNOT_DICT_FIELDNAMES.items():
-            self.assertTrue(all([hasattr(a_seq, fieldname) for a_seq in seq]))
-            self.assertTrue(all([type(getattr(a_seq, fieldname)) == fieldtype
-                            for a_seq in seq]))
+        self.assertTrue(all([hasattr(a_seq, 'segments') for a_seq in seq]))
 
     def test_notmat2csv(self):
         # since notmat_list_to_csv is basically a wrapper around
@@ -97,7 +82,7 @@ class TestNotmat(unittest.TestCase):
             reader = csv.DictReader(csvfile, fieldnames=SYL_DICT_FIELDNAMES)
             header = next(reader)
             for row in reader:
-                filenames_from_csv.append(row['filename'])
+                filenames_from_csv.append(row['file'])
         for notmat_name in notmat_list:
             cbin_name = notmat_name.replace('.not.mat', '')
             assert(cbin_name in filenames_from_csv)
@@ -107,11 +92,12 @@ class TestNotmat(unittest.TestCase):
                                 os.path.normpath('cbins/gy6or6/032312/'))
         notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
         for notmat in notmat_list:
-            seq = crowsetta.notmat.notmat2seq(notmat)
             notmat_dict = evfuncs.load_notmat(notmat)
-            crowsetta.notmat.make_notmat(filename=seq.file,
-                                         onsets_Hz=seq.onsets_Hz,
-                                         offsets_Hz=seq.offsets_Hz,
+            seq = crowsetta.notmat.notmat2seq(notmat)
+            seq_dict = seq.to_dict()
+            crowsetta.notmat.make_notmat(filename=seq_dict['file'],
+                                         onsets_Hz=seq_dict['onsets_Hz'],
+                                         offsets_Hz=seq_dict['offsets_Hz'],
                                          labels=np.asarray(list(notmat_dict['labels'])),
                                          samp_freq=notmat_dict['Fs'],
                                          threshold=notmat_dict['threshold'],
