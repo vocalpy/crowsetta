@@ -1,4 +1,4 @@
-filename,onset_Hz,offset_Hz,onset_s,offset_s,label
+file,onset_Hz,offset_Hz,onset_s,offset_s,label
 gy6or6_baseline_230312_0808.138.cbin,40888,43239,1.278,1.351,i
 gy6or6_baseline_230312_0808.138.cbin,46478,49146,1.452,1.536,i
 gy6or6_baseline_230312_0808.138.cbin,51370,54774,1.605,1.712,i
