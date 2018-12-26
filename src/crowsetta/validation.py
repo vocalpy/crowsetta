@@ -38,15 +38,14 @@ def _num_samples(x):
         return len(x)
 
 
-def check_consistent_length(*arrays):
+def check_consistent_length(arrays):
     """Check that all arrays have consistent first dimensions.
     Checks whether all objects in arrays have the same shape or length.
     Parameters
     ----------
-    *arrays : list or tuple of input objects.
+    arrays : list or tuple of input objects.
         Objects that will be checked for consistent length.
     """
-
     lengths = [_num_samples(X) for X in arrays if X is not None]
     uniques = np.unique(lengths)
     if len(uniques) > 1:
