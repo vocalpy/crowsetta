@@ -60,7 +60,7 @@ def seq2csv(seq,
         # SYL_ANNOT_COLUMN_NAMES is defined above, at the level of the module,
         # to ensure consistency across all functions in this module
         # that make use of it
-        writer = csv.DictWriter(csvfile, fieldnames=SYL_ANNOT_COLUMN_NAMES)
+        writer = csv.DictWriter(csvfile, fieldnames=Segment._FIELDS)
 
         writer.writeheader()
         for curr_seq in seq:
