@@ -6,6 +6,8 @@ import typing
 
 import attr
 
+from .csv import csv2seq
+
 HERE = os.path.dirname(__file__)
 
 CONFIG_DICT_KEYS = {'module', 'to_seq', 'to_csv', 'to_format'}
@@ -292,3 +294,17 @@ class Transcriber:
 
         seq = self.format_functions[file_format].to_seq(file, **to_seq_kwargs)
         return self.format_functions[to_format].to_format(seq, **to_format_kwargs)
+
+    def from_csv(self, csv_filename):
+        """loads and parses a comma-separated values (csv) file,
+        returns Sequence or list of Sequence
+
+        Parameters
+        ----------
+        csv_filename : str
+
+        Returns
+        -------
+        seq : Sequence or list
+        """
+        return csv2seq(csv_filename)
