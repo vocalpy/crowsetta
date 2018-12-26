@@ -229,3 +229,55 @@ class Sequence:
         # basically a convenience method
         # so user doesn't have to grok the concept of 'dictionary unpacking operator'
         return cls.from_keyword(**annot_dict)
+
+    def to_dict(self):
+        """returns sequence as a dictionary
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        seq_dict : dict
+            with the following key, value pairs:
+                file : str
+                    name of audio file with which annotation is associated.
+                onsets_Hz : numpy.ndarray or None
+                    of type int, onset of each annotated segment in samples/second
+                offsets_Hz : numpy.ndarray or None
+                    of type int, offset of each annotated segment in samples/second
+                onsets_s : numpy.ndarray or None
+                    of type float, onset of each annotated segment in seconds
+                offsets_s : numpy.ndarray or None
+                    of type float, offset of each annotated segment in seconds
+                labels : str, list, or numpy.ndarray
+                    of type str, label for each annotated segment
+        """
+        seq_keys = ['file', 'onsets_Hz', 'offsets_Hz', 'onsets_s', 'offsets_s', 'labels']
+        seq_dict = dict(zip(
+            seq_keys, [[] for _ in range(len(seq_keys))]
+        ))
+        for segment in self.segments:
+            seq_dict['labels'].append(segment.label)
+            seq_dict['onsets_Hz'].append(segment.onset_Hz)
+            seq_dict['offsets_Hz'].append(segment.offset_Hz)
+            seq_dict['onsets_s'].append(segment.onset_s)
+            seq_dict['offsets_s'].append(segment.offset_s)
+            seq_dict['file'].append(segment.file)
+        for seq_key in seq_keys:
+            seq_dict[seq_key] = np.asarray(seq_dict[seq_key])
+
+        uniq_file = np.unique(seq_dict['file'])
+        if len(uniq_file) > 1:
+            raise ValueError('More than one file name found in segments, not clear'
+                             'which to use when converting to dict.')
+        else:
+            seq_dict['file'] = uniq_file[0]
+
+        for a_key in ['onsets_Hz', 'offsets_Hz', 'onsets_s', 'offsets_s']:
+            # if value is an array full of Nones, just convert to one None
+            if np.all(seq_dict[a_key] == None):
+                seq_dict[a_key] = None
+
+        return seq_dict
