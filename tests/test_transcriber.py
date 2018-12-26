@@ -122,5 +122,16 @@ class TestTranscriber(unittest.TestCase):
         with self.assertRaises(KeyError):
             crowsetta.Transcriber(user_config=user_config)
 
+    def test_from_csv(self):
+        csv_filename = os.path.join(self.test_data_dir,
+                                    os.path.normpath('csv/gy6or6_032312.csv'))
+        # just a wrapper around `csv2seq` which has its own tests,
+        # so here just make sure it works as a class method
+        scribe = crowsetta.Transcriber()
+        seq = scribe.from_csv(csv_filename=csv_filename)
+        self.assertTrue(type(seq) == list)
+        self.assertTrue(all([type(a_seq) == crowsetta.classes.Sequence
+                             for a_seq in seq]))
+
 if __name__ == '__main__':
     unittest.main()
