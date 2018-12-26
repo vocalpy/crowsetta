@@ -2,60 +2,7 @@
 import os
 import csv
 
-import numpy as np
-
-from .classes import Sequence
-
-# fields that must be present for each syllable that is annotated.
-# these field names are used below by annot_list_to_csv and csv_to_annot_list
-# but defined at top-level of the module, since these fields determine
-# what annotations the library can and cannot interpret.
-# The idea is to use the bare minimum of fields required.
-SYL_ANNOT_COLUMN_NAMES = ['file',
-                          'onset_Hz',
-                          'offset_Hz',
-                          'onset_s',
-                          'offset_s',
-                          'label']
-set_SYL_ANNOT_COLUMN_NAMES = set(SYL_ANNOT_COLUMN_NAMES)
-
-# below maps each column in csv to a key in an annot_dict
-# used when appending to lists that correspond to each key
-SYL_ANNOT_TO_SONG_ANNOT_MAPPING = {'onset_Hz':'onsets_Hz',
-                                   'offset_Hz': 'offsets_Hz',
-                                   'onset_s': 'onsets_s',
-                                   'offset_s': 'offsets_s',
-                                   'label': 'labels'}
-
-# used when mapping inputs **from** csv **to** annotation
-SONG_ANNOT_TYPE_MAPPING = {'onsets_Hz': int,
-                           'offsets_Hz': int,
-                           'onsets_s': float,
-                           'offsets_s': float,
-                           'labels': str}
-
-
-def _fix_annot_dict_types(annot_dict):
-    """helper function that converts items in lists of annot dict
-    from str to correct type, and then converts lists to numpy arrays"""
-    for key, type_to_convert in SONG_ANNOT_TYPE_MAPPING.items():
-        list_from_key = annot_dict[key]
-        if type_to_convert == int:
-            list_from_key = [int(el) for el in list_from_key]
-        elif type_to_convert == float:
-            list_from_key = [float(el) for el in list_from_key]
-        elif type_to_convert == str:
-            pass
-        else:
-            raise TypeError('Unexpected type {} specified in '
-                            'crowsetta'
-                            .format(type_to_convert))
-        annot_dict[key] = list_from_key
-    # convert all lists to ndarray
-    for col_name in (set_SYL_ANNOT_COLUMN_NAMES - {'file'}):
-        annot_dict[SYL_ANNOT_TO_SONG_ANNOT_MAPPING[col_name]] = \
-            np.asarray(annot_dict[SYL_ANNOT_TO_SONG_ANNOT_MAPPING[col_name]])
-    return annot_dict
+from .classes import Segment, Sequence
 
 
 def seq2csv(seq,
@@ -147,67 +94,36 @@ def csv2seq(csv_fname):
 
         header = next(reader)
         set_header = set(header)
-        if set_header != set_SYL_ANNOT_COLUMN_NAMES:
-            not_in_FIELDNAMES = set_header.difference(set_SYL_ANNOT_COLUMN_NAMES)
-            if not_in_FIELDNAMES:
+        if set_header != set(Segment._FIELDS):
+            not_in_FIELDS = set_header.difference(set(Segment._FIELDS))
+            if not_in_FIELDS:
                 raise ValueError('The following column names in {} are not recognized: {}'
-                                 .format(csv_fname, not_in_FIELDNAMES))
-        not_in_header = set_SYL_ANNOT_COLUMN_NAMES.difference(set_header)
+                                 .format(csv_fname, not_in_FIELDS))
+        not_in_header = set(Segment._FIELDS).difference(set_header)
         if not_in_header:
             raise ValueError(
                 'The following column names in {} are required but missing: {}'
                 .format(csv_fname, not_in_header))
 
-        column_name_index_mapping = {column_name: header.index(column_name)
-                                     for column_name in SYL_ANNOT_COLUMN_NAMES}
-
         row = next(reader)
-        curr_filename = row[column_name_index_mapping['file']]
-        annot_dict = {'file': curr_filename,
-                      'onsets_Hz': [],
-                      'offsets_Hz': [],
-                      'onsets_s': [],
-                      'offsets_s': [],
-                      'labels': []}
-        for col_name in (set_SYL_ANNOT_COLUMN_NAMES - {'file'}):
-            annot_dict[SYL_ANNOT_TO_SONG_ANNOT_MAPPING[col_name]].append(
-                row[column_name_index_mapping[col_name]])
+        segment = Segment.from_row(row=row, header=header)
+        curr_file = segment.file
+        segments = []
 
         for row in reader:
-            row_filename = row[column_name_index_mapping['file']]
-            if row_filename == curr_filename:
-                for col_name in (set_SYL_ANNOT_COLUMN_NAMES - {'file'}):
-                    annot_dict[SYL_ANNOT_TO_SONG_ANNOT_MAPPING[col_name]].append(
-                        row[column_name_index_mapping[col_name]])
+            segment = Segment.from_row(row=row, header=header)
+            row_file = segment.file
+            if row_file == curr_file:
+                segments.append(segment)
             else:
-                annot_dict = _fix_annot_dict_types(annot_dict)
-                seq = Sequence.from_keyword(file=annot_dict['file'],
-                                            onsets_Hz=annot_dict['onsets_Hz'],
-                                            offsets_Hz=annot_dict['offsets_Hz'],
-                                            onsets_s=annot_dict['onsets_s'],
-                                            offsets_s=annot_dict['offsets_s'],
-                                            labels=annot_dict['labels'])
+                seq = Sequence.from_segments(segments)
                 seq_list.append(seq)
-                # and start a new annot_dict
-                curr_filename = row_filename
-                annot_dict = {'file': curr_filename,
-                              'onsets_Hz': [],
-                              'offsets_Hz': [],
-                              'onsets_s': [],
-                              'offsets_s': [],
-                              'labels': []}
-                for col_name in (set_SYL_ANNOT_COLUMN_NAMES - {'file'}):
-                    annot_dict[SYL_ANNOT_TO_SONG_ANNOT_MAPPING[col_name]].append(
-                        row[column_name_index_mapping[col_name]])
+                # start a new segments list that starts with this segment
+                curr_file = row_file
+                segments = [segment]
         # lines below appends annot_dict corresponding to last file
         # since there won't be another file after it to trigger the 'else' logic above
-        annot_dict = _fix_annot_dict_types(annot_dict)
-        seq = Sequence.from_keyword(file=annot_dict['file'],
-                                    onsets_Hz=annot_dict['onsets_Hz'],
-                                    offsets_Hz=annot_dict['offsets_Hz'],
-                                    onsets_s=annot_dict['onsets_s'],
-                                    offsets_s=annot_dict['offsets_s'],
-                                    labels=annot_dict['labels'])
+        seq = Sequence.from_segments(segments)
         seq_list.append(seq)
 
     return seq_list
