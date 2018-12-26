@@ -123,7 +123,7 @@ def seq2csv(seq,
                     seg_dict['file'] = os.path.abspath(seg_dict['file'])
                 elif basename:
                     seg_dict['file'] = os.path.basename(seg_dict['file'])
-                    writer.writerow(seg_dict)
+                writer.writerow(seg_dict)
 
 
 def csv2seqlist(csv_fname):
