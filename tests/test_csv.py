@@ -60,7 +60,7 @@ class TestAnnotation(unittest.TestCase):
         csv_fname = os.path.join(self.test_data_dir,
                                  os.path.normpath('csv/gy6or6_032312.csv'))
         # convert csv to crowsetta list -- this is what we're testing
-        seq_list_from_csv = crowsetta.csv.csv2seqlist(csv_fname)
+        seq_list_from_csv = crowsetta.csv.csv2seq(csv_fname)
         cbin_dir = os.path.join(self.test_data_dir,
                                 os.path.normpath('cbins/gy6or6/032312/'))
 
@@ -96,14 +96,14 @@ class TestAnnotation(unittest.TestCase):
                                  os.path.normpath(
                                      'csv/unrecognized_fields_in_header.csv'))
         with self.assertRaises(ValueError):
-            crowsetta.csv.csv2seqlist(csv_fname=csv_fname)
+            crowsetta.csv.csv2seq(csv_fname=csv_fname)
 
     def test_csv2seq_missing_fields_raises(self):
         csv_fname = os.path.join(self.test_data_dir,
                                  os.path.normpath(
                                      'csv/missing_fields_in_header.csv'))
         with self.assertRaises(ValueError):
-            crowsetta.csv.csv2seqlist(csv_fname=csv_fname)
+            crowsetta.csv.csv2seq(csv_fname=csv_fname)
 
 
 if __name__ == '__main__':

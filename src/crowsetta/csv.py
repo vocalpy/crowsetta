@@ -126,7 +126,7 @@ def seq2csv(seq,
                 writer.writerow(seg_dict)
 
 
-def csv2seqlist(csv_fname):
+def csv2seq(csv_fname):
     """loads a comma-separated values (csv) file containing annotations
     for song files, returns contents as a list of Sequence objects
 
