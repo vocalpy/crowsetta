@@ -8,7 +8,7 @@ from pathlib import Path
 
 import crowsetta
 
-SYL_DICT_FIELDNAMES = ['filename',
+SYL_DICT_FIELDNAMES = ['file',
                        'onset_Hz',
                        'offset_Hz',
                        'onset_s',
@@ -35,7 +35,7 @@ class TestAnnotation(unittest.TestCase):
                                                  wavpath=os.path.join(self.test_data_dir,
                                                                       'Wave'))
         self.assertTrue(type(seq_list) == list)
-        self.assertTrue(all([type(seq) == crowsetta.sequence.Sequence
+        self.assertTrue(all([type(seq) == crowsetta.classes.Sequence
                              for seq in seq_list]))
 
     def test_koumura2csv(self):
@@ -60,7 +60,7 @@ class TestAnnotation(unittest.TestCase):
             reader = csv.DictReader(csvfile, fieldnames=SYL_DICT_FIELDNAMES)
             header = next(reader)
             for row in reader:
-                filenames_from_csv.append(row['filename'])
+                filenames_from_csv.append(row['file'])
 
         wav_list = glob(os.path.join(self.test_data_dir, 'Wave', '*.wav'))
         wav_list = [Path(wav_file).name for wav_file in wav_list]
