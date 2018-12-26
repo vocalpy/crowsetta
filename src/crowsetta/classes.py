@@ -2,7 +2,7 @@
 import attr
 import numpy as np
 
-from .validation import _num_samples, check_consistent_length, column_or_1d
+from .validation import _num_samples, check_consistent_length, column_or_row_or_1d
 
 
 @attr.s
@@ -120,8 +120,8 @@ class Sequence:
         # then do type/shape checking on onsets and offsets;
         # also make sure everybody is the same length
         if onsets_Hz is not None and offsets_Hz is not None:
-            onsets_Hz = column_or_1d(onsets_Hz)
-            offsets_Hz = column_or_1d(offsets_Hz)
+            onsets_Hz = column_or_row_or_1d(onsets_Hz)
+            offsets_Hz = column_or_row_or_1d(offsets_Hz)
 
             if onsets_Hz.dtype != int or offsets_Hz.dtype != int:
                 raise TypeError('dtype of onsets_Hz and offsets_Hz '
@@ -145,8 +145,8 @@ class Sequence:
                                      f'onsets_Hz: {offsets_Hz.shape[0]}')
 
         if onsets_s is not None and offsets_s is not None:
-            onsets_s = column_or_1d(onsets_s)
-            offsets_s = column_or_1d(offsets_s)
+            onsets_s = column_or_row_or_1d(onsets_s)
+            offsets_s = column_or_row_or_1d(offsets_s)
 
             if onsets_s.dtype != float or offsets_s.dtype != float:
                 raise TypeError('dtype of onsets_s and offsets_s '
