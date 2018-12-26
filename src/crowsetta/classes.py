@@ -9,6 +9,8 @@ from .validation import _num_samples, check_consistent_length, column_or_row_or_
 class Segment(object):
     """object that represents a segment of a time series,
      usually a syllable in a bout of birdsong"""
+    _FIELDS = ('label', 'onset_s', 'offset_s', 'onset_Hz', 'offset_Hz', 'file')
+
     label = attr.ib(converter=str)
     onset_s = attr.ib(converter=attr.converters.optional(float))
     offset_s = attr.ib(converter=attr.converters.optional(float))
