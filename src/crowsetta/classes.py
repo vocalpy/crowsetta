@@ -43,35 +43,22 @@ class Segment(object):
                    onset_Hz=onset_Hz, offset_Hz=offset_Hz)
 
 
-class SegmentList(list):
-    """represents an ordered list of Segment instances.
-    Used for segments attribute of Sequence class.
-    Subclasses a list to override the __repr__ method, basically so user gets
-    newlines after every Segment, making it hopefully easier to read.
-    """
-    def __init__(self, segments):
-        super().__init__()
-        self.segments = segments
-
-    def __repr__(self):
-        segments_str = '\n'.join([str(segment) for segment in self.segments])
-        return '<SegmentList(\n' + segments_str + '\n)>'
-
-    @classmethod
-    def from_list_or_tuple(cls, segments):
-        if type(segments) != list and type(segments) != tuple:
-            raise TypeError(f'Unable to create list of segments from a {type(segments)}')
-        if not all([type(segment) == Segment for segment in segments]):
-            raise TypeError('all items in segments must be of type Segment')
-        return cls(segments)
-
-
 @attr.s
 class Sequence:
     """object that represents a sequence of segments, such as a bout of birdsong made
     up of syllables
     """
-    segments = attr.ib(converter=SegmentList.from_list_or_tuple)
+    segments = attr.ib(converter=list)
+
+    @segments.validator
+    def all_items_are_Segments(self, attribute, value):
+        if not all([type(item) == Segment for item in value]):
+            raise TypeError('A Sequence must be made from a list of Segments but not all '
+                            'items in the list passed were Segments.')
+
+    def __repr__(self):
+        segments_str = '\n'.join([str(segment) for segment in self.segments])
+        return '<Sequence(\n' + segments_str + '\n)>'
 
     @classmethod
     def from_segments(cls, segments):
