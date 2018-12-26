@@ -56,7 +56,7 @@ class TestAnnotation(unittest.TestCase):
         for test_row, compare_row in zip(test_rows, compare_rows):
             assert test_row == compare_row
 
-    def test_csv2seqlist(self):
+    def test_csv2seq(self):
         csv_fname = os.path.join(self.test_data_dir,
                                  os.path.normpath('csv/gy6or6_032312.csv'))
         # convert csv to crowsetta list -- this is what we're testing
