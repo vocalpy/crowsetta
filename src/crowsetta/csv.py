@@ -11,7 +11,7 @@ from .classes import Sequence
 # but defined at top-level of the module, since these fields determine
 # what annotations the library can and cannot interpret.
 # The idea is to use the bare minimum of fields required.
-SYL_ANNOT_COLUMN_NAMES = ['filename',
+SYL_ANNOT_COLUMN_NAMES = ['file',
                           'onset_Hz',
                           'offset_Hz',
                           'onset_s',
@@ -117,26 +117,13 @@ def seq2csv(seq,
 
         writer.writeheader()
         for curr_seq in seq:
-            song_filename = curr_seq.file
-            if abspath:
-                song_filename = os.path.abspath(song_filename)
-            elif basename:
-                song_filename = os.path.basename(song_filename)
-
-            annot_dict_zipped = zip(curr_seq.onsets_Hz,
-                                    curr_seq.offsets_Hz,
-                                    curr_seq.onsets_s,
-                                    curr_seq.offsets_s,
-                                    curr_seq.labels,
-                                    )
-            for onset_Hz, offset_Hz, onset_s, offset_s, label in annot_dict_zipped:
-                syl_annot_dict = {'filename': song_filename,
-                                  'onset_Hz': onset_Hz,
-                                  'offset_Hz': offset_Hz,
-                                  'onset_s': onset_s,
-                                  'offset_s': offset_s,
-                                  'label': label}
-                writer.writerow(syl_annot_dict)
+            for segment in curr_seq.segments:
+                seg_dict = segment.asdict()
+                if abspath:
+                    seg_dict['file'] = os.path.abspath(seg_dict['file'])
+                elif basename:
+                    seg_dict['file'] = os.path.basename(seg_dict['file'])
+                    writer.writerow(seg_dict)
 
 
 def csv2seqlist(csv_fname):
