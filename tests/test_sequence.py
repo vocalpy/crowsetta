@@ -2,12 +2,12 @@ import unittest
 
 import numpy as np
 
-from crowsetta.classes import Segment, SegmentList, Sequence
+from crowsetta.classes import Segment, Sequence
 
 
-class TestSegmentList(unittest.TestCase):
+class TestSequence(unittest.TestCase):
     # test here because Sequence uses SegmentList
-    def test_SegmentList_init(self):
+    def test_init(self):
         a_segment = Segment.from_keyword(
             label='a',
             onset_Hz=16000,
@@ -15,9 +15,9 @@ class TestSegmentList(unittest.TestCase):
             file='bird21.wav'
         )
         list_of_segments = [a_segment] * 3
-        segments = SegmentList(segments=list_of_segments)
-        self.assertTrue(type(segments) == SegmentList)
-        self.assertTrue(hasattr(segments, 'segments'))
+        seq = Sequence(segments=list_of_segments)
+        self.assertTrue(type(seq) == Sequence)
+        self.assertTrue(hasattr(seq, 'segments'))
 
     def test_init_with_wrong_type_for_segments_raises(self):
         a_segment = Segment.from_keyword(
@@ -27,10 +27,10 @@ class TestSegmentList(unittest.TestCase):
             file='bird21.wav'
         )
         list_of_segments = [a_segment] * 3
-        set_of_segments = dict(zip(range(len(list_of_segments)),
-                                   list_of_segments))
+        dict_of_segments = dict(zip(range(len(list_of_segments)),
+                                    list_of_segments))
         with self.assertRaises(TypeError):
-            SegmentList.from_list_or_tuple(segments=set_of_segments)
+            Sequence(segments=dict_of_segments)
 
     def test_init_with_bad_type_in_segments_raises(self):
         a_segment = Segment.from_keyword(
@@ -48,10 +48,8 @@ class TestSegmentList(unittest.TestCase):
         }
         list_of_segments.append(segment_dict)
         with self.assertRaises(TypeError):
-            SegmentList.from_list_or_tuple(segments=list_of_segments)
+            Sequence(segments=list_of_segments)
 
-
-class TestSequence(unittest.TestCase):
     def test_from_segments(self):
         a_segment = Segment.from_keyword(
             label='a',
@@ -62,7 +60,7 @@ class TestSequence(unittest.TestCase):
         list_of_segments = [a_segment] * 3
         seq = Sequence.from_segments(list_of_segments)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == SegmentList)
+        self.assertTrue(type(seq.segments) == list)
 
     def test_from_keyword_bad_labels_type_raises(self):
         file = '0.wav'
@@ -83,7 +81,7 @@ class TestSequence(unittest.TestCase):
                                     offsets_s=offsets_s,
                                     file=file)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == SegmentList)
+        self.assertTrue(type(seq.segments) == list)
 
     def test_from_keyword_onset_offset_in_Hertz(self):
         file = '0.wav'
@@ -95,7 +93,7 @@ class TestSequence(unittest.TestCase):
                                     offsets_Hz=offsets_Hz,
                                     file=file)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == SegmentList)
+        self.assertTrue(type(seq.segments) == list)
 
     def test_from_dict_onset_offset_in_seconds(self):
         annot_dict = {
@@ -106,7 +104,7 @@ class TestSequence(unittest.TestCase):
         }
         seq = Sequence.from_dict(annot_dict=annot_dict)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == SegmentList)
+        self.assertTrue(type(seq.segments) == list)
 
     def test_from_dict_onset_offset_in_Hertz(self):
         annot_dict = {
@@ -117,7 +115,7 @@ class TestSequence(unittest.TestCase):
         }
         seq = Sequence.from_dict(annot_dict=annot_dict)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == SegmentList)
+        self.assertTrue(type(seq.segments) == list)
 
     def test_from_keyword_missing_onsets_and_offsets_raises(self):
         with self.assertRaises(ValueError):
