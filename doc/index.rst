@@ -7,11 +7,19 @@
 **Crowsetta**
 =============
 
-``crowsetta`` is a tool to work with any format for annotating birdsong.
-**The goal of** ``crowsetta`` **is to make sure that your ability to work with a dataset 
-of birdsong does not depend on your ability to work with any given format for 
-annotating that dataset.** What ``crowsetta`` gives you is **not** yet another format for 
-annotation (I promise!); instead you get some nice data types that make it easy to 
+``crowsetta`` is a tool to work with any format for annotating birdsong (or other
+vocalizations). **The goal of** ``crowsetta`` **is to make sure that your ability
+to work with a dataset of birdsong does not depend on your ability to work with
+any given format for annotating that dataset.**
+
+**Features**
+============
+
+**Data types that help you write clean code**
+---------------------------------------------
+
+What ``crowsetta`` gives you is **not** yet another format for
+annotation (I promise!). Instead you get some nice data types that make it easy to
 work with any format: namely, ``Sequence``\ s made up of ``Segment``\ s.
 
 .. code-block:: python
@@ -31,11 +39,7 @@ work with any format: namely, ``Sequence``\ s made up of ``Segment``\ s.
     onset_Hz=16000, offset_Hz=32000, file='bird21.wav'), Segment(label='a', onset_s=None, 
     offset_s=None, onset_Hz=16000, offset_Hz=32000, file='bird21.wav')])
 
-**Features**
-============
 
-**Data types that are easy to use in a Python program**
--------------------------------------------------------
 You can load annotation from your format of choice into ``Sequence``\ s of ``Segment``\ s
 (most conveniently with the ``Transcriber``, as explained below) and then use the 
 ``Sequence``\ s however you need to in your program.
@@ -47,7 +51,8 @@ pull syllables out of a spectrogram, you can do something like this:
 
    >>> syllables_from_sequences = []
    >>> for a_seq in seq:
-   ...     seq_dict = seq.to_dict()  # convert to dict with 
+   ...     seq_dict = seq.to_dict()  # convert Sequence to Python dictionary
+   ...     # so we can get the name of the audio file associated with the Sequence
    ...     spect = some_spectrogram_making_function(seq['file'])
    ...     syllables = []
    ...     for seg in seq.segments:
@@ -56,6 +61,7 @@ pull syllables out of a spectrogram, you can do something like this:
    ...     syllables_from_sequences.append(syllables)
 
 This code is succinct and looks like idiomatic Python.
+For a deeper dive into why this is useful, see :ref:`background`.
 
 **A**  ``Transcriber`` **that makes it convenient to work with any annotation format**
 --------------------------------------------------------------------------------------
@@ -65,12 +71,12 @@ with convenience functions to do the work of converting for you.
 
 .. code-block:: python
 
-    >>> from crowsetta import Transcriber
     >>> annotation_files = [
     ...     '~/Data/bird1_day1/song1_2018-12-07_072135.not.mat',
     ...     '~/Data/bird1_day1/song2_2018-12-07_072316.not.mat',
     ...     '~/Data/bird1_day1/song3_2018-12-07_072749.not.mat'
     ... ]
+    >>> from crowsetta import Transcriber
     >>> scribe = Transcriber()
     >>> seq = scribe.to_seq(file=notmat_files, format='notmat')
     >>> len(seq)
