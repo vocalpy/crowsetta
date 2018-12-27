@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## Unreleased
+### added
+- `data` module that downloads small example datasets for each annotation format
+  + includes `formats` function that is imported at package level 
+  and prints formats built in to `crowsetta`
+
+### changed
+- major revamp of docs
+
 ## 0.2.0a3
 ### changed
 - fix failing tests
