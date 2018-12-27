@@ -3,8 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Crowsetta
-=========
+=============
+**Crowsetta**
+=============
 
 ``crowsetta`` is a tool to work with any format for annotating birdsong.
 **The goal of** ``crowsetta`` **is to make sure that your ability to work with a dataset 
@@ -30,12 +31,17 @@ work with any format: namely, ``Sequence``\ s made up of ``Segment``\ s.
     onset_Hz=16000, offset_Hz=32000, file='bird21.wav'), Segment(label='a', onset_s=None, 
     offset_s=None, onset_Hz=16000, offset_Hz=32000, file='bird21.wav')])
 
-You can load annotation from your format of choice into ``Sequence``\ s of ``Segment``\ s 
+**Features**
+============
+
+**Data types that are easy to use in a Python program**
+-------------------------------------------------------
+You can load annotation from your format of choice into ``Sequence``\ s of ``Segment``\ s
 (most conveniently with the ``Transcriber``, as explained below) and then use the 
 ``Sequence``\ s however you need to in your program.
 
-For example, if you want to loop through the ``Segment``\ s of each ``Sequence``\ s to 
-pull syllables out of a spectrogram, you can do something like this, very Pythonically:
+For example, if you want to loop through the ``Segment``\ s of each ``Sequence`` to
+pull syllables out of a spectrogram, you can do something like this:
 
 .. code-block:: python
 
@@ -49,37 +55,80 @@ pull syllables out of a spectrogram, you can do something like this, very Python
    ...         syllables.append(syllable)
    ...     syllables_from_sequences.append(syllables)
 
-As mentioned above, ``crowsetta`` provides you with a ``Transcriber`` that comes equipped
+This code is succinct and looks like idiomatic Python.
+
+**A**  ``Transcriber`` **that makes it convenient to work with any annotation format**
+--------------------------------------------------------------------------------------
+
+As mentioned, ``crowsetta`` provides you with a ``Transcriber`` that comes equipped
 with convenience functions to do the work of converting for you. 
 
 .. code-block:: python
 
-    from crowsetta import Transcriber
-    scribe = Transcriber()
-    seq = scribe.to_seq(file=notmat_files, format='notmat')
+    >>> from crowsetta import Transcriber
+    >>> annotation_files = [
+    ...     '~/Data/bird1_day1/song1_2018-12-07_072135.not.mat',
+    ...     '~/Data/bird1_day1/song2_2018-12-07_072316.not.mat',
+    ...     '~/Data/bird1_day1/song3_2018-12-07_072749.not.mat'
+    ... ]
+    >>> scribe = Transcriber()
+    >>> seq = scribe.to_seq(file=notmat_files, format='notmat')
+    >>> len(seq)
+    3
+    >>> print(seq[0])
+    Sequence(segments=[Segment(label='a', onset_s=None, offset_s=None, onset_Hz=16000,
+    offset_Hz=32000, file='~/Data/bird1_day1/song1_2018-12-07_072135.cbin'),
+    Segment(label='b', onset_s=None, offset_s=None, ...
 
-You can even easily adapt the ``Transcriber`` to use your own in-house format, like so:
+**Easily use the** ``Transcriber`` **with your own annotation format**
+----------------------------------------------------------------------
+You can even easily tell the ``Transcriber`` to use your own in-house format, like so:
+
+.. code-block:: python
+
+        >>> my_config = {
+        ...     'myformat_name': {
+        ...         'module': '/home/MyUserName/Documents/Python/convert_myformat.py'
+        ...         'to_seq': 'myformat2seq',
+        ...         'to_csv': 'myformat2csv'}
+        ...     }
+        ... }
+        >>> scribe = crowsetta.Transcriber(user_config=my_config)
+        >>> seq = scribe.toseq(file='my_annotation.mat', file_format='myformat_name')
+
+For more about how that works, please see :ref:`how-to-user-format`.
+
+**Save and load annotations in plain text files**
+-------------------------------------------------
+If you need it to, ``crowsetta`` can save your ``Sequence``\ s of ``Segment``\ s
+as a plain text file in the comma-separated values (csv) format. This file format
+was chosen because it is widely considered to be a very robust way to share data.
 
 .. code-block:: python
 
     from crowsetta import Transcriber
-    scribe = Transciber(user_config=your_config)
+    scribe = Transcriber(user_config=your_config)
     scribe.to_csv(file_'your_annotation_file.mat',
                   csv_filename='your_annotation.csv')
 
-For more on how that works, please see :doc:`example`.
 
-Features
---------
+An example csv looks like this:
 
-- convert annotation formats to ``Sequence`` objects that can be easily used in a Python program
-- convert ``Sequence`` objects to comma-separated value text files that can be read on any system
-- load comma-separated values files back into Python and convert to other formats
-- easily use with your own annotation format
+.. literalinclude:: ../tests/test_data/csv/gy6or6_032312.csv
+   :lines: 1-5
+   :language: none
 
-Getting Started
----------------
+Now that you have that, you can load it into a pandas_ dataframe or an Excel
+spreadsheet or a SQL database, or whatever you want.
 
+.. _pandas: https://pandas.pydata.org/
+
+You might find this useful in any situation where you want to share audio files of
+song and some associated annotations, but you don't want to require the user to
+install a large application in order to work with the annotation files.
+
+**Getting Started**
+-------------------
 Install ``crowsetta`` by running:
 
 .. code-block:: console
@@ -87,49 +136,58 @@ Install ``crowsetta`` by running:
     $ pip install crowsetta
     
 
-If you are new to the library, start with :doc:`intro`.
+If you are new to the library, start with :ref:`tutorial`.
 
 To see an example of using ``crowsetta`` to work with your own annotation format, 
-see :doc:`example`.
+see :ref:`how-to-user-format`.
 
-Project Information
--------------------
+**Table of Contents**
+=====================
+
+.. toctree::
+   :maxdepth: 2
+
+   tutorial
+   howto
+   background
+
+**Project Information**
+=======================
+
+``crowsetta`` was developed for use with the songdeck_ and
+hybrid-vocal-classifier_ libraries.
+
+.. _songdeck: https://github.com/NickleDave/songdeck
+
+.. _hybrid-vocal-classifier: https://hybrid-vocal-classifier.readthedocs.io/en/latest/
 
 Support
-~~~~~~~
+-------
 
 If you are having issues, please let us know.
 
 - Issue Tracker: https://github.com/NickleDave/crowsetta/issues
 
 Contribute
-~~~~~~~~~~
+----------
 
 - Issue Tracker: https://github.com/NickleDave/crowsetta/issues
 - Source Code: https://github.com/NickleDave/crowsetta
 
 License
-~~~~~~~
+-------
 
 The project is licensed under the 
 `BSD license <https://github.com/NickleDave/crowsetta/blob/master/LICENSE>`_.
 
 CHANGELOG
-~~~~~~~~~
+---------
 You can see project history and work in progress in the 
 `CHANGELOG <https://github.com/NickleDave/crowsetta/blob/master/doc/CHANGELOG.md>`_.
 
 Citation
-~~~~~~~~
+--------
 If you use ``crowsetta``, please cite the DOI:
 
 .. image:: https://zenodo.org/badge/159904494.svg
    :target: https://zenodo.org/badge/latestdoi/159904494
-
-Table of Contents
------------------
-
-.. toctree::
-   :maxdepth: 2
-   intro
-   example
