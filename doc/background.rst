@@ -1,18 +1,21 @@
-A Gentle Introduction to Working with ``crowsetta``
-===================================================
+==============
+**Background**
+==============
 
-Why you need ``crowsetta``
---------------------------
+**Why is** ``crowsetta`` **needed**?
+====================================
 
-You need ``crowsetta`` if you need to work with birdsong or any other vocalization that is
-annotated in some way, meaning someone took the time to figure out where elements of the
-vocalizations start and stop, and has assigned labels to those elements. Maybe you are a
-neuroscientist trying to figure out how songbirds learn their song, or why mice emit ultrasonic
-calls. Or maybe you're an ecologist studying dialects of bird species, or maybe you are a
-linguist studying accents.
+The target audience of ``crowsetta`` is anyone that works with birdsong
+or any other vocalization that is annotated in some way, meaning someone took the time to
+figure out where elements of the vocalizations start and stop, and has assigned labels to those
+elements. Maybe you are a neuroscientist trying to figure out how songbirds learn their song,
+or why mice emit ultrasonic calls. Or maybe you're an ecologist studying dialects of finches
+distributed across Asia, or maybe you are a linguist studying accents in the
+Antilles, or a speech pathologist looking for phonetic changes that indicate early onset
+Alzheimer's disease, etc., etc., ...
 
-To run a computational analysis on this kind of data, you'll need to get it out of a file,
-which often means you'll end up writing something like this:
+To run a computational analysis on this kind of data, you'll need to get the annotation
+out of a file, which often means you'll end up writing something like this:
 
 .. code-block:: python
 
@@ -47,8 +50,8 @@ What would be nice is to have data types that represent annotation in a concise 
 that we can manipulate like we would some native Python data type like a list or a
 dictionary. ``crowsetta`` provides such data types: ``Sequence``\ s and ``Segment``\ s.
 
-How ``crowsetta`` works
------------------------
+**How** ``crowsetta`` **works**
+===============================
 
 Internally, ``crowsetta`` takes whatever format you give it for a pile of files,
 and turns that into a bunch of ``Sequence``\ s made up of ``Segment``\ s. For someone working
