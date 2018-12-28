@@ -31,12 +31,17 @@ REQUIRED = [
 ]
 
 DEV_DEPS = [
-    'sphinx', 'ipython', 'coverage'
+    'coverage', 'jupyterlab',
+]
+
+DOCS_DEPS = [
+    'sphinx', 'ipython',
 ]
 
 # What packages are optional?
 EXTRAS = {
     'dev': DEV_DEPS,
+    'docs': DOC_DEPS,
 }
 
 # The rest you shouldn't have to touch too much :)
