@@ -41,7 +41,7 @@ DOCS_DEPS = [
 # What packages are optional?
 EXTRAS = {
     'dev': DEV_DEPS,
-    'docs': DOC_DEPS,
+    'docs': DOCS_DEPS,
 }
 
 # The rest you shouldn't have to touch too much :)
