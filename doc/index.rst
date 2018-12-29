@@ -102,7 +102,7 @@ You can even easily tell the ``Transcriber`` to use your own in-house format, li
         >>> scribe = crowsetta.Transcriber(user_config=my_config)
         >>> seq = scribe.toseq(file='my_annotation.mat', file_format='myformat_name')
 
-For more about how that works, please see :ref:`how-to-user-format`.
+For more about how that works, please see :ref:`howto-user-format`.
 
 **Save and load annotations in plain text files**
 -------------------------------------------------
@@ -145,7 +145,7 @@ Install ``crowsetta`` by running:
 If you are new to the library, start with :ref:`tutorial`.
 
 To see an example of using ``crowsetta`` to work with your own annotation format, 
-see :ref:`how-to-user-format`.
+see :ref:`howto-user-format`.
 
 **Table of Contents**
 =====================
