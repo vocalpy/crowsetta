@@ -1,10 +1,12 @@
+.. _howto:
+
 ==========
 **How-To**
 ==========
 
-.. _how-to-user-format:
+This section shows you how to use `crowsetta` for specific tasks.
 
-**How to use** ``crowsetta`` **with your own annotation format**
-================================================================
+.. toctree::
+   :maxdepth: 2
 
-example of how to use ``crowsetta`` with your own annotation format.
+   howto-user-format
