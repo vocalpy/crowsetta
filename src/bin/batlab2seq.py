@@ -4,8 +4,10 @@ from scipy.io import loadmat
 from crowsetta.classes import Sequence
 
 
-def example2seq(file):
-    """example of a function that unpacks annotation from
+def batlab2seq(file):
+    """unpack BatLAB annotation into Sequence object
+
+    example of a function that unpacks annotation from
     a complicated data structure and returns the necessary
     data from a Sequence object"""
     mat = loadmat(file, squeeze_me=True)
@@ -36,11 +38,15 @@ def example2seq(file):
                              "the segType parsed as type {} which is "
                              "not recognized.".format(wav_filename,
                                                       type(labels)))
-        seq = Sequence(file=filename,
-                       labels=labels,
-                       onsets_s=onsets_s,
-                       offsets_s=offsets_s,
-                       onsets_Hz=None,
-                       offsets_Hz=None)
+        BATLAB_SAMP_FREQ = 33100
+        onsets_Hz = np.round(onsets_s * BATLAB_SAMP_FREQ).astype(int)
+        offsets_Hz = np.round(onsets_s * BATLAB_SAMP_FREQ).astype(int)
+
+        seq = Sequence.from_keyword(file=filename,
+                                    labels=labels,
+                                    onsets_s=onsets_s,
+                                    offsets_s=offsets_s,
+                                    onsets_Hz=onsets_Hz,
+                                    offsets_Hz=offsets_Hz)
         seq_list.append(seq)
     return seq_list
