@@ -22,14 +22,14 @@ def batlab2seq(file):
         # instead gets ndarray out of a zero-length ndarray of dtype=object.
         # This is just weirdness that results from loading complicated data
         # structure in .mat file.
-        onsets_s = annotation['segOnset'].tolist()
-        offsets_s = annotation['segOffset'].tolist()
-        labels = annotation['segType'].tolist()
-        if type(labels) == int:
+        seg_onsets = annotation['segOnset'].tolist()
+        seg_offsets = annotation['segOffset'].tolist()
+        seg_types = annotation['segType'].tolist()
+        if type(seg_types) == int:
             # this happens when there's only one syllable in the file
             # with only one corresponding label
-            labels = np.asarray([labels])  # so make it a one-element list
-        elif type(labels) == np.ndarray:
+            seg_types = np.asarray([seg_types])  # so make it a one-element list
+        elif type(seg_types) == np.ndarray:
             # this should happen whenever there's more than one label
             pass
         else:
@@ -39,14 +39,14 @@ def batlab2seq(file):
                              "not recognized.".format(wav_filename,
                                                       type(labels)))
         BATLAB_SAMP_FREQ = 33100
-        onsets_Hz = np.round(onsets_s * BATLAB_SAMP_FREQ).astype(int)
-        offsets_Hz = np.round(onsets_s * BATLAB_SAMP_FREQ).astype(int)
+        seg_onsets_Hz = np.round(seg_onsets * BATLAB_SAMP_FREQ).astype(int)
+        seg_offsets_Hz = np.round(seg_offsets * BATLAB_SAMP_FREQ).astype(int)
 
         seq = Sequence.from_keyword(file=filename,
-                                    labels=labels,
-                                    onsets_s=onsets_s,
-                                    offsets_s=offsets_s,
-                                    onsets_Hz=onsets_Hz,
-                                    offsets_Hz=offsets_Hz)
+                                    labels=seg_types,
+                                    onsets_s=seg_onsets,
+                                    offsets_s=seg_offsets,
+                                    onsets_Hz=seg_onsets_Hz,
+                                    offsets_Hz=seg_offsets_Hz)
         seq_list.append(seq)
     return seq_list
