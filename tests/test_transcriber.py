@@ -73,7 +73,7 @@ class TestTranscriber(unittest.TestCase):
     def test_example_to_seq_path_import(self):
         user_config = {
             'example': {
-                'module': str(self.example_script_dir.joinpath('example.py')),
+                'module': str(self.example_script_dir.joinpath('batlab2seq.py')),
                 'to_seq': 'example2seq',
                 'to_csv': 'example2csv',
                 'to_format': 'None',
