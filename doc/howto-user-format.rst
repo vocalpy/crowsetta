@@ -29,8 +29,8 @@ annotation format. Here’s an outline of the steps we’ll walk through:
 5. use the ``to_csv`` method to share your annotation in a simple text
    file that others can use without having to know about the format
 
-Case Study: the ``BatLAB`` format:
-----------------------------------
+Case Study: the ``BatLAB`` format
+---------------------------------
 
 Let’s say you work in the Schumacher lab, studying bat vocalizations.
 The lab research specialist, Alfred, has spent years writing an
@@ -62,18 +62,29 @@ You figured out which bits of the code will be common to all your
 projects (the bits above) and you make that into a function. At first
 you just copy and paste it into all your projects. Then you decide you
 also want to save everyone else in your lab the effort of writing the
-same code, so you put the script on your lab’s Github page. Cool, cool.
+same code, so you put the script on your lab’s Github page. This is a
+step in the right direction, although your function gives you back a
+``list`` of ``dict``\ s. You have to type a lot of things like
+``annot_list[0].annot_dict['seg_onsets']`` which gets kind of annoying
+and makes you wonder if you should spend Christmas break learning how to
+use one of those hacker text editors like ``vim``.
 
-But now you’re publishing a PLOS Comp Biology paper, *Pidgeon Bat:
-Emergence of Dialects in Colonies of Multiple Bat Species*. You want to
-share your data with the world, mainly to satisfy reviewer #3 (who you
-are pretty sure from the way they write is Oswald Cobblepot, professor
-emeritus of ethology and author of the seminal review from 1982, *Bat
-Calls: A Completely Innate Behavior Encoded Genetically*). The problem
-is that reviewer #3 only knows how to write Fortran code and definitely
-doesn’t have the patience to read through ``parse_batlab_mat`` to figure
-out if they are convinced that your group can consistently record and
-identify bat calls.
+But now you’re publishing a paper in *PLOS Comp. Bio.* called “Pidgeon
+Bat: Emergence of Dialects in Colonies of Multiple Bat Species”. You
+want to share your data with the world, mainly to mollify reviewer #3
+(who you are pretty sure from the way they write is Oswald Cobblepot,
+professor emeritus of ethology at Metropolitan University of Fruitville,
+Florida, and author of the seminal review from 1982, “Bat Calls: A
+Completely Innate Behavior Encoded Genetically”). The problem is that
+reviewer #3 only knows how to write Fortran code and definitely doesn’t
+have the patience to read through ``parse_batlab_mat`` to figure out if
+they are convinced that your group can consistently record and identify
+bat calls.
+
+What you really want is to share your data and write your code in a way
+that doesn’t depend on anyone knowing anything about ``BatLAB``
+or\ ``SoNAR`` and how they save data and annotations. This is where
+``crowsetta`` comes to your rescue.
 
 Okay, now that we’ve set up some background for our case study, let’s go
 through the steps we outlined above.
@@ -93,7 +104,8 @@ through the steps we outlined above.
     from scipy.io import loadmat
     bat1_annotation = loadmat('../src/bin/bird1_annotation.mat')
     print('variables in .mat file:',
-          [var for var in list(bat1.keys()) if not var.startswith('__')]
+          [var for var in list(bat1_annotation.keys())
+           if not var.startswith('__')]
          )
 
 
@@ -106,9 +118,9 @@ Here’s the code you wrote to unpack the ``.mat`` files:
 
 .. code:: ipython3
 
-    # %load -r 13-14,20-43 ../src/bin/batlab2seq.py
-    mat = loadmat(file, squeeze_me=True)
-    seq_list = []
+    # %load -r 7-8,14-45 ../src/bin/parsebat.py
+    mat = loadmat(mat_file, squeeze_me=True)
+    annot_list = []
     for filename, annotation in zip(mat['filenames'], mat['annotations']):
         # below, .tolist() does not actually create a list,
         # instead gets ndarray out of a zero-length ndarray of dtype=object.
@@ -133,6 +145,14 @@ Here’s the code you wrote to unpack the ``.mat`` files:
         BATLAB_SAMP_FREQ = 33100
         seg_onsets_Hz = np.round(seg_onsets * BATLAB_SAMP_FREQ).astype(int)
         seg_offsets_Hz = np.round(seg_offsets * BATLAB_SAMP_FREQ).astype(int)
+        annot_dict = {
+            'seg_types': seg_types,
+            'seg_onsets': seg_onsets,
+            'seg_offsets': seg_offsets,
+            'seg_onsets_Hz': seg_onsets_Hz,
+            'seg_offsets_Hz': seg_offsets_Hz,
+        }
+        annot_list.append(annot_dict)
 
 Like we said above, the code has some weird, hard-to-read lines to deal
 with the way that the complicated MATLAB ``struct``\ s created by
@@ -143,26 +163,75 @@ has several repetitive steps to deal with the idiosyncracies of
 the calls from seconds back to Hertz so you can find those times in the
 raw audio files.
 
+When it runs on a file, you get back an ``annot_list`` where each item
+is an ``annot_dict`` that contains the annotations for a file, like
+this:
+
+.. code:: python
+
+   annot_dict = {
+       'seg_types': ,
+       'seq_onsets':
+   }
+
 Again, as we said above, you turned your code into a function to make it
 easier to use across projects:
 
 .. code:: python
 
-   def parse_batlab_mat(mat_file):
-       # code above here
-       return seg_types, seg_onsets, seg_offsets, seg_onsets_Hz, seg_offsets_Hz
+   import numpy as np
+   from scipy.io import loadmat
 
-This is where ``crowsetta`` comes to your rescue. All you need to do is
-take this code you already wrote, and instead of returning all of those
-variables, you can turn them into a ``Sequence``.
+   def parse_batlab_mat(mat_file):
+       """parse batlab annotation.mat file"""
+       # code from above
+       return annot_list
+
+All you need to do is take this code you already wrote, and instead of
+returning all of those variables, you can turn them into a ``Sequence``.
 
 Let’s make a ``Sequence`` using the ``from_keyword`` function.
 
 .. code:: ipython3
 
-    %load ../src/bin/parsebat.py  # contains parse_batlab_mat function
-    file0 = bat1['filenames'][0]
-    annot0 = bat1['annotations'][0]
+    cd ../src/bin
+
+
+.. parsed-literal::
+
+    /home/ildefonso/Documents/repositories/coding/birdsong/crowsetta/src/bin
+
+
+.. code:: ipython3
+
+    from parsebat import parse_batlab_mat
+    
+    annot_list = parse_batlab_mat(mat_file='bird1_annotation.mat')
+
+
+.. parsed-literal::
+
+    > /home/ildefonso/Documents/repositories/coding/birdsong/crowsetta/src/bin/parsebat.py(20)parse_batlab_mat()
+    -> seg_onsets = annotation['segOnset'].tolist()
+
+
+.. parsed-literal::
+
+    (Pdb)  annotation
+
+
+.. parsed-literal::
+
+    (array([0.00297619, 0.279125  , 0.55564729, 0.62654167, 0.68429167,
+           0.73929167, 0.79429167, 0.85020833, 0.906125  , 0.96479167,
+           1.02345833, 1.07754167, 1.128875  , 1.19579167, 1.25354167]), array([0.14150433, 0.504625  , 0.59629167, 0.64945833, 0.70445833,
+           0.75945833, 0.83004167, 0.884125  , 0.94095833, 1.013375  ,
+           1.06654167, 1.11156764, 1.17654167, 1.23154167, 1.29020833]), array([1, 1, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], dtype=uint8))
+
+
+.. parsed-literal::
+
+    (Pdb)  q
 
 
 ::
@@ -170,60 +239,45 @@ Let’s make a ``Sequence`` using the ``from_keyword`` function.
 
     ---------------------------------------------------------------------------
 
-    SyntaxError                               Traceback (most recent call last)
+    BdbQuit                                   Traceback (most recent call last)
 
-    ~/anaconda3/envs/conbirt-env/lib/python3.6/site-packages/IPython/core/interactiveshell.py in find_user_code(self, target, raw, py_only, skip_encoding_cookie, search_ns)
-       3586         try:                                              # User namespace
-    -> 3587             codeobj = eval(target, self.user_ns)
-       3588         except Exception:
-
-
-    SyntaxError: invalid syntax (<string>, line 1)
-
-    
-    During handling of the above exception, another exception occurred:
-
-
-    ValueError                                Traceback (most recent call last)
-
-    <ipython-input-25-02ad1ffafe42> in <module>
-    ----> 1 get_ipython().run_line_magic('load', '../src/bin/parsebat.py  # contains parse_batlab_mat function')
+    <ipython-input-3-017ab488e7f0> in <module>
+          1 from parsebat import parse_batlab_mat
+          2 
+    ----> 3 annot_list = parse_batlab_mat(mat_file='bird1_annotation.mat')
     
 
-    ~/anaconda3/envs/conbirt-env/lib/python3.6/site-packages/IPython/core/interactiveshell.py in run_line_magic(self, magic_name, line, _stack_depth)
-       2285                 kwargs['local_ns'] = sys._getframe(stack_depth).f_locals
-       2286             with self.builtin_trap:
-    -> 2287                 result = fn(*args,**kwargs)
-       2288             return result
-       2289 
+    ~/Documents/repositories/coding/birdsong/crowsetta/src/bin/parsebat.py in parse_batlab_mat(mat_file)
+         18         # structure in .mat file.
+         19         import pdb;pdb.set_trace()
+    ---> 20         seg_onsets = annotation['segOnset'].tolist()
+         21         seg_offsets = annotation['segOffset'].tolist()
+         22         seg_types = annotation['segType'].tolist()
 
 
-    <decorator-gen-47> in load(self, arg_s)
+    ~/Documents/repositories/coding/birdsong/crowsetta/src/bin/parsebat.py in parse_batlab_mat(mat_file)
+         18         # structure in .mat file.
+         19         import pdb;pdb.set_trace()
+    ---> 20         seg_onsets = annotation['segOnset'].tolist()
+         21         seg_offsets = annotation['segOffset'].tolist()
+         22         seg_types = annotation['segType'].tolist()
 
 
-    ~/anaconda3/envs/conbirt-env/lib/python3.6/site-packages/IPython/core/magic.py in <lambda>(f, *a, **k)
-        185     # but it's overkill for just that one bit of state.
-        186     def magic_deco(arg):
-    --> 187         call = lambda f, *a, **k: f(*a, **k)
-        188 
-        189         if callable(arg):
+    ~/anaconda3/envs/conbirt-env/lib/python3.6/bdb.py in trace_dispatch(self, frame, event, arg)
+         49             return # None
+         50         if event == 'line':
+    ---> 51             return self.dispatch_line(frame)
+         52         if event == 'call':
+         53             return self.dispatch_call(frame, arg)
 
 
-    ~/anaconda3/envs/conbirt-env/lib/python3.6/site-packages/IPython/core/magics/code.py in load(self, arg_s)
-        333         search_ns = 'n' in opts
-        334 
-    --> 335         contents = self.shell.find_user_code(args, search_ns=search_ns)
-        336 
-        337         if 's' in opts:
+    ~/anaconda3/envs/conbirt-env/lib/python3.6/bdb.py in dispatch_line(self, frame)
+         68         if self.stop_here(frame) or self.break_here(frame):
+         69             self.user_line(frame)
+    ---> 70             if self.quitting: raise BdbQuit
+         71         return self.trace_dispatch
+         72 
 
 
-    ~/anaconda3/envs/conbirt-env/lib/python3.6/site-packages/IPython/core/interactiveshell.py in find_user_code(self, target, raw, py_only, skip_encoding_cookie, search_ns)
-       3588         except Exception:
-       3589             raise ValueError(("'%s' was not found in history, as a file, url, "
-    -> 3590                                 "nor in the user namespace.") % target)
-       3591 
-       3592         if isinstance(codeobj, str):
-
-
-    ValueError: '../src/bin/parsebat.py # contains parse_batlab_mat function' was not found in history, as a file, url, nor in the user namespace.
+    BdbQuit: 
 

@@ -45,16 +45,16 @@ You can download small example datasets of the built-in formats with the
 
 .. code:: ipython3
 
-    crowsetta.data.fetch(format='notmat')
+    crowsetta.data.fetch(format='notmat', destination_path='./data/')
 
 
 .. parsed-literal::
 
     Downloading https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/13993349/cbinnotmat.tar.gz (8.6 MB)
-    [........................................] 100.00000 \ (  8.6 MB /   8.6 MB,   2.5 MB/s)   
-    File saved as ./cbin-notmat.tar.gz.
+    [........................................] 100.00000 / (  8.6 MB /   8.6 MB,   2.5 MB/s)   
+    File saved as ./data/cbin-notmat.tar.gz.
     
-    extracting ./cbin-notmat.tar.gz
+    extracting ./data/cbin-notmat.tar.gz
 
 
 Here we downloaded some ``.cbin`` audio files. Each ``.cbin`` file has
@@ -62,31 +62,31 @@ an associated ``.not.mat`` file that contains the annotation.
 
 .. code:: ipython3
 
-    !ls ./cbin-notmat/032312/*.cbin*
+    !ls ./data/cbin-notmat/032312/*.cbin*
 
 
 .. parsed-literal::
 
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin.not.mat
 
 
 (It doesn’t matter much for our purposes, but … files in the
@@ -111,22 +111,22 @@ use the ``glob`` function built into Python to do so.
 .. code:: ipython3
 
     from glob import glob  # function that finds files matching an expression
-    notmats = glob('./cbin-notmat/032312/*.not.mat')
+    notmats = glob('./data/cbin-notmat/032312/*.not.mat')
     for notmat in notmats: print(notmat)
 
 
 .. parsed-literal::
 
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin.not.mat
-    ./cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin.not.mat
+    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin.not.mat
 
 
 Now that we have our annotation files in a variable, we use the
@@ -197,8 +197,8 @@ part of the sequence defined by an ``onset`` and ``offset`` that has a
     type of first element of seq:  <class 'crowsetta.classes.Sequence'>
     
     First two Segments of first Sequence:
-    Segment(label='i', onset_s=0.435, offset_s=0.511, onset_Hz=13924, offset_Hz=16350, file='./cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin')
-    Segment(label='i', onset_s=0.583, offset_s=0.662, onset_Hz=18670, offset_Hz=21184, file='./cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin')
+    Segment(label='i', onset_s=0.435, offset_s=0.511, onset_Hz=13924, offset_Hz=16350, file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin')
+    Segment(label='i', onset_s=0.583, offset_s=0.662, onset_Hz=18670, offset_Hz=21184, file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin')
 
 
 **Using** ``crowsetta`` **data types to write clean code**
@@ -319,7 +319,7 @@ the signal, and then smooths it with a sliding window.
         cbin = sequence.to_dict()['file']
         raw_audio, samp_freq = evfuncs.load_cbin(cbin)
         smoothed = evfuncs.smooth_data(raw_audio, samp_freq,
-                                       freq_cutoffs=[500, 10000])
+                                       freq_cutoffs=(500, 10000))
         for segment in sequence.segments:
             smoothed_seg = smoothed[segment.onset_Hz:segment.offset_Hz]
             mean_seg_amp = np.mean(smoothed_seg)
@@ -339,16 +339,16 @@ the signal, and then smooths it with a sliding window.
 
 .. parsed-literal::
 
-    mean of mean amplitude for syllable a: 208207.12402863556
+    mean of mean amplitude for syllable a: 208207.1240286356
     mean of mean amplitude for syllable b: 16679.46415410411
-    mean of mean amplitude for syllable c: 1327150.5563241516
-    mean of mean amplitude for syllable d: 510289.3285039273
+    mean of mean amplitude for syllable c: 1327150.5563241513
+    mean of mean amplitude for syllable d: 510289.32850392733
     mean of mean amplitude for syllable e: 846590.5009779686
-    mean of mean amplitude for syllable f: 522099.17255753896
-    mean of mean amplitude for syllable g: 192993.6353244887
-    mean of mean amplitude for syllable h: 167343.7423264921
+    mean of mean amplitude for syllable f: 522099.1725575389
+    mean of mean amplitude for syllable g: 192993.63532448874
+    mean of mean amplitude for syllable h: 167343.74232649204
     mean of mean amplitude for syllable i: 16903.56906972767
-    mean of mean amplitude for syllable j: 3005979.15761373
+    mean of mean amplitude for syllable j: 3005979.1576137305
     mean of mean amplitude for syllable k: 170753.77886737106
 
 
