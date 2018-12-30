@@ -16,9 +16,8 @@ def parse_batlab_mat(mat_file):
         # instead gets ndarray out of a zero-length ndarray of dtype=object.
         # This is just weirdness that results from loading complicated data
         # structure in .mat file.
-        import pdb;pdb.set_trace()
-        seg_onsets = annotation['segOnset'].tolist()
-        seg_offsets = annotation['segOffset'].tolist()
+        seg_start_times = annotation['segFileStartTimes'].tolist()
+        seg_end_times = annotation['segFileEndTimes'].tolist()
         seg_types = annotation['segType'].tolist()
         if type(seg_types) == int:
             # this happens when there's only one syllable in the file
@@ -31,17 +30,18 @@ def parse_batlab_mat(mat_file):
             # something unexpected happened
             raise ValueError("Unable to load labels from {}, because "
                              "the segType parsed as type {} which is "
-                             "not recognized.".format(wav_filename,
-                                                      type(labels)))
-        BATLAB_SAMP_FREQ = 33100
-        seg_onsets_Hz = np.round(seg_onsets * BATLAB_SAMP_FREQ).astype(int)
-        seg_offsets_Hz = np.round(seg_offsets * BATLAB_SAMP_FREQ).astype(int)
+                             "not recognized.".format(filename,
+                                                      type(seg_types)))
+        samp_freq = annotation['fs'].tolist()
+        seg_start_times_Hz = np.round(seg_start_times * samp_freq).astype(int)
+        seg_end_times_Hz = np.round(seg_end_times * samp_freq).astype(int)
         annot_dict = {
+            'audio_file': filename,
             'seg_types': seg_types,
-            'seg_onsets': seg_onsets,
-            'seg_offsets': seg_offsets,
-            'seg_onsets_Hz': seg_onsets_Hz,
-            'seg_offsets_Hz': seg_offsets_Hz,
+            'seg_start_times': seg_start_times,
+            'seg_end_times': seg_end_times,
+            'seg_start_times_Hz': seg_start_times_Hz,
+            'seg_end_times_Hz': seg_end_times_Hz,
         }
         annot_list.append(annot_dict)
 

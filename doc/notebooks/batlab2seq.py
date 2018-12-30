@@ -4,16 +4,27 @@ from scipy.io import loadmat
 from crowsetta.classes import Sequence
 
 
-def batlab2seq(file):
-    """unpack BatLAB annotation into Sequence object
+def batlab2seq(mat_file):
+    """unpack BatLAB annotation into list of Sequence objects
 
     example of a function that unpacks annotation from
     a complicated data structure and returns the necessary
-    data from a Sequence object"""
-    mat = loadmat(file, squeeze_me=True)
+    data as a Sequence object
+
+    Parameters
+    ----------
+    mat_file : str
+        filename of .mat file created by BatLAB
+
+    Returns
+    -------
+    seq_list : list
+        of Sequence objects
+    """
+    mat = loadmat(mat_file, squeeze_me=True)
     seq_list = []
     # annotation structure loads as a Python dictionary with two keys
-    # one maps to a list of filenames, 
+    # one maps to a list of filenames,
     # and the other to a Numpy array where each element is the annotation
     # coresponding to the filename at the same index in the list.
     # We can iterate over both by using the zip() function.
@@ -22,8 +33,8 @@ def batlab2seq(file):
         # instead gets ndarray out of a zero-length ndarray of dtype=object.
         # This is just weirdness that results from loading complicated data
         # structure in .mat file.
-        seg_onsets = annotation['segOnset'].tolist()
-        seg_offsets = annotation['segOffset'].tolist()
+        seg_start_times = annotation['segFileStartTimes'].tolist()
+        seg_end_times = annotation['segFileEndTimes'].tolist()
         seg_types = annotation['segType'].tolist()
         if type(seg_types) == int:
             # this happens when there's only one syllable in the file
@@ -37,16 +48,16 @@ def batlab2seq(file):
             raise ValueError("Unable to load labels from {}, because "
                              "the segType parsed as type {} which is "
                              "not recognized.".format(wav_filename,
-                                                      type(labels)))
-        BATLAB_SAMP_FREQ = 33100
-        seg_onsets_Hz = np.round(seg_onsets * BATLAB_SAMP_FREQ).astype(int)
-        seg_offsets_Hz = np.round(seg_offsets * BATLAB_SAMP_FREQ).astype(int)
+                                                      type(seg_types)))
+        samp_freq = annotation['fs'].tolist()
+        seg_start_times_Hz = np.round(seg_start_times * samp_freq).astype(int)
+        seg_end_times_Hz = np.round(seg_end_times * samp_freq).astype(int)
 
         seq = Sequence.from_keyword(file=filename,
                                     labels=seg_types,
-                                    onsets_s=seg_onsets,
-                                    offsets_s=seg_offsets,
-                                    onsets_Hz=seg_onsets_Hz,
-                                    offsets_Hz=seg_offsets_Hz)
+                                    onsets_s=seg_start_times,
+                                    offsets_s=seg_end_times,
+                                    onsets_Hz=seg_start_times_Hz,
+                                    offsets_Hz=seg_end_times_Hz)
         seq_list.append(seq)
     return seq_list
