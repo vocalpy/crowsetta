@@ -6,5 +6,7 @@ MANIFEST
 *.pyc
 .idea/
 doc/_build/
-notebooks/*/
+doc/notebooks/data/*/
 .ipynb_checkpoints/
+./notebooks/*.ipynb
+./notebooks/data/*/
