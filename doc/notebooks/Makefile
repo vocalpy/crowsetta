@@ -1,36 +1,37 @@
-$FORMAT_DIRS = $(wildcard ./*/)
-$IPYNB_HERE = $(wildcard ./%.ipynb)
-$IPYNB_WITHOUT_RAW = $(patsubst ./%.ipynb, ../../notebooks/%.ipynb, $(IPYNB_HERE))
-$RST_FROM_IPYNB = $(patsubst ./%.ipynb, ../%.rst, $(IPYNB_HERE)
+DATA_FORMAT_DIRS=$(wildcard ./data/*/)
+IPYNB_HERE=$(wildcard ./*.ipynb)
+IPYNB_WITHOUT_RAW=$(patsubst ./%.ipynb, ../../notebooks/%.ipynb, $(IPYNB_HERE))
+RST_FROM_IPYNB=$(patsubst ./%.ipynb, ../%.rst, $(IPYNB_HERE))
 
 ## all			: make all targets
 .PHONY: all
 all : ipynb_without_raw rst_from_ipynb
 
 ## ipynb_without_raw	: copy notebooks into crowsetta/notebooks, but remove raw cells (with rst directives)
-ipynb_wihout_raw : $(IPYNB_WITHOUT_RAW)
+ipynb_without_raw : $(IPYNB_WITHOUT_RAW)
 
 ../../notebooks/%.ipynb : ./%.ipynb
-	jupyter nbconvert --to notebook @< --output @* --TemplateExporter.exclude_raw:True
+	jupyter nbconvert --to notebook $< --output=$@ --TemplateExporter.exclude_raw=True
 
 ## rst_from_ipynb	: convert notebooks into rst; raw cells containing rst directives will be kept
 rst_from_ipynb : $(RST_FROM_IPYNB)
 
 ../%.rst : ./%.ipynb
-	jupyter nbconvert --to rst @< --output @*
+	jupyter nbconvert --to rst $< --output=$@
 
 ## variables		: show variables defined in this makefile
 .PHONY: variables
 variables :
-	@echo        FORMAT_DIRS:   $(FORMAT_DIRS)
-	@echo         IPYNB_HERE:   $(IPYNB_HERE)
-	@echo  IPYNB_WITHOUT_RAW:   $(IPYNB_WITHOUT_RAW)
-	@echo     RST_FROM_IPYNB:   $(RST_FROM_IPYNB)
+	@echo	       ALL_FILES: 	$(ALL_FILES)
+	@echo   DATA_FORMAT_DIRS:	$(DATA_FORMAT_DIRS)
+	@echo         IPYNB_HERE:	$(IPYNB_HERE)
+	@echo  IPYNB_WITHOUT_RAW:	$(IPYNB_WITHOUT_RAW)
+	@echo     RST_FROM_IPYNB:	$(RST_FROM_IPYNB)
 
 ## clean		: remove auto-generated files
 .PHONY: clean
 clean :
-	rm -rf $FORMAT_DIRS
+	rm -rf $DATA_FORMAT_DIRS
 	rm -rf $(IPYNB_WITHOUT_RAW)
 	rm -rf $(RST_FROM_IPYNB)
 
