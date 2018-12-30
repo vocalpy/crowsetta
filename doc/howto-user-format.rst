@@ -17,20 +17,17 @@ Steps to using ``crowsetta`` with your own annotation format
 ------------------------------------------------------------
 
 Below we’ll walk through a case study for using ``crowsetta`` with your
-annotation format. Here’s an outline of the steps we’ll walk through:
+annotation format. Here’s an outline of the steps we’ll go through:
 
-1. use the ``Sequence`` “factory function” (we’ll explain what that
-   means) to conveniently turn annotations in your format into
+1. get your annotations into some variables in Python (maybe you already
+   wrote code to do this)
+2. use one of the ``Sequence`` “factory functions” (we’ll explain what
+   that means) to conveniently turn your annotations into
    ``Sequence``\ s
-2. create a function that uses this code to take annotation files as an
-   argument, and return ``Sequence``\ s
-3. make a ``Transcriber`` that knows to use this function when you tell
+3. turn the code you just wrote into a function that takes annotation
+   files as an argument, and returns ``Sequence``\ s
+4. make a ``Transcriber`` that knows to use this function when you tell
    it you want to turn your annotation files into ``Sequence``\ s
-4. use the ``to_seq`` method of the ``Transcriber`` that you make to
-   turn your annotation files into ``Sequence``\ s that you can use in
-   Python code for your analysis
-5. use the ``to_csv`` method to share your annotation in a simple text
-   file that others can use without having to know about the format
 
 Case Study: the ``BatLAB`` format
 ---------------------------------
@@ -48,13 +45,14 @@ like the data science and machine learning libraries. However, you find
 yourself writing the same code over and over again to unpack the
 annotations from the ``.mat`` files made by ``BatLAB``. Every time you
 use the code for a new analysis, you have to modify it slightly. The
-code has some weird, hard-to-read lines to deal with the way that the
-complicated MATLAB ``struct``\ s created by ``BatLAB`` load into Python.
-The code also has several repetitive steps to deal with the
-idiosyncracies of how ``SoNAR`` and ``BatLAB`` save data. You can’t
-change ``BatLAB`` or ``SoNAR`` though, because that’s Alfred’s job, and
-everyone else’s code that was written ten years ago (and still works!)
-expects those idiosyncracies.
+code has some weird, hard-to-read lines to deal with the complicated
+MATLAB ``struct``\ s created by ``BatLAB`` and how they load into
+Python. The code also has several repetitive steps to deal with the
+idiosyncracies of how ``SoNAR`` and ``BatLAB`` save data: unit
+conversion, data types, etcetera. You can’t change ``BatLAB`` or
+``SoNAR`` though, because that’s Alfred’s job, and everyone else’s code
+that was written ten years ago (and still works!) expects those
+idiosyncracies.
 
 You know that it’s a good idea to turn the code you wrote into a
 function (because you took part in a `Software
@@ -62,13 +60,13 @@ Carpentry <https://software-carpentry.org/>`__ workshop and then you
 read `this
 paper <https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510>`__.)
 You figured out which bits of the code will be common to all your
-projects (the bits above) and you make that into a function, called
-``parse_batlab_mat``. At first you just copy and paste it into all your
-projects. Then you decide you also want to save everyone else in your
-lab the effort of writing the same code, so you put the script on your
-lab’s Github page. This is a step in the right direction, although
-``parse_batlab_mat`` gives you back a Python ``list`` of ``dict``\ s,
-and you end up typing a lot of things like:
+projects and you make that into a function, called ``parse_batlab_mat``.
+At first you just copy and paste it into all your projects. Then you
+decide you also want to save everyone else in your lab the effort of
+writing the same code, so you put the script on your lab’s Github page.
+This is a step in the right direction, although ``parse_batlab_mat``
+gives you back a Python ``list`` of ``dict``\ s, and you end up typing a
+lot of things like:
 
 .. code:: python
 
@@ -76,9 +74,9 @@ and you end up typing a lot of things like:
    onsets = annot_list[0]['seg_onsets']
    offsets = annot_list[0]['seg_offsets']
 
-This gets kind of annoying and makes you wonder if you should spend your
-vacation learning how to use one of those hacker text editors like
-``vim``.
+Typing all those very similar ``['keys']`` in particular gets kind of
+annoying and makes you wonder if you should spend your vacation learning
+how to use one of those hacker text editors like ``vim``.
 
 But before you can worry about that, you get back reviews of your paper
 in *PLOS Comp. Bio.* called “Pidgeon Bat: Emergence of Dialects in
@@ -101,8 +99,8 @@ where ``crowsetta`` comes to your rescue.
 Okay, now that we’ve set up some background for our case study, let’s go
 through the steps we outlined above.
 
-1. use the ``Sequence`` “factory function” to conveniently turn annotations in your format into Sequences
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1. get your annotation into some variables in Python
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 | Let’s look at this complicated data structure that we have our
   annotation in. The ``BatLAB`` GUI saves annotation into
@@ -205,18 +203,23 @@ As we’ll see in a moment, all you need to do is take this code you
 already wrote, and instead of returning your ``list`` of ``dict``\ s,
 you return a list of ``Sequence``\ s.
 
+2. use one of the ``Sequence`` “factory functions” to conveniently turn annotations in your format into ``Sequence``\ s
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 First, to get the ``Sequence``, we’ll use a “factory function”, which
 just means it’s a function built into the ``Sequence`` class that gives
-us back an instance of a ``Sequence``. Let’s see how you would make a
-``Sequence`` using the ``from_keyword`` function.
+us back an instance of a ``Sequence``. One such factory function is
+``Sequence.from_keyword``. Here’s an example of using it:
 
 .. code:: ipython3
 
     from parsebat import parse_batlab_mat
     from crowsetta.classes import Sequence
     
+    # you, using the function you already wrote
     annot_list = parse_batlab_mat(mat_file='bat1_annotation.mat')
     
+    # you have annotation from one file in an "annot_dict"
     annot_dict = annot_list[0]
     
     a_sequence = Sequence.from_keyword(labels=annot_dict['seg_types'],
@@ -234,52 +237,212 @@ us back an instance of a ``Sequence``. Let’s see how you would make a
      Sequence(segments=[Segment(label='1', onset_s=0.0029761904761904934, offset_s=0.14150432900432905, onset_Hz=143, offset_Hz=6792, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='1', onset_s=0.279125, offset_s=0.504625, onset_Hz=13398, offset_Hz=24222, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='5', onset_s=0.5556472915365209, offset_s=0.5962916666666667, onset_Hz=26671, offset_Hz=28622, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.6265416666666667, offset_s=0.6494583333333334, onset_Hz=30074, offset_Hz=31174, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.6842916666666666, offset_s=0.7044583333333333, onset_Hz=32846, offset_Hz=33814, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.7392916666666667, offset_s=0.7594583333333333, onset_Hz=35486, offset_Hz=36454, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.7942916666666666, offset_s=0.8300416666666667, onset_Hz=38126, offset_Hz=39842, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.8502083333333333, offset_s=0.884125, onset_Hz=40810, offset_Hz=42438, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.906125, offset_s=0.9409583333333333, onset_Hz=43494, offset_Hz=45166, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.9647916666666667, offset_s=1.013375, onset_Hz=46310, offset_Hz=48642, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.0234583333333334, offset_s=1.0665416666666667, onset_Hz=49126, offset_Hz=51194, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.0775416666666666, offset_s=1.1115676406926405, onset_Hz=51722, offset_Hz=53355, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.128875, offset_s=1.1765416666666666, onset_Hz=54186, offset_Hz=56474, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.1957916666666666, offset_s=1.2315416666666668, onset_Hz=57398, offset_Hz=59114, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.2535416666666668, offset_s=1.2902083333333334, onset_Hz=60170, offset_Hz=61930, file='lbr3009_0005_2017_04_27_06_14_46.wav')])
 
 
-2. Create a function that uses this code to take annotation files as an argument, and return Sequences
-------------------------------------------------------------------------------------------------------
+3. turn the code we just wrote into a function that takes annotation files as an argument, and returns ``Sequence``\ s
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You already wrote this too! Just take your ``parse_batlab_mat`` function
-from above and change a couple lines. First, you’re going to return a
-list of sequences instead of your ``annot_list`` from before. You
-probably want to make that explicit in your function.
+Again, you pretty much already wrote this. Just take your
+``parse_batlab_mat`` function from above and change a couple lines.
+First, you’re going to return a list of sequences instead of your
+``annot_list`` from before. You probably want to make that explicit in
+your function.
 
 .. code:: ipython3
 
-    # %load -r 24-25 batlab2seq.py
+    # %load -r 4-7,24-25 batlab2seq.py
+    from crowsetta.classes import Sequence
+    
+    
+    def batlab2seq(mat_file):
         mat = loadmat(mat_file, squeeze_me=True)
         seq_list = []
 
-Then at the end of your main loop, you’ll make a new ``Sequence`` from
-each file using the factory function, append that to your ``seq_list``,
-and then finally return that ``list`` of ``Sequence``\ s.
+Then at the end of your main loop, instead of making your
+``annot_dict``, you’ll make a new ``Sequence`` from each file using the
+``from_keyword`` factory function, append the new ``Sequence`` to your
+``seq_list``, and then finally return that ``list`` of ``Sequence``\ s.
 
 .. code:: ipython3
 
     # %load -r 56-63 batlab2seq.py
-        seq = Sequence.from_keyword(file=filename,
-                                    labels=seg_types,
-                                    onsets_s=seg_start_times,
-                                    offsets_s=seg_end_times,
-                                    onsets_Hz=seg_start_times_Hz,
-                                    offsets_Hz=seg_end_times_Hz)
-        seq_list.append(seq)
+            seq = Sequence.from_keyword(file=filename,
+                                        labels=seg_types,
+                                        onsets_s=seg_start_times,
+                                        offsets_s=seg_end_times,
+                                        onsets_Hz=seg_start_times_Hz,
+                                        offsets_Hz=seg_end_times_Hz)
+            seq_list.append(seq)
         return seq_list
 
-If this still feels too wordy and repetitive for you, you can put
-``segFileStartTimes``, ``segFileEndTimes``, et al., into a Python
-``dict`` with ``keys`` corresponding to the parameters for
-``Segment.from_keyword``:
+   If this still feels too wordy and repetitive for you, you can put
+   ``segFileStartTimes``, ``segFileEndTimes``, et al., into a Python
+   ``dict`` with ``keys`` corresponding to the parameters for
+   ``Segment.from_keyword``:
+
+..
+
+   .. code:: python
+
+      annot_dict = {
+          'file': filename,
+          'onsets_s': annotation['segFileStartTimes'].tolist(),
+          'offsets_s': annotation['segFileEndTimes'].tolist()
+          'labels': seg_types
+      }
+
+      Note here that you only have to specify the onsets an offsets of
+      segments *either* in seconds or in Hertz (but you can define
+      both).
+
+..
+
+   and then use another factory function, ``Sequence.from_dict``, to
+   create the ``Sequence``.
+
+   .. code:: python
+
+      seq_list.append(Sequence.from_dict(annot_dict))
+
+Now that you have a function that takes annotation files and return
+``Sequence``\ s, call it something like ``batlab2seq`` and put it in a
+file that ends with ``.py``, e.g. \ ``batlab2seq.py``. This is also
+known as a Python **module** (as you’ll need to know below). To see the
+entire example, check out the `batlab2seq.py <./batlab2seq.py>`__ file
+in this folder (and compare it with `parsebat.py <./parsebat.py>`__).
+
+4. make a ``Transcriber`` that knows to use this function when you tell it you want to turn your annotation files into ``Sequence``\ s
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you have worked with ``Crowsetta`` already, or gone through the
+tutorial, you know that we can work with a ``Transcriber`` that does the
+work of making ``Sequence``\ s of ``Segment``\ s from annotation files
+for us. We create a new instance of a ``Transcriber`` by writing
+something like this:
 
 .. code:: python
 
-   annot_dict = {
-       'file': filename,
-       'onsets_s': annotation['segFileStartTimes'].tolist(),
-       'offsets_s': annotation['segFileEndTimes'].tolist()
-       'labels': seg_types
+   scribe = Transcriber()
+
+You will do the same thing here, but to tell the ``Transcriber`` how to
+work with your format, you will pass an argument for the ``user_config``
+parameter when you create a new one:
+
+.. code:: python
+
+   scribe = Transcriber(user_config=your_config)
+
+The argument you pass for ``user_config`` will be a Python dictionary
+with the following structure:
+
+.. code:: python
+
+   your_config = {
+       'batlab': {
+           'module': 'batlab2seq.py',
+           'to_seq': 'batlab2seq',
+           'to_csv': 'None',
+           'to_format': 'None',
+       }
    }
 
-and then use another factory function, ``Sequence.from_dict``
+Notice that this a dictionary of dictionaries, where each ``key`` in the
+top-level ``dict`` is the name of a user-defined format, here
+``batlab``. If you had multiple formats to use, you would add more
+``dict``\ s inside the top-level ``dict``.
 
-.. code:: python
+The ``value`` for each ``key`` is another Python dictionary that tells
+the ``Transcriber`` what functions to use from your module when you call
+one of its methods and specify this format. In the example above, you’re
+telling the ``Transcriber`` that when you say ``file_format='batlab'``,
+it should use functions from the ``batlab2seq.py`` module. More
+specifically, when you call
+``scribe.to_seq(file='annotation.mat', file_format='batlab')``, it
+should use the ``batlab2seq`` function to convert your annotation into
+``Sequence``\ s. Notice also that you can specify ``'None'`` for
+``to_csv`` and ``to_format`` (which would be a function that converts
+``Sequence``\ s back to the ``BatLAB`` format).
 
-   seq_list.append(Sequence.from_dict(annot_dict))
+Here’s what it looks like to do all of that in a few lines of code:
+
+.. code:: ipython3
+
+    from crowsetta import Transcriber
+    
+    your_config = {
+        'batlab': {
+            'module': 'batlab2seq.py',
+            'to_seq': 'batlab2seq',
+            'to_csv': 'None',
+            'to_format': 'None',
+        }
+    }
+    scribe = Transcriber(user_config=your_config)
+    seq_list = scribe.to_seq(file='bat1_annotation.mat', file_format='batlab')
+
+And now, just like you do with the built-in formats, you get back a list
+of ``Sequence``\ s from your format:
+
+.. code:: ipython3
+
+    print(seq_list[0])
+
+
+.. parsed-literal::
+
+    Sequence(segments=[Segment(label='1', onset_s=0.0029761904761904934, offset_s=0.14150432900432905, onset_Hz=143, offset_Hz=6792, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='1', onset_s=0.279125, offset_s=0.504625, onset_Hz=13398, offset_Hz=24222, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='5', onset_s=0.5556472915365209, offset_s=0.5962916666666667, onset_Hz=26671, offset_Hz=28622, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.6265416666666667, offset_s=0.6494583333333334, onset_Hz=30074, offset_Hz=31174, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.6842916666666666, offset_s=0.7044583333333333, onset_Hz=32846, offset_Hz=33814, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.7392916666666667, offset_s=0.7594583333333333, onset_Hz=35486, offset_Hz=36454, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.7942916666666666, offset_s=0.8300416666666667, onset_Hz=38126, offset_Hz=39842, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.8502083333333333, offset_s=0.884125, onset_Hz=40810, offset_Hz=42438, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.906125, offset_s=0.9409583333333333, onset_Hz=43494, offset_Hz=45166, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.9647916666666667, offset_s=1.013375, onset_Hz=46310, offset_Hz=48642, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.0234583333333334, offset_s=1.0665416666666667, onset_Hz=49126, offset_Hz=51194, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.0775416666666666, offset_s=1.1115676406926405, onset_Hz=51722, offset_Hz=53355, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.128875, offset_s=1.1765416666666666, onset_Hz=54186, offset_Hz=56474, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.1957916666666666, offset_s=1.2315416666666668, onset_Hz=57398, offset_Hz=59114, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.2535416666666668, offset_s=1.2902083333333334, onset_Hz=60170, offset_Hz=61930, file='lbr3009_0005_2017_04_27_06_14_46.wav')])
+
+
+Summary
+-------
+
+Now you have seen in detail the process of working with your own
+annotation format in ``Crowsetta``. Here’s a review of the steps, with
+some code snippets worked in to tie it all together:
+
+1. get your annotations into some variables in Python, perhaps using
+   code you already wrote
+2. use one of the ``Sequence`` “factory functions” to conveniently turn
+   your annotations into ``Sequence``\ s
+3. turn all that code into a function that takes annotation files as an
+   argument, and returns ``Sequence``\ s
+
+..
+
+   steps 1-3 will give you something like this in a file named something
+   like ``myformat.py``
+
+   .. code:: python
+
+      from Crowsetta import Sequence
+
+
+      def myformat2seq(my_format_files):
+          seq_list = []
+          for format_file in my_format_files:
+          # load annotation into some Python variables, e.g. a dictionary
+              annot_dict = magic_annotation_unpacking_function(format_file)
+              seq = Sequence.from_dict(annot_dict)
+              seq_list.append(seq)
+          return seq_list
+
+4. make a ``Transcriber`` that knows to use this function when you tell
+   it you want to turn your annotation files into ``Sequence``\ s,
+   and/or csv files, or to convert back to your format from
+   ``Sequence``\ s (assuming you wrote a function in your module that
+   will do so).
+
+..
+
+   .. code:: python
+
+      from Crowsetta import Transcriber
+
+      my_config = {
+          'my_format': {
+              'module': 'myformat.py',
+              'to_seq': 'myformat2seq',
+              'to_csv': 'myformat2csv',
+              'to_format': 'seq2myformat,
+          }
+      }
+      scribe = Transcriber(user_config=my_config)
+      seq_list = scribe.to_seq(file='my_annotations.txt', file_format='my_format')
