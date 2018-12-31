@@ -155,6 +155,38 @@ class TestTranscriber(unittest.TestCase):
         with self.assertRaises(KeyError):
             crowsetta.Transcriber(user_config=user_config)
 
+    def test_call_to_csv_when_None_raises(self):
+        user_config = {
+            'example': {
+                'module': str(self.example_script_dir.joinpath('example.py')),
+                'to_seq': 'example2seq',
+                'to_csv': None,
+                'to_format': None,
+            }
+        }
+        scribe = crowsetta.Transcriber(user_config=user_config)
+        annotation = os.path.join(self.test_data_dir,
+                                  'example_user_format',
+                                  'bird1_annotation.mat')
+        with self.assertRaises(NotImplementedError):
+            scribe.to_csv(file=annotation, file_format='example')
+
+    def test_call_to_format_when_None_raises(self):
+        user_config = {
+            'example': {
+                'module': str(self.example_script_dir.joinpath('example.py')),
+                'to_seq': 'example2seq',
+                'to_csv': None,
+                'to_format': None,
+            }
+        }
+        scribe = crowsetta.Transcriber(user_config=user_config)
+        annotation = os.path.join(self.test_data_dir,
+                                  'example_user_format',
+                                  'bird1_annotation.mat')
+        with self.assertRaises(NotImplementedError):
+            scribe.to_format(file=annotation, to_format='example')
+
     def test_from_csv(self):
         csv_filename = os.path.join(self.test_data_dir,
                                     os.path.normpath('csv/gy6or6_032312.csv'))
