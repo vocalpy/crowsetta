@@ -1,21 +1,21 @@
 import os
-from glob import glob
 import tempfile
 import shutil
 import csv
 import unittest
+from pathlib import Path
 
 import numpy as np
 import attr
 
 import crowsetta
 
-TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
+TESTS_DIR = Path(__file__).resolve().parent  # same as os.path.dirname(__file__)
 
 
 class TestAnnotation(unittest.TestCase):
     def setUp(self):
-        self.test_data_dir = os.path.join(TESTS_DIR, 'test_data')
+        self.test_data_dir = TESTS_DIR.joinpath('test_data')
         self.tmp_output_dir = tempfile.mkdtemp()
 
     def tearDown(self):
@@ -24,9 +24,8 @@ class TestAnnotation(unittest.TestCase):
     def test_seq2csv(self):
         # compare csv created by seq2csv
         # with correctly generated csv saved in crowsetta/tests/test_data
-        cbin_dir = os.path.join(self.test_data_dir,
-                                os.path.normpath('cbins/gy6or6/032312/'))
-        notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
+        cbin_dir = self.test_data_dir.joinpath('cbins/gy6or6/032312/')
+        notmat_list = [str(path) for path in cbin_dir.glob('*.not.mat')]
         # below, sorted() so it's the same order on different platforms
         notmat_list = sorted(notmat_list)
         seq_list = []
@@ -46,8 +45,7 @@ class TestAnnotation(unittest.TestCase):
             for row in reader:
                 test_rows.append(row)
 
-        csv_to_compare_with = os.path.join(self.test_data_dir,
-                                           os.path.normpath('csv/gy6or6_032312.csv'))
+        csv_to_compare_with = self.test_data_dir.joinpath('csv/gy6or6_032312.csv')
         compare_rows = []
         with open(csv_to_compare_with, 'r', newline='') as csvfile:
             reader = csv.reader(csvfile)
@@ -58,9 +56,8 @@ class TestAnnotation(unittest.TestCase):
 
     def test_toseq_func_to_csv_with_builtin_format(self):
         notmat2csv = crowsetta.csv.toseq_func_to_csv(crowsetta.notmat.notmat2seq)
-        cbin_dir = os.path.join(self.test_data_dir,
-                                os.path.normpath('cbins/gy6or6/032312/'))
-        notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
+        cbin_dir = self.test_data_dir.joinpath('cbins/gy6or6/032312/')
+        notmat_list = [str(path) for path in cbin_dir.glob('*.not.mat')]
         # below, sorted() so it's the same order on different platforms
         notmat_list = sorted(notmat_list)
         csv_fname = os.path.join(self.tmp_output_dir,
@@ -75,8 +72,7 @@ class TestAnnotation(unittest.TestCase):
             for row in reader:
                 test_rows.append(row)
 
-        csv_to_compare_with = os.path.join(self.test_data_dir,
-                                           os.path.normpath('csv/gy6or6_032312.csv'))
+        csv_to_compare_with = self.test_data_dir.joinpath('csv/gy6or6_032312.csv')
         compare_rows = []
         with open(csv_to_compare_with, 'r', newline='') as csvfile:
             reader = csv.reader(csvfile)
@@ -86,16 +82,14 @@ class TestAnnotation(unittest.TestCase):
             self.assertTrue(test_row == compare_row)
 
     def test_csv2seq(self):
-        csv_fname = os.path.join(self.test_data_dir,
-                                 os.path.normpath('csv/gy6or6_032312.csv'))
+        csv_fname = self.test_data_dir.joinpath('csv/gy6or6_032312.csv')
         # convert csv to crowsetta list -- this is what we're testing
         seq_list_from_csv = crowsetta.csv.csv2seq(csv_fname)
-        cbin_dir = os.path.join(self.test_data_dir,
-                                os.path.normpath('cbins/gy6or6/032312/'))
+        cbin_dir = self.test_data_dir.joinpath('cbins/gy6or6/032312/')
 
         # get what should be the same seq list from .not.mat files
         # to compare with what we got from the csv
-        notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
+        notmat_list = [str(path) for path in cbin_dir.glob('*.not.mat')]
         # below, sorted() so it's the same order on different platforms
         notmat_list = sorted(notmat_list)
         seq_list_from_notmats = []
@@ -121,16 +115,12 @@ class TestAnnotation(unittest.TestCase):
                                            from_notmat[from_csv_key])
 
     def test_csv2seq_unrecognized_fields_raises(self):
-        csv_fname = os.path.join(self.test_data_dir,
-                                 os.path.normpath(
-                                     'csv/unrecognized_fields_in_header.csv'))
+        csv_fname = str(self.test_data_dir.joinpath('csv/unrecognized_fields_in_header.csv'))
         with self.assertRaises(ValueError):
             crowsetta.csv.csv2seq(csv_fname=csv_fname)
 
     def test_csv2seq_missing_fields_raises(self):
-        csv_fname = os.path.join(self.test_data_dir,
-                                 os.path.normpath(
-                                     'csv/missing_fields_in_header.csv'))
+        csv_fname = str(self.test_data_dir.joinpath('csv/missing_fields_in_header.csv'))
         with self.assertRaises(ValueError):
             crowsetta.csv.csv2seq(csv_fname=csv_fname)
 
