@@ -79,8 +79,8 @@ class TestTranscriber(unittest.TestCase):
             'example': {
                 'module': str(self.example_script_dir.joinpath('example.py')),
                 'to_seq': 'example2seq',
-                'to_csv': 'example2csv',
-                'to_format': 'None',
+                'to_csv': None,
+                'to_format': None,
             }
         }
         scribe = crowsetta.Transcriber(user_config=user_config)
