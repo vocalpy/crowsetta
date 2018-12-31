@@ -10,7 +10,8 @@ from .csv import csv2seq
 
 HERE = os.path.dirname(__file__)
 
-CONFIG_DICT_KEYS = {'module', 'to_seq', 'to_csv', 'to_format'}
+VALID_CONFIG_DICT_KEYS = {'module', 'to_seq', 'to_csv', 'to_format'}
+REQUIRED_CONFIG_DICT_KEYS = {'module', 'to_seq'}
 
 
 @attr.s(auto_attribs=True)
