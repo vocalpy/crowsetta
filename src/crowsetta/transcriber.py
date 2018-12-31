@@ -299,26 +299,24 @@ class Transcriber:
                              f"file format not recognized.\n"
                              f"Valid file formats are: {self.file_formats}")
         elif self.format_functions[to_format].to_format is None:
-            raise ValueError("the current configuration does not define a function mapping "
-                             f"Sequences to the format '{to_format}'.")
+            raise NotImplementedError("the current configuration does not define "
+                                      "a function mapping Sequences to the format"
+                                      f" '{to_format}'.")
 
         if file_format is None:
             file_format = self._guess_format(file)
         else:
             self._validate_format(file_format)
 
-        if self.format_functions[file_format].to_format is None:
-            raise NotImplementedError(f'No to_format function for format: {file_format}')
-        else:
-            # if called w/out kwargs, change default to a mapping
-            # so the dictionary unpacking operators don't cause a crash below
-            if to_seq_kwargs is None:
-                to_seq_kwargs = {}
-            if to_format_kwargs is None:
-                to_format_kwargs = {}
+        # if called w/out kwargs, change default to a mapping
+        # so the dictionary unpacking operators don't cause a crash below
+        if to_seq_kwargs is None:
+            to_seq_kwargs = {}
+        if to_format_kwargs is None:
+            to_format_kwargs = {}
 
-            seq = self.format_functions[file_format].to_seq(file, **to_seq_kwargs)
-            return self.format_functions[to_format].to_format(seq, **to_format_kwargs)
+        seq = self.format_functions[file_format].to_seq(file, **to_seq_kwargs)
+        return self.format_functions[to_format].to_format(seq, **to_format_kwargs)
 
     def from_csv(self, csv_filename):
         """loads and parses a comma-separated values (csv) file,
