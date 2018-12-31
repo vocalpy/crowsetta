@@ -56,7 +56,7 @@ class TestAnnotation(unittest.TestCase):
         for test_row, compare_row in zip(test_rows, compare_rows):
             assert test_row == compare_row
 
-    def test_seq2csv_when_one_type_of_onset_is_None(self):
+    def test_seq2csv_when_one_pair_of_onsets_and_offsets_is_None(self):
         # example2seq only gets onset and offset times in seconds
         # so onset_Hz and offset_Hz will be None
         # Test that we can make a csv that has 'None' in columns for
@@ -162,6 +162,18 @@ class TestAnnotation(unittest.TestCase):
         csv_fname = str(self.test_data_dir.joinpath('csv/missing_fields_in_header.csv'))
         with self.assertRaises(ValueError):
             crowsetta.csv.csv2seq(csv_fname=csv_fname)
+
+    def test_csv2seq_when_one_pair_of_onsets_and_offsets_is_None(self):
+        # Test that we can load a csv that has 'None' in columns for
+        # onset_Hz and offset_Hz, so that they are None for each segment
+        csv_with_None_columns = self.test_data_dir.joinpath(
+            'csv/example_annotation_with_onsets_Hz_offsets_Hz_None.csv'
+        )
+        seq = crowsetta.csv.csv2seq(csv_fname=csv_with_None_columns)
+        self.assertTrue(
+            seg.onset_Hz is None and seg.offset_Hz is None
+            for a_seq in seq for seg in a_seq.segments
+        )
 
 
 if __name__ == '__main__':
