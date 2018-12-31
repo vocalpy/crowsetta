@@ -14,7 +14,7 @@ class TestTranscriber(unittest.TestCase):
     def setUp(self):
         self.tmp_output_dir = Path(tempfile.mkdtemp())
         self.test_data_dir = TESTS_DIR.joinpath('test_data')
-        self.example_script_dir = TESTS_DIR.joinpath('../src/bin')
+        self.example_script_dir = TESTS_DIR.joinpath('test_scripts/')
 
     def tearDown(self):
         shutil.rmtree(self.tmp_output_dir)
@@ -68,19 +68,27 @@ class TestTranscriber(unittest.TestCase):
             }
         }
         scribe = crowsetta.Transcriber(user_config=user_config)
-        annotation = os.path.join(TESTS_DIR, '..', 'src', 'bin', 'bird1_annotation.mat')
+        annotation = os.path.join(self.test_data_dir,
+                                  'example_user_format',
+                                  'bird1_annotation.mat')
+        seq = scribe.to_seq(file=annotation, file_format='example')
+        self.assertTrue(all([type(a_seq) == crowsetta.Sequence for a_seq in seq]))
 
     def test_example_to_seq_path_import(self):
         user_config = {
             'example': {
-                'module': str(self.example_script_dir.joinpath('batlab2seq.py')),
+                'module': str(self.example_script_dir.joinpath('example.py')),
                 'to_seq': 'example2seq',
                 'to_csv': 'example2csv',
                 'to_format': 'None',
             }
         }
         scribe = crowsetta.Transcriber(user_config=user_config)
-        annotation = TESTS_DIR.joinpath('../src/bin/bird1_annotation.mat')
+        annotation = os.path.join(self.test_data_dir,
+                                  'example_user_format',
+                                  'bird1_annotation.mat')
+        seq = scribe.to_seq(file=annotation, file_format='example')
+        self.assertTrue(all([type(a_seq)==crowsetta.Sequence for a_seq in seq]))
 
     def test_user_config_wrong_types_raise(self):
         # should raise an error because user_config should be dict of dicts
