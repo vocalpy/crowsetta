@@ -115,6 +115,9 @@ class Transcriber:
                                        f'invalid keys: {extra_keys}')
                 self._config.add_section(config_name)
                 for option, value in config_dict.items():
+                    if value is None:
+                        # value has to be a string
+                        value = 'None'
                     self._config[config_name][option] = value
 
         self.file_formats = self._config.sections()
