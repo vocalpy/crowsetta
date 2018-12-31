@@ -109,7 +109,18 @@ class TestTranscriber(unittest.TestCase):
             'example': {
                 # missing 'module' key
                 'to_seq': 'example2seq',
-                'to_csv': 'example2csv',
+                'to_csv': None,
+                'to_format': None,
+            }
+        }
+        with self.assertRaises(KeyError):
+            crowsetta.Transcriber(user_config=user_config)
+
+        user_config = {
+            'example': {
+                'module': 'example',
+                # missing 'to_seq' key
+                'to_csv': None,
                 'to_format': None,
             }
         }
