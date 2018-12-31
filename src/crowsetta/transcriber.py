@@ -103,11 +103,6 @@ class Transcriber:
                                 'that specifies what module and functions to use.\n'
                                 f'The following values are not dictionaries: {not_dict}')
 
-            if not all([set(config_dict.keys()) == CONFIG_DICT_KEYS 
-                        for config_dict in user_config.values()]):
-                raise KeyError(f'All dictionaries in user_config must have '
-                               f'the following keys: {CONFIG_DICT_KEYS}')
-
             for config_name, config_dict in user_config.items():
                 this_config_keys = set(config_dict.keys())
                 if this_config_keys != CONFIG_DICT_KEYS:
