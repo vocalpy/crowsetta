@@ -105,15 +105,14 @@ class Transcriber:
 
             for config_name, config_dict in user_config.items():
                 this_config_keys = set(config_dict.keys())
-                if this_config_keys != CONFIG_DICT_KEYS:
-                    if this_config_keys < CONFIG_DICT_KEYS:
-                        missing_keys = CONFIG_DICT_KEYS - this_config_keys
-                        raise KeyError(f'config_dict for {config_name} is missing '
-                                       f'the following keys: {missing_keys}')
-                    elif this_config_keys > CONFIG_DICT_KEYS:
-                        extra_keys = this_config_keys - CONFIG_DICT_KEYS
-                        raise KeyError(f'config_dict for {config_name} contains '
-                                       f'invalid keys: {extra_keys}')
+                if not REQUIRED_CONFIG_DICT_KEYS.issubset(this_config_keys):
+                    missing_keys = REQUIRED_CONFIG_DICT_KEYS - this_config_keys
+                    raise KeyError(f'config_dict for {config_name} requires '
+                                   f'the following keys: {missing_keys}')
+                elif not this_config_keys.issubset(VALID_CONFIG_DICT_KEYS):
+                    extra_keys = this_config_keys - VALID_CONFIG_DICT_KEYS
+                    raise KeyError(f'config_dict for {config_name} contains '
+                                   f'invalid keys: {extra_keys}')
                 self._config.add_section(config_name)
                 for option, value in config_dict.items():
                     if value is None:
