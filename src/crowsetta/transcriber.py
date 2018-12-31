@@ -81,9 +81,9 @@ class Transcriber:
         >>> scribe = crowsetta.Transcriber(user_config=my_config)
         >>> seq = scribe.toseq(file='my_annotation.mat', file_format='myformat_name')
         """
-        # read default config declared in src/crowsetta/config.ini
-        # have to read in __init__ so config doesn't live at module level;
-        # otherwise it will be shared across instances
+        # read default config is declared in src/crowsetta/config.ini;
+        # have to read  it in __init__ so config doesn't live at module level;
+        # otherwise it will be shared across instances (and mutable!)
         crowsetta_config = ConfigParser()
         crowsetta_config.read(os.path.join(HERE, 'config.ini'))
         self._config = crowsetta_config
