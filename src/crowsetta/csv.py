@@ -73,6 +73,44 @@ def seq2csv(seq,
                 writer.writerow(seg_dict)
 
 
+def toseq_func_to_csv(toseq_func):
+    """accepts a function for turning files of a certain format into Sequences,
+    and returns a function, `format2seq2csv` that will convert that format into
+    csv files. Essentially creates a wrapper around some `format2seq` function
+    and the `seq2csv` function.
+
+    Parameters
+    ----------
+    toseq_func : callable
+        function that accepts a file argument (and keyword arguments, if needed),
+        and returns a Sequence or list of Sequence
+
+    Returns
+    -------
+    format2seq2csv : callable
+        function that accepts a file argument, a dictionary of keywords and arguments
+        to use to call the toseq_func, and a dictionary of keywords and arguments to
+        pass to the seq2csv function.
+
+    Examples
+    --------
+    >>> from my_format_module import myformat2seq
+    >>> myformat2csv = toseq_func_to_csv(myformat2seq)
+    >>> to_csv_kwargs = {csv_fname: 'my_format_bird1.csv', 'abspath': True}
+    >>> myformat2csv('my_annotation.txt', to_csv_kwargs=to_csv_kwargs)
+    """
+    def format2seq2csv(file, to_seq_kwargs=None, to_csv_kwargs=None):
+        if to_seq_kwargs is None:
+            to_seq_kwargs = {}
+        if to_csv_kwargs is None:
+            to_csv_kwargs = {}
+
+        seq = toseq_func(file, **to_seq_kwargs)
+        seq2csv(seq, **to_csv_kwargs)
+
+    return format2seq2csv
+
+
 def csv2seq(csv_fname):
     """loads a comma-separated values (csv) file containing annotations
     for song files, returns contents as a list of Sequence objects
