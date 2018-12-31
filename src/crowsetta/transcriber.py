@@ -121,22 +121,30 @@ class Transcriber:
 
         self.format_functions = {}
         for section in self._config.sections():
-            try:
-                this_format_module = import_module(self._config[section]['module'])
-            except ModuleNotFoundError:
-                if os.path.isfile(self._config[section]['module']):
-                    module_name = os.path.basename(self._config[section]['module'])
-                    if module_name.endswith('.py'):
-                        module_name = module_name.replace('.py', '')
-                else:
-                    module_name = self._config[section]['module']
-                    raise FileNotFoundError(
-                        f'{module_name} could not be imported, '
-                        'and not recognized as a file')
+            format_module = self._config[section]['module']
+
+            if os.path.isfile(format_module):
+                # if it's a file (e.g. some path), have to import
+                # this more verbose way
+                module_name = os.path.basename(format_module)
+                if module_name.endswith('.py'):
+                    module_name = module_name.replace('.py', '')
                 spec = importlib.util.spec_from_file_location(name=module_name,
-                                                              location=self._config[section]['module'])
+                                                              location=format_module)
                 this_format_module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(this_format_module)
+
+            else:
+                # if it's not a file, it should be on the path or in the
+                # current directory, and we can just import it in one line
+                try:
+                    this_format_module = import_module(format_module)
+                except ModuleNotFoundError:
+                    # unless that didn't work either, in which case...
+                    raise FileNotFoundError(
+                        f'{format_module} could not be imported, '
+                        'and not recognized as a file')
+
             # insert error checking for module attributes (i.e. functions) here
             # so we can give user human-interpretable error messages
             self.format_functions[section] = FormatFunctions(
