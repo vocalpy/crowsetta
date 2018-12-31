@@ -96,7 +96,12 @@ class Transcriber:
 
             if not all([type(config_dict) == dict 
                         for config_dict in user_config.values()]):
-                raise TypeError('all values in user_config should be dictionaries')
+                not_dict = [config_dict for config_dict in user_config.values()
+                            if not type(config_dict) == dict]
+                raise TypeError('user_config should be a dictionary of dictionaries,\n'
+                                'where keys are format names and values are the dictionary '
+                                'that specifies what module and functions to use.\n'
+                                f'The following values are not dictionaries: {not_dict}')
 
             if not all([set(config_dict.keys()) == CONFIG_DICT_KEYS 
                         for config_dict in user_config.values()]):
