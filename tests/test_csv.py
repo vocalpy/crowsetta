@@ -56,6 +56,35 @@ class TestAnnotation(unittest.TestCase):
         for test_row, compare_row in zip(test_rows, compare_rows):
             assert test_row == compare_row
 
+    def test_toseq_func_to_csv_with_builtin_format(self):
+        notmat2csv = crowsetta.csv.toseq_func_to_csv(crowsetta.notmat.notmat2seq)
+        cbin_dir = os.path.join(self.test_data_dir,
+                                os.path.normpath('cbins/gy6or6/032312/'))
+        notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
+        # below, sorted() so it's the same order on different platforms
+        notmat_list = sorted(notmat_list)
+        csv_fname = os.path.join(self.tmp_output_dir,
+                                 'test_toseq_func_to_csv_gy6or6_032312.csv')
+        to_csv_kwargs = {'csv_fname': csv_fname,
+                         'basename': True}
+        notmat2csv(file=notmat_list, to_csv_kwargs=to_csv_kwargs)
+
+        test_rows = []
+        with open(csv_fname, 'r', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                test_rows.append(row)
+
+        csv_to_compare_with = os.path.join(self.test_data_dir,
+                                           os.path.normpath('csv/gy6or6_032312.csv'))
+        compare_rows = []
+        with open(csv_to_compare_with, 'r', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                compare_rows.append(row)
+        for test_row, compare_row in zip(test_rows, compare_rows):
+            self.assertTrue(test_row == compare_row)
+
     def test_csv2seq(self):
         csv_fname = os.path.join(self.test_data_dir,
                                  os.path.normpath('csv/gy6or6_032312.csv'))
