@@ -1,9 +1,11 @@
+import sys
 import os
 import tempfile
 import shutil
 import csv
 import unittest
 from pathlib import Path
+from importlib import import_module
 
 import numpy as np
 import attr
@@ -53,6 +55,43 @@ class TestAnnotation(unittest.TestCase):
                 compare_rows.append(row)
         for test_row, compare_row in zip(test_rows, compare_rows):
             assert test_row == compare_row
+
+    def test_seq2csv_when_one_type_of_onset_is_None(self):
+        # example2seq only gets onset and offset times in seconds
+        # so onset_Hz and offset_Hz will be None
+        # Test that we can make a csv that has 'None' in columns for
+        # onset_Hz and offset_Hz when they are None for each segment
+
+        # first load the module with example2seq
+        example_script_dir = TESTS_DIR.joinpath('test_scripts/')
+        sys.path.append(str(example_script_dir))
+        example_module = import_module(name='example')
+
+        annot_file = str(self.test_data_dir.joinpath(
+            'example_user_format/bird1_annotation.mat')
+        )
+        seq = example_module.example2seq(mat_file=annot_file)
+        self.assertTrue(
+            all(
+                [seg.onset_Hz is None and seg.offset_Hz is None
+                 for a_seq in seq for seg in a_seq.segments]
+            )
+        )
+        csv_fname = os.path.join(self.tmp_output_dir,
+                                 'test_seq2csv_onset_None.csv')
+        crowsetta.csv.seq2csv(seq=seq, csv_fname=csv_fname)
+
+        with open(csv_fname, 'r', newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            header = next(reader)
+            onset_Hz_ind = header.index('onset_Hz')
+            offset_Hz_ind = header.index('offset_Hz')
+            for row in reader:
+                self.assertTrue(
+                    row[onset_Hz_ind] == 'None' and row[offset_Hz_ind] == 'None'
+                )
+
+        sys.path.remove(str(example_script_dir))
 
     def test_toseq_func_to_csv_with_builtin_format(self):
         notmat2csv = crowsetta.csv.toseq_func_to_csv(crowsetta.notmat.notmat2seq)
