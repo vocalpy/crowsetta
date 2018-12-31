@@ -6,12 +6,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### added
+- nothing yet, just released 0.2.0a4
+
+## 0.2.0a4
+### added
 - `data` module that downloads small example datasets for each annotation format
   + includes `formats` function that is imported at package level 
   and prints formats built in to `crowsetta`
+- `to_seq_func_to_csv` that takes a `yourformat2seq` function and returns a function
+  that will convert the same format to csv files (just a wrapper around your function
+  and `seq2csv`)
+- for docs, Makefile that generates `./notebooks` folder from `./doc/notebooks`
 
 ### changed
 - major revamp of docs
+- `config_dict`s for `user_config` arg of Transcriber.__init__ only require
+  `module` and `to_seq` keys; `to_csv` and `to_format` are optional, can be 
+  specified Python `None` or a string `'None'`
+
+### fixed
+- Transcriber raises `NotImplemented` error when `to_csv` or `to_format` are 
+  None for a specified format (instead of crashing mysteriously)
+- `seq2csv` and `csv2seq` can deal with `None` values for one pair of onsets and offsets
 
 ## 0.2.0a3
 ### changed
