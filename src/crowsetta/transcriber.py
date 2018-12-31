@@ -46,6 +46,8 @@ class Transcriber:
     to_seq : maps a file of a specified format to a Sequence or list of Sequences
     to_csv : maps a file of a specified format to a comma-separate values (csv) file
     to_format : maps a file of a specified format to another format
+    from_csv: loads and parses a comma-separated values (csv) file, returns Sequence
+    or list of Sequence
     """
     def __init__(self, user_config=None):
         """__init__ method of Transciber class
