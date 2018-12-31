@@ -90,8 +90,8 @@ class Transcriber:
 
         if user_config is not None:
             if type(user_config) != dict:
-                raise TypeError(f'config_dict should be a dictionary '
-                                f', not {type(user_config)}')
+                raise TypeError(f'config_dict should be a dictionary, '
+                                f'not {type(user_config)}')
 
             if not all([type(config_dict) == dict 
                         for config_dict in user_config.values()]):
