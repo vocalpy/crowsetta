@@ -66,6 +66,10 @@ def seq2csv(seq,
         for curr_seq in seq:
             for segment in curr_seq.segments:
                 seg_dict = segment.asdict()
+                seg_dict = {
+                    key: ('None' if val is None else val)
+                    for key, val in seg_dict.items()
+                }
                 if abspath:
                     seg_dict['file'] = os.path.abspath(seg_dict['file'])
                 elif basename:
