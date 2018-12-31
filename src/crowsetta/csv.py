@@ -148,11 +148,13 @@ def csv2seq(csv_fname):
                 .format(csv_fname, not_in_header))
 
         row = next(reader)
+        row = [None if item=='None' else item for item in row]
         segment = Segment.from_row(row=row, header=header)
         curr_file = segment.file
         segments = []
 
         for row in reader:
+            row = [None if item == 'None' else item for item in row]
             segment = Segment.from_row(row=row, header=header)
             row_file = segment.file
             if row_file == curr_file:
