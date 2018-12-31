@@ -88,7 +88,7 @@ class TestTranscriber(unittest.TestCase):
                                   'example_user_format',
                                   'bird1_annotation.mat')
         seq = scribe.to_seq(file=annotation, file_format='example')
-        self.assertTrue(all([type(a_seq)==crowsetta.Sequence for a_seq in seq]))
+        self.assertTrue(all([type(a_seq) == crowsetta.Sequence for a_seq in seq]))
 
     def test_user_config_wrong_types_raise(self):
         # should raise an error because user_config should be dict of dicts
