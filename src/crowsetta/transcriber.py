@@ -263,7 +263,10 @@ class Transcriber:
         else:
             self._validate_format(file_format)
 
-        return self.format_functions[file_format].to_csv(file, **kwargs)
+        if self.format_functions[file_format].to_csv is None:
+            raise NotImplementedError(f'No to_csv function for format: {file_format}')
+        else:
+            return self.format_functions[file_format].to_csv(file, **kwargs)
 
     def to_format(self, file, to_format, file_format=None,
                   to_seq_kwargs=None, to_format_kwargs=None):
