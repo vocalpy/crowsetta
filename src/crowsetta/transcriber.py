@@ -119,6 +119,12 @@ class Transcriber:
                         # value has to be a string
                         value = 'None'
                     self._config[config_name][option] = value
+                # since these aren't required, have to add default 'None'
+                # if user doesn't specify
+                if 'to_csv' not in config_dict:
+                    self._config[config_name]['to_csv'] = 'None'
+                if 'to_format' not in config_dict:
+                    self._config[config_name]['to_format'] = 'None'
 
         self.file_formats = self._config.sections()
 
