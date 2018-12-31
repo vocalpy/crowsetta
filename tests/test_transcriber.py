@@ -63,8 +63,23 @@ class TestTranscriber(unittest.TestCase):
             'example': {
                 'module': 'example',
                 'to_seq': 'example2seq',
-                'to_csv': 'example2csv',
-                'to_format': 'None',
+                'to_csv': None,
+                'to_format': None,
+            }
+        }
+        scribe = crowsetta.Transcriber(user_config=user_config)
+        annotation = os.path.join(self.test_data_dir,
+                                  'example_user_format',
+                                  'bird1_annotation.mat')
+        seq = scribe.to_seq(file=annotation, file_format='example')
+        self.assertTrue(all([type(a_seq) == crowsetta.Sequence for a_seq in seq]))
+        sys.path.remove(str(self.example_script_dir))
+
+    def test_only_module_and_to_seq_required(self):
+        user_config = {
+            'example': {
+                'module': str(self.example_script_dir.joinpath('example.py')),
+                'to_seq': 'example2seq',
             }
         }
         scribe = crowsetta.Transcriber(user_config=user_config)
