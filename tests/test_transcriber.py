@@ -98,7 +98,6 @@ class TestTranscriber(unittest.TestCase):
                 'module': 'example',
                 'to_seq': 'example2seq',
                 'to_csv': 'example2csv',
-                'extra': 'key_right_here',
                 'to_format': 'None',
             }}
         )
