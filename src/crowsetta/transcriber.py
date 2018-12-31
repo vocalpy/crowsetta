@@ -58,17 +58,17 @@ class Transcriber:
             a user-provided dictionary that maps format names to a another
             dictionary that defines the following key-value pairs:
                 module: str
-                    name of module from which functions for this format can be
-                    imported
+                    Required. Name of module from which functions for working with
+                    this format will be imported.
                 to_seq: Callable
-                    name of function in module that converts this file format to
-                    sequences
+                    Required. Name of function in module that converts this format
+                    to sequences
                 to_csv: Callable
-                    name of function in module that converts this file format to
-                    comma-separated values files
+                    Optional. Name of function in module that converts this format
+                    to comma-separated values files.
                 to_format: Callable
-                    name of function in module that converts Sequence objects to
-                    this format. Can be None, in which case trying to convert to
+                    Optional. Name of function in module that converts Sequence objects
+                    to this format. Can be None, in which case trying to convert to
                     this format will raise an error.
 
         Examples
