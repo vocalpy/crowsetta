@@ -4,11 +4,11 @@ from scipy.io import loadmat
 from crowsetta.classes import Sequence
 
 
-def example2seq(file):
+def example2seq(mat_file):
     """example of a function that unpacks annotation from
     a complicated data structure and returns the necessary
     data from a Sequence object"""
-    mat = loadmat(file, squeeze_me=True)
+    mat = loadmat(mat_file, squeeze_me=True)
     seq_list = []
     # annotation structure loads as a Python dictionary with two keys
     # one maps to a list of filenames, 
@@ -20,8 +20,8 @@ def example2seq(file):
         # instead gets ndarray out of a zero-length ndarray of dtype=object.
         # This is just weirdness that results from loading complicated data
         # structure in .mat file.
-        onsets_s = annotation['segOnset'].tolist()
-        offsets_s = annotation['segOffset'].tolist()
+        onsets_s = annotation['segFileStartTimes'].tolist()
+        offsets_s = annotation['segFileEndTimes'].tolist()
         labels = annotation['segType'].tolist()
         if type(labels) == int:
             # this happens when there's only one syllable in the file
@@ -34,13 +34,11 @@ def example2seq(file):
             # something unexpected happened
             raise ValueError("Unable to load labels from {}, because "
                              "the segType parsed as type {} which is "
-                             "not recognized.".format(wav_filename,
+                             "not recognized.".format(filename,
                                                       type(labels)))
-        seq = Sequence(file=filename,
-                       labels=labels,
-                       onsets_s=onsets_s,
-                       offsets_s=offsets_s,
-                       onsets_Hz=None,
-                       offsets_Hz=None)
+        seq = Sequence.from_keyword(file=filename,
+                                    labels=labels,
+                                    onsets_s=onsets_s,
+                                    offsets_s=offsets_s)
         seq_list.append(seq)
     return seq_list
