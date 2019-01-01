@@ -6,7 +6,7 @@ import typing
 
 import attr
 
-from .csv import csv2seq
+from .csv import toseq_func_to_csv, csv2seq
 
 HERE = os.path.dirname(__file__)
 
@@ -156,18 +156,13 @@ class Transcriber:
                         f'{format_module} could not be imported, '
                         'and not recognized as a file')
 
-            # insert error checking for module attributes (i.e. functions) here
-            # so we can give user human-interpretable error messages
+            # need to_seq in a variable so we use it to get default for to_csv
+            to_seq = getattr(this_format_module, self._config[section]['to_seq'])
             self.format_functions[section] = FormatFunctions(
-                to_seq=getattr(this_format_module,
-                               self._config[section]['to_seq'],
-                               None),
-                to_csv=getattr(this_format_module,
-                               self._config[section]['to_csv'],
-                               None),
-                to_format=getattr(this_format_module,
-                                  self._config[section]['to_format'],
-                                  None),
+                to_seq=to_seq,
+                # default for to_csv is function returned by toseq_func_to_csv() when we pass it to_seq
+                to_csv=getattr(this_format_module, self._config[section]['to_csv'], toseq_func_to_csv(to_seq)),
+                to_format=getattr(this_format_module, self._config[section]['to_format'], None),
             )
 
     def _validate_format(self, file_format):
