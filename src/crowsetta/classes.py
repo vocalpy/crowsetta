@@ -5,7 +5,7 @@ import numpy as np
 from .validation import _num_samples, check_consistent_length, column_or_row_or_1d
 
 
-@attr.s
+@attr.s(frozen=True)
 class Segment(object):
     """object that represents a segment of a time series,
      usually a syllable in a bout of birdsong"""
@@ -45,7 +45,7 @@ class Segment(object):
                    onset_Hz=onset_Hz, offset_Hz=offset_Hz)
 
 
-@attr.s
+@attr.s(frozen=True)
 class Sequence:
     """object that represents a sequence of segments, such as a bout of birdsong made
     up of syllables
