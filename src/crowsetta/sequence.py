@@ -59,6 +59,12 @@ class Sequence:
                                                         offsets_Hz,
                                                         labels)
 
+        self._validate_segments_type(segments)
+        file_from_segments = self._get_unique_file_from_segments(segments)
+        if file_from_segments != file:
+            raise ValueError(f"File for segments, '{file_from_segments}', "
+                             f"does not match file, '{file}'.")
+
         self.segments = segments
         self.onsets_s = onsets_s
         self.offsets_s = offsets_s
@@ -95,13 +101,24 @@ class Sequence:
         return labels
 
     @staticmethod
-    def _validate_segments(segments):
+    def _validate_segments_type(segments):
         """validate that all items in list of segments are Segment"""
         if not all([type(seg) == Segment for seg in segments]):
             raise TypeError(
                 'A Sequence must be made from a list of Segments but not all '
                 'items in the list passed were Segments.')
 
+    @staticmethod
+    def _get_unique_file_from_segments(segments):
+        files = []
+        for seg in segments:
+            files.append(seg.file)
+        file = np.unique(files)
+        if file.shape[0] > 1:
+            raise ValueError('Segments for a Sequence should all come from same file, '
+                             f'but found more than one file name in segments: {file}')
+        else:
+            return file[0]
 
     @staticmethod
     def _validate_onsets_offsets_labels(onsets_s,
@@ -224,7 +241,7 @@ class Sequence:
         seq : Sequence
             instance of Sequence generated using list of segments
         """
-        cls._validate_segments(segments)
+        cls._validate_segments_type(segments)
 
         onsets_s = []
         offsets_s = []
@@ -239,20 +256,14 @@ class Sequence:
             onsets_Hz.append(seg.onset_Hz)
             offsets_Hz.append(seg.offset_Hz)
             labels.append(seg.label)
-            files.append(seg.file)
 
         onsets_s = np.asarray(onsets_s)
         offsets_s = np.asarray(offsets_s)
         onsets_Hz = np.asarray(onsets_Hz)
         offsets_Hz = np.asarray(offsets_Hz)
         labels = np.asarray(labels)
-        files = np.asarray(files)
 
-        file = np.unique(files)
-        if file.shape[0] > 1:
-            raise ValueError(f'Found more than one file name in segments: {file}')
-        else:
-            file = file[0]
+        file = cls._get_unique_file_from_segments(segments)
 
         labels = cls._convert_labels(labels)
 
