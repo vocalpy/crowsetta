@@ -27,6 +27,64 @@ class TestSequence(unittest.TestCase):
         offsets_s = np.asarray(offsets_s)
         return onsets_Hz, offsets_Hz, onsets_s, offsets_s, labels
 
+    def setUp(self):
+        file = 'bird21.wav'
+        a_segment = Segment.from_keyword(
+            label='a',
+            onset_Hz=16000,
+            offset_Hz=32000,
+            file=file,
+        )
+        list_of_segments = [a_segment] * 3
+
+        (onsets_Hz,
+         offsets_Hz,
+         onsets_s,
+         offsets_s,
+         labels) = self.keywords_from_segments(list_of_segments)
+
+        self.a_seq = Sequence(segments=list_of_segments,
+                              onsets_Hz=onsets_Hz,
+                              offsets_Hz=offsets_Hz,
+                              onsets_s=onsets_s,
+                              offsets_s=offsets_s,
+                              labels=labels,
+                              file=file
+                              )
+
+        self.same_seq = Sequence(segments=list_of_segments,
+                              onsets_Hz=onsets_Hz,
+                              offsets_Hz=offsets_Hz,
+                              onsets_s=onsets_s,
+                              offsets_s=offsets_s,
+                              labels=labels,
+                              file=file
+                              )
+
+        file = 'bird22.wav'
+        a_segment = Segment.from_keyword(
+            label='a',
+            onset_Hz=32000,
+            offset_Hz=64000,
+            file=file,
+        )
+        list_of_segments = [a_segment] * 4
+
+        (onsets_Hz,
+         offsets_Hz,
+         onsets_s,
+         offsets_s,
+         labels) = self.keywords_from_segments(list_of_segments)
+
+        self.different_seq = Sequence(segments=list_of_segments,
+                                      onsets_Hz=onsets_Hz,
+                                      offsets_Hz=offsets_Hz,
+                                      onsets_s=onsets_s,
+                                      offsets_s=offsets_s,
+                                      labels=labels,
+                                      file=file
+                                      )
+
     def test_init(self):
         file = 'bird21.wav'
         a_segment = Segment.from_keyword(
@@ -295,6 +353,32 @@ class TestSequence(unittest.TestCase):
         self.assertTrue(np.all(seq_dict['onsets_Hz'] == onsets_Hz))
         self.assertTrue(np.all(seq_dict['offsets_Hz'] == offsets_Hz))
         self.assertTrue(np.all(seq_dict['file'] == file))
+
+    def test_eq(self):
+        self.assertTrue(self.a_seq == self.same_seq)
+
+    def test_ne(self):
+        self.assertTrue(self.a_seq != self.different_seq)
+
+    def test_lt_raises(self):
+        with self.assertRaises(NotImplementedError):
+            self.a_seq < self.different_seq
+
+    def test_le_raises(self):
+        with self.assertRaises(NotImplementedError):
+            self.a_seq <= self.different_seq
+
+    def test_gt_raises(self):
+        with self.assertRaises(NotImplementedError):
+            self.a_seq > self.different_seq
+
+    def test_ge_raises(self):
+        with self.assertRaises(NotImplementedError):
+            self.a_seq >= self.different_seq
+
+    def test_hash_raises(self):
+        with self.assertRaises(NotImplementedError):
+            hash(self.a_seq)
 
 
 if __name__ == '__main__':
