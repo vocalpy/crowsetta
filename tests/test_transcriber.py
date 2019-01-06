@@ -169,7 +169,7 @@ class TestTranscriber(unittest.TestCase):
                                   'example_user_format',
                                   'bird1_annotation.mat')
         with self.assertRaises(NotImplementedError):
-            scribe.to_csv(file=annotation, file_format='example')
+            scribe.to_csv(file=annotation, file_format='example', csv_fname='bad.csv')
 
     def test_call_to_format_when_None_raises(self):
         user_config = {
