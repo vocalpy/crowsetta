@@ -152,7 +152,7 @@ def csv2seq(csv_fname):
         row = [None if item=='None' else item for item in row]
         segment = Segment.from_row(row=row, header=header)
         curr_file = segment.file
-        segments = []
+        segments = [segment]
 
         for row in reader:
             row = [None if item == 'None' else item for item in row]
