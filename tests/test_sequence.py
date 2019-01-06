@@ -380,6 +380,9 @@ class TestSequence(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             hash(self.a_seq)
 
+    def test_seq_is_immutable(self):
+        with self.assertRaises(TypeError):
+            self.a_seq.file = 'bird39.wav'
 
 if __name__ == '__main__':
     unittest.main()
