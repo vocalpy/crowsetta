@@ -2,7 +2,7 @@
 import os
 import csv
 
-from .classes import Segment
+from .segment import Segment
 from .sequence import Sequence
 
 

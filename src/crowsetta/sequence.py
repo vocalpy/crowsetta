@@ -1,8 +1,9 @@
+"""defines Sequence class"""
 import numpy as np
 
 from .validation import _num_samples, check_consistent_length, column_or_row_or_1d 
 
-from .classes import Segment
+from .segment import Segment
 
 
 class Sequence:
