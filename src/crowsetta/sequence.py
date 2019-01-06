@@ -13,21 +13,27 @@ class Sequence:
     Attributes
     ----------
     segments : list
-        of Segment objects
-    onsets_s : numpy.ndarray
-    offsets_s : numpy.ndarray
-    onsets_Hz : numpy.ndarray
-    offsets_Hz : numpy.ndarray
-    labels : numpy.ndarray
+        of Segment objects.
     file : str
+        name of audio file with which annotation is associated.
+    onsets_Hz : numpy.ndarray or None
+        of type int, onset of each annotated segment in samples/second
+    offsets_Hz : numpy.ndarray or None
+        of type int, offset of each annotated segment in samples/second
+    onsets_s : numpy.ndarray or None
+        of type float, onset of each annotated segment in seconds
+    offsets_s : numpy.ndarray or None
+        of type float, offset of each annotated segment in seconds
+    labels : str, list, or numpy.ndarray
+        of type str, label for each annotated segment
 
     Methods
     -------
-    from_segments
-
-    from_keyword
-
-    from_dict
+    from_segments : make a Sequence from a list of segments
+    from_keyword : make a Sequence by passing keywords (all arguments except segments)
+    from_dict : like from_keyword, but pass a Python dictionary where keys are keywords
+        and values are arguments for those keywords
+    to_dict : convert to a dict. The inverse of from_dict.
     """
     def __init__(self,
                  segments,
@@ -37,16 +43,24 @@ class Sequence:
                  offsets_s=None,
                  onsets_Hz=None,
                  offsets_Hz=None):
-        """
+        """Sequence __init__
 
         Parameters
         ----------
-        segments
-        onsets_s
-        offsets_s
-        onsets_Hz
-        offsets_Hz
-        labels
+        segments : list
+            of Segment objects.
+        file : str
+            name of audio file with which annotation is associated.
+        onsets_Hz : numpy.ndarray or None
+            of type int, onset of each annotated segment in samples/second
+        offsets_Hz : numpy.ndarray or None
+            of type int, offset of each annotated segment in samples/second
+        onsets_s : numpy.ndarray or None
+            of type float, onset of each annotated segment in seconds
+        offsets_s : numpy.ndarray or None
+            of type float, offset of each annotated segment in seconds
+        labels : str, list, or numpy.ndarray
+            of type str, label for each annotated segment
         """
         labels = self._convert_labels(labels)
 
