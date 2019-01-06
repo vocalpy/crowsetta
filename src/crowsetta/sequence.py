@@ -99,10 +99,7 @@ class Sequence:
                 self_attr = getattr(self, attr)
                 other_attr = getattr(other, attr)
                 if type(self_attr) == np.ndarray:
-                    try:
-                        eq.append(np.all(np.equal(self_attr, other_attr)))
-                    except ValueError:
-                        eq.append(False)
+                        eq.append(np.array_equal(self_attr, other_attr))
                 else:
                     eq.append(self_attr == other_attr)
 
