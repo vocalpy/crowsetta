@@ -1,5 +1,5 @@
 import os
-from configparser import ConfigParser
+import json
 from importlib import import_module
 import importlib.util
 import typing
@@ -84,19 +84,18 @@ class Transcriber:
         >>> scribe = crowsetta.Transcriber(user_config=my_config)
         >>> seq = scribe.toseq(file='my_annotation.mat', file_format='myformat_name')
         """
-        # read default config is declared in src/crowsetta/config.ini;
+        # read default config is declared in src/crowsetta/config.json;
         # have to read  it in __init__ so config doesn't live at module level;
         # otherwise it will be shared across instances (and mutable!)
-        crowsetta_config = ConfigParser()
-        crowsetta_config.read(os.path.join(HERE, 'config.ini'))
-        self._config = crowsetta_config
+        with open(os.path.join(HERE, 'config.json'), 'r') as json_fp:
+            self._config = json.load(json_fp)
 
         if user_config is not None:
             if type(user_config) != dict:
                 raise TypeError(f'config_dict should be a dictionary, '
                                 f'not {type(user_config)}')
 
-            if not all([type(config_dict) == dict 
+            if not all([type(config_dict) == dict
                         for config_dict in user_config.values()]):
                 not_dict = [config_dict for config_dict in user_config.values()
                             if not type(config_dict) == dict]
@@ -115,24 +114,13 @@ class Transcriber:
                     extra_keys = this_config_keys - VALID_CONFIG_DICT_KEYS
                     raise KeyError(f'config_dict for {config_name} contains '
                                    f'invalid keys: {extra_keys}')
-                self._config.add_section(config_name)
-                for option, value in config_dict.items():
-                    if value is None:
-                        # value has to be a string
-                        value = 'None'
-                    self._config[config_name][option] = value
-                # since these aren't required, have to add default 'None'
-                # if user doesn't specify
-                if 'to_csv' not in config_dict:
-                    self._config[config_name]['to_csv'] = 'None'
-                if 'to_format' not in config_dict:
-                    self._config[config_name]['to_format'] = 'None'
+                self._config[config_name] = config_dict
 
-        self.file_formats = self._config.sections()
+        self.file_formats = self._config.keys()
 
         self.format_functions = {}
-        for section in self._config.sections():
-            format_module = self._config[section]['module']
+        for file_format, config_dict in self._config.items():
+            format_module = config_dict['module']
 
             if os.path.isfile(format_module):
                 # if it's a file (e.g. some path), have to import
@@ -157,12 +145,26 @@ class Transcriber:
                         'and not recognized as a file')
 
             # need to_seq in a variable so we use it to get default for to_csv
-            to_seq = getattr(this_format_module, self._config[section]['to_seq'])
-            self.format_functions[section] = FormatFunctions(
+            to_seq = getattr(this_format_module, config_dict['to_seq'])
+            # if to_csv not in config_dict (not specified by user)
+            if not 'to_csv' in config_dict:
+                # default to function returned by toseq_func_to_csv()
+                # when we pass it to_seq
+                to_csv = toseq_func_to_csv(to_seq)
+            elif config_dict['to_csv'] is None:
+                to_csv = None
+            else:
+                to_csv = getattr(this_format_module, config_dict['to_csv'])
+
+            if not 'to_format' in config_dict or config_dict['to_format'] is None:
+                to_format = None
+            else:
+                to_format = getattr(this_format_module, config_dict['to_format'])
+
+            self.format_functions[file_format] = FormatFunctions(
                 to_seq=to_seq,
-                # default for to_csv is function returned by toseq_func_to_csv() when we pass it to_seq
-                to_csv=getattr(this_format_module, self._config[section]['to_csv'], toseq_func_to_csv(to_seq)),
-                to_format=getattr(this_format_module, self._config[section]['to_format'], None),
+                to_csv=to_csv,
+                to_format=to_format,
             )
 
     def _validate_format(self, file_format):
