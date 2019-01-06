@@ -93,13 +93,31 @@ class Sequence:
 
     def __eq__(self, other):
         if self.__class__ == other.__class__:
-            return _test_equality(self, other)
+            eq = []
+            for attr in ['segments', 'labels', 'file',
+                         'onsets_s', 'offsets_s', 'onsets_Hz', 'offsets_Hz']:
+                self_attr = getattr(self, attr)
+                other_attr = getattr(other, attr)
+                if type(self_attr) == np.ndarray:
+                    try:
+                        eq.append(np.all(np.equal(self_attr, other_attr)))
+                    except ValueError:
+                        eq.append(False)
+                else:
+                    eq.append(self_attr == other_attr)
+
+            if all(eq):
+                return True
+            else:
+                return False
+
         else:
-            return NotImplementedError
+            raise TypeError("can only test for equality between two Sequences, not "
+                            f"between a Sequence and {type(other)}")
 
     def __ne__(self, other):
         if self.__class__ == other.__class__:
-            return not _test_equality(self, other)
+            return not self.__eq__(other)
         else:
             return NotImplementedError
 
