@@ -2,20 +2,56 @@ import unittest
 
 import numpy as np
 
-from crowsetta.classes import Segment, Sequence
+from crowsetta.classes import Segment
+from crowsetta.sequence import Sequence
 
 
 class TestSequence(unittest.TestCase):
-    # test here because Sequence uses SegmentList
+
+    @staticmethod
+    def keywords_from_segments(segments):
+        labels = []
+        onsets_Hz = []
+        offsets_Hz = []
+        onsets_s = []
+        offsets_s = []
+        for seg in segments:
+            labels.append(seg.label)
+            onsets_Hz.append(seg.onset_Hz)
+            offsets_Hz.append(seg.offset_Hz)
+            onsets_s.append(None)
+            offsets_s.append(None)
+        onsets_Hz = np.asarray(onsets_Hz)
+        offsets_Hz = np.asarray(offsets_Hz)
+        onsets_s = np.asarray(onsets_s)
+        offsets_s = np.asarray(offsets_s)
+        return onsets_Hz, offsets_Hz, onsets_s, offsets_s, labels
+
     def test_init(self):
+        file = 'bird21.wav'
         a_segment = Segment.from_keyword(
             label='a',
             onset_Hz=16000,
             offset_Hz=32000,
-            file='bird21.wav'
+            file=file,
         )
         list_of_segments = [a_segment] * 3
-        seq = Sequence(segments=list_of_segments)
+
+        (onsets_Hz,
+         offsets_Hz,
+         onsets_s,
+         offsets_s,
+         labels) = self.keywords_from_segments(list_of_segments)
+
+        seq = Sequence(segments=list_of_segments,
+                       onsets_Hz=onsets_Hz,
+                       offsets_Hz=offsets_Hz,
+                       onsets_s=onsets_s,
+                       offsets_s=offsets_s,
+                       labels=labels,
+                       file=file
+                       )
+
         self.assertTrue(type(seq) == Sequence)
         self.assertTrue(hasattr(seq, 'segments'))
 
@@ -50,6 +86,40 @@ class TestSequence(unittest.TestCase):
         with self.assertRaises(TypeError):
             Sequence(segments=list_of_segments)
 
+    def test_init_where_segments_has_bad_file_raises(self):
+        # should raise error because one Segment has different value for file
+        # than the other two
+        file = 'bird21.wav'
+        a_segment = Segment.from_keyword(
+            label='a',
+            onset_Hz=16000,
+            offset_Hz=32000,
+            file=file
+        )
+        list_of_segments = [a_segment] * 3
+        segment_with_different_file = Segment.from_keyword(
+            label='a',
+            onset_Hz=16000,
+            offset_Hz=32000,
+            file='bird12.wav'
+        )
+        list_of_segments.append(segment_with_different_file)
+
+        (onsets_Hz,
+         offsets_Hz,
+         onsets_s,
+         offsets_s,
+         labels) = self.keywords_from_segments(list_of_segments)
+
+        with self.assertRaises(ValueError):
+            Sequence(list_of_segments,
+                     labels,
+                     file,
+                     onsets_s,
+                     offsets_s,
+                     onsets_Hz,
+                     offsets_Hz)
+
     def test_from_segments(self):
         a_segment = Segment.from_keyword(
             label='a',
@@ -61,6 +131,28 @@ class TestSequence(unittest.TestCase):
         seq = Sequence.from_segments(list_of_segments)
         self.assertTrue(hasattr(seq, 'segments'))
         self.assertTrue(type(seq.segments) == list)
+
+    def test_from_segments_with_bad_file_raises(self):
+        # should raise error because one Segment has different value for file
+        # than the other two
+        file = 'bird21.wav'
+        a_segment = Segment.from_keyword(
+            label='a',
+            onset_Hz=16000,
+            offset_Hz=32000,
+            file=file
+        )
+        list_of_segments = [a_segment] * 3
+        segment_with_different_file = Segment.from_keyword(
+            label='a',
+            onset_Hz=16000,
+            offset_Hz=32000,
+            file='bird12.wav'
+        )
+        list_of_segments.append(segment_with_different_file)
+
+        with self.assertRaises(ValueError):
+            Sequence.from_segments(list_of_segments)
 
     def test_from_keyword_bad_labels_type_raises(self):
         file = '0.wav'
@@ -203,25 +295,6 @@ class TestSequence(unittest.TestCase):
         self.assertTrue(np.all(seq_dict['onsets_Hz'] == onsets_Hz))
         self.assertTrue(np.all(seq_dict['offsets_Hz'] == offsets_Hz))
         self.assertTrue(np.all(seq_dict['file'] == file))
-
-    def test_to_dict_with_bad_Segments_raises(self):
-        a_segment = Segment.from_keyword(
-            label='a',
-            onset_Hz=16000,
-            offset_Hz=32000,
-            file='bird21.wav'
-        )
-        list_of_segments = [a_segment] * 3
-        segment_with_different_file = Segment.from_keyword(
-            label='a',
-            onset_Hz=16000,
-            offset_Hz=32000,
-            file='bird12.wav'
-        )
-        list_of_segments.append(segment_with_different_file)
-        seq = Sequence(segments=list_of_segments)
-        with self.assertRaises(ValueError):
-            seq.to_dict()
 
 
 if __name__ == '__main__':
