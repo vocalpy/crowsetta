@@ -10,7 +10,7 @@ import numpy as np
 import evfuncs
 
 import crowsetta
-from crowsetta.classes import Segment
+from crowsetta.segment import Segment
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 

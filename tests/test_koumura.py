@@ -7,7 +7,7 @@ import unittest
 from pathlib import Path
 
 import crowsetta
-from crowsetta.classes import Segment
+from crowsetta.segment import Segment
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
