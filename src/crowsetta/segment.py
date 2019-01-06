@@ -1,4 +1,4 @@
-"""defines Segment and Sequence classes used for conversion"""
+"""defines Segment class"""
 import attr
 
 
