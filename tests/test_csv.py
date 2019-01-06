@@ -138,16 +138,19 @@ class TestAnnotation(unittest.TestCase):
 
         # make sure everything is the same in the two annotation lists
         for from_csv, from_notmat in zip(seq_list_from_csv, seq_list_from_notmats):
-            from_csv = attr.asdict(from_csv)
-            from_notmat = attr.asdict(from_notmat)
+            from_csv = from_csv.as_dict()
+            from_notmat = from_notmat.as_dict()
             for from_csv_key, from_csv_val in from_csv.items():
                 if type(from_csv_val) == str:
                     assert from_csv_val == from_notmat[from_csv_key]
                 elif type(from_csv_val) == np.ndarray:
                     # hacky platform-agnostic way to say "if integer"
                     if from_csv_val.dtype == np.asarray(int(1)).dtype:
-                        assert np.array_equal(from_csv_val,
-                                              from_notmat[from_csv_key])
+                        try:
+                            assert np.array_equal(from_csv_val,
+                                                  from_notmat[from_csv_key])
+                        except AssertionError:
+                            import pdb;pdb.set_trace()
                     # hacky platform-agnostic way to say "if float"
                     elif from_csv_val.dtype == np.asarray((1.)).dtype:
                         assert np.allclose(from_csv[from_csv_key],
