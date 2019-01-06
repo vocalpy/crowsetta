@@ -29,7 +29,7 @@ class TestNotmat(unittest.TestCase):
                                   'cbins/gy6or6/032312/'
                                   'gy6or6_baseline_230312_0808.138.cbin.not.mat'))
         seq = crowsetta.notmat.notmat2seq(notmat)
-        self.assertTrue(type(seq) == crowsetta.classes.Sequence)
+        self.assertTrue(type(seq) == crowsetta.sequence.Sequence)
         self.assertTrue(hasattr(seq, 'segments'))
 
     def test_notmat2seq_list_of_str(self):
@@ -39,7 +39,7 @@ class TestNotmat(unittest.TestCase):
         seq = crowsetta.notmat.notmat2seq(notmat)
         self.assertTrue(type(seq) == list)
         self.assertTrue(len(seq) == len(notmat))
-        self.assertTrue(all([type(a_seq) == crowsetta.classes.Sequence
+        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
                             for a_seq in seq]))
         self.assertTrue(all([hasattr(a_seq, 'segments') for a_seq in seq]))
 
@@ -49,7 +49,7 @@ class TestNotmat(unittest.TestCase):
         seq = crowsetta.notmat.notmat2seq(notmat)
         self.assertTrue(type(seq) == list)
         self.assertTrue(len(seq) == len(list(notmat)))
-        self.assertTrue(all([type(a_seq) == crowsetta.classes.Sequence
+        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
                             for a_seq in seq]))
         self.assertTrue(all([hasattr(a_seq, 'segments') for a_seq in seq]))
 

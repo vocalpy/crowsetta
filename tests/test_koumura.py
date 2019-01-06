@@ -28,7 +28,7 @@ class TestAnnotation(unittest.TestCase):
                                                  wavpath=os.path.join(self.test_data_dir,
                                                                       'Wave'))
         self.assertTrue(type(seq_list) == list)
-        self.assertTrue(all([type(seq) == crowsetta.classes.Sequence
+        self.assertTrue(all([type(seq) == crowsetta.sequence.Sequence
                              for seq in seq_list]))
 
     def test_koumura2csv(self):
