@@ -2,7 +2,7 @@ import unittest
 
 import numpy as np
 
-from crowsetta.classes import Segment
+from crowsetta.segment import Segment
 from crowsetta.sequence import Sequence
 
 
