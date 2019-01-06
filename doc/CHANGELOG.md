@@ -13,12 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sequence class totally re-written
   + no longer attrs-based
   + because of somewhat complicated logic for validating arguments that
-  (I decided) was necessary in init (to prevent user from creating a 'bad'
-  instance. A Nanny State init function.)
+  was necessary in init (to prevent user from creating a 'bad'
+  instance.)
   + Sequences are immutable. Idea is they are just connectors between 
    annotation and whatever user needs to do with it so you shouldn't 
    need to change any attribute values after loading annotation 
-   (also Nanny State-ish)
 - Transcriber.__init__ uses config.json instead of config.ini to read defaults
   + this makes __init__ logic more readable since we don't have to convert
   user_config dict to strings and then back again; default config just loads as 
