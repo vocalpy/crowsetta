@@ -2,7 +2,8 @@
 import os
 import csv
 
-from .classes import Segment, Sequence
+from .classes import Segment
+from .sequence import Sequence
 
 
 def seq2csv(seq,
