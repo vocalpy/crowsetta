@@ -238,7 +238,7 @@ class TestSequence(unittest.TestCase):
                                   offsets_Hz=np.asarray([0, 2, 4, 6, 8]),
                                   file='bird21.wav')
 
-    def test_to_dict_onset_offset_in_Hertz(self):
+    def test_as_dict_onset_offset_in_Hertz(self):
         file = '0.wav'
         labels = 'abcde'
         onsets_Hz = np.asarray([0, 2, 4, 6, 8])
@@ -247,7 +247,7 @@ class TestSequence(unittest.TestCase):
                                     onsets_Hz=onsets_Hz,
                                     offsets_Hz=offsets_Hz,
                                     file=file)
-        seq_dict = seq.to_dict()
+        seq_dict = seq.as_dict()
 
         self.assertTrue(np.all(seq_dict['labels'] == np.asarray(list(labels))))
         self.assertTrue(np.all(seq_dict['onsets_Hz'] == onsets_Hz))
@@ -256,7 +256,7 @@ class TestSequence(unittest.TestCase):
         self.assertTrue(seq_dict['onsets_s'] is None)
         self.assertTrue(seq_dict['offsets_s'] is None)
 
-    def test_to_dict_onset_offset_in_seconds(self):
+    def test_as_dict_onset_offset_in_seconds(self):
         file = '0.wav'
         labels = 'abcde'
         onsets_s = np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
@@ -265,7 +265,7 @@ class TestSequence(unittest.TestCase):
                                     onsets_s=onsets_s,
                                     offsets_s=offsets_s,
                                     file=file)
-        seq_dict = seq.to_dict()
+        seq_dict = seq.as_dict()
 
         self.assertTrue(np.all(seq_dict['labels'] == np.asarray(list(labels))))
         self.assertTrue(np.all(seq_dict['onsets_s'] == onsets_s))
@@ -287,7 +287,7 @@ class TestSequence(unittest.TestCase):
                                     onsets_s=onsets_s,
                                     offsets_s=offsets_s,
                                     file=file)
-        seq_dict = seq.to_dict()
+        seq_dict = seq.as_dict()
 
         self.assertTrue(np.all(seq_dict['labels'] == np.asarray(list(labels))))
         self.assertTrue(np.all(seq_dict['onsets_s'] == onsets_s))
