@@ -1,6 +1,6 @@
 import unittest
 
-from crowsetta.classes import Segment
+from crowsetta.segment import Segment
 
 
 class TestSegment(unittest.TestCase):
