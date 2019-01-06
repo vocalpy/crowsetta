@@ -80,13 +80,13 @@ class Sequence:
             raise ValueError(f"File for segments, '{file_from_segments}', "
                              f"does not match file, '{file}'.")
 
-        self.segments = segments
-        self.onsets_s = onsets_s
-        self.offsets_s = offsets_s
-        self.onsets_Hz = onsets_Hz
-        self.offsets_Hz = offsets_Hz
-        self.labels = labels
-        self.file = file
+        super().__setattr__('segments', segments)
+        super().__setattr__('onsets_s', onsets_s)
+        super().__setattr__('offsets_s', offsets_s)
+        super().__setattr__('onsets_Hz', onsets_Hz)
+        super().__setattr__('offsets_Hz', offsets_Hz)
+        super().__setattr__('labels', labels)
+        super().__setattr__('file', file)
 
     def __repr__(self):
         return f"<Sequence with {len(self.segments)} segments>"
@@ -121,6 +121,9 @@ class Sequence:
         else:
             raise TypeError("can only test for equality between two Sequences, not "
                             f"between a Sequence and {type(other)}")
+
+    def __setattr__(self, key, value):
+        raise TypeError('Sequence objects are immutable.')
 
     def __lt__(self, other):
         raise NotImplementedError
