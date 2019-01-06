@@ -119,7 +119,23 @@ class Sequence:
         if self.__class__ == other.__class__:
             return not self.__eq__(other)
         else:
-            return NotImplementedError
+            raise TypeError("can only test for equality between two Sequences, not "
+                            f"between a Sequence and {type(other)}")
+
+    def __lt__(self, other):
+        raise NotImplementedError
+
+    def __le__(self, other):
+        raise NotImplementedError
+
+    def __gt__(self, other):
+        raise NotImplementedError
+
+    def __ge__(self, other):
+        raise NotImplementedError
+
+    def __hash__(self):
+        raise NotImplementedError
 
     @staticmethod
     def _convert_labels(labels):
