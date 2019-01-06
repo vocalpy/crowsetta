@@ -88,7 +88,7 @@ class TestNotmat(unittest.TestCase):
         for notmat in notmat_list:
             notmat_dict = evfuncs.load_notmat(notmat)
             seq = crowsetta.notmat.notmat2seq(notmat)
-            seq_dict = seq.to_dict()
+            seq_dict = seq.as_dict()
             crowsetta.notmat.make_notmat(filename=seq_dict['file'],
                                          onsets_Hz=seq_dict['onsets_Hz'],
                                          offsets_Hz=seq_dict['offsets_Hz'],
