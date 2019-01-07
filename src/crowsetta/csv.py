@@ -101,17 +101,37 @@ def toseq_func_to_csv(toseq_func):
     --------
     >>> from my_format_module import myformat2seq
     >>> myformat2csv = toseq_func_to_csv(myformat2seq)
-    >>> to_csv_kwargs = {csv_fname: 'my_format_bird1.csv', 'abspath': True}
+    >>> to_csv_kwargs = {csv_filename: 'my_format_bird1.csv', 'abspath': True}
     >>> myformat2csv('my_annotation.txt', to_csv_kwargs=to_csv_kwargs)
     """
-    def format2seq2csv(file, to_seq_kwargs=None, to_csv_kwargs=None):
-        if to_seq_kwargs is None:
-            to_seq_kwargs = {}
-        if to_csv_kwargs is None:
-            to_csv_kwargs = {}
+    def format2seq2csv(file, csv_filename, abspath=False, basename=False, **to_seq_kwargs):
+        """wrapper around a to_seq function and the seq2csv function.
+        Returned by format2seq2csv
 
+        Parameters
+        ----------
+        file : str or list
+            annotation file or files to load into Sequences
+        csv_filename : str
+            name of .csv file that will be saved
+        **to_seq_kwargs
+            arbitrary keyword arguments to pass to the to_seq function, if needed. Default is None.
+
+        Other Parameters
+        ----------------
+        abspath : bool
+            if True, converts filename for each audio file into absolute path.
+            Default is False.
+        basename : bool
+            if True, discard any information about path and just use file name.
+            Default is False.
+
+        Returns
+        -------
+        None
+        """
         seq = toseq_func(file, **to_seq_kwargs)
-        seq2csv(seq, **to_csv_kwargs)
+        seq2csv(seq, csv_filename, abspath=abspath, basename=basename)
 
     return format2seq2csv
 
