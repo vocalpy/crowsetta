@@ -222,23 +222,41 @@ class Transcriber:
 
         return self.format_functions[file_format].to_seq(file, **kwargs)
 
-    def to_csv(self, file, file_format=None, **kwargs):
+    def to_csv(self, file, csv_filename, file_format=None,
+               abspath=False, basename=False, **to_seq_kwargs):
         """convert a file or files to a comma-separated values (csv) file
 
         Parameters
         ----------
         file : str or list
             Name or full path to one annotation file, or a list of such file names or paths
+        csv_filename : str
+            Name of .csv file that will be saved.
         file_format : str
             Format of file(s). Default is None, in which case an attempt is made to determine
             the format from the file extension.
-        **kwargs
-            Arbitrary keyword arguments. For when the to_csv function for the format specified
-            requires additional arguments.
+
+        Other Parameters
+        ----------------
+        abspath : bool
+            if True, converts filename for each audio file into absolute path.
+            Default is False.
+        basename : bool
+            if True, discard any information about path and just use file name.
+            Default is False.
+        **to_seq_kwargs :
+            arbitrary keyword arguments to pass to a to_seq function, if needed.
 
         Returns
         -------
         None
+
+        Notes
+        -----
+        If a Transcriber has a user_config, and that config does not specify a function
+        to use for to_csv, then by default the Transcriber attempts to make a function
+        using crowsetta.csv.toseq_func_to_csv (see documentation of that function for more
+        detail). To prevent this, specify `to_csv` in user_config as None.
 
         Examples
         --------
