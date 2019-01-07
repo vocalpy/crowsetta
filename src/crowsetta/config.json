@@ -1,0 +1,14 @@
+{
+    "koumura": {
+        "module": "crowsetta.koumura",
+        "to_seq": "koumura2seq",
+        "to_csv": "koumura2csv",
+        "to_format": null
+    },
+    "notmat": {
+        "module": "crowsetta.notmat",
+        "to_seq": "notmat2seq",
+        "to_csv": "notmat2csv",
+        "to_format": "make_notmat"
+    }
+}

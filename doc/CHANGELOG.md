@@ -6,7 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### added
-- nothing yet, just released 0.2.0a4
+- Sequence instances have attributes: labels, onsets_s, offsets_s, onsets_Hz, 
+  offsets_Hz, and file. 
+
+### changed
+- Sequence class totally re-written
+  + no longer attrs-based
+  + because of somewhat complicated logic for validating arguments that
+  was necessary in init (to prevent user from creating a 'bad'
+  instance.)
+- Sequences are immutable. Idea is they are just connectors between 
+  annotation and whatever user needs to do with it so you shouldn't 
+  need to change any attribute values after loading annotation 
+- Segment also immutable (by setting frozen=True in call to attr.s decorator)
+- Transcriber.__init__ uses config.json instead of config.ini to read defaults
+  + this makes __init__ logic more readable since we don't have to convert
+  user_config dict to strings and then back again; default config just loads as 
+  a dict from the .json file and we add the user_config dicts to it
 
 ## 0.2.0a4
 ### added

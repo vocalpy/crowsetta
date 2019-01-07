@@ -2,11 +2,12 @@
 import os
 import csv
 
-from .classes import Segment, Sequence
+from .segment import Segment
+from .sequence import Sequence
 
 
 def seq2csv(seq,
-            csv_fname,
+            csv_filename,
             abspath=False,
             basename=False):
     """write annotations from files to a comma-separated value (csv) file.
@@ -14,7 +15,7 @@ def seq2csv(seq,
     Parameters
     ----------
     seq : Sequence or list of Sequence objects
-    csv_fname : str
+    csv_filename : str
         name of csv file to write to, will be created
         (or overwritten if it exists already)
 
@@ -56,7 +57,7 @@ def seq2csv(seq,
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    with open(csv_fname, 'w', newline='') as csvfile:
+    with open(csv_filename, 'w', newline='') as csvfile:
         # SYL_ANNOT_COLUMN_NAMES is defined above, at the level of the module,
         # to ensure consistency across all functions in this module
         # that make use of it
@@ -100,28 +101,48 @@ def toseq_func_to_csv(toseq_func):
     --------
     >>> from my_format_module import myformat2seq
     >>> myformat2csv = toseq_func_to_csv(myformat2seq)
-    >>> to_csv_kwargs = {csv_fname: 'my_format_bird1.csv', 'abspath': True}
+    >>> to_csv_kwargs = {csv_filename: 'my_format_bird1.csv', 'abspath': True}
     >>> myformat2csv('my_annotation.txt', to_csv_kwargs=to_csv_kwargs)
     """
-    def format2seq2csv(file, to_seq_kwargs=None, to_csv_kwargs=None):
-        if to_seq_kwargs is None:
-            to_seq_kwargs = {}
-        if to_csv_kwargs is None:
-            to_csv_kwargs = {}
+    def format2seq2csv(file, csv_filename, abspath=False, basename=False, **to_seq_kwargs):
+        """wrapper around a to_seq function and the seq2csv function.
+        Returned by format2seq2csv
 
+        Parameters
+        ----------
+        file : str or list
+            annotation file or files to load into Sequences
+        csv_filename : str
+            name of .csv file that will be saved
+        **to_seq_kwargs
+            arbitrary keyword arguments to pass to the to_seq function, if needed. Default is None.
+
+        Other Parameters
+        ----------------
+        abspath : bool
+            if True, converts filename for each audio file into absolute path.
+            Default is False.
+        basename : bool
+            if True, discard any information about path and just use file name.
+            Default is False.
+
+        Returns
+        -------
+        None
+        """
         seq = toseq_func(file, **to_seq_kwargs)
-        seq2csv(seq, **to_csv_kwargs)
+        seq2csv(seq, csv_filename, abspath=abspath, basename=basename)
 
     return format2seq2csv
 
 
-def csv2seq(csv_fname):
+def csv2seq(csv_filename):
     """loads a comma-separated values (csv) file containing annotations
     for song files, returns contents as a list of Sequence objects
 
     Parameters
     ----------
-    csv_fname : str
+    csv_filename : str
         filename for comma-separated values file
 
     Returns
@@ -131,7 +152,7 @@ def csv2seq(csv_fname):
     """
     seq_list = []
 
-    with open(csv_fname, 'r', newline='') as csv_file:
+    with open(csv_filename, 'r', newline='') as csv_file:
         reader = csv.reader(csv_file)
 
         header = next(reader)
@@ -140,18 +161,18 @@ def csv2seq(csv_fname):
             not_in_FIELDS = set_header.difference(set(Segment._FIELDS))
             if not_in_FIELDS:
                 raise ValueError('The following column names in {} are not recognized: {}'
-                                 .format(csv_fname, not_in_FIELDS))
+                                 .format(csv_filename, not_in_FIELDS))
         not_in_header = set(Segment._FIELDS).difference(set_header)
         if not_in_header:
             raise ValueError(
                 'The following column names in {} are required but missing: {}'
-                .format(csv_fname, not_in_header))
+                .format(csv_filename, not_in_header))
 
         row = next(reader)
-        row = [None if item=='None' else item for item in row]
+        row = [None if item == 'None' else item for item in row]
         segment = Segment.from_row(row=row, header=header)
         curr_file = segment.file
-        segments = []
+        segments = [segment]
 
         for row in reader:
             row = [None if item == 'None' else item for item in row]

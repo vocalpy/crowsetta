@@ -214,7 +214,7 @@ us back an instance of a ``Sequence``. One such factory function is
 .. code:: ipython3
 
     from parsebat import parse_batlab_mat
-    from crowsetta.classes import Sequence
+    from crowsetta.sequence import Sequence
     
     # you, using the function you already wrote
     annot_list = parse_batlab_mat(mat_file='bat1_annotation.mat')
@@ -234,7 +234,7 @@ us back an instance of a ``Sequence``. One such factory function is
 .. parsed-literal::
 
     a_sequence:
-     Sequence(segments=[Segment(label='1', onset_s=0.0029761904761904934, offset_s=0.14150432900432905, onset_Hz=143, offset_Hz=6792, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='1', onset_s=0.279125, offset_s=0.504625, onset_Hz=13398, offset_Hz=24222, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='5', onset_s=0.5556472915365209, offset_s=0.5962916666666667, onset_Hz=26671, offset_Hz=28622, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.6265416666666667, offset_s=0.6494583333333334, onset_Hz=30074, offset_Hz=31174, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.6842916666666666, offset_s=0.7044583333333333, onset_Hz=32846, offset_Hz=33814, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.7392916666666667, offset_s=0.7594583333333333, onset_Hz=35486, offset_Hz=36454, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.7942916666666666, offset_s=0.8300416666666667, onset_Hz=38126, offset_Hz=39842, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.8502083333333333, offset_s=0.884125, onset_Hz=40810, offset_Hz=42438, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.906125, offset_s=0.9409583333333333, onset_Hz=43494, offset_Hz=45166, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.9647916666666667, offset_s=1.013375, onset_Hz=46310, offset_Hz=48642, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.0234583333333334, offset_s=1.0665416666666667, onset_Hz=49126, offset_Hz=51194, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.0775416666666666, offset_s=1.1115676406926405, onset_Hz=51722, offset_Hz=53355, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.128875, offset_s=1.1765416666666666, onset_Hz=54186, offset_Hz=56474, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.1957916666666666, offset_s=1.2315416666666668, onset_Hz=57398, offset_Hz=59114, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.2535416666666668, offset_s=1.2902083333333334, onset_Hz=60170, offset_Hz=61930, file='lbr3009_0005_2017_04_27_06_14_46.wav')])
+     <Sequence with 15 segments>
 
 
 3. turn the code we just wrote into a function that takes annotation files as an argument, and returns ``Sequence``\ s
@@ -249,7 +249,7 @@ your function.
 .. code:: ipython3
 
     # %load -r 4-7,24-25 batlab2seq.py
-    from crowsetta.classes import Sequence
+    from crowsetta.sequence import Sequence
     
     
     def batlab2seq(mat_file):
@@ -264,13 +264,13 @@ Then at the end of your main loop, instead of making your
 .. code:: ipython3
 
     # %load -r 56-63 batlab2seq.py
-            seq = Sequence.from_keyword(file=filename,
-                                        labels=seg_types,
-                                        onsets_s=seg_start_times,
-                                        offsets_s=seg_end_times,
-                                        onsets_Hz=seg_start_times_Hz,
-                                        offsets_Hz=seg_end_times_Hz)
-            seq_list.append(seq)
+    seq = Sequence.from_keyword(file=filename,
+                                labels=seg_types,
+                                onsets_s=seg_start_times,
+                                offsets_s=seg_end_times,
+                                onsets_Hz=seg_start_times_Hz,
+                                offsets_Hz=seg_end_times_Hz)
+    seq_list.append(seq)
         return seq_list
 
    If this still feels too wordy and repetitive for you, you can put
@@ -371,11 +371,11 @@ Here’s what it looks like to do all of that in a few lines of code:
         'batlab': {
             'module': 'batlab2seq.py',
             'to_seq': 'batlab2seq',
-            'to_csv': 'None',
-            'to_format': 'None',
         }
     }
+    
     scribe = Transcriber(user_config=your_config)
+    
     seq_list = scribe.to_seq(file='bat1_annotation.mat', file_format='batlab')
 
 And now, just like you do with the built-in formats, you get back a list
@@ -383,13 +383,47 @@ of ``Sequence``\ s from your format:
 
 .. code:: ipython3
 
-    print(seq_list[0])
+    print(f'First item in seq_list: {seq_list[0]}')
+    print(f'First segment in first sequence:\n{seq_list[0].segments[0]}')
 
 
 .. parsed-literal::
 
-    Sequence(segments=[Segment(label='1', onset_s=0.0029761904761904934, offset_s=0.14150432900432905, onset_Hz=143, offset_Hz=6792, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='1', onset_s=0.279125, offset_s=0.504625, onset_Hz=13398, offset_Hz=24222, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='5', onset_s=0.5556472915365209, offset_s=0.5962916666666667, onset_Hz=26671, offset_Hz=28622, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.6265416666666667, offset_s=0.6494583333333334, onset_Hz=30074, offset_Hz=31174, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.6842916666666666, offset_s=0.7044583333333333, onset_Hz=32846, offset_Hz=33814, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.7392916666666667, offset_s=0.7594583333333333, onset_Hz=35486, offset_Hz=36454, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.7942916666666666, offset_s=0.8300416666666667, onset_Hz=38126, offset_Hz=39842, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.8502083333333333, offset_s=0.884125, onset_Hz=40810, offset_Hz=42438, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.906125, offset_s=0.9409583333333333, onset_Hz=43494, offset_Hz=45166, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=0.9647916666666667, offset_s=1.013375, onset_Hz=46310, offset_Hz=48642, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.0234583333333334, offset_s=1.0665416666666667, onset_Hz=49126, offset_Hz=51194, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.0775416666666666, offset_s=1.1115676406926405, onset_Hz=51722, offset_Hz=53355, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.128875, offset_s=1.1765416666666666, onset_Hz=54186, offset_Hz=56474, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.1957916666666666, offset_s=1.2315416666666668, onset_Hz=57398, offset_Hz=59114, file='lbr3009_0005_2017_04_27_06_14_46.wav'), Segment(label='2', onset_s=1.2535416666666668, offset_s=1.2902083333333334, onset_Hz=60170, offset_Hz=61930, file='lbr3009_0005_2017_04_27_06_14_46.wav')])
+    First item in seq_list: <Sequence with 15 segments>
+    First segment in first sequence:
+    Segment(label='1', file='lbr3009_0005_2017_04_27_06_14_46.wav', onset_s=0.0029761904761904934, offset_s=0.14150432900432905, onset_Hz=143, offset_Hz=6792)
 
+
+Notice that we also get a ``to_csv`` function for free:
+
+.. code:: ipython3
+
+    scribe.to_csv(file='bat1_annotation.mat', 
+                  csv_filename='test.csv',
+                  file_format='batlab')
+    
+    import csv
+    with open('test.csv', 'r', newline='') as csv_file:
+         reader = csv.reader(csv_file)
+         for _ in range(4):
+             print(next(reader))
+
+
+.. parsed-literal::
+
+    ['label', 'onset_s', 'offset_s', 'onset_Hz', 'offset_Hz', 'file']
+    ['1', '0.0029761904761904934', '0.14150432900432905', '143', '6792', 'lbr3009_0005_2017_04_27_06_14_46.wav']
+    ['1', '0.279125', '0.504625', '13398', '24222', 'lbr3009_0005_2017_04_27_06_14_46.wav']
+    ['5', '0.5556472915365209', '0.5962916666666667', '26671', '28622', 'lbr3009_0005_2017_04_27_06_14_46.wav']
+
+
+How does that work? Well, as long as we can convert our annotation
+format to ``Sequence``\ s, then we can pass those ``Sequence``\ s to the
+``crowsetta.csv2seq`` function, which will output them as a ``.csv``
+file. The ``Transcriber`` does this by default. Under the hood, when you
+make a new ``Transcriber`` with your ``user_config``, it wraps your
+``format2seq`` function and the ``seq2csv`` function into one, using the
+function ``crowsetta.csv.toseq_func_to_csv``.
 
 Summary
 -------

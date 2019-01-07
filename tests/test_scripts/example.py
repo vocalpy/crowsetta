@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.io import loadmat
 
-from crowsetta.classes import Sequence
+from crowsetta.sequence import Sequence
 
 
 def example2seq(mat_file):

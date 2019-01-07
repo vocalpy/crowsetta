@@ -51,7 +51,7 @@ You can download small example datasets of the built-in formats with the
 .. parsed-literal::
 
     Downloading https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/13993349/cbinnotmat.tar.gz (8.6 MB)
-    [........................................] 100.00000 / (  8.6 MB /   8.6 MB,   2.5 MB/s)   
+    [........................................] 100.00000 - (  8.6 MB /   8.6 MB,   3.8 MB/s)   
     File saved as ./data/cbin-notmat.tar.gz.
     
     extracting ./data/cbin-notmat.tar.gz
@@ -60,33 +60,42 @@ You can download small example datasets of the built-in formats with the
 Here we downloaded some ``.cbin`` audio files. Each ``.cbin`` file has
 an associated ``.not.mat`` file that contains the annotation.
 
+We use the ``glob`` function from the Python standard library to list
+those files. (``glob`` gives you the full path to files that match a
+string pattern; ``*`` in the string below is a wildcard that will match
+zero or more characters).
+
 .. code:: ipython3
 
-    !ls ./data/cbin-notmat/032312/*.cbin*
+    from glob import glob
+    glob('./data/cbin-notmat/032312/*.cbin*')
+
+
 
 
 .. parsed-literal::
 
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin.not.mat
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin.not.mat
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin.not.mat
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin.not.mat
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin.not.mat
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin.not.mat
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin.not.mat
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin.not.mat
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin.not.mat
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin
-    ./data/cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin.not.mat
+    ['./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin.not.mat',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin.not.mat',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin.not.mat',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0816.179.cbin.not.mat',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin.not.mat',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin.not.mat',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0817.183.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin.not.mat',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0821.202.cbin.not.mat',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0810.148.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0813.163.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0820.196.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0809.141.cbin',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0811.159.cbin.not.mat',
+     './data/cbin-notmat/032312/gy6or6_baseline_230312_0808.138.cbin.not.mat']
+
 
 
 (It doesn’t matter much for our purposes, but … files in the
@@ -105,12 +114,11 @@ easy to work with data; the data types that ``crowsetta`` gives us,
 clean code for working with annotation formats for birdsong and other
 vocalizations.
 
-First we need to get all the annotation files in some variable. We can
-use the ``glob`` function built into Python to do so.
+First we need to get all the annotation files in some variable. We use
+``glob`` again to do so, this time just getting the ``.not.mat`` files.
 
 .. code:: ipython3
 
-    from glob import glob  # function that finds files matching an expression
     notmats = glob('./data/cbin-notmat/032312/*.not.mat')
     for notmat in notmats: print(notmat)
 
@@ -187,18 +195,18 @@ part of the sequence defined by an ``onset`` and ``offset`` that has a
 
 .. code:: ipython3
 
-    print("type of first element of seq: ", type(seq[0]))
+    print("first element of seq: ", seq[0])
     print("\nFirst two Segments of first Sequence:")
     for seg in seq[0].segments[0:2]: print(seg)
 
 
 .. parsed-literal::
 
-    type of first element of seq:  <class 'crowsetta.classes.Sequence'>
+    first element of seq:  <Sequence with 54 segments>
     
     First two Segments of first Sequence:
-    Segment(label='i', onset_s=0.435, offset_s=0.511, onset_Hz=13924, offset_Hz=16350, file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin')
-    Segment(label='i', onset_s=0.583, offset_s=0.662, onset_Hz=18670, offset_Hz=21184, file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin')
+    Segment(label='i', file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin', onset_s=0.435, offset_s=0.511, onset_Hz=13924, offset_Hz=16350)
+    Segment(label='i', file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin', onset_s=0.583, offset_s=0.662, onset_Hz=18670, offset_Hz=21184)
 
 
 **Using** ``crowsetta`` **data types to write clean code**
@@ -243,7 +251,7 @@ which syllable type we’re looking at from this bird.
     
     unique_labels = np.unique(all_labels)
     
-    # now we make our dict,
+    # now we make our dict,.
     # with some fancy Pythoning
     syl_amp_dict = dict(
         zip(unique_labels,
@@ -316,7 +324,7 @@ the signal, and then smooths it with a sliding window.
 .. code:: ipython3
 
     for sequence in seq:
-        cbin = sequence.to_dict()['file']
+        cbin = sequence.file
         raw_audio, samp_freq = evfuncs.load_cbin(cbin)
         smoothed = evfuncs.smooth_data(raw_audio, samp_freq,
                                        freq_cutoffs=(500, 10000))
@@ -341,15 +349,15 @@ the signal, and then smooths it with a sliding window.
 
     mean of mean amplitude for syllable a: 208207.1240286356
     mean of mean amplitude for syllable b: 16679.46415410411
-    mean of mean amplitude for syllable c: 1327150.5563241513
-    mean of mean amplitude for syllable d: 510289.32850392733
-    mean of mean amplitude for syllable e: 846590.5009779686
+    mean of mean amplitude for syllable c: 1327150.5563241516
+    mean of mean amplitude for syllable d: 510289.3285039273
+    mean of mean amplitude for syllable e: 846590.5009779687
     mean of mean amplitude for syllable f: 522099.1725575389
-    mean of mean amplitude for syllable g: 192993.63532448874
-    mean of mean amplitude for syllable h: 167343.74232649204
+    mean of mean amplitude for syllable g: 192993.6353244887
+    mean of mean amplitude for syllable h: 167343.74232649207
     mean of mean amplitude for syllable i: 16903.56906972767
     mean of mean amplitude for syllable j: 3005979.1576137305
-    mean of mean amplitude for syllable k: 170753.77886737106
+    mean of mean amplitude for syllable k: 170753.7788673711
 
 
 Okay, now you’ve seen the basics of working with ``crowsetta``. Get out

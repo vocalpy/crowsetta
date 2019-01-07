@@ -13,7 +13,7 @@ import wave
 
 import koumura
 
-from .classes import Sequence
+from .sequence import Sequence
 from . import csv
 
 
