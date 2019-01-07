@@ -7,7 +7,7 @@ from .sequence import Sequence
 
 
 def seq2csv(seq,
-            csv_fname,
+            csv_filename,
             abspath=False,
             basename=False):
     """write annotations from files to a comma-separated value (csv) file.
@@ -15,7 +15,7 @@ def seq2csv(seq,
     Parameters
     ----------
     seq : Sequence or list of Sequence objects
-    csv_fname : str
+    csv_filename : str
         name of csv file to write to, will be created
         (or overwritten if it exists already)
 
@@ -57,7 +57,7 @@ def seq2csv(seq,
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    with open(csv_fname, 'w', newline='') as csvfile:
+    with open(csv_filename, 'w', newline='') as csvfile:
         # SYL_ANNOT_COLUMN_NAMES is defined above, at the level of the module,
         # to ensure consistency across all functions in this module
         # that make use of it
