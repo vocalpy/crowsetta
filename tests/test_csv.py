@@ -77,11 +77,11 @@ class TestAnnotation(unittest.TestCase):
                  for a_seq in seq for seg in a_seq.segments]
             )
         )
-        csv_fname = os.path.join(self.tmp_output_dir,
+        csv_filename = os.path.join(self.tmp_output_dir,
                                  'test_seq2csv_onset_None.csv')
-        crowsetta.csv.seq2csv(seq=seq, csv_fname=csv_fname)
+        crowsetta.csv.seq2csv(seq=seq, csv_filename=csv_filename)
 
-        with open(csv_fname, 'r', newline='') as csvfile:
+        with open(csv_filename, 'r', newline='') as csvfile:
             reader = csv.reader(csvfile)
             header = next(reader)
             onset_Hz_ind = header.index('onset_Hz')
@@ -99,14 +99,14 @@ class TestAnnotation(unittest.TestCase):
         notmat_list = [str(path) for path in cbin_dir.glob('*.not.mat')]
         # below, sorted() so it's the same order on different platforms
         notmat_list = sorted(notmat_list)
-        csv_fname = os.path.join(self.tmp_output_dir,
+        csv_filename = os.path.join(self.tmp_output_dir,
                                  'test_toseq_func_to_csv_gy6or6_032312.csv')
-        to_csv_kwargs = {'csv_fname': csv_fname,
-                         'basename': True}
-        notmat2csv(file=notmat_list, to_csv_kwargs=to_csv_kwargs)
+        notmat2csv(file=notmat_list,
+                   csv_filename=csv_filename,
+                   basename=True)
 
         test_rows = []
-        with open(csv_fname, 'r', newline='') as csvfile:
+        with open(csv_filename, 'r', newline='') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 test_rows.append(row)
@@ -121,9 +121,9 @@ class TestAnnotation(unittest.TestCase):
             self.assertTrue(test_row == compare_row)
 
     def test_csv2seq(self):
-        csv_fname = self.test_data_dir.joinpath('csv/gy6or6_032312.csv')
+        csv_filename = self.test_data_dir.joinpath('csv/gy6or6_032312.csv')
         # convert csv to crowsetta list -- this is what we're testing
-        seq_list_from_csv = crowsetta.csv.csv2seq(csv_fname)
+        seq_list_from_csv = crowsetta.csv.csv2seq(csv_filename)
         cbin_dir = self.test_data_dir.joinpath('cbins/gy6or6/032312/')
 
         # get what should be the same seq list from .not.mat files
@@ -157,14 +157,14 @@ class TestAnnotation(unittest.TestCase):
                                            from_notmat[from_csv_key])
 
     def test_csv2seq_unrecognized_fields_raises(self):
-        csv_fname = str(self.test_data_dir.joinpath('csv/unrecognized_fields_in_header.csv'))
+        csv_filename = str(self.test_data_dir.joinpath('csv/unrecognized_fields_in_header.csv'))
         with self.assertRaises(ValueError):
-            crowsetta.csv.csv2seq(csv_fname=csv_fname)
+            crowsetta.csv.csv2seq(csv_filename=csv_filename)
 
     def test_csv2seq_missing_fields_raises(self):
-        csv_fname = str(self.test_data_dir.joinpath('csv/missing_fields_in_header.csv'))
+        csv_filename = str(self.test_data_dir.joinpath('csv/missing_fields_in_header.csv'))
         with self.assertRaises(ValueError):
-            crowsetta.csv.csv2seq(csv_fname=csv_fname)
+            crowsetta.csv.csv2seq(csv_filename=csv_filename)
 
     def test_csv2seq_when_one_pair_of_onsets_and_offsets_is_None(self):
         # Test that we can load a csv that has 'None' in columns for
@@ -172,7 +172,7 @@ class TestAnnotation(unittest.TestCase):
         csv_with_None_columns = self.test_data_dir.joinpath(
             'csv/example_annotation_with_onsets_Hz_offsets_Hz_None.csv'
         )
-        seq = crowsetta.csv.csv2seq(csv_fname=csv_with_None_columns)
+        seq = crowsetta.csv.csv2seq(csv_filename=csv_with_None_columns)
         self.assertTrue(
             seg.onset_Hz is None and seg.offset_Hz is None
             for a_seq in seq for seg in a_seq.segments
