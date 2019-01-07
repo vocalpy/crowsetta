@@ -23,7 +23,7 @@ URL = 'https://github.com/NickleDave/crowsetta'
 EMAIL = 'nicholdav@gmail.com'
 AUTHOR = 'David Nicholson'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.2.0a4'
+VERSION = '0.2.0a5'
 LICENSE = 'BSD'
 
 REQUIRED = [
