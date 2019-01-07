@@ -136,13 +136,13 @@ def toseq_func_to_csv(toseq_func):
     return format2seq2csv
 
 
-def csv2seq(csv_fname):
+def csv2seq(csv_filename):
     """loads a comma-separated values (csv) file containing annotations
     for song files, returns contents as a list of Sequence objects
 
     Parameters
     ----------
-    csv_fname : str
+    csv_filename : str
         filename for comma-separated values file
 
     Returns
@@ -152,7 +152,7 @@ def csv2seq(csv_fname):
     """
     seq_list = []
 
-    with open(csv_fname, 'r', newline='') as csv_file:
+    with open(csv_filename, 'r', newline='') as csv_file:
         reader = csv.reader(csv_file)
 
         header = next(reader)
@@ -161,15 +161,15 @@ def csv2seq(csv_fname):
             not_in_FIELDS = set_header.difference(set(Segment._FIELDS))
             if not_in_FIELDS:
                 raise ValueError('The following column names in {} are not recognized: {}'
-                                 .format(csv_fname, not_in_FIELDS))
+                                 .format(csv_filename, not_in_FIELDS))
         not_in_header = set(Segment._FIELDS).difference(set_header)
         if not_in_header:
             raise ValueError(
                 'The following column names in {} are required but missing: {}'
-                .format(csv_fname, not_in_header))
+                .format(csv_filename, not_in_header))
 
         row = next(reader)
-        row = [None if item=='None' else item for item in row]
+        row = [None if item == 'None' else item for item in row]
         segment = Segment.from_row(row=row, header=header)
         curr_file = segment.file
         segments = [segment]
