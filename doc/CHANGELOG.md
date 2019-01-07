@@ -5,9 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+- just released 0.2.0a5
+
+## 0.2.0a5
 ### added
 - Sequence instances have attributes: labels, onsets_s, offsets_s, onsets_Hz, 
   offsets_Hz, and file. 
+- Explanation of default `to_csv` function for user formats in `howto-user-config`.
 
 ### changed
 - Sequence class totally re-written
