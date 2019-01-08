@@ -7,9 +7,9 @@
 **Crowsetta**
 =============
 
-``crowsetta`` is a tool to work with any format for annotating birdsong (or other
-vocalizations). **The goal of** ``crowsetta`` **is to make sure that your ability
-to work with a dataset of birdsong does not depend on your ability to work with
+``crowsetta`` is a tool to work with any format for annotating vocalizations, like
+birdsong or human speech. **The goal of** ``crowsetta`` **is to make sure that your
+ability to work with a dataset of vocalizations does not depend on your ability to work with
 any given format for annotating that dataset.**
 
 **Features**
@@ -19,8 +19,9 @@ any given format for annotating that dataset.**
 ---------------------------------------------
 
 What ``crowsetta`` gives you is **not** yet another format for
-annotation (I promise!). Instead you get some nice data types that make it easy to
+annotation (I promise!). Instead you get some nice data types that make it easier to
 work with any format: namely, ``Sequence``\ s made up of ``Segment``\ s.
+The code block below shows some of the features of these data types.
 
 .. code-block:: python
 
@@ -31,16 +32,25 @@ work with any format: namely, ``Sequence``\ s made up of ``Segment``\ s.
     ...     offset_Hz=32000,
     ...     file='bird21.wav'
     ...     )
-    >>> list_of_segments = [a_segment] * 3
-    >>> seq = Sequence(segments=list_of_segments)
+    >>> another_segment = Segment.from_keyword(
+    ...     label='b',
+    ...     onset_Hz=36000,
+    ...     offset_Hz=48000,
+    ...     file='bird21.wav'
+    ...     )
+    >>> list_of_segments = [a_segment, another_segment]
+    >>> seq = Sequence.from_segments(segments=list_of_segments)
     >>> print(seq)
-    Sequence(segments=[Segment(label='a', onset_s=None, offset_s=None, onset_Hz=16000, 
-    offset_Hz=32000, file='bird21.wav'), Segment(label='a', onset_s=None, offset_s=None, 
-    onset_Hz=16000, offset_Hz=32000, file='bird21.wav'), Segment(label='a', onset_s=None, 
-    offset_s=None, onset_Hz=16000, offset_Hz=32000, file='bird21.wav')])
+    <Sequence with 2 segments>
+    >>> for segment in seq.segments: print(segment)
+    Segment(label='a', file='bird21.wav', onset_s=None, offset_s=None, onset_Hz=16000, offset_Hz=32000)
+    Segment(label='b', file='bird21.wav', onset_s=None, offset_s=None, onset_Hz=36000, offset_Hz=48000)
+    >>> seq.file
+    bird21.wav
+    >>> seq.onsets_Hz
+    array([16000, 36000])
 
-
-You can load annotation from your format of choice into ``Sequence``\ s of ``Segment``\ s
+You load annotation from your format of choice into ``Sequence``\ s of ``Segment``\ s
 (most conveniently with the ``Transcriber``, as explained below) and then use the 
 ``Sequence``\ s however you need to in your program.
 
@@ -49,25 +59,29 @@ pull syllables out of a spectrogram, you can do something like this:
 
 .. code-block:: python
 
+   >>> list_of_sequences = my_sequence_loading_function(file='annotation.txt')
    >>> syllables_from_sequences = []
-   >>> for a_seq in seq:
-   ...     seq_dict = seq.to_dict()  # convert Sequence to Python dictionary
-   ...     # so we can get the name of the audio file associated with the Sequence
-   ...     spect = some_spectrogram_making_function(seq['file'])
+   >>> for a_sequence in list_of_sequences:
+   ...     # get name of the audio file associated with the Sequence
+   ...     audio_file = a_sequence.file
+   ...     # then create a spectrogram from that audio file
+   ...     spect = some_spectrogram_making_function(audio_file)
    ...     syllables = []
-   ...     for seg in seq.segments:
-   ...         syllable = spect[:, seg.onset:seg.offset]  ## spectrogram is a 2d numpy array
+   ...     for segment in a_sequence.segments:
+   ...         ## spectrogram is a 2d numpy array so we index into using onset and offset from segment
+   ...         syllable = spect[:, segment.onset_s:segment.offset_s]
    ...         syllables.append(syllable)
    ...     syllables_from_sequences.append(syllables)
 
-This code is succinct and looks like idiomatic Python.
+This code is succinct, compared to the data munging code you usually write when dealing with
+audio files and annotation formats. It reads like idiomatic Python.
 For a deeper dive into why this is useful, see :ref:`background`.
 
 **A**  ``Transcriber`` **that makes it convenient to work with any annotation format**
 --------------------------------------------------------------------------------------
 
 As mentioned, ``crowsetta`` provides you with a ``Transcriber`` that comes equipped
-with convenience functions to do the work of converting for you. 
+with convenience functions to do the work of loading and saving annotations for you.
 
 .. code-block:: python
 
@@ -78,13 +92,11 @@ with convenience functions to do the work of converting for you.
     ... ]
     >>> from crowsetta import Transcriber
     >>> scribe = Transcriber()
-    >>> seq = scribe.to_seq(file=notmat_files, format='notmat')
+    >>> seq = scribe.to_seq(file=annotation_files, format='notmat')
     >>> len(seq)
     3
     >>> print(seq[0])
-    Sequence(segments=[Segment(label='a', onset_s=None, offset_s=None, onset_Hz=16000,
-    offset_Hz=32000, file='~/Data/bird1_day1/song1_2018-12-07_072135.cbin'),
-    Segment(label='b', onset_s=None, offset_s=None, ...
+    <Sequence with 55 segments>
 
 **Easily use the** ``Transcriber`` **with your own annotation format**
 ----------------------------------------------------------------------
@@ -125,7 +137,7 @@ An example csv looks like this:
    :language: none
 
 Now that you have that, you can load it into a pandas_ dataframe or an Excel
-spreadsheet or a SQL database, or whatever you want.
+spreadsheet or an SQL database, or whatever you want.
 
 .. _pandas: https://pandas.pydata.org/
 
