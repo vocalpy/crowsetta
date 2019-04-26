@@ -2,9 +2,10 @@
 [![Build Status](https://travis-ci.com/NickleDave/crowsetta.svg?branch=master)](https://travis-ci.com/NickleDave/crowsetta)
 [![Documentation Status](https://readthedocs.org/projects/crowsetta/badge/?version=latest)](https://crowsetta.readthedocs.io/en/latest/?badge=latest)
 
-`crowsetta` is a tool to work with any format for annotating birdsong.
+`crowsetta` is a tool to work with any format for annotating vocalizations: speech, birdsong, 
+mouse ultrasonic calls (insert your favorite animal vocalization here).
 **The goal of** `crowsetta` **is to make sure that your ability to work with a dataset 
-of birdsong does not depend on your ability to work with any given format for 
+of vocalizations does not depend on your ability to work with any given format for 
 annotating that dataset.** What `crowsetta` gives you is **not** yet another format for 
 annotation (I promise!); instead you get some nice data types that make it easy to 
 work with any format: namely, `Sequence`s made up of `Segment`s.
@@ -70,10 +71,6 @@ You can even easily adapt the `Transcriber` to use your own in-house format, lik
 - load comma-separated values files back into Python and convert to other formats
 - easily use with your own annotation format
 
-
-`crowsetta` is used by the `hybrid-vocal-classifier` and `songdeck` 
-libraries.
-
 You might find it useful in any situation where you want 
 to share audio files of song and some associated annotations, 
 but you don't want to require the user to install a large 
@@ -88,16 +85,27 @@ To learn how to use `crowsetta`, please see the documentation at:
 
 ## Project Information
 
+### Background
+
+`crowsetta` was developed for two libraries:
+- `hybrid-vocal-classifier` <https://github.com/NickleDave/hybrid-vocal-classifier>
+- `vak` <https://github.com/NickleDave/vak>
+
+Testing relies on the `Vocalization Annotation Formats Dataset` which you may find useful if you need
+small samples of different audio files and associated annotation formats
+- on Figshare: <https://figshare.com/articles/Vocalization_Annotation_Formats_Dataset/8046920>
+- built from this GitHub repository: <https://github.com/NickleDave/vocal-annotation-formats>
+
 ### Support
 
 If you are having issues, please let us know.
 
-- Issue Tracker: https://github.com/NickleDave/crowsetta/issues
+- Issue Tracker: <https://github.com/NickleDave/crowsetta/issues>
 
 ### Contribute
 
-- Issue Tracker: https://github.com/NickleDave/crowsetta/issues
-- Source Code: https://github.com/NickleDave/crowsetta
+- Issue Tracker: <https://github.com/NickleDave/crowsetta/issues>
+- Source Code: <https://github.com/NickleDave/crowsetta>
 
 ### CHANGELOG
 You can see project history and work in progress in the [CHANGELOG](./doc/CHANGELOG.md)
