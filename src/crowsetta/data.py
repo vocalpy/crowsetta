@@ -398,12 +398,6 @@ FORMATS = {
 }
 
 
-def formats():
-    """prints annotation formats built in to Crowsetta"""
-    formats_str = ', '.join([key for key in FORMATS.keys()])
-    return f'Annotation formats built in to Crowsetta: {formats_str}'
-
-
 def fetch(format, destination_path='.', remove_compressed_file=True):
     """fetches data from repositories
 
