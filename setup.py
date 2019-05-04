@@ -117,7 +117,7 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(where="src", exclude=('tests',)),
+    packages=find_packages(where="src"),
     package_dir={"": "src"},
     package_data={'': ['*.csv', '*.json', '*.mat']},  # files types to install
     # scripts=['src/bin/crowsetta-cli.py'],
