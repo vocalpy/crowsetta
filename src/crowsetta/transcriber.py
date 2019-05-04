@@ -2,9 +2,6 @@ import os
 import json
 from importlib import import_module
 import importlib.util
-import typing
-
-import attr
 
 from .csv import toseq_func_to_csv, csv2seq
 
@@ -12,14 +9,6 @@ HERE = os.path.dirname(__file__)
 
 VALID_CONFIG_DICT_KEYS = {'module', 'to_seq', 'to_csv', 'to_format'}
 REQUIRED_CONFIG_DICT_KEYS = {'module', 'to_seq'}
-
-
-@attr.s(auto_attribs=True)
-class FormatFunctions:
-    """functions for converting a given format"""
-    to_seq: typing.Callable
-    to_csv: typing.Callable
-    to_format: typing.Callable
 
 
 class Transcriber:
