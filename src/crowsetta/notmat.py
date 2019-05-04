@@ -10,6 +10,7 @@ import evfuncs
 
 from .sequence import Sequence
 from .csv import seq2csv
+from .meta import Meta
 
 
 def _parse_notmat(notmat):
@@ -278,3 +279,10 @@ def make_notmat(filename,
                                   .format(notmat_name))
     else:
         scipy.io.savemat(notmat_name, notmat_dict)
+
+meta = Meta(
+    name='notmat',
+    ext='not.mat',
+    to_seq=notmat2seq,
+    to_csv=notmat2csv,
+)
