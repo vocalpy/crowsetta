@@ -15,6 +15,7 @@ import koumura
 
 from .sequence import Sequence
 from . import csv
+from .meta import Meta
 
 
 def koumura2seq(xml_file='Annotation.xml', concat_seqs_into_songs=True,
@@ -134,3 +135,11 @@ def koumura2csv(xml_file, concat_seqs_into_songs=True, wavpath='./Wave',
         csv_filename = os.path.abspath(xml_file)
         csv_filename = csv_filename.replace('xml', 'csv')
     csv.seq2csv(seq_list, csv_filename, abspath=abspath, basename=basename)
+
+
+meta = Meta(
+    name='koumura',
+    ext='xml',
+    to_seq=koumura2seq,
+    to_csv=koumura2csv,
+)
