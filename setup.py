@@ -29,6 +29,7 @@ ENTRY_POINTS = {
     'crowsetta.format': [
         'notmat = crowsetta.notmat',
         'koumura = crowsetta.koumura',
+        'textgrid = crowsetta.textgrid',
     ]
 }
 

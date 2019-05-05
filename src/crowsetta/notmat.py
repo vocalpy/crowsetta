@@ -2,7 +2,6 @@
 produced by evsonganaly GUI
 """
 import os
-from pathlib import Path
 
 import numpy as np
 import scipy.io
@@ -11,29 +10,7 @@ import evfuncs
 from .sequence import Sequence
 from .csv import seq2csv
 from .meta import Meta
-
-
-def _parse_file(file):
-    """helper function that parses/validates value for file argument;
-    puts a single string or Path into a list to iterate over it (cheap hack
-    that lets functions accept multiple types), and checks list to make sure
-    all types are consistent
-    """
-    if type(file) == str or type(file) == Path:
-        # put in a list to iterate over
-        file = [file]
-
-    for a_file in file:
-        if type(a_file) == str:
-            if not a_file.endswith('.not.mat'):
-                raise ValueError("all filenames in .not.mat must end with '.not.mat' "
-                                 f"but {a_file} does not")
-        elif type(a_file) == Path:
-            if not a_file.suffixes == ['.not', '.mat']:
-                raise ValueError("all filenames in .not.mat must end with '.not.mat' "
-                                 f"but {a_file} does not")
-
-    return file
+from .validation import _parse_file
 
 
 def notmat2seq(file,
@@ -76,7 +53,7 @@ def notmat2seq(file,
     due to floating point error, e.g. when loading .not.mat files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    file = _parse_file(file)
+    file = _parse_file(file, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -158,7 +135,7 @@ def notmat2csv(file, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    file = _parse_file(file)
+    file = _parse_file(file, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '

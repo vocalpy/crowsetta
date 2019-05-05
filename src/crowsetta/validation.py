@@ -1,17 +1,10 @@
 """utilities for input validation.
 
-Adapted from scikit-learn under BSD 3 License
+Some utilities adapted from scikit-learn under BSD 3 License
 https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/utils/validation.py
-
-Original Authors: Olivier Grisel
-                  Gael Varoquaux
-                  Andreas Mueller
-                  Lars Buitinck
-                  Alexandre Gramfort
-                  Nicolas Tresegnie
 """
-import warnings
 import numbers
+from pathlib import Path
 
 import numpy as np
 
@@ -69,3 +62,25 @@ def column_or_row_or_1d(y):
         return np.ravel(y)
     else:
         raise ValueError("bad input shape {0}".format(shape))
+
+
+def _parse_file(file, extension):
+    """helper function that parses/validates value for file argument;
+    puts a single string or Path into a list to iterate over it (cheap hack
+    that lets functions accept multiple types), and checks list to make sure
+    all types are consistent
+    """
+    if type(file) == str or type(file) == Path:
+        # put in a list to iterate over
+        file = [file]
+
+    for a_file in file:
+        # cast to string (if it's not already, e.g. it's a Path)
+        # so we can use .endswith() to compare extensions
+        # (because using Path.suffixes() would require too much special casing)
+        a_file = str(a_file)
+        if not a_file.endswith(extension):
+            raise ValueError(f"all filenames in 'file' must end with '{extension}' "
+                             f"but {a_file} does not")
+
+    return file
