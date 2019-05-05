@@ -4,8 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-- just released 0.2.0a5
+## 1.0.0
+### added
+- entry point group `crowsetta.format` to make it possible to 'install' formats
+  + removes special casing for built-in formats, they just get added via entry point
+  + instead of parsing a config.json file built into the package
+- module for working with Praat Textgrid format
+- `Meta` class which represents metadata about a format
+  + such as file extension associated with it
+  + and the module / functions that a `Transcriber` instance should use
+    to work with this format
+
+### changed
+- Each instance of `Transcriber` has only one vocal annotation format that it handles
+  + because it's annoying to type `file_format` every time you call a method like `to_seq`
+  + instead you just make an instance of `Transcriber` for each format you want 
+  + This also works better with `crowsetta.format` entry points and `Meta` class;
+    when you instantiate a `Transcriber` for a given `voc_format`, the `__init__`
+    uses the `Meta` for that format to figure out which function to use for `to_seq`, 
+    `to_csv`, etc.
+  + For this reason bumping to 1.0.0, new `Transcriber` not backwards compatible
+    - although this will be inconvenient for millions of people
 
 ## 0.2.0a5
 ### added
