@@ -20,183 +20,156 @@ class TestTranscriber(unittest.TestCase):
         shutil.rmtree(self.tmp_output_dir)
 
     def test_koumura_to_seq(self):
-        scribe = crowsetta.Transcriber()
+        scribe = crowsetta.Transcriber(voc_format='koumura')
         xml_file = str(self.test_data_dir.joinpath('koumura/Bird0/Annotation.xml'))
         wavpath = str(self.test_data_dir.joinpath('koumura/Bird0/Wave'))
-        seq = scribe.to_seq(file=xml_file, file_format='koumura', wavpath=wavpath)
+        seq = scribe.to_seq(file=xml_file, wavpath=wavpath)
         self.assertTrue(type(seq) == list)
         self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
                              for a_seq in seq]))
 
     def test_koumura_to_csv(self):
-        scribe = crowsetta.Transcriber()
+        scribe = crowsetta.Transcriber(voc_format='koumura')
         xml_file = str(self.test_data_dir.joinpath('koumura/Bird0/Annotation.xml'))
         wavpath = str(self.test_data_dir.joinpath('koumura/Bird0/Wave'))
         csv_filename = str(self.tmp_output_dir.joinpath('Annotation.csv'))
-        scribe.to_csv(file=xml_file, file_format='koumura', wavpath=wavpath,
-                    csv_filename=csv_filename)
+        scribe.to_csv(file=xml_file, wavpath=wavpath, csv_filename=csv_filename)
         self.assertTrue(Path(csv_filename).is_file())
 
     def test_notmat_to_seq(self):
-        scribe = crowsetta.Transcriber()
+        scribe = crowsetta.Transcriber(voc_format='notmat')
         notmats = list(str(notmat) 
                        for notmat in self.test_data_dir.joinpath(
             'cbins/gy6or6/032312').glob('*.not.mat')
         )
         for notmat in notmats:
-            seq = scribe.to_seq(file=notmat, file_format='notmat')
+            seq = scribe.to_seq(file=notmat)
             self.assertTrue(type(seq) == crowsetta.sequence.Sequence)
 
     def test_notmat_to_csv(self):
-        scribe = crowsetta.Transcriber()
+        scribe = crowsetta.Transcriber(voc_format='notmat')
         notmats = list(str(notmat) 
                        for notmat in self.test_data_dir.joinpath(
             'cbins/gy6or6/032312').glob('*.not.mat')
         )
         csv_filename = str(self.tmp_output_dir.joinpath('Annotation.csv'))
-        scribe.to_csv(file=notmats, file_format='notmat', csv_filename=csv_filename)
+        scribe.to_csv(file=notmats, csv_filename=csv_filename)
         self.assertTrue(Path(csv_filename).is_file())
 
     def test_example_to_seq_name_import(self):
         sys.path.append(str(self.example_script_dir))
-        user_config = {
-            'example': {
-                'module': 'example',
-                'to_seq': 'example2seq',
-                'to_csv': None,
-                'to_format': None,
-            }
+        config = {
+            'module': 'example',
+            'to_seq': 'example2seq',
+            'to_csv': None,
+            'to_format': None,
         }
-        scribe = crowsetta.Transcriber(user_config=user_config)
+        scribe = crowsetta.Transcriber(voc_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
-        seq = scribe.to_seq(file=annotation, file_format='example')
+        seq = scribe.to_seq(mat_file=annotation)
         self.assertTrue(all([type(a_seq) == crowsetta.Sequence for a_seq in seq]))
         sys.path.remove(str(self.example_script_dir))
 
     def test_only_module_and_to_seq_required(self):
-        user_config = {
-            'example': {
-                'module': str(self.example_script_dir.joinpath('example.py')),
-                'to_seq': 'example2seq',
+        config = {
+            'module': str(self.example_script_dir.joinpath('example.py')),
+            'to_seq': 'example2seq',
             }
-        }
-        scribe = crowsetta.Transcriber(user_config=user_config)
+        scribe = crowsetta.Transcriber(voc_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
-        seq = scribe.to_seq(file=annotation, file_format='example')
+        seq = scribe.to_seq(mat_file=annotation)
         self.assertTrue(all([type(a_seq) == crowsetta.Sequence for a_seq in seq]))
 
     def test_example_to_seq_path_import(self):
-        user_config = {
-            'example': {
-                'module': str(self.example_script_dir.joinpath('example.py')),
-                'to_seq': 'example2seq',
-                'to_csv': None,
-                'to_format': None,
-            }
+        config = {
+            'module': str(self.example_script_dir.joinpath('example.py')),
+            'to_seq': 'example2seq',
+            'to_csv': None,
+            'to_format': None,
         }
-        scribe = crowsetta.Transcriber(user_config=user_config)
+        scribe = crowsetta.Transcriber(voc_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
-        seq = scribe.to_seq(file=annotation, file_format='example')
+        seq = scribe.to_seq(mat_file=annotation)
         self.assertTrue(all([type(a_seq) == crowsetta.Sequence for a_seq in seq]))
 
-    def test_user_config_wrong_types_raise(self):
-        # should raise an error because user_config should be dict of dicts
+    def test_config_wrong_types_raise(self):
+        # should raise an error because config should be a dict
         # not list of dicts
-        user_config = list(
-            {'example': {
+        config = list({
                 'module': 'example',
                 'to_seq': 'example2seq',
                 'to_csv': 'example2csv',
                 'to_format': 'None',
-            }}
+            }
         )
         with self.assertRaises(TypeError):
-            crowsetta.Transcriber(user_config=user_config)
+            crowsetta.Transcriber(config=config)
 
     def test_missing_keys_in_config_raises(self):
-        user_config = {
-            'example': {
-                # missing 'module' key
-                'to_seq': 'example2seq',
-                'to_csv': None,
-                'to_format': None,
-            }
+        config = {
+            # missing 'module' key
+            'to_seq': 'example2seq',
+            'to_csv': None,
+            'to_format': None,
         }
-        with self.assertRaises(KeyError):
-            crowsetta.Transcriber(user_config=user_config)
 
-        user_config = {
-            'example': {
-                'module': 'example',
-                # missing 'to_seq' key
-                'to_csv': None,
-                'to_format': None,
-            }
+        with self.assertRaises(KeyError):
+            crowsetta.Transcriber(voc_format='example', config=config)
+
+        config = {
+            'module': 'example',
+            # missing 'to_seq' key
+            'to_csv': None,
+            'to_format': None,
         }
         with self.assertRaises(KeyError):
-            crowsetta.Transcriber(user_config=user_config)
+            crowsetta.Transcriber(voc_format='example', config=config)
 
     def test_extra_keys_in_config_raises(self):
-        user_config = {
-            'example': {
-                'module': 'example',
-                'to_seq': 'example2seq',
-                'to_csv': 'example2csv',
-                'extra': 'key_right_here',
-                'to_format': 'None',
-            }
+        config = {
+            'module': 'example',
+            'to_seq': 'example2seq',
+            'to_csv': 'example2csv',
+            'extra': 'key_right_here',
+            'to_format': 'None',
         }
         with self.assertRaises(KeyError):
-            crowsetta.Transcriber(user_config=user_config)
+            crowsetta.Transcriber(voc_format='example', config=config)
 
     def test_call_to_csv_when_None_raises(self):
-        user_config = {
-            'example': {
-                'module': str(self.example_script_dir.joinpath('example.py')),
-                'to_seq': 'example2seq',
-                'to_csv': None,
-                'to_format': None,
-            }
+        config = {
+            'module': str(self.example_script_dir.joinpath('example.py')),
+            'to_seq': 'example2seq',
+            'to_csv': None,
+            'to_format': None,
         }
-        scribe = crowsetta.Transcriber(user_config=user_config)
+        scribe = crowsetta.Transcriber(voc_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
         with self.assertRaises(NotImplementedError):
-            scribe.to_csv(file=annotation, csv_filename='bad.csv', file_format='example')
+            scribe.to_csv(mat_mat_file=annotation, csv_filename='bad.csv')
 
     def test_call_to_format_when_None_raises(self):
-        user_config = {
-            'example': {
-                'module': str(self.example_script_dir.joinpath('example.py')),
-                'to_seq': 'example2seq',
-                'to_csv': None,
-                'to_format': None,
-            }
+        config = {
+            'module': str(self.example_script_dir.joinpath('example.py')),
+            'to_seq': 'example2seq',
+            'to_csv': None,
+            'to_format': None,
         }
-        scribe = crowsetta.Transcriber(user_config=user_config)
+        scribe = crowsetta.Transcriber(voc_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
         with self.assertRaises(NotImplementedError):
-            scribe.to_format(file=annotation, to_format='example')
+            scribe.to_format(mat_mat_file=annotation, to_format='example')
 
-    def test_from_csv(self):
-        csv_filename = os.path.join(self.test_data_dir,
-                                    os.path.normpath('csv/gy6or6_032312.csv'))
-        # just a wrapper around `csv2seq` which has its own tests,
-        # so here just make sure it works as a class method
-        scribe = crowsetta.Transcriber()
-        seq = scribe.from_csv(csv_filename=csv_filename)
-        self.assertTrue(type(seq) == list)
-        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
-                             for a_seq in seq]))
 
 if __name__ == '__main__':
     unittest.main()

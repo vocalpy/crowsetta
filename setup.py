@@ -25,6 +25,12 @@ AUTHOR = 'David Nicholson'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = '0.2.0a5'
 LICENSE = 'BSD'
+ENTRY_POINTS = {
+    'crowsetta.format': [
+        'notmat = crowsetta.notmat',
+        'koumura = crowsetta.koumura',
+    ]
+}
 
 REQUIRED = [
     'numpy', 'attrs', 'evfuncs', 'koumura',
@@ -121,9 +127,7 @@ setup(
     package_dir={"": "src"},
     package_data={'': ['*.csv', '*.json', '*.mat']},  # files types to install
     # scripts=['src/bin/crowsetta-cli.py'],
-    # entry_points={
-    #     'console_scripts': ['crowsetta-cli=crowsetta.__main__:main'],
-    # },
+    entry_points=ENTRY_POINTS,
     install_requires=REQUIRED,
     extras_require=EXTRAS,
     include_package_data=True,

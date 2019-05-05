@@ -23,7 +23,7 @@ class TestAnnotation(unittest.TestCase):
 
     def test_koumura2seq(self):
         xml_file = os.path.join(self.test_data_dir, 'Annotation.xml')
-        seq_list = crowsetta.koumura.koumura2seq(xml_file=xml_file,
+        seq_list = crowsetta.koumura.koumura2seq(file=xml_file,
                                                  concat_seqs_into_songs=True,
                                                  wavpath=os.path.join(self.test_data_dir,
                                                                       'Wave'))
@@ -40,7 +40,7 @@ class TestAnnotation(unittest.TestCase):
         wavpath = os.path.join(self.test_data_dir, 'Wave')
         csv_filename = os.path.join(str(self.tmp_output_dir),
                                     'test.csv')
-        crowsetta.koumura.koumura2csv(xml_file=xml_file,
+        crowsetta.koumura.koumura2csv(file=xml_file,
                                       wavpath=wavpath,
                                       csv_filename=csv_filename,
                                       basename=True)

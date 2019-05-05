@@ -10,43 +10,42 @@ import evfuncs
 
 from .sequence import Sequence
 from .csv import seq2csv
+from .meta import Meta
 
 
-def _parse_notmat(notmat):
-    """helper function that parses/validates value for notmat argument;
+def _parse_file(file):
+    """helper function that parses/validates value for file argument;
     puts a single string or Path into a list to iterate over it (cheap hack
     that lets functions accept multiple types), and checks list to make sure
     all types are consistent
     """
-    if type(notmat) == str or type(notmat) == Path:
+    if type(file) == str or type(file) == Path:
         # put in a list to iterate over
-        notmat = [notmat]
+        file = [file]
 
-    for a_notmat in notmat:
-        if type(a_notmat) == str:
-            if not a_notmat.endswith('.not.mat'):
+    for a_file in file:
+        if type(a_file) == str:
+            if not a_file.endswith('.not.mat'):
                 raise ValueError("all filenames in .not.mat must end with '.not.mat' "
-                                 f"but {a_notmat} does not")
-        elif type(a_notmat) == Path:
-            if not a_notmat.suffixes == ['.not', '.mat']:
+                                 f"but {a_file} does not")
+        elif type(a_file) == Path:
+            if not a_file.suffixes == ['.not', '.mat']:
                 raise ValueError("all filenames in .not.mat must end with '.not.mat' "
-                                 f"but {a_notmat} does not")
+                                 f"but {a_file} does not")
 
-    return notmat
+    return file
 
 
-def notmat2seq(notmat,
+def notmat2seq(file,
                abspath=False,
                basename=False,
                round_times=True,
                decimals=3):
-    """open .not.mat file and return as Sequence
-    (data structure that used internally to represent
-    annotation for one audio file)
+    """parse annotation from .not.mat and return as Sequence
 
     Parameters
     ----------
-    notmat : str, Path, or list
+    file : str, Path, or list
         filename of a .not.mat annotation file,
         created by the evsonganaly GUI for MATLAB
     abspath : bool
@@ -77,7 +76,7 @@ def notmat2seq(notmat,
     due to floating point error, e.g. when loading .not.mat files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    notmat = _parse_notmat(notmat)
+    file = _parse_file(file)
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -85,7 +84,7 @@ def notmat2seq(notmat,
                          'information (just base filename) should be saved.')
 
     seq = []
-    for a_notmat in notmat:
+    for a_notmat in file:
         notmat_dict = evfuncs.load_notmat(a_notmat)
         # in .not.mat files saved by evsonganaly,
         # onsets and offsets are in units of ms, have to convert to s
@@ -132,14 +131,14 @@ def notmat2seq(notmat,
         return seq
 
 
-def notmat2csv(notmat, csv_filename, abspath=False, basename=False):
+def notmat2csv(file, csv_filename, abspath=False, basename=False):
     """saves annotation from .not.mat file(s) in a comma-separated values
     (csv) file, where each row represents one syllable from one
     .not.mat file.
 
     Parameters
     ----------
-    notmat : str, Path, or list
+    file : str, Path, or list
         if list, list of strings or Path objects pointing to .not.mat files
     csv_filename : str
         name for csv file that is created
@@ -159,14 +158,14 @@ def notmat2csv(notmat, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    notmat = _parse_notmat(notmat)
+    file = _parse_file(file)
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    seq = notmat2seq(notmat)
+    seq = notmat2seq(file)
     seq2csv(seq, csv_filename, abspath=abspath, basename=basename)
 
 
@@ -278,3 +277,11 @@ def make_notmat(filename,
                                   .format(notmat_name))
     else:
         scipy.io.savemat(notmat_name, notmat_dict)
+
+meta = Meta(
+    name='notmat',
+    ext='not.mat',
+    to_seq=notmat2seq,
+    to_csv=notmat2csv,
+    to_format=make_notmat,
+)
