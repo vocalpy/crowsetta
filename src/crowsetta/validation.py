@@ -1,16 +1,8 @@
 """utilities for input validation.
 
-Adapted from scikit-learn under BSD 3 License
+Some utilities adapted from scikit-learn under BSD 3 License
 https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/utils/validation.py
-
-Original Authors: Olivier Grisel
-                  Gael Varoquaux
-                  Andreas Mueller
-                  Lars Buitinck
-                  Alexandre Gramfort
-                  Nicolas Tresegnie
 """
-import warnings
 import numbers
 
 import numpy as np
