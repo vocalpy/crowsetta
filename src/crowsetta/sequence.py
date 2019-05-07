@@ -128,15 +128,20 @@ class Sequence:
         return self._file
 
     def __hash__(self):
-        return hash(
-            (self._segments,
-             self._onsets_s,
-             self._offsets_s,
-             self._onsets_Hz,
-             self._offsets_Hz,
-             self._labels,
-             self._file)
-        )
+        list_for_hash = [self._segments,
+                         self._onsets_s,
+                         self._offsets_s,
+                         self._onsets_Hz,
+                         self._offsets_Hz,
+                         self._labels,
+                         self._file]
+        list_for_hash = [tuple(item.tolist())
+                         if type(item) == np.ndarray
+                         else item
+                         for item in list_for_hash
+                         ]
+        tup_for_hash = tuple(list_for_hash)
+        return hash(tup_for_hash)
 
     def __repr__(self):
         return f"<Sequence with {len(self.segments)} segments>"
