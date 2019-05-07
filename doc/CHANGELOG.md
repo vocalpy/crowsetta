@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.1.1
+### changed
+- `segments` property of a `Sequence` is a tuple, not a list, so that class is immutable + hashable
+
+### fixed
+- `__hash__` implementation for `Sequence` class
+  + convert attributes that are `numpy.ndarray`s into tuples before hashing
+- tests for `Sequence`
+  + no longer assert that calling `__hash__` raises `NotImplementedError`
+  + test that `segments` attribute is a `tuple` not a `list`
+
 ## 1.1.0
 ### added
 - implement hashing and equality for `Sequence` class
