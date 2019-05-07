@@ -12,7 +12,7 @@ class Sequence:
 
     Attributes
     ----------
-    segments : list
+    segments : tuple
         of Segment objects.
     file : str
         name of audio file with which annotation is associated.
@@ -47,7 +47,7 @@ class Sequence:
 
         Parameters
         ----------
-        segments : list
+        segments : list or tuple
             of Segment objects.
         file : str
             name of audio file with which annotation is associated.
@@ -62,6 +62,17 @@ class Sequence:
         labels : str, list, or numpy.ndarray
             of type str, label for each annotated segment
         """
+        if segments is not None:
+            if type(segments) == Segment:
+                segments = (segments,)
+            elif type(segments) in (list, tuple):
+                segments = tuple(segments)
+            else:
+                raise TypeError(
+                    f"type of 'segments' should be either list, tuple, or a single segment but "
+                    f"got type {type(segments)}, could not convert to tuple."
+                )
+
         labels = self._convert_labels(labels)
 
         (onsets_s,
