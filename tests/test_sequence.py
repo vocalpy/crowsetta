@@ -188,7 +188,7 @@ class TestSequence(unittest.TestCase):
         list_of_segments = [a_segment] * 3
         seq = Sequence.from_segments(list_of_segments)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == list)
+        self.assertTrue(type(seq.segments) == tuple)
 
     def test_from_segments_with_bad_file_raises(self):
         # should raise error because one Segment has different value for file
@@ -231,7 +231,7 @@ class TestSequence(unittest.TestCase):
                                     offsets_s=offsets_s,
                                     file=file)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == list)
+        self.assertTrue(type(seq.segments) == tuple)
 
     def test_from_keyword_onset_offset_in_Hertz(self):
         file = '0.wav'
@@ -243,7 +243,7 @@ class TestSequence(unittest.TestCase):
                                     offsets_Hz=offsets_Hz,
                                     file=file)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == list)
+        self.assertTrue(type(seq.segments) == tuple)
 
     def test_from_dict_onset_offset_in_seconds(self):
         annot_dict = {
@@ -254,7 +254,7 @@ class TestSequence(unittest.TestCase):
         }
         seq = Sequence.from_dict(annot_dict=annot_dict)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == list)
+        self.assertTrue(type(seq.segments) == tuple)
 
     def test_from_dict_onset_offset_in_Hertz(self):
         annot_dict = {
@@ -265,7 +265,7 @@ class TestSequence(unittest.TestCase):
         }
         seq = Sequence.from_dict(annot_dict=annot_dict)
         self.assertTrue(hasattr(seq, 'segments'))
-        self.assertTrue(type(seq.segments) == list)
+        self.assertTrue(type(seq.segments) == tuple)
 
     def test_from_keyword_missing_onsets_and_offsets_raises(self):
         with self.assertRaises(ValueError):
@@ -376,13 +376,44 @@ class TestSequence(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             self.a_seq >= self.different_seq
 
-    def test_hash_raises(self):
-        with self.assertRaises(NotImplementedError):
-            hash(self.a_seq)
+    def test_hash(self):
+        annot_dict1 = {
+            'file': '0.wav',
+            'labels': 'abcde',
+            'onsets_s':  np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
+            'offsets_s': np.asarray([0.1, 0.3, 0.5, 0.7, 0.9]),
+        }
+        seq1 = Sequence.from_dict(annot_dict=annot_dict1)
+
+        # same as seq1, so Sequence should have same hash
+        annot_dict2 = {
+            'file': '0.wav',
+            'labels': 'abcde',
+            'onsets_s':  np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
+            'offsets_s': np.asarray([0.1, 0.3, 0.5, 0.7, 0.9]),
+        }
+        seq2 = Sequence.from_dict(annot_dict=annot_dict2)
+
+        # different from seq1, so Sequence should have different hash
+        annot_dict3 = {
+            'file': '1.wav',
+            'labels': 'fghijk',
+            'onsets_s':  np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
+            'offsets_s': np.asarray([0.1, 0.3, 0.5, 0.7, 0.9]),
+        }
+        seq3 = Sequence.from_dict(annot_dict=annot_dict3)
+
+        hash1 = hash(seq1)
+        hash2 = hash(seq2)
+        hash3 = hash(seq3)
+
+        self.assertTrue(hash1 == hash2)
+        self.assertTrue(hash1 != hash3)
 
     def test_seq_is_immutable(self):
         with self.assertRaises(TypeError):
             self.a_seq.file = 'bird39.wav'
+
 
 if __name__ == '__main__':
     unittest.main()
