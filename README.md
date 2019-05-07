@@ -1,6 +1,8 @@
 # crowsetta
 [![Build Status](https://travis-ci.com/NickleDave/crowsetta.svg?branch=master)](https://travis-ci.com/NickleDave/crowsetta)
 [![Documentation Status](https://readthedocs.org/projects/crowsetta/badge/?version=latest)](https://crowsetta.readthedocs.io/en/latest/?badge=latest)
+[![DOI](https://zenodo.org/badge/159904494.svg)](https://zenodo.org/badge/latestdoi/159904494)
+[![PyPI version](https://badge.fury.io/py/crowsetta.svg)](https://badge.fury.io/py/crowsetta)
 
 `crowsetta` is a tool to work with any format for annotating vocalizations: speech, birdsong, 
 mouse ultrasonic calls (insert your favorite animal vocalization here).
