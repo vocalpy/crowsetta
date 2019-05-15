@@ -15,17 +15,16 @@ class Meta:
         name of vocal annotation format. E.g., "textgrid"
     ext : str
         extension of files associated with format, e.g. "TextGrid"
-    to_seq : typing.Callable
+    from_file : typing.Callable
         a function that accepts the name of a file containing
-        annotations in the format and returns a Sequence or list of
-        Sequences. Required.
+        annotations in the format and returns an Annotation or list of
+        Annotations. Required.
     to_csv : typing.Callable
-        a function that accepts a Sequence or list of Sequences and
+        a function that accepts an Annotation or list of Annotations and
         saves them as a comma-separated value file. Default is None.
     to_format : typing.Callable
-        a function that accepts a Sequence or list of Sequences and
+        a function that accepts a Sequence or list of Annotations and
         saves files in the format. Default is None.
-
     module : str
         path to module (a .py file) containing functions for working with format,
         e.g. 'home/users/me/Documents/code/textgrid/textgrid.py'.
@@ -35,7 +34,7 @@ class Meta:
     """
     name = attr.ib(validator=instance_of(str))
     ext = attr.ib(validator=instance_of(str))
-    to_seq = attr.ib(validator=instance_of(typing.Callable))
+    from_file = attr.ib(validator=instance_of(typing.Callable))
     to_csv = attr.ib(validator=optional(instance_of(typing.Callable)), default=None)
     to_format = attr.ib(validator=optional(instance_of(typing.Callable)), default=None)
     module = attr.ib(validator=optional(instance_of(str)), default=None)
