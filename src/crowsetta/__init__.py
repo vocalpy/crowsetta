@@ -1,6 +1,7 @@
 from .transcriber import Transcriber
 from .segment import Segment
 from .sequence import Sequence
+from .annotation import Annotation
 from .meta import Meta
 from . import csv
 from . import data
