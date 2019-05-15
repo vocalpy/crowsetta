@@ -8,8 +8,8 @@ from .meta import Meta
 
 HERE = os.path.dirname(__file__)
 
-VALID_CONFIG_DICT_KEYS = {'module', 'to_seq', 'to_csv', 'to_format'}
-REQUIRED_CONFIG_DICT_KEYS = {'module', 'to_seq'}
+VALID_CONFIG_DICT_KEYS = {'module', 'from_file', 'to_csv', 'to_format'}
+REQUIRED_CONFIG_DICT_KEYS = {'module', 'from_file'}
 
 
 def not_implemented(*args, **kwargs):
@@ -17,9 +17,10 @@ def not_implemented(*args, **kwargs):
 
 
 class Transcriber:
-    """converts vocal annotation files into Sequences (the data structure used to enable
-    conversion between formats), comma-separated values (csv) files,
-    other annotation formats.
+    """class that loads vocal annotation files into Annotations
+    (the data structure used to work with annotations and enable
+    conversion between formats), and converts Annotations to
+    comma-separated values (csv) files or other formats.
 
     Attributes
     ----------
@@ -31,11 +32,9 @@ class Transcriber:
 
     Methods
     -------
-    to_seq : maps a file of the specified format to a Sequence or list of Sequences
-    to_csv : maps a file of the specified format to a comma-separate values (csv) file
-    to_format : maps a Sequence or list of Sequences to the format
-    from_csv: loads and parses a comma-separated values (csv) file, returns Sequence
-    or list of Sequence
+    from_file : loads a file, returns an Annotation for that file
+    to_csv : converts a file in the format into a comma-separate values (csv) file
+    to_format : converts an Annotation to the format
     """
     def __init__(self, annot_format, config=None):
         """__init__ method of Transciber class
@@ -49,12 +48,12 @@ class Transcriber:
         --------
         >>> my_config = {
         ...     'module': convert_myformat.py
-        ...     'to_seq': 'myformat2seq',
+        ...     'from_file': 'myformat2seq',
         ...     'to_csv': 'myformat2csv',
         ...     'to_format': 'to_myformat'
         ... }
         >>> scribe = crowsetta.Transcriber(annot_format='myformat_name', config=my_config)
-        >>> seq = scribe.to_seq(file='my_annotation.mat')
+        >>> seq = scribe.from_file(file='my_annotation.mat')
         """
         # make sure format specified is either installed or that user also specified a config
         if (annot_format in formats._INSTALLED and config is None) or (annot_format and config is not None):
@@ -86,7 +85,7 @@ class Transcriber:
 
         if annot_format in formats._INSTALLED and config is None:
             voc_format_module = getattr(formats, annot_format)
-            self.to_seq = voc_format_module.meta.to_seq
+            self.from_file = voc_format_module.meta.from_file
             if hasattr(voc_format_module.meta, 'to_csv'):
                 self.to_csv = voc_format_module.meta.to_csv
             else:
@@ -122,12 +121,12 @@ class Transcriber:
                         f'{format_module} could not be imported, '
                         'and not recognized as a file')
 
-            self.to_seq = getattr(this_format_module, config['to_seq'])
+            self.from_file = getattr(this_format_module, config['from_file'])
             # if to_csv not in config (not specified by user)
             if 'to_csv' not in config:
                 # default to function returned by toseq_func_to_csv()
-                # when we pass it to_seq
-                self.to_csv = toseq_func_to_csv(self.to_seq)
+                # when we pass it from_file
+                self.to_csv = toseq_func_to_csv(self.from_file)
             elif config['to_csv'] is None:
                 self.to_csv = not_implemented
             else:

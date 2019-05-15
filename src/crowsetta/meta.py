@@ -23,7 +23,7 @@ class Meta:
         a function that accepts an Annotation or list of Annotations and
         saves them as a comma-separated value file. Default is None.
     to_format : typing.Callable
-        a function that accepts a Sequence or list of Annotations and
+        a function that accepts an Annotation or list of Annotations and
         saves files in the format. Default is None.
     module : str
         path to module (a .py file) containing functions for working with format,
