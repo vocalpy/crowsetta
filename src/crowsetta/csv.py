@@ -4,17 +4,29 @@ import csv
 
 from .segment import Segment
 from .sequence import Sequence
+from .annotation import Annotation
 
 
-def seq2csv(seq,
-            csv_filename,
-            abspath=False,
-            basename=False):
+CSV_FIELDNAMES = [
+    'label',
+    'onset_s',
+    'offset_s',
+    'onset_Hz',
+    'offset_Hz',
+    'file',
+    'sequence',
+]
+
+
+def annot2csv(annot,
+              csv_filename,
+              abspath=False,
+              basename=False):
     """write annotations from files to a comma-separated value (csv) file.
 
     Parameters
     ----------
-    seq : Sequence or list of Sequence objects
+    annot : Annotation or list of Annotations
     csv_filename : str
         name of csv file to write to, will be created
         (or overwritten if it exists already)
@@ -40,17 +52,15 @@ def seq2csv(seq,
     Default for both is False, in which case the filename is saved just as it is passed to
     this function in a Sequence object.
     """
-    if type(seq) == Sequence:
+    if type(annot) == Annotation:
         # put in a list so we can iterate over it
-        seq = [seq]
-    elif type(seq) == list:
-        pass
+        annot = [annot]
+    elif type(annot) == list:
+        if not all([type(annot_) == Annotation for annot_ in annot]):
+            raise TypeError('not all objects in annot are of type Annotation')
     else:
-        raise TypeError('seq must be Sequence or list of Sequence objects, '
-                        f'not type {type(seq)})')
-
-    if not all([type(curr_seq) == Sequence for curr_seq in seq]):
-        raise TypeError('not all objects in seq are of type Sequence')
+        raise TypeError('annot must be Annotation or list of Annotations, '
+                        f'not type {type(annot)})')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -58,31 +68,32 @@ def seq2csv(seq,
                          'information (just base filename) should be saved.')
 
     with open(csv_filename, 'w', newline='') as csvfile:
-        # SYL_ANNOT_COLUMN_NAMES is defined above, at the level of the module,
-        # to ensure consistency across all functions in this module
-        # that make use of it
-        writer = csv.DictWriter(csvfile, fieldnames=Segment._FIELDS)
+        writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDNAMES)
 
         writer.writeheader()
-        for curr_seq in seq:
-            for segment in curr_seq.segments:
-                seg_dict = segment.asdict()
-                seg_dict = {
-                    key: ('None' if val is None else val)
-                    for key, val in seg_dict.items()
-                }
-                if abspath:
-                    seg_dict['file'] = os.path.abspath(seg_dict['file'])
-                elif basename:
-                    seg_dict['file'] = os.path.basename(seg_dict['file'])
-                writer.writerow(seg_dict)
+
+        for annot_ in annot:
+            for seq_num, seq in enumerate(annot_.seq):
+                for segment in seq.segments:
+                    seg_dict = segment.asdict()
+                    seg_dict = {
+                        key: ('None' if val is None else val)
+                        for key, val in seg_dict.items()
+                    }
+                    if abspath:
+                        seg_dict['file'] = os.path.abspath(seg_dict['file'])
+                    elif basename:
+                        seg_dict['file'] = os.path.basename(seg_dict['file'])
+                    seg_dict['sequence'] = seq_num
+
+                    writer.writerow(seg_dict)
 
 
-def toseq_func_to_csv(toseq_func):
-    """accepts a function for turning files of a certain format into Sequences,
-    and returns a function, `format2seq2csv` that will convert that format into
+def toannot_func_to_csv(toseq_func):
+    """accepts a function for turning files of a certain format into Annotations,
+    and returns a function, `annot2seq2csv` that will convert that format into
     csv files. Essentially creates a wrapper around some `format2seq` function
-    and the `seq2csv` function.
+    and the `annot2csv` function.
 
     Parameters
     ----------
@@ -99,12 +110,12 @@ def toseq_func_to_csv(toseq_func):
 
     Examples
     --------
-    >>> from my_format_module import myformat2seq
-    >>> myformat2csv = toseq_func_to_csv(myformat2seq)
+    >>> from my_format_module import myformat2annot
+    >>> myformat2csv = toannot_func_to_csv(myformat2annot)
     >>> to_csv_kwargs = {csv_filename: 'my_format_bird1.csv', 'abspath': True}
     >>> myformat2csv('my_annotation.txt', to_csv_kwargs=to_csv_kwargs)
     """
-    def format2seq2csv(file, csv_filename, abspath=False, basename=False, **to_seq_kwargs):
+    def format2annot2csv(file, csv_filename, abspath=False, basename=False, **to_annot_kwargs):
         """wrapper around a to_seq function and the seq2csv function.
         Returned by format2seq2csv
 
@@ -114,8 +125,8 @@ def toseq_func_to_csv(toseq_func):
             annotation file or files to load into Sequences
         csv_filename : str
             name of .csv file that will be saved
-        **to_seq_kwargs
-            arbitrary keyword arguments to pass to the to_seq function, if needed. Default is None.
+        **to_annot_kwargs
+            arbitrary keyword arguments to pass to the to_annot function, if needed. Default is None.
 
         Other Parameters
         ----------------
@@ -130,10 +141,10 @@ def toseq_func_to_csv(toseq_func):
         -------
         None
         """
-        seq = toseq_func(file, **to_seq_kwargs)
-        seq2csv(seq, csv_filename, abspath=abspath, basename=basename)
+        annot = toannot_func(file, **to_annot_kwargs)
+        annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
-    return format2seq2csv
+    return format2annot2csv
 
 
 def csv2seq(csv_filename):
