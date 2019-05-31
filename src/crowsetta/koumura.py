@@ -13,12 +13,13 @@ import wave
 
 import koumura
 
+from .annotation import Annotation
 from .sequence import Sequence
 from . import csv
 from .meta import Meta
 
 
-def koumura2seq(file='Annotation.xml', concat_seqs_into_songs=True,
+def koumura2annot(file='Annotation.xml', concat_seqs_into_songs=True,
                 wavpath='./Wave'):
     """converts Annotation.xml from [1]_ into an annotation list
 
@@ -57,7 +58,7 @@ def koumura2seq(file='Annotation.xml', concat_seqs_into_songs=True,
     # but it has a totally different structure
     seq_list_xml = koumura.parse_xml(file, concat_seqs_into_songs=concat_seqs_into_songs)
 
-    seq_list_out = []
+    annot_list = []
     for seq_xml in seq_list_xml:
         onsets_Hz = np.asarray([syl.position for syl in seq_xml.syls])
         offsets_Hz = np.asarray([syl.position + syl.length for syl in seq_xml.syls])
@@ -75,7 +76,7 @@ def koumura2seq(file='Annotation.xml', concat_seqs_into_songs=True,
         onsets_s = np.round(onsets_Hz / samp_freq, decimals=3)
         offsets_s = np.round(offsets_Hz / samp_freq, decimals=3)
 
-        seq_obj = Sequence.from_keyword(
+        seq = Sequence.from_keyword(
             file=seq_xml.wav_file,
             onsets_Hz=onsets_Hz,
             offsets_Hz=offsets_Hz,
@@ -83,8 +84,9 @@ def koumura2seq(file='Annotation.xml', concat_seqs_into_songs=True,
             offsets_s=offsets_s,
             labels=labels
         )
-        seq_list_out.append(seq_obj)
-    return seq_list_out
+        annot = Annotation(seq=seq, file=seq.file)
+        annot_list.append(annot)
+    return annot_list
 
 
 def koumura2csv(file, concat_seqs_into_songs=True, wavpath='./Wave',
@@ -126,20 +128,20 @@ def koumura2csv(file, concat_seqs_into_songs=True, wavpath='./Wave',
 
     Notes
     -----
-    see seq2scv function for explanation of when you would want to use
+    see annot2scv function for explanation of when you would want to use
     the abspath and basename parameters
     """
-    seq_list = koumura2seq(file, concat_seqs_into_songs=concat_seqs_into_songs,
-                           wavpath=wavpath)
+    annot = koumura2annot(file, concat_seqs_into_songs=concat_seqs_into_songs,
+                          wavpath=wavpath)
     if csv_filename is None:
         csv_filename = os.path.abspath(file)
         csv_filename = csv_filename.replace('xml', 'csv')
-    csv.seq2csv(seq_list, csv_filename, abspath=abspath, basename=basename)
+    csv.annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
 
 meta = Meta(
     name='koumura',
     ext='xml',
-    to_seq=koumura2seq,
+    from_file=koumura2annot,
     to_csv=koumura2csv,
 )
