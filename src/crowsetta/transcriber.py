@@ -2,7 +2,7 @@ import os
 from importlib import import_module
 import importlib.util
 
-from .csv import toseq_func_to_csv
+from .csv import toannot_func_to_csv
 from . import formats
 from .meta import Meta
 
@@ -126,7 +126,7 @@ class Transcriber:
             if 'to_csv' not in config:
                 # default to function returned by toseq_func_to_csv()
                 # when we pass it from_file
-                self.to_csv = toseq_func_to_csv(self.from_file)
+                self.to_csv = toannot_func_to_csv(self.from_file)
             elif config['to_csv'] is None:
                 self.to_csv = not_implemented
             else:
