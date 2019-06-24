@@ -84,12 +84,15 @@ def annot2csv(annot,
                         seg_dict['file'] = os.path.abspath(seg_dict['file'])
                     elif basename:
                         seg_dict['file'] = os.path.basename(seg_dict['file'])
+                    # we use 'sequence' and 'annotation' fields when we are
+                    # loading back into Annotations
                     seg_dict['sequence'] = seq_num
+                    seg_dict['annotation'] = annot_num
 
                     writer.writerow(seg_dict)
 
 
-def toannot_func_to_csv(toseq_func):
+def toannot_func_to_csv(toannot_func):
     """accepts a function for turning files of a certain format into Annotations,
     and returns a function, `annot2seq2csv` that will convert that format into
     csv files. Essentially creates a wrapper around some `format2seq` function
