@@ -10,21 +10,22 @@ import os
 import numpy as np
 from textgrid import TextGrid, IntervalTier
 
-from .sequence import Sequence
+from .annotation import Annotation
+from .csv import annot2csv
 from .meta import Meta
-from .csv import seq2csv
+from .sequence import Sequence
 from .validation import _parse_file
 
 
-def textgrid2seq(file,
-                 abspath=False,
-                 basename=False,
-                 round_times=True,
-                 decimals=3,
-                 intervaltier_ind=0,
-                 audio_ext='wav',
-                 ):
-    """convert Praat Textgrid file into a Sequence
+def textgrid2annot(file,
+                   abspath=False,
+                   basename=False,
+                   round_times=True,
+                   decimals=3,
+                   intervaltier_ind=0,
+                   audio_ext='wav',
+                   ):
+    """convert Praat Textgrid file(s) into Annotation(s)
 
     Parameters
     ----------
@@ -61,7 +62,7 @@ def textgrid2seq(file,
         will become one segment in a sequence.
     """
     file = _parse_file(file, extension='.TextGrid')
-    seq = []
+    annot = []
     for a_textgrid in file:
         tg = TextGrid.fromFile(a_textgrid)
 
@@ -96,16 +97,17 @@ def textgrid2seq(file,
             onsets_s = np.around(onsets_s, decimals=decimals)
             offsets_s = np.around(offsets_s, decimals=decimals)
 
+        # TODO: check for multiple sequences
         textgrid_seq = Sequence.from_keyword(file=audio_filename,
                                              labels=labels,
                                              onsets_s=onsets_s,
                                              offsets_s=offsets_s)
         seq.append(textgrid_seq)
 
-    if len(seq) == 1:
-        return seq[0]
+    if len(annot) == 1:
+        return annot[0]
     else:
-        return seq
+        return annot
 
 
 def textgrid2csv(file, csv_filename, abspath=False, basename=False):
@@ -142,13 +144,13 @@ def textgrid2csv(file, csv_filename, abspath=False, basename=False):
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    seq = textgrid2seq(file)
-    seq2csv(seq, csv_filename, abspath=abspath, basename=basename)
+    seq = textgrid2annot(file)
+    annot2csv(seq, csv_filename, abspath=abspath, basename=basename)
 
 
 meta = Meta(
     name='textgrid',
     ext='TextGrid',
-    to_seq=textgrid2seq,
+    from_file=textgrid2annot,
     to_csv=textgrid2csv,
 )
