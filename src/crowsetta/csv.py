@@ -2,9 +2,10 @@
 import os
 import csv
 
+from .annotation import Annotation
 from .segment import Segment
 from .sequence import Sequence
-from .annotation import Annotation
+from .stack import Stack
 
 
 CSV_FIELDNAMES = [
@@ -15,7 +16,20 @@ CSV_FIELDNAMES = [
     'offset_Hz',
     'file',
     'sequence',
+    'annotation'
 ]
+
+
+FIELD_TYPES = {
+    'label': str,
+    'onset_s': float,
+    'offset_s': float,
+    'onset_Hz': int,
+    'offset_Hz': int,
+    'file': str,
+    'sequence': int,
+    'annotation': int,
+}
 
 
 def annot2csv(annot,
@@ -154,9 +168,9 @@ def toannot_func_to_csv(toannot_func):
     return format2annot2csv
 
 
-def csv2seq(csv_filename):
+def csv2annot(csv_filename):
     """loads a comma-separated values (csv) file containing annotations
-    for song files, returns contents as a list of Sequence objects
+    for song files, returns contents as a list of Annotation objects
 
     Parameters
     ----------
@@ -165,48 +179,91 @@ def csv2seq(csv_filename):
 
     Returns
     -------
-    seq_list : list
-        list of crowsetta.tuples.Sequence objects
+    annot_list : list
+        list of Annotations
     """
-    seq_list = []
+    annot_list = []
 
     with open(csv_filename, 'r', newline='') as csv_file:
-        reader = csv.reader(csv_file)
+        reader = csv.DictReader(csv_file)
 
-        header = next(reader)
-        set_header = set(header)
-        if set_header != set(Segment._FIELDS):
-            not_in_FIELDS = set_header.difference(set(Segment._FIELDS))
+        # DictReader automatically uses first row (AKA 'header') as fieldnames
+        # when no argument supplied for fieldnames parameter
+        # so we use that default to check validity of csv fieldnames
+        set_header = set(reader.fieldnames)
+        if set_header != set(CSV_FIELDNAMES):
+            not_in_FIELDS = set_header.difference(set(CSV_FIELDNAMES))
             if not_in_FIELDS:
                 raise ValueError('The following column names in {} are not recognized: {}'
                                  .format(csv_filename, not_in_FIELDS))
-        not_in_header = set(Segment._FIELDS).difference(set_header)
+        not_in_header = set(CSV_FIELDNAMES).difference(set_header)
         if not_in_header:
             raise ValueError(
                 'The following column names in {} are required but missing: {}'
                 .format(csv_filename, not_in_header))
 
         row = next(reader)
-        row = [None if item == 'None' else item for item in row]
-        segment = Segment.from_row(row=row, header=header)
-        curr_file = segment.file
-        segments = [segment]
+        row.update((key, converter(row[key]))
+                   for key, converter in FIELD_TYPES.items())
+        segment = Segment.from_row(row=row)
+        curr_seq = row['sequence']
+        curr_annot = row['annotation']
+        curr_file_list = [row['file']]
 
-        for row in reader:
-            row = [None if item == 'None' else item for item in row]
-            segment = Segment.from_row(row=row, header=header)
-            row_file = segment.file
-            if row_file == curr_file:
+        segments = [segment]
+        seq_list = []
+        annot_list = []
+        for row_num, row in enumerate(reader):
+            row.update((key, converter(row[key]))
+                       for key, converter in FIELD_TYPES.items())
+            segment = Segment.from_row(row=row)
+            # if this is still the same sequence and/or annotation
+            if row['sequence'] == curr_seq and row['annotation'] == curr_annot:
+                # append to growing list of segments
                 segments.append(segment)
+                curr_file_list.append(row['file'])
             else:
+                # either sequence **or** annotation changed
+                # so make sequence from the one we just finished
                 seq = Sequence.from_segments(segments)
                 seq_list.append(seq)
-                # start a new segments list that starts with this segment
-                curr_file = row_file
-                segments = [segment]
+                curr_seq = row['sequence']
+                # start a new segments list that starts with the segment we just made
+                segments = [segment]  # that will go into this next seq we just started
+                # if we're still on the same annotation
+                if row['annotation'] == curr_annot:
+                    curr_file_list.append(row['file'])
+                else:  # annot file changed too
+                    curr_file_list = [row['file']]
+
+                    if len(seq_list) == 1:
+                        annot_file = set(curr_file_list)
+                        if len(annot_file) != 1:
+                            raise ValueError(
+                                'A single annotation should be associated with a '
+                                f'single file but the found the following set: {annot_file}'
+                            )
+                        else:
+                            annot_file = annot_file.pop()
+                        annot = Annotation(seq=seq_list[0], file=annot_file)
+                    elif len(seq_list) > 1:
+                        stack = Stack(seqs=seq_list)
+                        annot = Annotation(stack=stack, file=annot_file)
+                    else:
+                        raise ValueError(
+                            f'invalid sequence length: {len(seq_list)}\n'
+                            f'in row from csv: {csv_filename}\n'
+                            f'row: {row}')
+
+                    annot_list.append(annot)
+                    seq_list = []
+                    curr_annot = row['annotation']
+
         # lines below appends annot_dict corresponding to last file
         # since there won't be another file after it to trigger the 'else' logic above
         seq = Sequence.from_segments(segments)
         seq_list.append(seq)
+        annot = Annotation(seq=seq_list)
+        annot_list.append(annot)
 
-    return seq_list
+    return annot_list
