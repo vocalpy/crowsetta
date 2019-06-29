@@ -72,8 +72,12 @@ def annot2csv(annot,
 
         writer.writeheader()
 
-        for annot_ in annot:
-            for seq_num, seq in enumerate(annot_.seq):
+        for annot_num, annot_ in enumerate(annot):
+            if hasattr(annot_, 'stack'):
+                seq_list = annot_.stack.seqs
+            else:
+                seq_list = [annot_.seq]
+            for seq_num, seq in enumerate(seq_list):
                 for segment in seq.segments:
                     seg_dict = segment.asdict()
                     seg_dict = {
