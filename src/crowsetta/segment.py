@@ -1,4 +1,6 @@
 """defines Segment class"""
+import warnings
+
 import attr
 
 
@@ -17,8 +19,32 @@ class Segment(object):
     asdict = attr.asdict
 
     @classmethod
-    def from_row(cls, row, header):
-        row_dict = dict(zip(header, row))
+    def from_row(cls, row, header=None):
+        if type(row) is list:
+            if header is None:
+                raise ValueError(
+                    'must provide header when row is a list'
+                )
+            row = dict(zip(header, row))
+        elif type(row) is dict:
+            if header is not None:
+                warnings.warn(
+                    "Type of 'row' argument was 'dict' but 'header'" 
+                    "argument was not None. Value for header will not "
+                    "be used because keys of dict are used as field from "
+                    "header. To use a different header, convert row to a list: "
+                    ">>> row = list(dict.values())"
+                )
+
+        row_dict = {}
+        for field in cls._FIELDS:
+            try:
+                row_dict[field] = row[field]
+            except KeyError:
+                raise KeyError(
+                    f'missing field {field} in row'
+                )
+
         return cls.from_keyword(**row_dict)
 
     @classmethod
