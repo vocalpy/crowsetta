@@ -8,23 +8,24 @@ import scipy.io
 import evfuncs
 
 from .sequence import Sequence
-from .csv import seq2csv
+from .annotation import Annotation
+from .csv import annot2csv
 from .meta import Meta
 from .validation import _parse_file
 
 
-def notmat2seq(file,
-               abspath=False,
-               basename=False,
-               round_times=True,
-               decimals=3):
-    """parse annotation from .not.mat and return as Sequence
+def notmat2annot(annot_file,
+                 abspath=False,
+                 basename=False,
+                 round_times=True,
+                 decimals=3):
+    """parse annotation from .not.mat and return as Annotation
 
     Parameters
     ----------
-    file : str, Path, or list
-        filename of a .not.mat annotation file,
-        created by the evsonganaly GUI for MATLAB
+    annot_file : str, Path, or list
+        filename of a .not.mat annotation file, created by the evsonganaly GUI for MATLAB,
+        or a list of paths to .not.mat files
     abspath : bool
         if True, converts filename for each audio file into absolute path.
         Default is False.
@@ -41,8 +42,11 @@ def notmat2seq(file,
 
     Returns
     -------
-    seq : Sequence
-        with fields 'file', 'labels', 'onsets_Hz', 'offsets_Hz', 'onsets_s', 'offsets_s'
+    annot : Annotation, list
+        if a single file is provided, a single Annotation is returned. If a list is
+        provided, a list of Annotations is returned. Annotation will have a `sequence`
+        attribute with the fields 'file', 'labels', 'onsets_Hz',
+        'offsets_Hz', 'onsets_s', 'offsets_s'
 
     The abspath and basename parameters specify how file names for audio files are saved.
     These options are useful for working with multiple copies of files and for
@@ -53,15 +57,15 @@ def notmat2seq(file,
     due to floating point error, e.g. when loading .not.mat files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    file = _parse_file(file, extension='.not.mat')
+    annot_file = _parse_file(annot_file, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    seq = []
-    for a_notmat in file:
+    annot = []
+    for a_notmat in annot_file:
         notmat_dict = evfuncs.load_notmat(a_notmat)
         # in .not.mat files saved by evsonganaly,
         # onsets and offsets are in units of ms, have to convert to s
@@ -69,9 +73,9 @@ def notmat2seq(file,
         offsets_s = notmat_dict['offsets'] / 1000
 
         # convert to Hz using sampling frequency
-        audio_filename = a_notmat.replace('.not.mat','')
+        audio_filename = a_notmat.replace('.not.mat', '')
         if audio_filename.endswith('.cbin'):
-            rec_filename = audio_filename.replace('.cbin','.rec')
+            rec_filename = audio_filename.replace('.cbin', '.rec')
         elif audio_filename.endswith('.wav'):
             rec_filename = audio_filename.replace('.wav', '.rec')
         else:
@@ -91,31 +95,34 @@ def notmat2seq(file,
 
         if abspath:
             audio_filename = os.path.abspath(audio_filename)
+            a_notmat = os.path.abspath(a_notmat)
         elif basename:
             audio_filename = os.path.basename(audio_filename)
+            a_notmat = os.path.basename(a_notmat)
 
-        notmat_seq = Sequence.from_keyword(file=audio_filename,
-                                           labels=np.asarray(list(notmat_dict['labels'])),
+        notmat_seq = Sequence.from_keyword(labels=np.asarray(list(notmat_dict['labels'])),
                                            onsets_s=onsets_s,
                                            offsets_s=offsets_s,
                                            onsets_Hz=onsets_Hz,
                                            offsets_Hz=offsets_Hz)
-        seq.append(notmat_seq)
+        annot.append(
+            Annotation(annot_file=a_notmat, audio_file=audio_filename, seq=notmat_seq)
+        )
 
-    if len(seq) == 1:
-        return seq[0]
+    if len(annot) == 1:
+        return annot[0]
     else:
-        return seq
+        return annot
 
 
-def notmat2csv(file, csv_filename, abspath=False, basename=False):
+def notmat2csv(annot_file, csv_filename, abspath=False, basename=False):
     """saves annotation from .not.mat file(s) in a comma-separated values
     (csv) file, where each row represents one syllable from one
     .not.mat file.
 
     Parameters
     ----------
-    file : str, Path, or list
+    annot_file : str, Path, or list
         if list, list of strings or Path objects pointing to .not.mat files
     csv_filename : str
         name for csv file that is created
@@ -135,15 +142,15 @@ def notmat2csv(file, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    file = _parse_file(file, extension='.not.mat')
+    annot_file = _parse_file(annot_file, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    seq = notmat2seq(file)
-    seq2csv(seq, csv_filename, abspath=abspath, basename=basename)
+    annot = notmat2annot(annot_file)
+    annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
 
 def make_notmat(filename,
@@ -255,10 +262,11 @@ def make_notmat(filename,
     else:
         scipy.io.savemat(notmat_name, notmat_dict)
 
+
 meta = Meta(
     name='notmat',
     ext='not.mat',
-    to_seq=notmat2seq,
+    from_file=notmat2annot,
     to_csv=notmat2csv,
     to_format=make_notmat,
 )

@@ -1,20 +1,48 @@
-"""module of functions for handling with csv files"""
+"""module of functions for handling csv files"""
 import os
 import csv
 
+from .annotation import Annotation
 from .segment import Segment
 from .sequence import Sequence
+from .stack import Stack
 
 
-def seq2csv(seq,
-            csv_filename,
-            abspath=False,
-            basename=False):
+CSV_FIELDNAMES = [
+    'label',
+    'onset_s',
+    'offset_s',
+    'onset_Hz',
+    'offset_Hz',
+    'audio_file',
+    'annot_file',
+    'sequence',
+    'annotation'
+]
+
+
+FIELD_TYPES = {
+    'label': str,
+    'onset_s': float,
+    'offset_s': float,
+    'onset_Hz': int,
+    'offset_Hz': int,
+    'audio_file': str,
+    'annot_file': str,
+    'sequence': int,
+    'annotation': int,
+}
+
+
+def annot2csv(annot,
+              csv_filename,
+              abspath=False,
+              basename=False):
     """write annotations from files to a comma-separated value (csv) file.
 
     Parameters
     ----------
-    seq : Sequence or list of Sequence objects
+    annot : Annotation or list of Annotations
     csv_filename : str
         name of csv file to write to, will be created
         (or overwritten if it exists already)
@@ -40,17 +68,15 @@ def seq2csv(seq,
     Default for both is False, in which case the filename is saved just as it is passed to
     this function in a Sequence object.
     """
-    if type(seq) == Sequence:
+    if type(annot) == Annotation:
         # put in a list so we can iterate over it
-        seq = [seq]
-    elif type(seq) == list:
-        pass
+        annot = [annot]
+    elif type(annot) == list:
+        if not all([type(annot_) == Annotation for annot_ in annot]):
+            raise TypeError('not all objects in annot are of type Annotation')
     else:
-        raise TypeError('seq must be Sequence or list of Sequence objects, '
-                        f'not type {type(seq)})')
-
-    if not all([type(curr_seq) == Sequence for curr_seq in seq]):
-        raise TypeError('not all objects in seq are of type Sequence')
+        raise TypeError('annot must be Annotation or list of Annotations, '
+                        f'not type {type(annot)})')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -58,31 +84,50 @@ def seq2csv(seq,
                          'information (just base filename) should be saved.')
 
     with open(csv_filename, 'w', newline='') as csvfile:
-        # SYL_ANNOT_COLUMN_NAMES is defined above, at the level of the module,
-        # to ensure consistency across all functions in this module
-        # that make use of it
-        writer = csv.DictWriter(csvfile, fieldnames=Segment._FIELDS)
+        writer = csv.DictWriter(csvfile, fieldnames=CSV_FIELDNAMES)
 
         writer.writeheader()
-        for curr_seq in seq:
-            for segment in curr_seq.segments:
-                seg_dict = segment.asdict()
-                seg_dict = {
-                    key: ('None' if val is None else val)
-                    for key, val in seg_dict.items()
-                }
-                if abspath:
-                    seg_dict['file'] = os.path.abspath(seg_dict['file'])
-                elif basename:
-                    seg_dict['file'] = os.path.basename(seg_dict['file'])
-                writer.writerow(seg_dict)
+
+        for annot_num, annot_ in enumerate(annot):
+            if hasattr(annot_, 'stack'):
+                seq_list = annot_.stack.seqs
+            else:
+                seq_list = [annot_.seq]
+            for seq_num, seq in enumerate(seq_list):
+                for segment in seq.segments:
+                    row = segment.asdict()
+                    row = {
+                        key: ('None' if val is None else val)
+                        for key, val in row.items()
+                    }
+                    annot_file = annot_.annot_file
+                    audio_file = annot_.audio_file
+                    if abspath:
+                        annot_file = os.path.abspath(annot_file)
+                        if audio_file is not None:
+                            audio_file = os.path.abspath(audio_file)
+                    elif basename:
+                        annot_file = os.path.basename(annot_file)
+                        if audio_file is not None:
+                            audio_file = os.path.basename(audio_file)
+                    row['annot_file'] = annot_file
+                    if audio_file is not None:
+                        row['audio_file'] = audio_file
+                    else:
+                        row['audio_file'] = 'None'
+                    # we use 'sequence' and 'annotation' fields when we are
+                    # loading back into Annotations
+                    row['sequence'] = seq_num
+                    row['annotation'] = annot_num
+
+                    writer.writerow(row)
 
 
-def toseq_func_to_csv(toseq_func):
-    """accepts a function for turning files of a certain format into Sequences,
-    and returns a function, `format2seq2csv` that will convert that format into
+def toannot_func_to_csv(toannot_func):
+    """accepts a function for turning files of a certain format into Annotations,
+    and returns a function, `annot2seq2csv` that will convert that format into
     csv files. Essentially creates a wrapper around some `format2seq` function
-    and the `seq2csv` function.
+    and the `annot2csv` function.
 
     Parameters
     ----------
@@ -99,12 +144,12 @@ def toseq_func_to_csv(toseq_func):
 
     Examples
     --------
-    >>> from my_format_module import myformat2seq
-    >>> myformat2csv = toseq_func_to_csv(myformat2seq)
+    >>> from my_format_module import myformat2annot
+    >>> myformat2csv = toannot_func_to_csv(myformat2annot)
     >>> to_csv_kwargs = {csv_filename: 'my_format_bird1.csv', 'abspath': True}
     >>> myformat2csv('my_annotation.txt', to_csv_kwargs=to_csv_kwargs)
     """
-    def format2seq2csv(file, csv_filename, abspath=False, basename=False, **to_seq_kwargs):
+    def format2annot2csv(file, csv_filename, abspath=False, basename=False, **to_annot_kwargs):
         """wrapper around a to_seq function and the seq2csv function.
         Returned by format2seq2csv
 
@@ -114,8 +159,8 @@ def toseq_func_to_csv(toseq_func):
             annotation file or files to load into Sequences
         csv_filename : str
             name of .csv file that will be saved
-        **to_seq_kwargs
-            arbitrary keyword arguments to pass to the to_seq function, if needed. Default is None.
+        **to_annot_kwargs
+            arbitrary keyword arguments to pass to the to_annot function, if needed. Default is None.
 
         Other Parameters
         ----------------
@@ -130,15 +175,15 @@ def toseq_func_to_csv(toseq_func):
         -------
         None
         """
-        seq = toseq_func(file, **to_seq_kwargs)
-        seq2csv(seq, csv_filename, abspath=abspath, basename=basename)
+        annot = toannot_func(file, **to_annot_kwargs)
+        annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
-    return format2seq2csv
+    return format2annot2csv
 
 
-def csv2seq(csv_filename):
+def csv2annot(csv_filename):
     """loads a comma-separated values (csv) file containing annotations
-    for song files, returns contents as a list of Sequence objects
+    for song files, returns contents as a list of Annotation objects
 
     Parameters
     ----------
@@ -147,48 +192,139 @@ def csv2seq(csv_filename):
 
     Returns
     -------
-    seq_list : list
-        list of crowsetta.tuples.Sequence objects
+    annot_list : list
+        list of Annotations
     """
-    seq_list = []
+    annot_list = []
 
     with open(csv_filename, 'r', newline='') as csv_file:
-        reader = csv.reader(csv_file)
+        reader = csv.DictReader(csv_file)
 
-        header = next(reader)
-        set_header = set(header)
-        if set_header != set(Segment._FIELDS):
-            not_in_FIELDS = set_header.difference(set(Segment._FIELDS))
+        # DictReader automatically uses first row (AKA 'header') as fieldnames
+        # when no argument supplied for fieldnames parameter
+        # so we use that default to check validity of csv fieldnames
+        set_header = set(reader.fieldnames)
+        if set_header != set(CSV_FIELDNAMES):
+            not_in_FIELDS = set_header.difference(set(CSV_FIELDNAMES))
             if not_in_FIELDS:
                 raise ValueError('The following column names in {} are not recognized: {}'
                                  .format(csv_filename, not_in_FIELDS))
-        not_in_header = set(Segment._FIELDS).difference(set_header)
+        not_in_header = set(CSV_FIELDNAMES).difference(set_header)
         if not_in_header:
             raise ValueError(
                 'The following column names in {} are required but missing: {}'
                 .format(csv_filename, not_in_header))
 
         row = next(reader)
-        row = [None if item == 'None' else item for item in row]
-        segment = Segment.from_row(row=row, header=header)
-        curr_file = segment.file
-        segments = [segment]
+        row.update((key, converter(row[key]))
+                   if row[key] != 'None'
+                   else (key, None)
+                   for key, converter in FIELD_TYPES.items())
+        segment = Segment.from_row(row=row)
+        curr_seq = row['sequence']
+        curr_annot = row['annotation']
+        curr_annot_file_list = [row['annot_file']]
+        curr_audio_file_list = [row['audio_file']]
 
-        for row in reader:
-            row = [None if item == 'None' else item for item in row]
-            segment = Segment.from_row(row=row, header=header)
-            row_file = segment.file
-            if row_file == curr_file:
+        segments = [segment]
+        seq_list = []
+        annot_list = []
+        for row_num, row in enumerate(reader):
+            row.update((key, converter(row[key]))
+                       if row[key] != 'None'
+                       else (key, None)
+                       for key, converter in FIELD_TYPES.items())
+            segment = Segment.from_row(row=row)
+            # if this is still the same sequence and/or annotation
+            if row['sequence'] == curr_seq and row['annotation'] == curr_annot:
+                # append to growing list of segments
                 segments.append(segment)
+                curr_annot_file_list.append(row['annot_file'])
+                curr_audio_file_list.append(row['audio_file'])
             else:
+                # either sequence **or** annotation changed
+                # so make sequence from the one we just finished
                 seq = Sequence.from_segments(segments)
                 seq_list.append(seq)
-                # start a new segments list that starts with this segment
-                curr_file = row_file
-                segments = [segment]
+                curr_seq = row['sequence']
+                # start a new segments list that starts with the segment we just made
+                segments = [segment]  # that will go into this next seq we just started
+                # if we're still on the same annotation
+                if row['annotation'] == curr_annot:
+                    curr_annot_file_list.append(row['annot_file'])
+                    curr_audio_file_list.append(row['audio_file'])
+                else:  # annot file changed too
+                    if len(seq_list) == 1:
+                        annot_file = set(curr_annot_file_list)
+                        if len(annot_file) != 1:
+                            raise ValueError(
+                                'A single annotation should be associated with a '
+                                'single annotation file but the found the following set: '
+                                f'{annot_file}'
+                            )
+                        else:
+                            annot_file = annot_file.pop()
+
+                        audio_file = set(curr_audio_file_list)
+                        if len(audio_file) != 1:
+                            raise ValueError(
+                                'A single annotation should be associated with a single'
+                                'audio file but the found the following set: '
+                                f'{audio_file}'
+                            )
+                        else:
+                            audio_file = audio_file.pop()
+
+                        annot = Annotation(seq=seq_list[0], annot_file=annot_file,
+                                           audio_file=audio_file)
+                    elif len(seq_list) > 1:
+                        stack = Stack(seqs=seq_list)
+                        annot = Annotation(stack=stack, annot_file=annot_file,
+                                           audio_file=audio_file)
+                    else:
+                        raise ValueError(
+                            f'invalid sequence length: {len(seq_list)}\n'
+                            f'in row from csv: {csv_filename}\n'
+                            f'row: {row}')
+
+                    annot_list.append(annot)
+                    seq_list = []
+                    curr_annot_file_list = [row['annot_file']]
+                    curr_audio_file_list = [row['audio_file']]
+                    curr_annot = row['annotation']
+
         # lines below appends annot_dict corresponding to last file
         # since there won't be another file after it to trigger the 'else' logic above
         seq = Sequence.from_segments(segments)
         seq_list.append(seq)
 
-    return seq_list
+        if len(seq_list) == 1:
+            annot_file = set(curr_annot_file_list)
+            if len(annot_file) != 1:
+                raise ValueError(
+                    'A single annotation should be associated with a '
+                    'single annotation file but the found the following set: '
+                    f'{annot_file}'
+                )
+            else:
+                annot_file = annot_file.pop()
+
+            audio_file = set(curr_audio_file_list)
+            if len(audio_file) != 1:
+                raise ValueError(
+                    'A single annotation should be associated with a single'
+                    'audio file but the found the following set: '
+                    f'{audio_file}'
+                )
+            else:
+                audio_file = audio_file.pop()
+
+            annot = Annotation(seq=seq_list[0], annot_file=annot_file,
+                               audio_file=audio_file)
+        elif len(seq_list) > 1:
+            stack = Stack(seqs=seq_list)
+            annot = Annotation(stack=stack, annot_file=annot_file)
+
+        annot_list.append(annot)
+
+    return annot_list

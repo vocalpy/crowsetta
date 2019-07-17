@@ -14,8 +14,6 @@ class Sequence:
     ----------
     segments : tuple
         of Segment objects.
-    file : str
-        name of audio file with which annotation is associated.
     onsets_Hz : numpy.ndarray or None
         of type int, onset of each annotated segment in samples/second
     offsets_Hz : numpy.ndarray or None
@@ -38,7 +36,6 @@ class Sequence:
     def __init__(self,
                  segments,
                  labels,
-                 file,
                  onsets_s=None,
                  offsets_s=None,
                  onsets_Hz=None,
@@ -49,8 +46,6 @@ class Sequence:
         ----------
         segments : list or tuple
             of Segment objects.
-        file : str
-            name of audio file with which annotation is associated.
         onsets_Hz : numpy.ndarray or None
             of type int, onset of each annotated segment in samples/second
         offsets_Hz : numpy.ndarray or None
@@ -86,10 +81,6 @@ class Sequence:
                                                         labels)
 
         self._validate_segments_type(segments)
-        file_from_segments = self._get_unique_file_from_segments(segments)
-        if file_from_segments != file:
-            raise ValueError(f"File for segments, '{file_from_segments}', "
-                             f"does not match file, '{file}'.")
 
         super().__setattr__('_segments', segments)
         super().__setattr__('_onsets_s', onsets_s)
@@ -97,7 +88,6 @@ class Sequence:
         super().__setattr__('_onsets_Hz', onsets_Hz)
         super().__setattr__('_offsets_Hz', offsets_Hz)
         super().__setattr__('_labels', labels)
-        super().__setattr__('_file', file)
 
     @property
     def segments(self):
@@ -123,18 +113,13 @@ class Sequence:
     def labels(self):
         return self._labels
 
-    @property
-    def file(self):
-        return self._file
-
     def __hash__(self):
         list_for_hash = [self._segments,
                          self._onsets_s,
                          self._offsets_s,
                          self._onsets_Hz,
                          self._offsets_Hz,
-                         self._labels,
-                         self._file]
+                         self._labels]
         list_for_hash = [tuple(item.tolist())
                          if type(item) == np.ndarray
                          else item
@@ -151,12 +136,12 @@ class Sequence:
             return False
 
         eq = []
-        for attr in ['_segments', '_labels', '_file',
-                     '_onsets_s', '_offsets_s', '_onsets_Hz', '_offsets_Hz']:
+        for attr in ['_segments', '_labels', '_onsets_s', '_offsets_s',
+                     '_onsets_Hz', '_offsets_Hz']:
             self_attr = getattr(self, attr)
             other_attr = getattr(other, attr)
             if type(self_attr) == np.ndarray:
-                    eq.append(np.array_equal(self_attr, other_attr))
+                eq.append(np.array_equal(self_attr, other_attr))
             else:
                 eq.append(self_attr == other_attr)
 
@@ -206,18 +191,6 @@ class Sequence:
             raise TypeError(
                 'A Sequence must be made from a list of Segments but not all '
                 'items in the list passed were Segments.')
-
-    @staticmethod
-    def _get_unique_file_from_segments(segments):
-        files = []
-        for seg in segments:
-            files.append(seg.file)
-        file = np.unique(files)
-        if file.shape[0] > 1:
-            raise ValueError('Segments for a Sequence should all come from same file, '
-                             f'but found more than one file name in segments: {file}')
-        else:
-            return file[0]
 
     @staticmethod
     def _validate_onsets_offsets_labels(onsets_s,
@@ -347,7 +320,6 @@ class Sequence:
         onsets_Hz = []
         offsets_Hz = []
         labels = []
-        files = []
 
         for seg in segments:
             onsets_s.append(seg.onset_s)
@@ -361,8 +333,6 @@ class Sequence:
         onsets_Hz = np.asarray(onsets_Hz)
         offsets_Hz = np.asarray(offsets_Hz)
         labels = np.asarray(labels)
-
-        file = cls._get_unique_file_from_segments(segments)
 
         labels = cls._convert_labels(labels)
 
@@ -378,21 +348,18 @@ class Sequence:
 
         return cls(segments,
                    labels,
-                   file,
                    onsets_s,
                    offsets_s,
                    onsets_Hz,
                    offsets_Hz)
 
     @classmethod
-    def from_keyword(cls, file, labels, onsets_Hz=None, offsets_Hz=None,
+    def from_keyword(cls, labels, onsets_Hz=None, offsets_Hz=None,
                      onsets_s=None, offsets_s=None):
         """construct a Sequence from keyword arguments
 
         Parameters
         ----------
-        file : str
-            name of audio file with which annotation is associated.
         onsets_Hz : numpy.ndarray or None
             of type int, onset of each annotated segment in samples/second
         offsets_Hz : numpy.ndarray or None
@@ -425,13 +392,10 @@ class Sequence:
                                                  onset_Hz=onset_Hz,
                                                  offset_Hz=offset_Hz,
                                                  onset_s=onset_s,
-                                                 offset_s=offset_s,
-                                                 file=file))
-        # import pdb;pdb.set_trace()
+                                                 offset_s=offset_s))
 
         return cls(segments,
                    labels,
-                   file,
                    onsets_s,
                    offsets_s,
                    onsets_Hz,
@@ -439,16 +403,14 @@ class Sequence:
                    )
 
     @classmethod
-    def from_dict(cls, annot_dict):
+    def from_dict(cls, seq_dict):
         """returns a Sequence, given a Python dictionary
         where keys of dictionary are arguments to Sequence.from_keyword()
 
         Parameters
         ----------
-        annot_dict : dict
+        seq_dict : dict
             with following key, value pairs
-            file : str
-                name of audio file with which annotation is associated.
             onsets_Hz : numpy.ndarray or None
                 of type int, onset of each annotated segment in samples/second
             offsets_Hz : numpy.ndarray or None
@@ -460,22 +422,22 @@ class Sequence:
             labels : str, list, or numpy.ndarray
                 of type str, label for each annotated segment
 
-        annot_dict must specify both onsets and offsets, either in units of Hz or seconds 
+        seq_dict must specify both onsets and offsets, either in units of Hz or seconds
         (or both).
 
         Examples
         --------
-        >>> annot_dict = {
+        >>> seq_dict = {
         ...     'labels': 'abc',
         ...     'onsets_Hz': np.asarray([16005, 17925, 19837]),
         ...     'offsets_Hz': np.asarray([17602, 19520, 21435]),
         ...     'file': 'bird0.wav',
         ...     }
-        >>> seq = Sequence.from_dict(annot_dict)
+        >>> seq = Sequence.from_dict(seq_dict)
         """
         # basically a convenience method
         # so user doesn't have to grok the concept of 'dictionary unpacking operator'
-        return cls.from_keyword(**annot_dict)
+        return cls.from_keyword(**seq_dict)
 
     def as_dict(self):
         """returns sequence as a dictionary
@@ -488,8 +450,6 @@ class Sequence:
         -------
         seq_dict : dict
             with the following key, value pairs:
-                file : str
-                    name of audio file with which annotation is associated.
                 onsets_Hz : numpy.ndarray or None
                     of type int, onset of each annotated segment in samples/second
                 offsets_Hz : numpy.ndarray or None
@@ -501,13 +461,15 @@ class Sequence:
                 labels : numpy.ndarray
                     of type str; label for each annotated segment
         """
-        seq_keys = ['file', 'onsets_Hz', 'offsets_Hz', 'onsets_s', 'offsets_s', 'labels']
+        seq_keys = ['onsets_Hz', 'offsets_Hz', 'onsets_s', 'offsets_s', 'labels']
         seq_dict = dict(zip(
             seq_keys, [getattr(self, seq_key) for seq_key in seq_keys]
         ))
 
         for a_key in ['onsets_Hz', 'offsets_Hz', 'onsets_s', 'offsets_s']:
-            # if value is an array full of Nones, just convert to one None
+            # if value is an array full of Nones, just convert to one None.
+            # Use == to do elementwise comparison (so ignore warnings about
+            # 'comparison with None performed with equality operators')
             if np.all(seq_dict[a_key] == None):
                 seq_dict[a_key] = None
 

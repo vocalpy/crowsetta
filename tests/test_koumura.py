@@ -1,3 +1,4 @@
+"""test functions in koumura module"""
 import os
 from glob import glob
 import tempfile
@@ -7,12 +8,12 @@ import unittest
 from pathlib import Path
 
 import crowsetta
-from crowsetta.segment import Segment
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class TestAnnotation(unittest.TestCase):
+class TestKoumura(unittest.TestCase):
+    """TestCase subclass to test functions in koumura module"""
     def setUp(self):
         self.test_data_dir = os.path.join(TESTS_DIR, 'test_data',
                                           'koumura', 'Bird0')
@@ -21,15 +22,15 @@ class TestAnnotation(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp_output_dir)
 
-    def test_koumura2seq(self):
+    def test_koumura2annot(self):
         xml_file = os.path.join(self.test_data_dir, 'Annotation.xml')
-        seq_list = crowsetta.koumura.koumura2seq(file=xml_file,
+        annots = crowsetta.koumura.koumura2annot(annot_file=xml_file,
                                                  concat_seqs_into_songs=True,
                                                  wavpath=os.path.join(self.test_data_dir,
                                                                       'Wave'))
-        self.assertTrue(type(seq_list) == list)
-        self.assertTrue(all([type(seq) == crowsetta.sequence.Sequence
-                             for seq in seq_list]))
+        self.assertTrue(type(annots) == list)
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                             for annot in annots]))
 
     def test_koumura2csv(self):
         # since koumura2csv is basically a wrapper around
@@ -40,7 +41,7 @@ class TestAnnotation(unittest.TestCase):
         wavpath = os.path.join(self.test_data_dir, 'Wave')
         csv_filename = os.path.join(str(self.tmp_output_dir),
                                     'test.csv')
-        crowsetta.koumura.koumura2csv(file=xml_file,
+        crowsetta.koumura.koumura2csv(annot_file=xml_file,
                                       wavpath=wavpath,
                                       csv_filename=csv_filename,
                                       basename=True)
@@ -50,10 +51,11 @@ class TestAnnotation(unittest.TestCase):
         # to be extra sure, make sure all .wav files filenames from are in csv
         filenames_from_csv = []
         with open(csv_filename, 'r', newline='') as csvfile:
-            reader = csv.DictReader(csvfile, fieldnames=Segment._FIELDS)
+            reader = csv.DictReader(csvfile,
+                                    fieldnames=crowsetta.csv.CSV_FIELDNAMES)
             header = next(reader)
             for row in reader:
-                filenames_from_csv.append(row['file'])
+                filenames_from_csv.append(row['audio_file'])
 
         wav_list = glob(os.path.join(self.test_data_dir, 'Wave', '*.wav'))
         wav_list = [Path(wav_file).name for wav_file in wav_list]

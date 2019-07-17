@@ -19,91 +19,94 @@ class TestTranscriber(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp_output_dir)
 
-    def test_koumura_to_seq(self):
-        scribe = crowsetta.Transcriber(voc_format='koumura')
+    def test_koumura_from_file(self):
+        scribe = crowsetta.Transcriber(annot_format='koumura')
         xml_file = str(self.test_data_dir.joinpath('koumura/Bird0/Annotation.xml'))
         wavpath = str(self.test_data_dir.joinpath('koumura/Bird0/Wave'))
-        seq = scribe.to_seq(file=xml_file, wavpath=wavpath)
-        self.assertTrue(type(seq) == list)
-        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
-                             for a_seq in seq]))
+        annots = scribe.from_file(annot_file=xml_file, wavpath=wavpath)
+        self.assertTrue(type(annots) == list)
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                             for annot in annots]))
 
     def test_koumura_to_csv(self):
-        scribe = crowsetta.Transcriber(voc_format='koumura')
+        scribe = crowsetta.Transcriber(annot_format='koumura')
         xml_file = str(self.test_data_dir.joinpath('koumura/Bird0/Annotation.xml'))
         wavpath = str(self.test_data_dir.joinpath('koumura/Bird0/Wave'))
         csv_filename = str(self.tmp_output_dir.joinpath('Annotation.csv'))
-        scribe.to_csv(file=xml_file, wavpath=wavpath, csv_filename=csv_filename)
+        scribe.to_csv(annot_file=xml_file, wavpath=wavpath, csv_filename=csv_filename)
         self.assertTrue(Path(csv_filename).is_file())
 
-    def test_notmat_to_seq(self):
-        scribe = crowsetta.Transcriber(voc_format='notmat')
+    def test_notmat_from_file(self):
+        scribe = crowsetta.Transcriber(annot_format='notmat')
         notmats = list(str(notmat) 
                        for notmat in self.test_data_dir.joinpath(
             'cbins/gy6or6/032312').glob('*.not.mat')
         )
         for notmat in notmats:
-            seq = scribe.to_seq(file=notmat)
-            self.assertTrue(type(seq) == crowsetta.sequence.Sequence)
+            annot = scribe.from_file(annot_file=notmat)
+            self.assertTrue(type(annot) == crowsetta.Annotation)
 
     def test_notmat_to_csv(self):
-        scribe = crowsetta.Transcriber(voc_format='notmat')
+        scribe = crowsetta.Transcriber(annot_format='notmat')
         notmats = list(str(notmat) 
                        for notmat in self.test_data_dir.joinpath(
             'cbins/gy6or6/032312').glob('*.not.mat')
         )
         csv_filename = str(self.tmp_output_dir.joinpath('Annotation.csv'))
-        scribe.to_csv(file=notmats, csv_filename=csv_filename)
+        scribe.to_csv(annot_file=notmats, csv_filename=csv_filename)
         self.assertTrue(Path(csv_filename).is_file())
 
-    def test_example_to_seq_name_import(self):
+    def test_example_from_file_name_import(self):
         sys.path.append(str(self.example_script_dir))
         config = {
             'module': 'example',
-            'to_seq': 'example2seq',
+            'from_file': 'example2annot',
             'to_csv': None,
             'to_format': None,
         }
-        scribe = crowsetta.Transcriber(voc_format='example', config=config)
+        scribe = crowsetta.Transcriber(annot_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
-        seq = scribe.to_seq(mat_file=annotation)
-        self.assertTrue(all([type(a_seq) == crowsetta.Sequence for a_seq in seq]))
+        annots = scribe.from_file(annot_file=annotation)
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                             for annot in annots]))
         sys.path.remove(str(self.example_script_dir))
 
-    def test_only_module_and_to_seq_required(self):
+    def test_only_module_and_from_file_required(self):
         config = {
             'module': str(self.example_script_dir.joinpath('example.py')),
-            'to_seq': 'example2seq',
+            'from_file': 'example2annot',
             }
-        scribe = crowsetta.Transcriber(voc_format='example', config=config)
+        scribe = crowsetta.Transcriber(annot_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
-        seq = scribe.to_seq(mat_file=annotation)
-        self.assertTrue(all([type(a_seq) == crowsetta.Sequence for a_seq in seq]))
+        annots = scribe.from_file(annot_file=annotation)
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                             for annot in annots]))
 
-    def test_example_to_seq_path_import(self):
+    def test_example_from_file_path_import(self):
         config = {
             'module': str(self.example_script_dir.joinpath('example.py')),
-            'to_seq': 'example2seq',
+            'from_file': 'example2annot',
             'to_csv': None,
             'to_format': None,
         }
-        scribe = crowsetta.Transcriber(voc_format='example', config=config)
+        scribe = crowsetta.Transcriber(annot_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
-        seq = scribe.to_seq(mat_file=annotation)
-        self.assertTrue(all([type(a_seq) == crowsetta.Sequence for a_seq in seq]))
+        annots = scribe.from_file(annot_file=annotation)
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                             for annot in annots]))
 
     def test_config_wrong_types_raise(self):
         # should raise an error because config should be a dict
         # not list of dicts
         config = list({
                 'module': 'example',
-                'to_seq': 'example2seq',
+                'from_file': 'example2annot',
                 'to_csv': 'example2csv',
                 'to_format': 'None',
             }
@@ -114,42 +117,42 @@ class TestTranscriber(unittest.TestCase):
     def test_missing_keys_in_config_raises(self):
         config = {
             # missing 'module' key
-            'to_seq': 'example2seq',
+            'from_file': 'example2annot',
             'to_csv': None,
             'to_format': None,
         }
 
         with self.assertRaises(KeyError):
-            crowsetta.Transcriber(voc_format='example', config=config)
+            crowsetta.Transcriber(annot_format='example', config=config)
 
         config = {
             'module': 'example',
-            # missing 'to_seq' key
+            # missing 'from_file' key
             'to_csv': None,
             'to_format': None,
         }
         with self.assertRaises(KeyError):
-            crowsetta.Transcriber(voc_format='example', config=config)
+            crowsetta.Transcriber(annot_format='example', config=config)
 
     def test_extra_keys_in_config_raises(self):
         config = {
             'module': 'example',
-            'to_seq': 'example2seq',
+            'from_file': 'example2annot',
             'to_csv': 'example2csv',
             'extra': 'key_right_here',
             'to_format': 'None',
         }
         with self.assertRaises(KeyError):
-            crowsetta.Transcriber(voc_format='example', config=config)
+            crowsetta.Transcriber(annot_format='example', config=config)
 
     def test_call_to_csv_when_None_raises(self):
         config = {
             'module': str(self.example_script_dir.joinpath('example.py')),
-            'to_seq': 'example2seq',
+            'from_file': 'example2annot',
             'to_csv': None,
             'to_format': None,
         }
-        scribe = crowsetta.Transcriber(voc_format='example', config=config)
+        scribe = crowsetta.Transcriber(annot_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
@@ -159,11 +162,11 @@ class TestTranscriber(unittest.TestCase):
     def test_call_to_format_when_None_raises(self):
         config = {
             'module': str(self.example_script_dir.joinpath('example.py')),
-            'to_seq': 'example2seq',
+            'from_file': 'example2annot',
             'to_csv': None,
             'to_format': None,
         }
-        scribe = crowsetta.Transcriber(voc_format='example', config=config)
+        scribe = crowsetta.Transcriber(annot_format='example', config=config)
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')

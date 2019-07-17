@@ -1,15 +1,15 @@
 import numpy as np
 from scipy.io import loadmat
 
-from crowsetta.sequence import Sequence
+from crowsetta import Sequence, Annotation
 
 
-def example2seq(mat_file):
+def example2annot(annot_file):
     """example of a function that unpacks annotation from
     a complicated data structure and returns the necessary
-    data from a Sequence object"""
-    mat = loadmat(mat_file, squeeze_me=True)
-    seq_list = []
+    data from an Annotation object"""
+    mat = loadmat(annot_file, squeeze_me=True)
+    annot_list = []
     # annotation structure loads as a Python dictionary with two keys
     # one maps to a list of filenames, 
     # and the other to a Numpy array where each element is the annotation
@@ -36,9 +36,9 @@ def example2seq(mat_file):
                              "the segType parsed as type {} which is "
                              "not recognized.".format(filename,
                                                       type(labels)))
-        seq = Sequence.from_keyword(file=filename,
-                                    labels=labels,
+        seq = Sequence.from_keyword(labels=labels,
                                     onsets_s=onsets_s,
                                     offsets_s=offsets_s)
-        seq_list.append(seq)
-    return seq_list
+        annot_list.append(Annotation(annot_file=annot_file, audio_file=filename, seq=seq))
+
+    return annot_list

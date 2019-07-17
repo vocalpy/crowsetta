@@ -20,39 +20,36 @@ class TestTextgrid(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp_output_dir)
 
-    def test_textgrid2seq_single_str(self):
+    def test_textgrid2annot_single_str(self):
         textgrid = glob(os.path.join(self.test_data_dir,
                                      os.path.normpath(
                                          'wav-textgrid/*.TextGrid')))
         a_textgrid = textgrid[0]
-        seq = crowsetta.textgrid.textgrid2seq(a_textgrid)
-        self.assertTrue(type(seq) == crowsetta.sequence.Sequence)
-        self.assertTrue(hasattr(seq, 'segments'))
+        annot = crowsetta.textgrid.textgrid2annot(a_textgrid)
+        self.assertTrue(type(annot) == crowsetta.Annotation)
 
-    def test_textgrid2seq_list_of_str(self):
+    def test_textgrid2annot_list_of_str(self):
         textgrid = glob(os.path.join(self.test_data_dir,
                                      os.path.normpath(
                                          'wav-textgrid/*.TextGrid')))
-        seq = crowsetta.textgrid.textgrid2seq(textgrid)
-        self.assertTrue(type(seq) == list)
-        self.assertTrue(len(seq) == len(textgrid))
-        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
-                            for a_seq in seq]))
-        self.assertTrue(all([hasattr(a_seq, 'segments') for a_seq in seq]))
+        annots = crowsetta.textgrid.textgrid2annot(textgrid)
+        self.assertTrue(type(annots) == list)
+        self.assertTrue(len(annots) == len(textgrid))
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                            for annot in annots]))
 
-    def test_textgrid2seq_list_of_Path(self):
+    def test_textgrid2annot_list_of_Path(self):
         textgrid = Path(self.test_data_dir).joinpath(
             'wav-textgrid').glob('*.TextGrid')
-        seq = crowsetta.textgrid.textgrid2seq(textgrid)
-        self.assertTrue(type(seq) == list)
-        self.assertTrue(len(seq) == len(list(textgrid)))
-        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
-                            for a_seq in seq]))
-        self.assertTrue(all([hasattr(a_seq, 'segments') for a_seq in seq]))
+        annots = crowsetta.textgrid.textgrid2annot(textgrid)
+        self.assertTrue(type(annots) == list)
+        self.assertTrue(len(annots) == len(list(textgrid)))
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                            for annot in annots]))
 
     def test_textgrid2csv(self):
         # since textgrid2csv is basically a wrapper around
-        # textgrid2seq and seq2csv,
+        # textgrid2annot and seq2csv,
         # and those are tested above and in other test modules,
         # here just need to make sure this function doesn't fail
         textgrid_dir = os.path.join(self.test_data_dir,

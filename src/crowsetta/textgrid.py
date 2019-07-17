@@ -1,4 +1,4 @@
-"""module for loading Praat TextGrid files into Sequences
+"""module for loading Praat TextGrid files into Annotations
 
 uses the Python library textgrid
 https://github.com/kylebgorman/textgrid
@@ -10,25 +10,26 @@ import os
 import numpy as np
 from textgrid import TextGrid, IntervalTier
 
-from .sequence import Sequence
+from .annotation import Annotation
+from .csv import annot2csv
 from .meta import Meta
-from .csv import seq2csv
+from .sequence import Sequence
 from .validation import _parse_file
 
 
-def textgrid2seq(file,
-                 abspath=False,
-                 basename=False,
-                 round_times=True,
-                 decimals=3,
-                 intervaltier_ind=0,
-                 audio_ext='wav',
-                 ):
-    """convert Praat Textgrid file into a Sequence
+def textgrid2annot(annot_file,
+                   abspath=False,
+                   basename=False,
+                   round_times=True,
+                   decimals=3,
+                   intervaltier_ind=0,
+                   audio_ext='wav',
+                   ):
+    """convert Praat Textgrid file(s) into Annotation(s)
 
     Parameters
     ----------
-    file : str, Path
+    annot_file : str, Path
         filename of a .TextGrid annotation file, created by Praat.
     abspath : bool
         if True, converts filename for each audio file into absolute path.
@@ -56,13 +57,13 @@ def textgrid2seq(file,
 
     Returns
     -------
-    seq : crowsetta.Sequence or list of Sequence
+    annot : crowsetta.Annotation or list of Annotations
         each Interval in the first IntervalTier in a TextGrid file
         will become one segment in a sequence.
     """
-    file = _parse_file(file, extension='.TextGrid')
-    seq = []
-    for a_textgrid in file:
+    annot_file = _parse_file(annot_file, extension='.TextGrid')
+    annots = []
+    for a_textgrid in annot_file:
         tg = TextGrid.fromFile(a_textgrid)
 
         intv_tier = tg[intervaltier_ind]
@@ -96,26 +97,29 @@ def textgrid2seq(file,
             onsets_s = np.around(onsets_s, decimals=decimals)
             offsets_s = np.around(offsets_s, decimals=decimals)
 
-        textgrid_seq = Sequence.from_keyword(file=audio_filename,
-                                             labels=labels,
+        # TODO: check for multiple sequences
+        textgrid_seq = Sequence.from_keyword(labels=labels,
                                              onsets_s=onsets_s,
                                              offsets_s=offsets_s)
-        seq.append(textgrid_seq)
+        annot = Annotation(annot_file=a_textgrid,
+                           audio_file=audio_filename,
+                           seq=textgrid_seq)
+        annots.append(annot)
 
-    if len(seq) == 1:
-        return seq[0]
+    if len(annots) == 1:
+        return annots[0]
     else:
-        return seq
+        return annots
 
 
-def textgrid2csv(file, csv_filename, abspath=False, basename=False):
+def textgrid2csv(annot_file, csv_filename, abspath=False, basename=False):
     """saves annotation from TextGrid file(s) in a comma-separated values
     (csv) file, where each row represents one syllable from one
     .not.mat file.
 
     Parameters
     ----------
-    file : str, Path, or list
+    annot_file : str, Path, or list
         if list, list of strings or Path objects pointing to TextGrid files
     csv_filename : str
         name for csv file that is created
@@ -135,20 +139,20 @@ def textgrid2csv(file, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    file = _parse_file(file, extension='.TextGrid')
+    annot_file = _parse_file(annot_file, extension='.TextGrid')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    seq = textgrid2seq(file)
-    seq2csv(seq, csv_filename, abspath=abspath, basename=basename)
+    annots = textgrid2annot(annot_file)
+    annot2csv(annots, csv_filename, abspath=abspath, basename=basename)
 
 
 meta = Meta(
     name='textgrid',
     ext='TextGrid',
-    to_seq=textgrid2seq,
+    from_file=textgrid2annot,
     to_csv=textgrid2csv,
 )
