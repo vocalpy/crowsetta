@@ -98,11 +98,10 @@ def textgrid2annot(file,
             offsets_s = np.around(offsets_s, decimals=decimals)
 
         # TODO: check for multiple sequences
-        textgrid_seq = Sequence.from_keyword(file=audio_filename,
-                                             labels=labels,
+        textgrid_seq = Sequence.from_keyword(labels=labels,
                                              onsets_s=onsets_s,
                                              offsets_s=offsets_s)
-        annot = Annotation(annot_file=file,
+        annot = Annotation(annot_file=a_textgrid,
                            audio_file=audio_filename,
                            seq=textgrid_seq)
         annots.append(annot)
