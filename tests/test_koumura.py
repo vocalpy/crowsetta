@@ -1,3 +1,4 @@
+"""test functions in koumura module"""
 import os
 from glob import glob
 import tempfile
@@ -12,7 +13,8 @@ from crowsetta.segment import Segment
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-class TestAnnotation(unittest.TestCase):
+class TestKoumura(unittest.TestCase):
+    """TestCase subclass to test functions in koumura module"""
     def setUp(self):
         self.test_data_dir = os.path.join(TESTS_DIR, 'test_data',
                                           'koumura', 'Bird0')
@@ -21,15 +23,15 @@ class TestAnnotation(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp_output_dir)
 
-    def test_koumura2seq(self):
+    def test_koumura2annot(self):
         xml_file = os.path.join(self.test_data_dir, 'Annotation.xml')
-        seq_list = crowsetta.koumura.koumura2seq(file=xml_file,
+        annots = crowsetta.koumura.koumura2annot(file=xml_file,
                                                  concat_seqs_into_songs=True,
                                                  wavpath=os.path.join(self.test_data_dir,
                                                                       'Wave'))
-        self.assertTrue(type(seq_list) == list)
-        self.assertTrue(all([type(seq) == crowsetta.sequence.Sequence
-                             for seq in seq_list]))
+        self.assertTrue(type(annots) == list)
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                             for annot in annots]))
 
     def test_koumura2csv(self):
         # since koumura2csv is basically a wrapper around
