@@ -95,8 +95,10 @@ def notmat2annot(file,
 
         if abspath:
             audio_filename = os.path.abspath(audio_filename)
+            a_notmat = os.path.abspath(a_notmat)
         elif basename:
             audio_filename = os.path.basename(audio_filename)
+            a_notmat = os.path.basename(a_notmat)
 
         notmat_seq = Sequence.from_keyword(labels=np.asarray(list(notmat_dict['labels'])),
                                            onsets_s=onsets_s,
