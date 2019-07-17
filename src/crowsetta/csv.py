@@ -100,14 +100,21 @@ def annot2csv(annot,
                         key: ('None' if val is None else val)
                         for key, val in row.items()
                     }
+                    annot_file = annot_.annot_file
+                    audio_file = annot_.audio_file
                     if abspath:
-                        row['annot_file'] = os.path.abspath(annot_.annot_file)
-                        if annot_.audio_file is not None:
-                            row['audio_file'] = os.path.abspath(annot_.audio_file)
+                        annot_file = os.path.abspath(annot_file)
+                        if audio_file is not None:
+                            audio_file = os.path.abspath(audio_file)
                     elif basename:
-                        row['annot_file'] = os.path.basename(annot_.annot_file)
-                        if annot_.audio_file is not None:
-                            row['audio_file'] = os.path.basename(annot_.audio_file)
+                        annot_file = os.path.basename(annot_file)
+                        if audio_file is not None:
+                            audio_file = os.path.basename(audio_file)
+                    row['annot_file'] = annot_file
+                    if audio_file is not None:
+                        row['audio_file'] = audio_file
+                    else:
+                        row['audio_file'] = 'None'
                     # we use 'sequence' and 'annotation' fields when we are
                     # loading back into Annotations
                     row['sequence'] = seq_num
