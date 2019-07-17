@@ -247,10 +247,10 @@ def csv2annot(csv_filename):
                             )
                         else:
                             annot_file = annot_file.pop()
-                        annot = Annotation(seq=seq_list[0], file=annot_file)
+                        annot = Annotation(seq=seq_list[0], annot_file=annot_file)
                     elif len(seq_list) > 1:
                         stack = Stack(seqs=seq_list)
-                        annot = Annotation(stack=stack, file=annot_file)
+                        annot = Annotation(stack=stack, annot_file=annot_file)
                     else:
                         raise ValueError(
                             f'invalid sequence length: {len(seq_list)}\n'
@@ -275,10 +275,10 @@ def csv2annot(csv_filename):
                 )
             else:
                 annot_file = annot_file.pop()
-            annot = Annotation(seq=seq_list[0], file=annot_file)
+            annot = Annotation(seq=seq_list[0], annot_file=annot_file)
         elif len(seq_list) > 1:
             stack = Stack(seqs=seq_list)
-            annot = Annotation(stack=stack, file=annot_file)
+            annot = Annotation(stack=stack, annot_file=annot_file)
 
         annot_list.append(annot)
 
