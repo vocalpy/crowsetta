@@ -36,8 +36,7 @@ def example2annot(mat_file):
                              "the segType parsed as type {} which is "
                              "not recognized.".format(filename,
                                                       type(labels)))
-        seq = Sequence.from_keyword(file=filename,
-                                    labels=labels,
+        seq = Sequence.from_keyword(labels=labels,
                                     onsets_s=onsets_s,
                                     offsets_s=offsets_s)
         annot_list.append(Annotation(annot_file=mat_file, audio_file=filename, seq=seq))
