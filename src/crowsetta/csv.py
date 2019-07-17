@@ -1,4 +1,4 @@
-"""module of functions for handling with csv files"""
+"""module of functions for handling csv files"""
 import os
 import csv
 
@@ -204,6 +204,8 @@ def csv2annot(csv_filename):
 
         row = next(reader)
         row.update((key, converter(row[key]))
+                   if row[key] != 'None'
+                   else (key, None)
                    for key, converter in FIELD_TYPES.items())
         segment = Segment.from_row(row=row)
         curr_seq = row['sequence']
@@ -215,6 +217,8 @@ def csv2annot(csv_filename):
         annot_list = []
         for row_num, row in enumerate(reader):
             row.update((key, converter(row[key]))
+                       if row[key] != 'None'
+                       else (key, None)
                        for key, converter in FIELD_TYPES.items())
             segment = Segment.from_row(row=row)
             # if this is still the same sequence and/or annotation
@@ -234,8 +238,6 @@ def csv2annot(csv_filename):
                 if row['annotation'] == curr_annot:
                     curr_file_list.append(row['file'])
                 else:  # annot file changed too
-                    curr_file_list = [row['file']]
-
                     if len(seq_list) == 1:
                         annot_file = set(curr_file_list)
                         if len(annot_file) != 1:
@@ -257,13 +259,27 @@ def csv2annot(csv_filename):
 
                     annot_list.append(annot)
                     seq_list = []
+                    curr_file_list = [row['file']]
                     curr_annot = row['annotation']
 
         # lines below appends annot_dict corresponding to last file
         # since there won't be another file after it to trigger the 'else' logic above
         seq = Sequence.from_segments(segments)
         seq_list.append(seq)
-        annot = Annotation(seq=seq_list)
+        if len(seq_list) == 1:
+            annot_file = set(curr_file_list)
+            if len(annot_file) != 1:
+                raise ValueError(
+                    'A single annotation should be associated with a '
+                    f'single file but the found the following set: {annot_file}'
+                )
+            else:
+                annot_file = annot_file.pop()
+            annot = Annotation(seq=seq_list[0], file=annot_file)
+        elif len(seq_list) > 1:
+            stack = Stack(seqs=seq_list)
+            annot = Annotation(stack=stack, file=annot_file)
+
         annot_list.append(annot)
 
     return annot_list
