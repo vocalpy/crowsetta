@@ -14,7 +14,8 @@ CSV_FIELDNAMES = [
     'offset_s',
     'onset_Hz',
     'offset_Hz',
-    'file',
+    'audio_file',
+    'annot_file',
     'sequence',
     'annotation'
 ]
@@ -26,7 +27,8 @@ FIELD_TYPES = {
     'offset_s': float,
     'onset_Hz': int,
     'offset_Hz': int,
-    'file': str,
+    'audio_file': str,
+    'annot_file': str,
     'sequence': int,
     'annotation': int,
 }
@@ -93,21 +95,25 @@ def annot2csv(annot,
                 seq_list = [annot_.seq]
             for seq_num, seq in enumerate(seq_list):
                 for segment in seq.segments:
-                    seg_dict = segment.asdict()
-                    seg_dict = {
+                    row = segment.asdict()
+                    row = {
                         key: ('None' if val is None else val)
-                        for key, val in seg_dict.items()
+                        for key, val in row.items()
                     }
                     if abspath:
-                        seg_dict['file'] = os.path.abspath(seg_dict['file'])
+                        row['annot_file'] = os.path.abspath(annot_.annot_file)
+                        if annot_.audio_file is not None:
+                            row['audio_file'] = os.path.abspath(annot_.audio_file)
                     elif basename:
-                        seg_dict['file'] = os.path.basename(seg_dict['file'])
+                        row['annot_file'] = os.path.basename(annot_.annot_file)
+                        if annot_.audio_file is not None:
+                            row['audio_file'] = os.path.basename(annot_.audio_file)
                     # we use 'sequence' and 'annotation' fields when we are
                     # loading back into Annotations
-                    seg_dict['sequence'] = seq_num
-                    seg_dict['annotation'] = annot_num
+                    row['sequence'] = seq_num
+                    row['annotation'] = annot_num
 
-                    writer.writerow(seg_dict)
+                    writer.writerow(row)
 
 
 def toannot_func_to_csv(toannot_func):
@@ -210,7 +216,8 @@ def csv2annot(csv_filename):
         segment = Segment.from_row(row=row)
         curr_seq = row['sequence']
         curr_annot = row['annotation']
-        curr_file_list = [row['file']]
+        curr_annot_file_list = [row['annot_file']]
+        curr_audio_file_list = [row['audio_file']]
 
         segments = [segment]
         seq_list = []
@@ -225,7 +232,8 @@ def csv2annot(csv_filename):
             if row['sequence'] == curr_seq and row['annotation'] == curr_annot:
                 # append to growing list of segments
                 segments.append(segment)
-                curr_file_list.append(row['file'])
+                curr_annot_file_list.append(row['annot_file'])
+                curr_audio_file_list.append(row['audio_file'])
             else:
                 # either sequence **or** annotation changed
                 # so make sequence from the one we just finished
@@ -236,21 +244,36 @@ def csv2annot(csv_filename):
                 segments = [segment]  # that will go into this next seq we just started
                 # if we're still on the same annotation
                 if row['annotation'] == curr_annot:
-                    curr_file_list.append(row['file'])
+                    curr_annot_file_list.append(row['annot_file'])
+                    curr_audio_file_list.append(row['audio_file'])
                 else:  # annot file changed too
                     if len(seq_list) == 1:
-                        annot_file = set(curr_file_list)
+                        annot_file = set(curr_annot_file_list)
                         if len(annot_file) != 1:
                             raise ValueError(
                                 'A single annotation should be associated with a '
-                                f'single file but the found the following set: {annot_file}'
+                                'single annotation file but the found the following set: '
+                                f'{annot_file}'
                             )
                         else:
                             annot_file = annot_file.pop()
-                        annot = Annotation(seq=seq_list[0], annot_file=annot_file)
+
+                        audio_file = set(curr_audio_file_list)
+                        if len(audio_file) != 1:
+                            raise ValueError(
+                                'A single annotation should be associated with a single'
+                                'audio file but the found the following set: '
+                                f'{audio_file}'
+                            )
+                        else:
+                            audio_file = audio_file.pop()
+
+                        annot = Annotation(seq=seq_list[0], annot_file=annot_file,
+                                           audio_file=audio_file)
                     elif len(seq_list) > 1:
                         stack = Stack(seqs=seq_list)
-                        annot = Annotation(stack=stack, annot_file=annot_file)
+                        annot = Annotation(stack=stack, annot_file=annot_file,
+                                           audio_file=audio_file)
                     else:
                         raise ValueError(
                             f'invalid sequence length: {len(seq_list)}\n'
@@ -259,23 +282,38 @@ def csv2annot(csv_filename):
 
                     annot_list.append(annot)
                     seq_list = []
-                    curr_file_list = [row['file']]
+                    curr_annot_file_list = [row['annot_file']]
+                    curr_audio_file_list = [row['audio_file']]
                     curr_annot = row['annotation']
 
         # lines below appends annot_dict corresponding to last file
         # since there won't be another file after it to trigger the 'else' logic above
         seq = Sequence.from_segments(segments)
         seq_list.append(seq)
+
         if len(seq_list) == 1:
-            annot_file = set(curr_file_list)
+            annot_file = set(curr_annot_file_list)
             if len(annot_file) != 1:
                 raise ValueError(
                     'A single annotation should be associated with a '
-                    f'single file but the found the following set: {annot_file}'
+                    'single annotation file but the found the following set: '
+                    f'{annot_file}'
                 )
             else:
                 annot_file = annot_file.pop()
-            annot = Annotation(seq=seq_list[0], annot_file=annot_file)
+
+            audio_file = set(curr_audio_file_list)
+            if len(audio_file) != 1:
+                raise ValueError(
+                    'A single annotation should be associated with a single'
+                    'audio file but the found the following set: '
+                    f'{audio_file}'
+                )
+            else:
+                audio_file = audio_file.pop()
+
+            annot = Annotation(seq=seq_list[0], annot_file=annot_file,
+                               audio_file=audio_file)
         elif len(seq_list) > 1:
             stack = Stack(seqs=seq_list)
             annot = Annotation(stack=stack, annot_file=annot_file)
