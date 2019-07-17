@@ -23,39 +23,37 @@ class TestNotmat(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp_output_dir)
 
-    def test_notmat2seq_single_str(self):
+    def test_notmat2annot_single_str(self):
         notmat = os.path.join(self.test_data_dir,
                               os.path.normpath(
                                   'cbins/gy6or6/032312/'
                                   'gy6or6_baseline_230312_0808.138.cbin.not.mat'))
-        seq = crowsetta.notmat.notmat2seq(notmat)
-        self.assertTrue(type(seq) == crowsetta.sequence.Sequence)
-        self.assertTrue(hasattr(seq, 'segments'))
+        annot = crowsetta.notmat.notmat2annot(notmat)
+        self.assertTrue(type(annot) == crowsetta.Annotation)
+        self.assertTrue(hasattr(annot, 'seq'))
 
-    def test_notmat2seq_list_of_str(self):
+    def test_notmat2annot_list_of_str(self):
         notmat = glob(os.path.join(self.test_data_dir,
                                    os.path.normpath(
                                        'cbins/gy6or6/032312/*.not.mat')))
-        seq = crowsetta.notmat.notmat2seq(notmat)
-        self.assertTrue(type(seq) == list)
-        self.assertTrue(len(seq) == len(notmat))
-        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
-                            for a_seq in seq]))
-        self.assertTrue(all([hasattr(a_seq, 'segments') for a_seq in seq]))
+        annots = crowsetta.notmat.notmat2annot(notmat)
+        self.assertTrue(type(annots) == list)
+        self.assertTrue(len(annots) == len(notmat))
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                            for annot in annots]))
 
-    def test_notmat2seq_list_of_Path(self):
+    def test_notmat2annot_list_of_Path(self):
         notmat = Path(self.test_data_dir).joinpath(
             'cbins/gy6or6/032312/').glob('*.not.mat')
-        seq = crowsetta.notmat.notmat2seq(notmat)
-        self.assertTrue(type(seq) == list)
-        self.assertTrue(len(seq) == len(list(notmat)))
-        self.assertTrue(all([type(a_seq) == crowsetta.sequence.Sequence
-                            for a_seq in seq]))
-        self.assertTrue(all([hasattr(a_seq, 'segments') for a_seq in seq]))
+        annots = crowsetta.notmat.notmat2annot(notmat)
+        self.assertTrue(type(annots) == list)
+        self.assertTrue(len(annots) == len(list(annots)))
+        self.assertTrue(all([type(annot) == crowsetta.Annotation
+                            for annot in annots]))
 
     def test_notmat2csv(self):
         # since notmat_list_to_csv is basically a wrapper around
-        # notmat2seq and seq2csv,
+        # notmat2annot and seq2csv,
         # and those are tested above and in other test modules,
         # here just need to make sure this function doesn't fail
         cbin_dir = os.path.join(self.test_data_dir,
@@ -87,8 +85,8 @@ class TestNotmat(unittest.TestCase):
         notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
         for notmat in notmat_list:
             notmat_dict = evfuncs.load_notmat(notmat)
-            seq = crowsetta.notmat.notmat2seq(notmat)
-            seq_dict = seq.as_dict()
+            annot = crowsetta.notmat.notmat2annot(notmat)
+            seq_dict = annot.seq.as_dict()
             crowsetta.notmat.make_notmat(filename=seq_dict['file'],
                                          onsets_Hz=seq_dict['onsets_Hz'],
                                          offsets_Hz=seq_dict['offsets_Hz'],
