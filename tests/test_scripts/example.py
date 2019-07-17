@@ -40,6 +40,6 @@ def example2annot(mat_file):
                                     labels=labels,
                                     onsets_s=onsets_s,
                                     offsets_s=offsets_s)
-        annot_list.append(Annotation(file=filename, seq=seq))
+        annot_list.append(Annotation(annot_file=mat_file, audio_file=filename, seq=seq))
 
     return annot_list
