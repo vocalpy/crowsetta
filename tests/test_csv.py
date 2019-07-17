@@ -7,8 +7,6 @@ import unittest
 from pathlib import Path
 from importlib import import_module
 
-import numpy as np
-
 import crowsetta
 
 TESTS_DIR = Path(__file__).resolve().parent  # same as os.path.dirname(__file__)
