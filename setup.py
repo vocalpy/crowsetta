@@ -17,14 +17,18 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'crowsetta'
-DESCRIPTION = 'A tool to work with any format for annotating vocalizations'
-URL = 'https://github.com/NickleDave/crowsetta'
-EMAIL = 'nicholdav@gmail.com'
-AUTHOR = 'David Nicholson'
+about = {}
+with open("src/crowsetta/__about__.py") as fp:
+    exec(fp.read(), about)
+
+NAME = about['__title__']
+DESCRIPTION = about['__summary__']
+URL = about['__uri__']
+EMAIL = about['__email__']
+AUTHOR = about['__author__']
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '1.1.1'
-LICENSE = 'BSD'
+VERSION = about['__version__']
+LICENSE = about['__license__']
 ENTRY_POINTS = {
     'crowsetta.format': [
         'notmat = crowsetta.notmat',
