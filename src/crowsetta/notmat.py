@@ -149,7 +149,7 @@ def notmat2csv(file, csv_filename, abspath=False, basename=False):
                          'information (just base filename) should be saved.')
 
     annot = notmat2annot(file)
-    annot2csv(seq, csv_filename, abspath=abspath, basename=basename)
+    annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
 
 def make_notmat(filename,
