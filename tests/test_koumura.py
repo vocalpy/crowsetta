@@ -8,7 +8,6 @@ import unittest
 from pathlib import Path
 
 import crowsetta
-from crowsetta.segment import Segment
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -52,10 +51,11 @@ class TestKoumura(unittest.TestCase):
         # to be extra sure, make sure all .wav files filenames from are in csv
         filenames_from_csv = []
         with open(csv_filename, 'r', newline='') as csvfile:
-            reader = csv.DictReader(csvfile, fieldnames=Segment._FIELDS)
+            reader = csv.DictReader(csvfile,
+                                    fieldnames=crowsetta.csv.CSV_FIELDNAMES)
             header = next(reader)
             for row in reader:
-                filenames_from_csv.append(row['file'])
+                filenames_from_csv.append(row['audio_file'])
 
         wav_list = glob(os.path.join(self.test_data_dir, 'Wave', '*.wav'))
         wav_list = [Path(wav_file).name for wav_file in wav_list]
