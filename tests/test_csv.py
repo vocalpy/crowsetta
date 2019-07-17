@@ -134,25 +134,9 @@ class TestCSV(unittest.TestCase):
         # make sure everything is the same in the two annotation lists
         for from_csv, from_notmat in zip(annot_list_from_csv,
                                          annot_list_from_notmats):
-            from_csv = from_csv.as_dict()
-            from_notmat = from_notmat.as_dict()
-            for from_csv_key, from_csv_val in from_csv.items():
-                if type(from_csv_val) == str:
-                    self.assertTrue(
-                        from_csv_val == from_notmat[from_csv_key]
-                    )
-                elif type(from_csv_val) == np.ndarray:
-                    # hacky platform-agnostic way to say "if integer"
-                    if from_csv_val.dtype == np.asarray(int(1)).dtype:
-                        self.assertTrue(
-                            np.array_equal(from_csv_val,
-                                           from_notmat[from_csv_key])
-                        )
-                    # hacky platform-agnostic way to say "if float"
-                    elif from_csv_val.dtype == np.asarray((1.)).dtype:
-                        self.assertTrue(
-                            np.allclose(from_csv[from_csv_key],
-                                        from_notmat[from_csv_key]))
+            self.assertTrue(
+                from_csv == from_notmat
+            )
 
     def test_csv2annot_unrecognized_fields_raises(self):
         csv_filename = str(
