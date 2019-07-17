@@ -4,6 +4,22 @@ import warnings
 import attr
 
 
+def float_or_None(val):
+    """converter that casts val to float, or returns None if val is string 'None'"""
+    if val == 'None':
+        return None
+    else:
+        return float(val)
+
+
+def int_or_None(val):
+    """converter that casts val to int, or returns None if val is string 'None'"""
+    if val == 'None':
+        return None
+    else:
+        return int(val)
+
+
 @attr.s(frozen=True)
 class Segment(object):
     """object that represents a segment of a time series,
@@ -12,10 +28,10 @@ class Segment(object):
 
     label = attr.ib(converter=str)
     file = attr.ib(converter=str)
-    onset_s = attr.ib(converter=attr.converters.optional(float))
-    offset_s = attr.ib(converter=attr.converters.optional(float))
-    onset_Hz = attr.ib(converter=attr.converters.optional(int))
-    offset_Hz = attr.ib(converter=attr.converters.optional(int))
+    onset_s = attr.ib(converter=attr.converters.optional(float_or_None))
+    offset_s = attr.ib(converter=attr.converters.optional(float_or_None))
+    onset_Hz = attr.ib(converter=attr.converters.optional(int_or_None))
+    offset_Hz = attr.ib(converter=attr.converters.optional(int_or_None))
     asdict = attr.asdict
 
     @classmethod
