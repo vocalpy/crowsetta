@@ -17,7 +17,7 @@ from .sequence import Sequence
 from .validation import _parse_file
 
 
-def textgrid2annot(file,
+def textgrid2annot(annot_file,
                    abspath=False,
                    basename=False,
                    round_times=True,
@@ -29,7 +29,7 @@ def textgrid2annot(file,
 
     Parameters
     ----------
-    file : str, Path
+    annot_file : str, Path
         filename of a .TextGrid annotation file, created by Praat.
     abspath : bool
         if True, converts filename for each audio file into absolute path.
@@ -61,9 +61,9 @@ def textgrid2annot(file,
         each Interval in the first IntervalTier in a TextGrid file
         will become one segment in a sequence.
     """
-    file = _parse_file(file, extension='.TextGrid')
+    annot_file = _parse_file(annot_file, extension='.TextGrid')
     annots = []
-    for a_textgrid in file:
+    for a_textgrid in annot_file:
         tg = TextGrid.fromFile(a_textgrid)
 
         intv_tier = tg[intervaltier_ind]
@@ -112,14 +112,14 @@ def textgrid2annot(file,
         return annots
 
 
-def textgrid2csv(file, csv_filename, abspath=False, basename=False):
+def textgrid2csv(annot_file, csv_filename, abspath=False, basename=False):
     """saves annotation from TextGrid file(s) in a comma-separated values
     (csv) file, where each row represents one syllable from one
     .not.mat file.
 
     Parameters
     ----------
-    file : str, Path, or list
+    annot_file : str, Path, or list
         if list, list of strings or Path objects pointing to TextGrid files
     csv_filename : str
         name for csv file that is created
@@ -139,14 +139,14 @@ def textgrid2csv(file, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    file = _parse_file(file, extension='.TextGrid')
+    annot_file = _parse_file(annot_file, extension='.TextGrid')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    annots = textgrid2annot(file)
+    annots = textgrid2annot(annot_file)
     annot2csv(annots, csv_filename, abspath=abspath, basename=basename)
 
 
