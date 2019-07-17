@@ -38,7 +38,7 @@ ENTRY_POINTS = {
 }
 
 REQUIRED = [
-    'numpy', 'attrs', 'evfuncs', 'koumura',
+    'numpy', 'scipy', 'attrs', 'evfuncs', 'koumura',
 ]
 
 DEV_DEPS = [
