@@ -73,9 +73,9 @@ def notmat2annot(file,
         offsets_s = notmat_dict['offsets'] / 1000
 
         # convert to Hz using sampling frequency
-        audio_filename = a_notmat.replace('.not.mat','')
+        audio_filename = a_notmat.replace('.not.mat', '')
         if audio_filename.endswith('.cbin'):
-            rec_filename = audio_filename.replace('.cbin','.rec')
+            rec_filename = audio_filename.replace('.cbin', '.rec')
         elif audio_filename.endswith('.wav'):
             rec_filename = audio_filename.replace('.wav', '.rec')
         else:
@@ -105,7 +105,7 @@ def notmat2annot(file,
                                            onsets_Hz=onsets_Hz,
                                            offsets_Hz=offsets_Hz)
         annot.append(
-            Annotation(file=audio_filename, seq=notmat_seq)
+            Annotation(annot_file=a_notmat, audio_file=audio_filename, seq=notmat_seq)
         )
 
     if len(annot) == 1:
@@ -260,6 +260,7 @@ def make_notmat(filename,
                                   .format(notmat_name))
     else:
         scipy.io.savemat(notmat_name, notmat_dict)
+
 
 meta = Meta(
     name='notmat',
