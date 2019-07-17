@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.0.0
+### added
+- add `Annotation` class
+  + which has 'audio_file' and 'annot_file' attributes,
+    along with 'seq' attribute
+
+### changed
+- rewrite everything centered around `Annotation` class
+  + meaning `Sequence` and `Segment` lose their redundant 'file'
+    attributes and all format modules convert to and from `Annotations`
+    and so does the csv module
+- single-source version
+  + now found in an `__about__.py` file in `src/crowsetta` that is used
+    by `setup.py`.
+
 ## 1.1.1
 ### changed
 - `segments` property of a `Sequence` is a tuple, not a list, so that class is immutable + hashable
