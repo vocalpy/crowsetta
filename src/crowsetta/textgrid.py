@@ -102,7 +102,8 @@ def textgrid2annot(file,
                                              labels=labels,
                                              onsets_s=onsets_s,
                                              offsets_s=offsets_s)
-        annot = Annotation(file=audio_filename,
+        annot = Annotation(annot_file=file,
+                           audio_file=audio_filename,
                            seq=textgrid_seq)
         annots.append(annot)
 
