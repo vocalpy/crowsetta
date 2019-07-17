@@ -76,14 +76,12 @@ def koumura2annot(file='Annotation.xml', concat_seqs_into_songs=True,
         onsets_s = np.round(onsets_Hz / samp_freq, decimals=3)
         offsets_s = np.round(offsets_Hz / samp_freq, decimals=3)
 
-        seq = Sequence.from_keyword(
-            file=seq_xml.wav_file,
-            onsets_Hz=onsets_Hz,
-            offsets_Hz=offsets_Hz,
-            onsets_s=onsets_s,
-            offsets_s=offsets_s,
-            labels=labels
-        )
+        seq = Sequence.from_keyword(onsets_Hz=onsets_Hz,
+                                    offsets_Hz=offsets_Hz,
+                                    onsets_s=onsets_s,
+                                    offsets_s=offsets_s,
+                                    labels=labels
+                                    )
         annot = Annotation(seq=seq, annot_file=file, audio_file=seq.file)
         annot_list.append(annot)
     return annot_list
