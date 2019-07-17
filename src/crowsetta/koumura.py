@@ -84,7 +84,7 @@ def koumura2annot(file='Annotation.xml', concat_seqs_into_songs=True,
             offsets_s=offsets_s,
             labels=labels
         )
-        annot = Annotation(seq=seq, file=seq.file)
+        annot = Annotation(seq=seq, annot_file=file, audio_file=seq.file)
         annot_list.append(annot)
     return annot_list
 
