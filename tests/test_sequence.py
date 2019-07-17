@@ -28,12 +28,10 @@ class TestSequence(unittest.TestCase):
         return onsets_Hz, offsets_Hz, onsets_s, offsets_s, labels
 
     def setUp(self):
-        file = 'bird21.wav'
         a_segment = Segment.from_keyword(
             label='a',
             onset_Hz=16000,
             offset_Hz=32000,
-            file=file,
         )
         list_of_segments = [a_segment] * 3
 
@@ -49,24 +47,20 @@ class TestSequence(unittest.TestCase):
                               onsets_s=onsets_s,
                               offsets_s=offsets_s,
                               labels=labels,
-                              file=file
                               )
 
         self.same_seq = Sequence(segments=list_of_segments,
-                              onsets_Hz=onsets_Hz,
-                              offsets_Hz=offsets_Hz,
-                              onsets_s=onsets_s,
-                              offsets_s=offsets_s,
-                              labels=labels,
-                              file=file
-                              )
+                                 onsets_Hz=onsets_Hz,
+                                 offsets_Hz=offsets_Hz,
+                                 onsets_s=onsets_s,
+                                 offsets_s=offsets_s,
+                                 labels=labels,
+                                 )
 
-        file = 'bird22.wav'
         a_segment = Segment.from_keyword(
             label='a',
             onset_Hz=32000,
             offset_Hz=64000,
-            file=file,
         )
         list_of_segments = [a_segment] * 4
 
@@ -82,16 +76,13 @@ class TestSequence(unittest.TestCase):
                                       onsets_s=onsets_s,
                                       offsets_s=offsets_s,
                                       labels=labels,
-                                      file=file
                                       )
 
     def test_init(self):
-        file = 'bird21.wav'
         a_segment = Segment.from_keyword(
             label='a',
             onset_Hz=16000,
             offset_Hz=32000,
-            file=file,
         )
         list_of_segments = [a_segment] * 3
 
@@ -107,7 +98,6 @@ class TestSequence(unittest.TestCase):
                        onsets_s=onsets_s,
                        offsets_s=offsets_s,
                        labels=labels,
-                       file=file
                        )
 
         self.assertTrue(type(seq) == Sequence)
@@ -118,7 +108,6 @@ class TestSequence(unittest.TestCase):
             label='a',
             onset_Hz=16000,
             offset_Hz=32000,
-            file='bird21.wav'
         )
         list_of_segments = [a_segment] * 3
         dict_of_segments = dict(zip(range(len(list_of_segments)),
@@ -131,209 +120,131 @@ class TestSequence(unittest.TestCase):
             label='a',
             onset_Hz=16000,
             offset_Hz=32000,
-            file='bird21.wav'
         )
         list_of_segments = [a_segment] * 3
         segment_dict = {
             'label': 'a',
             'onset_Hz': 16000,
             'offset_Hz': 32000,
-            'file': 'bird21.wav',
         }
         list_of_segments.append(segment_dict)
         with self.assertRaises(TypeError):
             Sequence(segments=list_of_segments)
-
-    def test_init_where_segments_has_bad_file_raises(self):
-        # should raise error because one Segment has different value for file
-        # than the other two
-        file = 'bird21.wav'
-        a_segment = Segment.from_keyword(
-            label='a',
-            onset_Hz=16000,
-            offset_Hz=32000,
-            file=file
-        )
-        list_of_segments = [a_segment] * 3
-        segment_with_different_file = Segment.from_keyword(
-            label='a',
-            onset_Hz=16000,
-            offset_Hz=32000,
-            file='bird12.wav'
-        )
-        list_of_segments.append(segment_with_different_file)
-
-        (onsets_Hz,
-         offsets_Hz,
-         onsets_s,
-         offsets_s,
-         labels) = self.keywords_from_segments(list_of_segments)
-
-        with self.assertRaises(ValueError):
-            Sequence(list_of_segments,
-                     labels,
-                     file,
-                     onsets_s,
-                     offsets_s,
-                     onsets_Hz,
-                     offsets_Hz)
 
     def test_from_segments(self):
         a_segment = Segment.from_keyword(
             label='a',
             onset_Hz=16000,
             offset_Hz=32000,
-            file='bird21.wav'
         )
         list_of_segments = [a_segment] * 3
         seq = Sequence.from_segments(list_of_segments)
         self.assertTrue(hasattr(seq, 'segments'))
         self.assertTrue(type(seq.segments) == tuple)
 
-    def test_from_segments_with_bad_file_raises(self):
-        # should raise error because one Segment has different value for file
-        # than the other two
-        file = 'bird21.wav'
-        a_segment = Segment.from_keyword(
-            label='a',
-            onset_Hz=16000,
-            offset_Hz=32000,
-            file=file
-        )
-        list_of_segments = [a_segment] * 3
-        segment_with_different_file = Segment.from_keyword(
-            label='a',
-            onset_Hz=16000,
-            offset_Hz=32000,
-            file='bird12.wav'
-        )
-        list_of_segments.append(segment_with_different_file)
-
-        with self.assertRaises(ValueError):
-            Sequence.from_segments(list_of_segments)
-
     def test_from_keyword_bad_labels_type_raises(self):
-        file = '0.wav'
         labels = 12345
         onsets_Hz = np.asarray([0, 2, 4, 6, 8])
         offsets_Hz = np.asarray([1, 3, 5, 7, 9])
         with self.assertRaises(TypeError):
-            Sequence.from_keyword(file=file, labels=labels, 
-                                  onsets_Hz=onsets_Hz, offsets_Hz=offsets_Hz)
+            Sequence.from_keyword(labels=labels, onsets_Hz=onsets_Hz,
+                                  offsets_Hz=offsets_Hz)
 
     def test_from_keyword__onset_offset_in_seconds(self):
-        file = '0.wav'
         labels = 'abcde'
         onsets_s = np.asarray([0., 0.2, 0.4, 0.6, 0.8])
         offsets_s = np.asarray([0.1, 0.3, 0.5, 0.7, 0.9])
         seq = Sequence.from_keyword(labels=labels,
                                     onsets_s=onsets_s,
-                                    offsets_s=offsets_s,
-                                    file=file)
+                                    offsets_s=offsets_s)
         self.assertTrue(hasattr(seq, 'segments'))
         self.assertTrue(type(seq.segments) == tuple)
 
     def test_from_keyword_onset_offset_in_Hertz(self):
-        file = '0.wav'
         labels = 'abcde'
         onsets_Hz = np.asarray([0, 2, 4, 6, 8])
         offsets_Hz = np.asarray([1, 3, 5, 7, 9])
         seq = Sequence.from_keyword(labels=labels,
                                     onsets_Hz=onsets_Hz,
-                                    offsets_Hz=offsets_Hz,
-                                    file=file)
+                                    offsets_Hz=offsets_Hz)
         self.assertTrue(hasattr(seq, 'segments'))
         self.assertTrue(type(seq.segments) == tuple)
 
     def test_from_dict_onset_offset_in_seconds(self):
-        annot_dict = {
-            'file': '0.wav',
+        seq_dict = {
             'labels': 'abcde',
             'onsets_s':  np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
             'offsets_s': np.asarray([0.1, 0.3, 0.5, 0.7, 0.9]),
         }
-        seq = Sequence.from_dict(annot_dict=annot_dict)
+        seq = Sequence.from_dict(seq_dict=seq_dict)
         self.assertTrue(hasattr(seq, 'segments'))
         self.assertTrue(type(seq.segments) == tuple)
 
     def test_from_dict_onset_offset_in_Hertz(self):
-        annot_dict = {
-            'file': '0.wav',
+        seq_dict = {
             'labels': 'abcde',
             'onsets_Hz':  np.asarray([0, 2, 4, 6, 8]),
             'offsets_Hz': np.asarray([1, 3, 5, 7, 9]),
         }
-        seq = Sequence.from_dict(annot_dict=annot_dict)
+        seq = Sequence.from_dict(seq_dict=seq_dict)
         self.assertTrue(hasattr(seq, 'segments'))
         self.assertTrue(type(seq.segments) == tuple)
 
     def test_from_keyword_missing_onsets_and_offsets_raises(self):
         with self.assertRaises(ValueError):
-            Sequence.from_keyword(labels='abcde',
-                                  file='bird21.wav')
+            Sequence.from_keyword(labels='abcde')
 
     def test_missing_offset_seconds_raises(self):
         with self.assertRaises(ValueError):
             Sequence.from_keyword(labels='abcde',
-                                  onsets_s=np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
-                                  file='bird21.wav')
+                                  onsets_s=np.asarray([0., 0.2, 0.4, 0.6, 0.8]))
 
     def test_missing_onset_seconds_raises(self):
         with self.assertRaises(ValueError):
             Sequence.from_keyword(labels='abcde',
-                                  offsets_s=np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
-                                  file='bird21.wav')
+                                  offsets_s=np.asarray([0., 0.2, 0.4, 0.6, 0.8]))
 
     def test_missing_offset_Hertz_raises(self):
         with self.assertRaises(ValueError):
             Sequence.from_keyword(labels='abcde',
-                                  onsets_Hz=np.asarray([0, 2, 4, 6, 8]),
-                                  file='bird21.wav')
+                                  onsets_Hz=np.asarray([0, 2, 4, 6, 8]))
 
     def test_missing_onset_Hertz_raises(self):
         with self.assertRaises(ValueError):
             Sequence.from_keyword(labels='abcde',
-                                  offsets_Hz=np.asarray([0, 2, 4, 6, 8]),
-                                  file='bird21.wav')
+                                  offsets_Hz=np.asarray([0, 2, 4, 6, 8]))
 
     def test_as_dict_onset_offset_in_Hertz(self):
-        file = '0.wav'
         labels = 'abcde'
         onsets_Hz = np.asarray([0, 2, 4, 6, 8])
         offsets_Hz = np.asarray([1, 3, 5, 7, 9])
         seq = Sequence.from_keyword(labels=labels,
                                     onsets_Hz=onsets_Hz,
-                                    offsets_Hz=offsets_Hz,
-                                    file=file)
+                                    offsets_Hz=offsets_Hz)
         seq_dict = seq.as_dict()
 
         self.assertTrue(np.all(seq_dict['labels'] == np.asarray(list(labels))))
         self.assertTrue(np.all(seq_dict['onsets_Hz'] == onsets_Hz))
         self.assertTrue(np.all(seq_dict['offsets_Hz'] == offsets_Hz))
-        self.assertTrue(np.all(seq_dict['file'] == file))
         self.assertTrue(seq_dict['onsets_s'] is None)
         self.assertTrue(seq_dict['offsets_s'] is None)
 
     def test_as_dict_onset_offset_in_seconds(self):
-        file = '0.wav'
         labels = 'abcde'
         onsets_s = np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
         offsets_s = np.asarray([0.1, 0.3, 0.5, 0.7, 0.9]),
         seq = Sequence.from_keyword(labels=labels,
                                     onsets_s=onsets_s,
-                                    offsets_s=offsets_s,
-                                    file=file)
+                                    offsets_s=offsets_s)
         seq_dict = seq.as_dict()
 
         self.assertTrue(np.all(seq_dict['labels'] == np.asarray(list(labels))))
         self.assertTrue(np.all(seq_dict['onsets_s'] == onsets_s))
         self.assertTrue(np.all(seq_dict['offsets_s'] == offsets_s))
-        self.assertTrue(np.all(seq_dict['file'] == file))
         self.assertTrue(seq_dict['onsets_Hz'] is None)
         self.assertTrue(seq_dict['offsets_Hz'] is None)
 
     def test_to_dict_onset_offset_both_units(self):
-        file = '0.wav'
         labels = 'abcde'
         onsets_Hz = np.asarray([0, 2, 4, 6, 8])
         offsets_Hz = np.asarray([1, 3, 5, 7, 9])
@@ -343,8 +254,7 @@ class TestSequence(unittest.TestCase):
                                     onsets_Hz=onsets_Hz,
                                     offsets_Hz=offsets_Hz,
                                     onsets_s=onsets_s,
-                                    offsets_s=offsets_s,
-                                    file=file)
+                                    offsets_s=offsets_s)
         seq_dict = seq.as_dict()
 
         self.assertTrue(np.all(seq_dict['labels'] == np.asarray(list(labels))))
@@ -352,7 +262,6 @@ class TestSequence(unittest.TestCase):
         self.assertTrue(np.all(seq_dict['offsets_s'] == offsets_s))
         self.assertTrue(np.all(seq_dict['onsets_Hz'] == onsets_Hz))
         self.assertTrue(np.all(seq_dict['offsets_Hz'] == offsets_Hz))
-        self.assertTrue(np.all(seq_dict['file'] == file))
 
     def test_eq(self):
         self.assertTrue(self.a_seq == self.same_seq)
@@ -377,31 +286,27 @@ class TestSequence(unittest.TestCase):
             self.a_seq >= self.different_seq
 
     def test_hash(self):
-        annot_dict1 = {
-            'file': '0.wav',
+        seq_dict1 = {
             'labels': 'abcde',
             'onsets_s':  np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
             'offsets_s': np.asarray([0.1, 0.3, 0.5, 0.7, 0.9]),
         }
-        seq1 = Sequence.from_dict(annot_dict=annot_dict1)
+        seq1 = Sequence.from_dict(seq_dict=seq_dict1)
 
         # same as seq1, so Sequence should have same hash
-        annot_dict2 = {
-            'file': '0.wav',
+        seq_dict2 = {
             'labels': 'abcde',
             'onsets_s':  np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
             'offsets_s': np.asarray([0.1, 0.3, 0.5, 0.7, 0.9]),
         }
-        seq2 = Sequence.from_dict(annot_dict=annot_dict2)
+        seq2 = Sequence.from_dict(seq_dict=seq_dict2)
 
         # different from seq1, so Sequence should have different hash
-        annot_dict3 = {
-            'file': '1.wav',
-            'labels': 'fghijk',
-            'onsets_s':  np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
-            'offsets_s': np.asarray([0.1, 0.3, 0.5, 0.7, 0.9]),
-        }
-        seq3 = Sequence.from_dict(annot_dict=annot_dict3)
+        seq_dict3 = {'labels': 'fghijk',
+                     'onsets_s': np.asarray([0., 0.2, 0.4, 0.6, 0.8]),
+                     'offsets_s': np.asarray([0.1, 0.3, 0.5, 0.7, 0.9]),
+                     }
+        seq3 = Sequence.from_dict(seq_dict=seq_dict3)
 
         hash1 = hash(seq1)
         hash2 = hash(seq2)
@@ -412,7 +317,7 @@ class TestSequence(unittest.TestCase):
 
     def test_seq_is_immutable(self):
         with self.assertRaises(TypeError):
-            self.a_seq.file = 'bird39.wav'
+            self.a_seq.labels = np.asarray(['a', 'b', 'c', 'd', 'd'])
 
 
 if __name__ == '__main__':
