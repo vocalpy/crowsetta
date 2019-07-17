@@ -25,8 +25,8 @@ class TestSegment(unittest.TestCase):
             self.assertTrue(getattr(a_segment, attr) is None)
 
     def test_Segment_init_onset_offset_in_seconds_from_row(self):
-        header = ['label', 'onset_s', 'offset_s', 'file']
-        row = ['a', '0.123', '0.170', 'bird21.wav']
+        header = ['label', 'onset_s', 'offset_s', 'onset_Hz', 'offset_Hz', 'file']
+        row = ['a', '0.123', '0.170', 'None', 'None', 'bird21.wav']
         a_segment = Segment.from_row(row=row, header=header)
         for attr in ['label', 'onset_s', 'offset_s', 'file']:
             self.assertTrue(hasattr(a_segment, attr))
@@ -34,8 +34,8 @@ class TestSegment(unittest.TestCase):
             self.assertTrue(getattr(a_segment, attr) is None)
 
     def test_Segment_init_onset_offset_in_Hertz_from_row(self):
-        header = ['label', 'onset_Hz', 'offset_Hz', 'file']
-        row = ['a', '15655', '20001', 'bird21.wav']
+        header = ['label', 'onset_s', 'offset_s', 'onset_Hz', 'offset_Hz', 'file']
+        row = ['a', 'None', 'None', '15655', '20001', 'bird21.wav']
         a_segment = Segment.from_row(row=row, header=header)
         for attr in ['label', 'onset_Hz', 'offset_Hz', 'file']:
             self.assertTrue(hasattr(a_segment, attr))
