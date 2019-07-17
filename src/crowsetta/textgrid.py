@@ -1,4 +1,4 @@
-"""module for loading Praat TextGrid files into Sequences
+"""module for loading Praat TextGrid files into Annotations
 
 uses the Python library textgrid
 https://github.com/kylebgorman/textgrid
@@ -57,12 +57,12 @@ def textgrid2annot(file,
 
     Returns
     -------
-    seq : crowsetta.Sequence or list of Sequence
+    annot : crowsetta.Annotation or list of Annotations
         each Interval in the first IntervalTier in a TextGrid file
         will become one segment in a sequence.
     """
     file = _parse_file(file, extension='.TextGrid')
-    annot = []
+    annots = []
     for a_textgrid in file:
         tg = TextGrid.fromFile(a_textgrid)
 
@@ -102,12 +102,14 @@ def textgrid2annot(file,
                                              labels=labels,
                                              onsets_s=onsets_s,
                                              offsets_s=offsets_s)
-        seq.append(textgrid_seq)
+        annot = Annotation(file=audio_filename,
+                           seq=textgrid_seq)
+        annots.append(annot)
 
-    if len(annot) == 1:
-        return annot[0]
+    if len(annots) == 1:
+        return annots[0]
     else:
-        return annot
+        return annots
 
 
 def textgrid2csv(file, csv_filename, abspath=False, basename=False):
@@ -144,8 +146,8 @@ def textgrid2csv(file, csv_filename, abspath=False, basename=False):
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    seq = textgrid2annot(file)
-    annot2csv(seq, csv_filename, abspath=abspath, basename=basename)
+    annots = textgrid2annot(file)
+    annot2csv(annots, csv_filename, abspath=abspath, basename=basename)
 
 
 meta = Meta(
