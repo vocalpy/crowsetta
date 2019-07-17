@@ -20,7 +20,7 @@ from .meta import Meta
 
 
 def koumura2annot(file='Annotation.xml', concat_seqs_into_songs=True,
-                wavpath='./Wave'):
+                  wavpath='./Wave'):
     """converts Annotation.xml from [1]_ into an annotation list
 
     Parameters
@@ -84,7 +84,7 @@ def koumura2annot(file='Annotation.xml', concat_seqs_into_songs=True,
                                     offsets_s=offsets_s,
                                     labels=labels
                                     )
-        annot = Annotation(seq=seq, annot_file=file, audio_file=seq.file)
+        annot = Annotation(seq=seq, annot_file=file, audio_file=wav_filename)
         annot_list.append(annot)
     return annot_list
 
