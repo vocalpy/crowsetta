@@ -10,7 +10,6 @@ import numpy as np
 import evfuncs
 
 import crowsetta
-from crowsetta.segment import Segment
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -71,13 +70,17 @@ class TestNotmat(unittest.TestCase):
         # .not.mat list are in csv
         filenames_from_csv = []
         with open(csv_filename, 'r', newline='') as csvfile:
-            reader = csv.DictReader(csvfile, fieldnames=Segment._FIELDS)
+            reader = csv.DictReader(csvfile,
+                                    fieldnames=crowsetta.csv.CSV_FIELDNAMES)
             header = next(reader)
             for row in reader:
-                filenames_from_csv.append(row['file'])
+                filenames_from_csv.append(
+                    os.path.basename(row['annot_file'])
+                )
         for notmat_name in notmat_list:
-            cbin_name = notmat_name.replace('.not.mat', '')
-            assert(cbin_name in filenames_from_csv)
+            self.assertTrue(
+                os.path.basename(notmat_name) in filenames_from_csv
+            )
 
     def test_make_notmat(self):
         cbin_dir = os.path.join(self.test_data_dir,
@@ -87,7 +90,8 @@ class TestNotmat(unittest.TestCase):
             notmat_dict = evfuncs.load_notmat(notmat)
             annot = crowsetta.notmat.notmat2annot(notmat)
             seq_dict = annot.seq.as_dict()
-            crowsetta.notmat.make_notmat(filename=seq_dict['file'],
+            filename = notmat.replace('.not.mat', '')
+            crowsetta.notmat.make_notmat(filename=filename,
                                          onsets_Hz=seq_dict['onsets_Hz'],
                                          offsets_Hz=seq_dict['offsets_Hz'],
                                          labels=np.asarray(list(notmat_dict['labels'])),
