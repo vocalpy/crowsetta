@@ -14,7 +14,7 @@ from .meta import Meta
 from .validation import _parse_file
 
 
-def notmat2annot(file,
+def notmat2annot(annot_file,
                  abspath=False,
                  basename=False,
                  round_times=True,
@@ -23,7 +23,7 @@ def notmat2annot(file,
 
     Parameters
     ----------
-    file : str, Path, or list
+    annot_file : str, Path, or list
         filename of a .not.mat annotation file, created by the evsonganaly GUI for MATLAB,
         or a list of paths to .not.mat files
     abspath : bool
@@ -57,7 +57,7 @@ def notmat2annot(file,
     due to floating point error, e.g. when loading .not.mat files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    file = _parse_file(file, extension='.not.mat')
+    annot_file = _parse_file(annot_file, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -65,7 +65,7 @@ def notmat2annot(file,
                          'information (just base filename) should be saved.')
 
     annot = []
-    for a_notmat in file:
+    for a_notmat in annot_file:
         notmat_dict = evfuncs.load_notmat(a_notmat)
         # in .not.mat files saved by evsonganaly,
         # onsets and offsets are in units of ms, have to convert to s
@@ -115,14 +115,14 @@ def notmat2annot(file,
         return annot
 
 
-def notmat2csv(file, csv_filename, abspath=False, basename=False):
+def notmat2csv(annot_file, csv_filename, abspath=False, basename=False):
     """saves annotation from .not.mat file(s) in a comma-separated values
     (csv) file, where each row represents one syllable from one
     .not.mat file.
 
     Parameters
     ----------
-    file : str, Path, or list
+    annot_file : str, Path, or list
         if list, list of strings or Path objects pointing to .not.mat files
     csv_filename : str
         name for csv file that is created
@@ -142,14 +142,14 @@ def notmat2csv(file, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    file = _parse_file(file, extension='.not.mat')
+    annot_file = _parse_file(annot_file, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    annot = notmat2annot(file)
+    annot = notmat2annot(annot_file)
     annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
 
