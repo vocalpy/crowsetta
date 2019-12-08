@@ -88,13 +88,13 @@ class TestNotmat(unittest.TestCase):
         notmat_list = glob(os.path.join(cbin_dir, '*.not.mat'))
         for notmat in notmat_list:
             notmat_dict = evfuncs.load_notmat(notmat)
-            annot = crowsetta.notmat.notmat2annot(notmat)
+            annot = crowsetta.notmat.notmat2annot(notmat, round_times=False)
             seq_dict = annot.seq.as_dict()
             filename = notmat.replace('.not.mat', '')
             crowsetta.notmat.make_notmat(filename=filename,
-                                         onsets_Hz=seq_dict['onsets_Hz'],
-                                         offsets_Hz=seq_dict['offsets_Hz'],
                                          labels=np.asarray(list(notmat_dict['labels'])),
+                                         onsets_s=seq_dict['onsets_s'],
+                                         offsets_s=seq_dict['offsets_s'],
                                          samp_freq=notmat_dict['Fs'],
                                          threshold=notmat_dict['threshold'],
                                          min_syl_dur=notmat_dict['min_dur']/1000,
@@ -115,9 +115,12 @@ class TestNotmat(unittest.TestCase):
                     notmat_made_path = Path(notmat_made[key])
                     self.assertTrue(notmat_dict_path.name == notmat_made_path.name)
                 elif type(notmat_dict[key]) == np.ndarray:
-                    self.assertTrue(np.allclose(notmat_dict[key],
-                                                notmat_made[key],
-                                                atol=1e-3, rtol=1e-3))
+                    try:
+                        self.assertTrue(np.allclose(notmat_dict[key],
+                                                    notmat_made[key],
+                                                    atol=1e-3, rtol=1e-3))
+                    except AssertionError:
+                        import pdb;pdb.set_trace()
                 else:
                     self.assertTrue(notmat_dict[key] == notmat_made[key])
 
