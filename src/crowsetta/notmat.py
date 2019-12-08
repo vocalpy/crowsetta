@@ -45,8 +45,7 @@ def notmat2annot(annot_file,
     annot : Annotation, list
         if a single file is provided, a single Annotation is returned. If a list is
         provided, a list of Annotations is returned. Annotation will have a `sequence`
-        attribute with the fields 'file', 'labels', 'onsets_Hz',
-        'offsets_Hz', 'onsets_s', 'offsets_s'
+        attribute with the fields 'file', 'labels', 'onsets_s', 'offsets_s'
 
     The abspath and basename parameters specify how file names for audio files are saved.
     These options are useful for working with multiple copies of files and for
@@ -72,27 +71,11 @@ def notmat2annot(annot_file,
         onsets_s = notmat_dict['onsets'] / 1000
         offsets_s = notmat_dict['offsets'] / 1000
 
-        # convert to Hz using sampling frequency
-        audio_filename = a_notmat.replace('.not.mat', '')
-        if audio_filename.endswith('.cbin'):
-            rec_filename = audio_filename.replace('.cbin', '.rec')
-        elif audio_filename.endswith('.wav'):
-            rec_filename = audio_filename.replace('.wav', '.rec')
-        else:
-            raise ValueError("Can't find .rec file for {}."
-                             .format(a_notmat))
-        rec_dict = evfuncs.readrecf(rec_filename)
-        sample_freq = rec_dict['sample_freq']
-        # subtract one because of Python's zero indexing (first sample is sample zero)
-        onsets_Hz = np.round(onsets_s * sample_freq).astype(int) - 1
-        offsets_Hz = np.round(offsets_s * sample_freq).astype(int)
-
-        # do this *after* converting onsets_s and offsets_s to onsets_Hz and offsets_Hz
-        # probably doesn't matter but why introduce more noise?
         if round_times:
             onsets_s = np.around(onsets_s, decimals=decimals)
             offsets_s = np.around(offsets_s, decimals=decimals)
 
+        audio_filename = a_notmat.replace('.not.mat', '')
         if abspath:
             audio_filename = os.path.abspath(audio_filename)
             a_notmat = os.path.abspath(a_notmat)
@@ -102,9 +85,7 @@ def notmat2annot(annot_file,
 
         notmat_seq = Sequence.from_keyword(labels=np.asarray(list(notmat_dict['labels'])),
                                            onsets_s=onsets_s,
-                                           offsets_s=offsets_s,
-                                           onsets_Hz=onsets_Hz,
-                                           offsets_Hz=offsets_Hz)
+                                           offsets_s=offsets_s)
         annot.append(
             Annotation(annot_file=a_notmat, audio_file=audio_filename, seq=notmat_seq)
         )
