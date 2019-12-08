@@ -136,8 +136,8 @@ def notmat2csv(annot_file, csv_filename, abspath=False, basename=False):
 
 def make_notmat(filename,
                 labels,
-                onsets_Hz,
-                offsets_Hz,
+                onsets_s,
+                offsets_s,
                 samp_freq,
                 threshold,
                 min_syl_dur,
@@ -159,10 +159,10 @@ def make_notmat(filename,
     labels : ndarray
         of type str.
         array of labels given to segments, i.e. syllables, found in filename
-    onsets_Hz : ndarray
-        onsets of syllables in sample number.
-    offsets_Hz : ndarray
-        offsets of syllables in sample number.
+    onsets_s : ndarray
+        onsets of syllables in seconds.
+    offsets_s : ndarray
+        offsets of syllables in seconds.
     samp_freq : int
         sampling frequency of audio file
     threshold : int
@@ -202,8 +202,6 @@ def make_notmat(filename,
     labels = ''.join(labels)
     # notmat files have onsets/offsets in units of ms
     # need to convert back from s
-    onsets_s = onsets_Hz / samp_freq
-    offsets_s = offsets_Hz / samp_freq
     onsets = (onsets_s * 1e3).astype(float)
     offsets = (offsets_s * 1e3).astype(float)
 
