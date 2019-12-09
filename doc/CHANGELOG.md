@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.1.0
+### changed
+- modify functions for `.not.mat` annotation files (created by evsonganaly GUI) 
+  so they do not require other files such as `.rec` files (created by evTAF data 
+  acquisition program)
+  - `notmat.notmat2annot` no longer looks for `.rec` files, which it used to get 
+    the sampling rate and convert onsets and offsets from seconds to Hz
+- the `make_notmat` for creating `.not.mat` files from `Annotation`s also 
+  now expets onsets and offsets in seconds, not Hz.
+  + the idea being that one can go from `.not.mat` to `Annotation` and back 
+    without doing any extra conversion. If user needs conversion to Hz for 
+    some other reason they can do this using the `Annotation` 
+
 ## 2.0.0
 ### added
 - add `Annotation` class
