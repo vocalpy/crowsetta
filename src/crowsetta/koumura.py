@@ -7,7 +7,7 @@ Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
 doi:10.1371/journal.pone.0159188
 """
 import os
-
+from pathlib import Path
 import numpy as np
 import wave
 
@@ -25,7 +25,7 @@ def koumura2annot(annot_file='Annotation.xml', concat_seqs_into_songs=True,
 
     Parameters
     ----------
-    annot_file : str or pathlib.Path
+    annot_file : str, pathlib.Path
         Path to .xml file from BirdsongRecognition dataset that contains annotation.
          Default is 'Annotation.xml'.
     concat_seqs_into_songs : bool
@@ -45,14 +45,21 @@ def koumura2annot(annot_file='Annotation.xml', concat_seqs_into_songs=True,
     Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
     doi:10.1371/journal.pone.0159188
     """
+    annot_file = Path(annot_file).expanduser().resolve()
+    if not annot_file.suffix == '.xml':
+        raise ValueError(
+            "Annotation file format should be xml, but value for 'annot_file' does not end in '.xml'.\n"
+            f"Value was: {annot_file}"
+        )
+    if not annot_file.exists():
+        raise FileNotFoundError(
+            f"annot_file not found: {annot_file}"
+        )
+
     wavpath = os.path.normpath(wavpath)
     if not os.path.isdir(wavpath):
         raise NotADirectoryError('Path specified for wavpath, {}, not recognized as an '
                                  'existing directory'.format(wavpath))
-
-    if not annot_file.endswith('.xml'):
-        raise ValueError('Name of annotation file should end with .xml, '
-                         'but name passed was {}'.format(xml_file))
 
     # confusingly, koumura also has an object named 'Sequence'
     # (which is where I borrowed the idea from)
