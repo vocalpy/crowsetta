@@ -27,7 +27,7 @@ def koumura2annot(annot_file='Annotation.xml', concat_seqs_into_songs=True,
     ----------
     annot_file : str, pathlib.Path
         Path to .xml file from BirdsongRecognition dataset that contains annotation.
-         Default is 'Annotation.xml'.
+        Default is 'Annotation.xml'.
     concat_seqs_into_songs : bool
         if True, concatenate sequences from xml_file, so that
         one sequence = one song / .wav file. Default is True.
