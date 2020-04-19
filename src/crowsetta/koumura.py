@@ -92,7 +92,7 @@ def koumura2annot(annot_file='Annotation.xml', concat_seqs_into_songs=True,
         if not os.path.isfile(wav_filename):
             raise FileNotFoundError(
                 f'.wav file {wav_filename} specified in '
-                f'annotation file {file} is not found'
+                f'annotation file {annot_file} is not found'
             )
         # found with %%timeit that Python wave module takes about 1/2 the time of
         # scipy.io.wavfile for just reading sampling frequency from each file
