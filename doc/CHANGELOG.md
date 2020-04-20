@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unrealased
+### changed
+- change types of `Annotation` attributes `annot_file` and `audio_path` from `str` (string) 
+  to `pathlib.Path`, to fix errors raised when passing in `Path` objects (because the 
+  attribute validator requires a string), and because it's preferable to work with `Path` 
+  objects over strings [#52](https://github.com/NickleDave/crowsetta/pull/52)
+
 ## 2.1.0
 ### changed
 - modify functions for `.not.mat` annotation files (created by evsonganaly GUI) 
@@ -12,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `notmat.notmat2annot` no longer looks for `.rec` files, which it used to get 
     the sampling rate and convert onsets and offsets from seconds to Hz
 - the `make_notmat` for creating `.not.mat` files from `Annotation`s also 
-  now expets onsets and offsets in seconds, not Hz.
+  now expects onsets and offsets in seconds, not Hz.
   + the idea being that one can go from `.not.mat` to `Annotation` and back 
     without doing any extra conversion. If user needs conversion to Hz for 
     some other reason they can do this using the `Annotation` 
