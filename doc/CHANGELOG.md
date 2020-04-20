@@ -4,12 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unrealased
+## Unreleased
 ### changed
 - change types of `Annotation` attributes `annot_file` and `audio_path` from `str` (string) 
   to `pathlib.Path`, to fix errors raised when passing in `Path` objects (because the 
   attribute validator requires a string), and because it's preferable to work with `Path` 
   objects over strings [#52](https://github.com/NickleDave/crowsetta/pull/52)
+- change default value for `koumura2annot` parameter `wavpath` so that the function 
+  will work regardless of current working directory for user, instead of requiring 
+  them to be in the parent directory of the `.wav` files that `wavpath` refers to
+  [#53]((https://github.com/NickleDave/crowsetta/pull/53)) 
+
+### fixed
+- fixed error that `koumura2annot` function threw when `annot_file` was a `pathlib.Path` 
+  and not a string [#53]((https://github.com/NickleDave/crowsetta/pull/53)) 
 
 ## 2.1.0
 ### changed
