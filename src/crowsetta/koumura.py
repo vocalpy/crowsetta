@@ -7,7 +7,7 @@ Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
 doi:10.1371/journal.pone.0159188
 """
 import os
-
+from pathlib import Path
 import numpy as np
 import wave
 
@@ -20,21 +20,29 @@ from .meta import Meta
 
 
 def koumura2annot(annot_file='Annotation.xml', concat_seqs_into_songs=True,
-                  wavpath='./Wave'):
+                  wavpath=None):
     """converts Annotation.xml from [1]_ into an annotation list
 
     Parameters
     ----------
-    annot_file : str or pathlib.Path
+    annot_file : str, pathlib.Path
         Path to .xml file from BirdsongRecognition dataset that contains annotation.
-         Default is 'Annotation.xml'.
+        Default is 'Annotation.xml'.
     concat_seqs_into_songs : bool
         if True, concatenate sequences from xml_file, so that
         one sequence = one song / .wav file. Default is True.
-    wavpath : str
+    wavpath : str, pathlib.Path
         Path in which .wav files listed in Annotation.xml file are found.
-        By default this is './Wave' to match the structure of the original
-        repository.
+        Default is None, in which case function assumes that the files are
+        in a directory `Wave` that is located in the parent directory of
+        the Annotation.xml file, which matches the structure of the dataset from [1]_.
+
+            Bird4/
+                Annotation.xml
+                Wave/
+                    0.wav
+                    1.wav
+                    ...
 
     Returns
     -------
@@ -45,14 +53,27 @@ def koumura2annot(annot_file='Annotation.xml', concat_seqs_into_songs=True,
     Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
     doi:10.1371/journal.pone.0159188
     """
-    wavpath = os.path.normpath(wavpath)
-    if not os.path.isdir(wavpath):
-        raise NotADirectoryError('Path specified for wavpath, {}, not recognized as an '
-                                 'existing directory'.format(wavpath))
+    annot_file = Path(annot_file).expanduser().resolve()
+    if not annot_file.suffix == '.xml':
+        raise ValueError(
+            "Annotation file format should be xml, but value for 'annot_file' does not end in '.xml'.\n"
+            f"Value was: {annot_file}"
+        )
+    if not annot_file.exists():
+        raise FileNotFoundError(
+            f"annot_file not found: {annot_file}"
+        )
 
-    if not annot_file.endswith('.xml'):
-        raise ValueError('Name of annotation file should end with .xml, '
-                         'but name passed was {}'.format(xml_file))
+    if wavpath is None:
+        wavpath = annot_file.parent.joinpath('Wave')
+    else:
+        wavpath = Path(wavpath)
+
+    if not wavpath.exists():
+        raise NotADirectoryError(
+            "Value specified for 'wavpath' not recognized as an existing directory."
+            f"\nValue for 'wavpath' was: {wavpath}"
+        )
 
     # confusingly, koumura also has an object named 'Sequence'
     # (which is where I borrowed the idea from)
@@ -71,7 +92,7 @@ def koumura2annot(annot_file='Annotation.xml', concat_seqs_into_songs=True,
         if not os.path.isfile(wav_filename):
             raise FileNotFoundError(
                 f'.wav file {wav_filename} specified in '
-                f'annotation file {file} is not found'
+                f'annotation file {annot_file} is not found'
             )
         # found with %%timeit that Python wave module takes about 1/2 the time of
         # scipy.io.wavfile for just reading sampling frequency from each file
