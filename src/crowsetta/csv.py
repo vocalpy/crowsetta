@@ -3,6 +3,7 @@ import os
 import csv
 
 from .annotation import Annotation
+from .meta import Meta
 from .segment import Segment
 from .sequence import Sequence
 from .stack import Stack
@@ -328,3 +329,11 @@ def csv2annot(csv_filename):
         annot_list.append(annot)
 
     return annot_list
+
+
+meta = Meta(
+    name='csv',
+    ext='csv',
+    from_file=csv2annot,
+    to_csv=annot2csv,
+)
