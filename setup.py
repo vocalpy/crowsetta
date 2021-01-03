@@ -34,6 +34,7 @@ ENTRY_POINTS = {
         'notmat = crowsetta.notmat',
         'koumura = crowsetta.koumura',
         'textgrid = crowsetta.textgrid',
+        'phn = crowsetta.phn'
     ]
 }
 
