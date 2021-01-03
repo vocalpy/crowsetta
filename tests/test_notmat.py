@@ -42,8 +42,7 @@ class TestNotmat(unittest.TestCase):
                             for annot in annots]))
 
     def test_notmat2annot_list_of_Path(self):
-        notmat = Path(self.test_data_dir).joinpath(
-            'cbins/gy6or6/032312/').glob('*.not.mat')
+        notmat = sorted(Path(self.test_data_dir).joinpath('cbins/gy6or6/032312/').glob('*.not.mat'))
         annots = crowsetta.notmat.notmat2annot(notmat)
         self.assertTrue(type(annots) == list)
         self.assertTrue(len(annots) == len(list(annots)))

@@ -20,6 +20,7 @@ from . import data
 from . import formats
 
 # built-in formats
-from . import notmat
 from . import koumura
+from . import notmat
+from . import phn
 from . import textgrid

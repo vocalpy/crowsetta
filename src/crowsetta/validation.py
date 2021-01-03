@@ -4,7 +4,7 @@ Some utilities adapted from scikit-learn under BSD 3 License
 https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/utils/validation.py
 """
 import numbers
-from pathlib import Path
+from pathlib import Path, PurePath
 
 import numpy as np
 
@@ -70,10 +70,24 @@ def _parse_file(file, extension):
     that lets functions accept multiple types), and checks list to make sure
     all types are consistent
     """
-    if type(file) == str or type(file) == Path:
+    if not(isinstance(file, str) or isinstance(file, PurePath) or isinstance(file, list)):
+        raise TypeError(
+            f"file must be a str or a pathlib.Path, but type of file was {type(file)}.\n"
+            f"File was: {file}"
+        )
+
+    if isinstance(file, list):
+        if not(all([isinstance(a_file, str) for a_file in file]) or
+               all([isinstance(a_file, PurePath) for a_file in file])):
+            raise ValueError(
+                f'all files in list of files must be either string or pathlib.Path'
+            )
+
+    if isinstance(file, str) or isinstance(file, PurePath):
         # put in a list to iterate over
         file = [file]
 
+    file_out = []
     for a_file in file:
         # cast to string (if it's not already, e.g. it's a Path)
         # so we can use .endswith() to compare extensions
@@ -82,5 +96,6 @@ def _parse_file(file, extension):
         if not a_file.endswith(extension):
             raise ValueError(f"all filenames in 'file' must end with '{extension}' "
                              f"but {a_file} does not")
+        file_out.append(a_file)
 
-    return file
+    return file_out
