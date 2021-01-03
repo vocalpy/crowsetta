@@ -39,8 +39,7 @@ class TestTextgrid(unittest.TestCase):
                             for annot in annots]))
 
     def test_textgrid2annot_list_of_Path(self):
-        textgrid = Path(self.test_data_dir).joinpath(
-            'wav-textgrid').glob('*.TextGrid')
+        textgrid = sorted(Path(self.test_data_dir).joinpath('wav-textgrid').glob('*.TextGrid'))
         annots = crowsetta.textgrid.textgrid2annot(textgrid)
         self.assertTrue(type(annots) == list)
         self.assertTrue(len(annots) == len(list(textgrid)))
