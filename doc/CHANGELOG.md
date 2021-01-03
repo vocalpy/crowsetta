@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### added
+- add `phn` module that parses `.phn` files from TIMIT dataset
+  [#59](https://github.com/NickleDave/crowsetta/pull/59)
+
 ## 2.2.0
 ### changed
 - change types of `Annotation` attributes `annot_file` and `audio_path` from `str` (string) 
@@ -13,11 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - change default value for `koumura2annot` parameter `wavpath` so that the function 
   will work regardless of current working directory for user, instead of requiring 
   them to be in the parent directory of the `.wav` files that `wavpath` refers to
-  [#53]((https://github.com/NickleDave/crowsetta/pull/53)) 
+  [#53](https://github.com/NickleDave/crowsetta/pull/53)
 
 ### fixed
 - fixed error that `koumura2annot` function threw when `annot_file` was a `pathlib.Path` 
-  and not a string [#53]((https://github.com/NickleDave/crowsetta/pull/53)) 
+  and not a string [#53](https://github.com/NickleDave/crowsetta/pull/53) 
 
 ## 2.1.0
 ### changed
