@@ -85,6 +85,21 @@ You can install with pip:
 To learn how to use `crowsetta`, please see the documentation at:  
 <https://crowsetta.readthedocs.io/en/latest/index.html>
 
+### Development Installation
+
+Currently `crowsetta` is developed with `conda`.
+To set up a development environment:
+```
+$ conda create crowsetta-dev
+$ conda create -n crowsetta-dev python=3.6 numpy scipy attrs
+$ conda activate crowsetta-dev
+$ $ pip install evfuncs koumura
+$ git clone https://github.com/NickleDave/crowsetta.git
+$ cd crowsetta
+$ pip install -e .
+```
+
+
 ## Project Information
 
 ### Background
