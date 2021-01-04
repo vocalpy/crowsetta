@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   See discussion on 
   [#55](https://github.com/NickleDave/crowsetta/issues/55).
 
+### changed
+- change name of `Transcriber` parameter `annot_format` to just `format`
+  [#64](https://github.com/NickleDave/crowsetta/pull/64)
+
 ## 2.3.0
 ### added
 - add `phn` module that parses `.phn` files from TIMIT dataset
