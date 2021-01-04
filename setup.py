@@ -31,10 +31,11 @@ VERSION = about['__version__']
 LICENSE = about['__license__']
 ENTRY_POINTS = {
     'crowsetta.format': [
-        'notmat = crowsetta.notmat',
+        'csv = crowsetta.csv',
         'koumura = crowsetta.koumura',
-        'textgrid = crowsetta.textgrid',
+        'notmat = crowsetta.notmat',
         'phn = crowsetta.phn'
+        'textgrid = crowsetta.textgrid',
     ]
 }
 
