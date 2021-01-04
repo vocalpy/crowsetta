@@ -14,7 +14,7 @@ from .meta import Meta
 from .validation import _parse_file
 
 
-def notmat2annot(annot_file,
+def notmat2annot(annot_path,
                  abspath=False,
                  basename=False,
                  round_times=True,
@@ -23,7 +23,7 @@ def notmat2annot(annot_file,
 
     Parameters
     ----------
-    annot_file : str, Path, or list
+    annot_path : str, Path, or list
         filename of a .not.mat annotation file, created by the evsonganaly GUI for MATLAB,
         or a list of paths to .not.mat files
     abspath : bool
@@ -56,7 +56,7 @@ def notmat2annot(annot_file,
     due to floating point error, e.g. when loading .not.mat files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    annot_file = _parse_file(annot_file, extension='.not.mat')
+    annot_path = _parse_file(annot_path, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -64,7 +64,7 @@ def notmat2annot(annot_file,
                          'information (just base filename) should be saved.')
 
     annot = []
-    for a_notmat in annot_file:
+    for a_notmat in annot_path:
         notmat_dict = evfuncs.load_notmat(a_notmat)
         # in .not.mat files saved by evsonganaly,
         # onsets and offsets are in units of ms, have to convert to s
@@ -75,19 +75,19 @@ def notmat2annot(annot_file,
             onsets_s = np.around(onsets_s, decimals=decimals)
             offsets_s = np.around(offsets_s, decimals=decimals)
 
-        audio_filename = a_notmat.replace('.not.mat', '')
+        audio_pathname = a_notmat.replace('.not.mat', '')
         if abspath:
-            audio_filename = os.path.abspath(audio_filename)
+            audio_pathname = os.path.abspath(audio_pathname)
             a_notmat = os.path.abspath(a_notmat)
         elif basename:
-            audio_filename = os.path.basename(audio_filename)
+            audio_pathname = os.path.basename(audio_pathname)
             a_notmat = os.path.basename(a_notmat)
 
         notmat_seq = Sequence.from_keyword(labels=np.asarray(list(notmat_dict['labels'])),
                                            onsets_s=onsets_s,
                                            offsets_s=offsets_s)
         annot.append(
-            Annotation(annot_file=a_notmat, audio_file=audio_filename, seq=notmat_seq)
+            Annotation(annot_path=a_notmat, audio_path=audio_pathname, seq=notmat_seq)
         )
 
     if len(annot) == 1:
@@ -96,14 +96,14 @@ def notmat2annot(annot_file,
         return annot
 
 
-def notmat2csv(annot_file, csv_filename, abspath=False, basename=False):
+def notmat2csv(annot_path, csv_filename, abspath=False, basename=False):
     """saves annotation from .not.mat file(s) in a comma-separated values
     (csv) file, where each row represents one syllable from one
     .not.mat file.
 
     Parameters
     ----------
-    annot_file : str, Path, or list
+    annot_path : str, Path, or list
         if list, list of strings or Path objects pointing to .not.mat files
     csv_filename : str
         name for csv file that is created
@@ -123,14 +123,14 @@ def notmat2csv(annot_file, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    annot_file = _parse_file(annot_file, extension='.not.mat')
+    annot_path = _parse_file(annot_path, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    annot = notmat2annot(annot_file)
+    annot = notmat2annot(annot_path)
     annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
 

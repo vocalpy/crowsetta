@@ -13,7 +13,7 @@ from .meta import Meta
 from .validation import _parse_file
 
 
-def phn2annot(annot_file,
+def phn2annot(annot_path,
               abspath=False,
               basename=False,
               round_times=True,
@@ -22,7 +22,7 @@ def phn2annot(annot_file,
 
     Parameters
     ----------
-    annot_file : str, Path, or list
+    annot_path : str, Path, or list
         filename of a .not.mat annotation file, created by the evsonganaly GUI for MATLAB,
         or a list of paths to .not.mat files
     abspath : bool
@@ -55,7 +55,7 @@ def phn2annot(annot_file,
     due to floating point error, e.g. when loading .phn files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    annot_file = _parse_file(annot_file, extension='.phn')
+    annot_path = _parse_file(annot_path, extension='.phn')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -63,7 +63,7 @@ def phn2annot(annot_file,
                          'information (just base filename) should be saved.')
 
     annot = []
-    for a_phn in annot_file:
+    for a_phn in annot_path:
         labels, onsets_Hz, offsets_Hz = [], [], []
         with open(a_phn) as fp:
             lines = fp.read().splitlines()
@@ -77,12 +77,12 @@ def phn2annot(annot_file,
         offsets_Hz = np.asarray(offsets_Hz)
         labels = np.asarray(labels)
 
-        audio_filename = str(
+        audio_pathname = str(
             Path(a_phn).parent.joinpath(
                 Path(a_phn).stem + '.wav'
                 )
         )
-        with wave.open(audio_filename, 'rb') as wav_file:
+        with wave.open(audio_pathname, 'rb') as wav_file:
             samp_freq = wav_file.getframerate()
         onsets_s = onsets_Hz / samp_freq
         offsets_s = offsets_Hz / samp_freq
@@ -92,10 +92,10 @@ def phn2annot(annot_file,
             offsets_s = np.around(offsets_s, decimals=decimals)
 
         if abspath:
-            audio_filename = os.path.abspath(audio_filename)
+            audio_pathname = os.path.abspath(audio_pathname)
             a_phn = os.path.abspath(a_phn)
         elif basename:
-            audio_filename = os.path.basename(audio_filename)
+            audio_pathname = os.path.basename(audio_pathname)
             a_phn = os.path.basename(a_phn)
 
         phn_seq = Sequence.from_keyword(labels=labels,
@@ -104,7 +104,7 @@ def phn2annot(annot_file,
                                         onsets_s=onsets_s,
                                         offsets_s=offsets_s)
         annot.append(
-            Annotation(annot_file=a_phn, audio_file=audio_filename, seq=phn_seq)
+            Annotation(annot_path=a_phn, audio_path=audio_pathname, seq=phn_seq)
         )
 
     if len(annot) == 1:
@@ -113,14 +113,14 @@ def phn2annot(annot_file,
         return annot
 
 
-def phn2csv(annot_file, csv_filename, abspath=False, basename=False):
+def phn2csv(annot_path, csv_filename, abspath=False, basename=False):
     """saves annotation from .not.mat file(s) in a comma-separated values
     (csv) file, where each row represents one syllable from one
     .not.mat file.
 
     Parameters
     ----------
-    annot_file : str, Path, or list
+    annot_path : str, Path, or list
         if list, list of strings or Path objects pointing to .not.mat files
     csv_filename : str
         name for csv file that is created
@@ -140,14 +140,14 @@ def phn2csv(annot_file, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    annot_file = _parse_file(annot_file, extension='.phn')
+    annot_path = _parse_file(annot_path, extension='.phn')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    annot = phn2annot(annot_file)
+    annot = phn2annot(annot_path)
     annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
 

@@ -17,7 +17,7 @@ from .sequence import Sequence
 from .validation import _parse_file
 
 
-def textgrid2annot(annot_file,
+def textgrid2annot(annot_path,
                    abspath=False,
                    basename=False,
                    round_times=True,
@@ -29,7 +29,7 @@ def textgrid2annot(annot_file,
 
     Parameters
     ----------
-    annot_file : str, Path
+    annot_path : str, Path
         filename of a .TextGrid annotation file, created by Praat.
     abspath : bool
         if True, converts filename for each audio file into absolute path.
@@ -61,9 +61,9 @@ def textgrid2annot(annot_file,
         each Interval in the first IntervalTier in a TextGrid file
         will become one segment in a sequence.
     """
-    annot_file = _parse_file(annot_file, extension='.TextGrid')
+    annot_path = _parse_file(annot_path, extension='.TextGrid')
     annots = []
-    for a_textgrid in annot_file:
+    for a_textgrid in annot_path:
         tg = TextGrid.fromFile(a_textgrid)
 
         intv_tier = tg[intervaltier_ind]
@@ -71,11 +71,11 @@ def textgrid2annot(annot_file,
             raise ValueError(f'Index specified for IntervalTier was {intervaltier_ind}, '
                              f'but type at that index was {type(intv_tier)}, not an IntervalTier')
 
-        audio_filename = a_textgrid.replace('TextGrid', audio_ext)
+        audio_pathname = a_textgrid.replace('TextGrid', audio_ext)
         if abspath:
-            audio_filename = os.path.abspath(audio_filename)
+            audio_pathname = os.path.abspath(audio_pathname)
         elif basename:
-            audio_filename = os.path.basename(audio_filename)
+            audio_pathname = os.path.basename(audio_pathname)
 
         intv_tier = tg[0]
         onsets_s = []
@@ -101,8 +101,8 @@ def textgrid2annot(annot_file,
         textgrid_seq = Sequence.from_keyword(labels=labels,
                                              onsets_s=onsets_s,
                                              offsets_s=offsets_s)
-        annot = Annotation(annot_file=a_textgrid,
-                           audio_file=audio_filename,
+        annot = Annotation(annot_path=a_textgrid,
+                           audio_path=audio_pathname,
                            seq=textgrid_seq)
         annots.append(annot)
 
@@ -112,14 +112,14 @@ def textgrid2annot(annot_file,
         return annots
 
 
-def textgrid2csv(annot_file, csv_filename, abspath=False, basename=False):
+def textgrid2csv(annot_path, csv_filename, abspath=False, basename=False):
     """saves annotation from TextGrid file(s) in a comma-separated values
     (csv) file, where each row represents one syllable from one
     .not.mat file.
 
     Parameters
     ----------
-    annot_file : str, Path, or list
+    annot_path : str, Path, or list
         if list, list of strings or Path objects pointing to TextGrid files
     csv_filename : str
         name for csv file that is created
@@ -139,14 +139,14 @@ def textgrid2csv(annot_file, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    annot_file = _parse_file(annot_file, extension='.TextGrid')
+    annot_path = _parse_file(annot_path, extension='.TextGrid')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
 
-    annots = textgrid2annot(annot_file)
+    annots = textgrid2annot(annot_path)
     annot2csv(annots, csv_filename, abspath=abspath, basename=basename)
 
 
