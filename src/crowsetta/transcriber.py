@@ -24,7 +24,7 @@ class Transcriber:
 
     Attributes
     ----------
-    annot_format : str
+    format : str
         name of vocal annotation format that Transcriber will use
     config : dict or crowsetta.meta.Meta
         configuration for a format. Default is None.
@@ -36,7 +36,7 @@ class Transcriber:
     to_csv : converts a file in the format into a comma-separate values (csv) file
     to_format : converts an Annotation to the format
     """
-    def __init__(self, annot_format, config=None):
+    def __init__(self, format, config=None):
         """__init__ method of Transciber class
 
         Parameters
@@ -52,14 +52,14 @@ class Transcriber:
         ...     'to_csv': 'myformat2csv',
         ...     'to_format': 'to_myformat'
         ... }
-        >>> scribe = crowsetta.Transcriber(annot_format='myformat_name', config=my_config)
+        >>> scribe = crowsetta.Transcriber(format='myformat_name', config=my_config)
         >>> seq = scribe.from_file(file='my_annotation.mat')
         """
         # make sure format specified is either installed or that user also specified a config
-        if (annot_format in formats._INSTALLED and config is None) or (annot_format and config is not None):
-            self.voc_format = annot_format
+        if (format in formats._INSTALLED and config is None) or (format and config is not None):
+            self.voc_format = format
         else:
-            raise ValueError(f"specified vocal annotation format, {annot_format}, not installed, and no"
+            raise ValueError(f"specified vocal annotation format, {format}, not installed, and no"
                              "configuration was specified. Either install format, or specify configuration "
                              "by passing as the 'config' argument to Transcriber")
 
@@ -76,15 +76,15 @@ class Transcriber:
                 config_keys = set(config.keys())
                 if not REQUIRED_CONFIG_DICT_KEYS.issubset(config_keys):
                     missing_keys = REQUIRED_CONFIG_DICT_KEYS - config_keys
-                    raise KeyError(f'config for {annot_format} requires '
+                    raise KeyError(f'config for {format} requires '
                                    f'the following keys: {missing_keys}')
                 elif not config_keys.issubset(VALID_CONFIG_DICT_KEYS):
                     extra_keys = config_keys - VALID_CONFIG_DICT_KEYS
-                    raise KeyError(f'config for {annot_format} contains '
+                    raise KeyError(f'config for {format} contains '
                                    f'invalid keys: {extra_keys}')
 
-        if annot_format in formats._INSTALLED and config is None:
-            voc_format_module = getattr(formats, annot_format)
+        if format in formats._INSTALLED and config is None:
+            voc_format_module = getattr(formats, format)
             self.from_file = voc_format_module.meta.from_file
             if hasattr(voc_format_module.meta, 'to_csv'):
                 self.to_csv = voc_format_module.meta.to_csv
@@ -95,7 +95,7 @@ class Transcriber:
             else:
                 self.to_format = not_implemented
 
-        elif annot_format and config:
+        elif format and config:
             self.config = config
             format_module = config['module']
 

@@ -18,7 +18,7 @@ def main():
 
     module = str(HERE.joinpath('example.py'))
     config = {'module': module, 'from_file': 'example2annot'}
-    scribe = crowsetta.Transcriber(annot_format='example', config=config)
+    scribe = crowsetta.Transcriber(format='example', config=config)
     mat_file = str(
         TEST_DATA.joinpath('example_user_format', 'bird1_annotation.mat')
     )
