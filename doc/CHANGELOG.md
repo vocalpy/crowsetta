@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### changed
 - change name of `Transcriber` parameter `annot_format` to just `format`
   [#64](https://github.com/NickleDave/crowsetta/pull/64)
+- change name of `Annotation` attributes `annot_file` and `audio_file` to 
+  `annot_path` and `audio_path`, for clarity and to match what's used in 
+  the `vak` library
+  [#65](https://github.com/NickleDave/crowsetta/pull/65)
 
 ## 2.3.0
 ### added
