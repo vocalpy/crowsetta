@@ -23,7 +23,7 @@ class TestTranscriber(unittest.TestCase):
         scribe = crowsetta.Transcriber(format='koumura')
         xml_file = str(self.test_data_dir.joinpath('koumura/Bird0/Annotation.xml'))
         wavpath = str(self.test_data_dir.joinpath('koumura/Bird0/Wave'))
-        annots = scribe.from_file(annot_file=xml_file, wavpath=wavpath)
+        annots = scribe.from_file(annot_path=xml_file, wavpath=wavpath)
         self.assertTrue(type(annots) == list)
         self.assertTrue(all([type(annot) == crowsetta.Annotation
                              for annot in annots]))
@@ -33,7 +33,7 @@ class TestTranscriber(unittest.TestCase):
         xml_file = str(self.test_data_dir.joinpath('koumura/Bird0/Annotation.xml'))
         wavpath = str(self.test_data_dir.joinpath('koumura/Bird0/Wave'))
         csv_filename = str(self.tmp_output_dir.joinpath('Annotation.csv'))
-        scribe.to_csv(annot_file=xml_file, wavpath=wavpath, csv_filename=csv_filename)
+        scribe.to_csv(annot_path=xml_file, wavpath=wavpath, csv_filename=csv_filename)
         self.assertTrue(Path(csv_filename).is_file())
 
     def test_notmat_from_file(self):
@@ -43,7 +43,7 @@ class TestTranscriber(unittest.TestCase):
             'cbins/gy6or6/032312').glob('*.not.mat')
         )
         for notmat in notmats:
-            annot = scribe.from_file(annot_file=notmat)
+            annot = scribe.from_file(annot_path=notmat)
             self.assertTrue(type(annot) == crowsetta.Annotation)
 
     def test_notmat_to_csv(self):
@@ -53,7 +53,7 @@ class TestTranscriber(unittest.TestCase):
             'cbins/gy6or6/032312').glob('*.not.mat')
         )
         csv_filename = str(self.tmp_output_dir.joinpath('Annotation.csv'))
-        scribe.to_csv(annot_file=notmats, csv_filename=csv_filename)
+        scribe.to_csv(annot_path=notmats, csv_filename=csv_filename)
         self.assertTrue(Path(csv_filename).is_file())
 
     def test_example_from_file_name_import(self):
@@ -68,7 +68,7 @@ class TestTranscriber(unittest.TestCase):
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
-        annots = scribe.from_file(annot_file=annotation)
+        annots = scribe.from_file(annot_path=annotation)
         self.assertTrue(all([type(annot) == crowsetta.Annotation
                              for annot in annots]))
         sys.path.remove(str(self.example_script_dir))
@@ -82,7 +82,7 @@ class TestTranscriber(unittest.TestCase):
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
-        annots = scribe.from_file(annot_file=annotation)
+        annots = scribe.from_file(annot_path=annotation)
         self.assertTrue(all([type(annot) == crowsetta.Annotation
                              for annot in annots]))
 
@@ -97,7 +97,7 @@ class TestTranscriber(unittest.TestCase):
         annotation = os.path.join(self.test_data_dir,
                                   'example_user_format',
                                   'bird1_annotation.mat')
-        annots = scribe.from_file(annot_file=annotation)
+        annots = scribe.from_file(annot_path=annotation)
         self.assertTrue(all([type(annot) == crowsetta.Annotation
                              for annot in annots]))
 

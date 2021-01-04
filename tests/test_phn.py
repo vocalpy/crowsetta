@@ -71,7 +71,7 @@ class TestPhn(unittest.TestCase):
             header = next(reader)
             for row in reader:
                 filenames_from_csv.append(
-                    os.path.basename(row['annot_file'])
+                    os.path.basename(row['annot_path'])
                 )
         for phn_name in phn_list:
             self.assertTrue(
@@ -89,7 +89,7 @@ class TestPhn(unittest.TestCase):
             annot_path = Path(self.tmp_output_dir).joinpath(Path(phn).name)
             # copy wav file to tmp_output_dir so we can open the annot
             # need sampling rate from wave file
-            shutil.copyfile(src=annot.audio_file, dst=Path(self.tmp_output_dir).joinpath(Path(annot.audio_file.name)))
+            shutil.copyfile(src=annot.audio_path, dst=Path(self.tmp_output_dir).joinpath(Path(annot.audio_path.name)))
             crowsetta.phn.annot2phn(annot, annot_path)
             annot_made = crowsetta.phn.phn2annot(annot_path)
             self.assertTrue(np.all(np.equal(annot.seq.onsets_Hz, annot_made.seq.onsets_Hz)))
