@@ -24,7 +24,7 @@ class TestKoumura(unittest.TestCase):
 
     def test_koumura2annot(self):
         xml_file = os.path.join(self.test_data_dir, 'Annotation.xml')
-        annots = crowsetta.koumura.koumura2annot(annot_file=xml_file,
+        annots = crowsetta.koumura.koumura2annot(annot_path=xml_file,
                                                  concat_seqs_into_songs=True,
                                                  wavpath=os.path.join(self.test_data_dir,
                                                                       'Wave'))
@@ -41,7 +41,7 @@ class TestKoumura(unittest.TestCase):
         wavpath = os.path.join(self.test_data_dir, 'Wave')
         csv_filename = os.path.join(str(self.tmp_output_dir),
                                     'test.csv')
-        crowsetta.koumura.koumura2csv(annot_file=xml_file,
+        crowsetta.koumura.koumura2csv(annot_path=xml_file,
                                       wavpath=wavpath,
                                       csv_filename=csv_filename,
                                       basename=True)
@@ -55,7 +55,7 @@ class TestKoumura(unittest.TestCase):
                                     fieldnames=crowsetta.csv.CSV_FIELDNAMES)
             header = next(reader)
             for row in reader:
-                filenames_from_csv.append(row['audio_file'])
+                filenames_from_csv.append(row['audio_path'])
 
         wav_list = glob(os.path.join(self.test_data_dir, 'Wave', '*.wav'))
         wav_list = [Path(wav_file).name for wav_file in wav_list]

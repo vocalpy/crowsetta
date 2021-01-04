@@ -4,11 +4,11 @@ from scipy.io import loadmat
 from crowsetta import Sequence, Annotation
 
 
-def example2annot(annot_file):
+def example2annot(annot_path):
     """example of a function that unpacks annotation from
     a complicated data structure and returns the necessary
     data from an Annotation object"""
-    mat = loadmat(annot_file, squeeze_me=True)
+    mat = loadmat(annot_path, squeeze_me=True)
     annot_list = []
     # annotation structure loads as a Python dictionary with two keys
     # one maps to a list of filenames, 
@@ -39,6 +39,6 @@ def example2annot(annot_file):
         seq = Sequence.from_keyword(labels=labels,
                                     onsets_s=onsets_s,
                                     offsets_s=offsets_s)
-        annot_list.append(Annotation(annot_file=annot_file, audio_file=filename, seq=seq))
+        annot_list.append(Annotation(annot_path=annot_path, audio_path=filename, seq=seq))
 
     return annot_list

@@ -74,7 +74,7 @@ class TestNotmat(unittest.TestCase):
             header = next(reader)
             for row in reader:
                 filenames_from_csv.append(
-                    os.path.basename(row['annot_file'])
+                    os.path.basename(row['annot_path'])
                 )
         for notmat_name in notmat_list:
             self.assertTrue(

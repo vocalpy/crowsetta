@@ -62,10 +62,10 @@ class TestCSV(unittest.TestCase):
         sys.path.append(str(example_script_dir))
         example_module = import_module(name='example')
 
-        annot_file = str(self.test_data_dir.joinpath(
+        annot_path = str(self.test_data_dir.joinpath(
             'example_user_format/bird1_annotation.mat')
         )
-        annot_list = example_module.example2annot(annot_file=annot_file)
+        annot_list = example_module.example2annot(annot_path=annot_path)
         self.assertTrue(
             all(
                 [seg.onset_Hz is None and seg.offset_Hz is None
