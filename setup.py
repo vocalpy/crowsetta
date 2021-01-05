@@ -34,7 +34,7 @@ ENTRY_POINTS = {
         'csv = crowsetta.csv',
         'koumura = crowsetta.koumura',
         'notmat = crowsetta.notmat',
-        'phn = crowsetta.phn'
+        'phn = crowsetta.phn',
         'textgrid = crowsetta.textgrid',
     ]
 }
