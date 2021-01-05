@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 3.0.1
+### fixed
+- add missing comma in `ENTRY_POINTS` in `setup.py` 
+  so that built-in formats are properly installed
+  [599149f](https://github.com/NickleDave/crowsetta/commit/599149f2bb52fb4cd01deca4d4b151fff085171c)
+
 ## 3.0.0
 ### added
 - make `csv` a format
