@@ -2,9 +2,9 @@
 """
 import os
 from pathlib import Path
-import wave
 
 import numpy as np
+import soundfile
 
 from .sequence import Sequence
 from .annotation import Annotation
@@ -86,9 +86,8 @@ def phn2annot(annot_path,
                 raise FileNotFoundError(
                     f'did not find a matching file with extension .wav or .WAV for the .phn file:\n{a_phn}'
                 )
-        audio_pathname = str(audio_pathname)
-        with wave.open(audio_pathname, 'rb') as wav_file:
-            samp_freq = wav_file.getframerate()
+
+        samp_freq = soundfile.info(audio_pathname).samplerate
         onsets_s = onsets_Hz / samp_freq
         offsets_s = offsets_Hz / samp_freq
 
