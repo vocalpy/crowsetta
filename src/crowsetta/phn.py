@@ -77,11 +77,16 @@ def phn2annot(annot_path,
         offsets_Hz = np.asarray(offsets_Hz)
         labels = np.asarray(labels)
 
-        audio_pathname = str(
-            Path(a_phn).parent.joinpath(
-                Path(a_phn).stem + '.wav'
+        # checking for audio_pathname need to be case insensitive
+        # since some versions of TIMIT dataset use .WAV instead of .wav
+        audio_pathname = Path(a_phn).parent.joinpath(Path(a_phn).stem + '.wav')
+        if not audio_pathname.exists():
+            audio_pathname = Path(a_phn).parent.joinpath(Path(a_phn).stem + '.WAV')
+            if not audio_pathname.exists():
+                raise FileNotFoundError(
+                    f'did not find a matching file with extension .wav or .WAV for the .phn file:\n{a_phn}'
                 )
-        )
+        audio_pathname = str(audio_pathname)
         with wave.open(audio_pathname, 'rb') as wav_file:
             samp_freq = wav_file.getframerate()
         onsets_s = onsets_Hz / samp_freq
