@@ -55,7 +55,9 @@ def phn2annot(annot_path,
     due to floating point error, e.g. when loading .phn files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    annot_path = _parse_file(annot_path, extension='.phn')
+    # note multiple extensions, both all-uppercase and all-lowercase `.phn` exist,
+    # depending on which version of TIMIT dataset you have
+    annot_path = _parse_file(annot_path, extension=('.phn', '.PHN'))
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -144,7 +146,7 @@ def phn2csv(annot_path, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    annot_path = _parse_file(annot_path, extension='.phn')
+    annot_path = _parse_file(annot_path, extension=('.phn', '.PHN'))
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
