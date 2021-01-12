@@ -2,9 +2,9 @@
 """
 import os
 from pathlib import Path
-import wave
 
 import numpy as np
+import soundfile
 
 from .sequence import Sequence
 from .annotation import Annotation
@@ -55,7 +55,9 @@ def phn2annot(annot_path,
     due to floating point error, e.g. when loading .phn files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    annot_path = _parse_file(annot_path, extension='.phn')
+    # note multiple extensions, both all-uppercase and all-lowercase `.phn` exist,
+    # depending on which version of TIMIT dataset you have
+    annot_path = _parse_file(annot_path, extension=('.phn', '.PHN'))
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -77,13 +79,17 @@ def phn2annot(annot_path,
         offsets_Hz = np.asarray(offsets_Hz)
         labels = np.asarray(labels)
 
-        audio_pathname = str(
-            Path(a_phn).parent.joinpath(
-                Path(a_phn).stem + '.wav'
+        # checking for audio_pathname need to be case insensitive
+        # since some versions of TIMIT dataset use .WAV instead of .wav
+        audio_pathname = Path(a_phn).parent.joinpath(Path(a_phn).stem + '.wav')
+        if not audio_pathname.exists():
+            audio_pathname = Path(a_phn).parent.joinpath(Path(a_phn).stem + '.WAV')
+            if not audio_pathname.exists():
+                raise FileNotFoundError(
+                    f'did not find a matching file with extension .wav or .WAV for the .phn file:\n{a_phn}'
                 )
-        )
-        with wave.open(audio_pathname, 'rb') as wav_file:
-            samp_freq = wav_file.getframerate()
+
+        samp_freq = soundfile.info(audio_pathname).samplerate
         onsets_s = onsets_Hz / samp_freq
         offsets_s = offsets_Hz / samp_freq
 
@@ -140,7 +146,7 @@ def phn2csv(annot_path, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    annot_path = _parse_file(annot_path, extension='.phn')
+    annot_path = _parse_file(annot_path, extension=('.phn', '.PHN'))
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '

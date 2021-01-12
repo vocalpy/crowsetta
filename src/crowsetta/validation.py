@@ -65,11 +65,36 @@ def column_or_row_or_1d(y):
 
 
 def _parse_file(file, extension):
-    """helper function that parses/validates value for file argument;
-    puts a single string or Path into a list to iterate over it (cheap hack
-    that lets functions accept multiple types), and checks list to make sure
-    all types are consistent
+    """"check that all files have valid extensions,
+    convert into a list that can be iterated over
+
+    Parameters
+    ----------
+    file : str, pathlib.Path, list
+        filename(s), list must be of str or pathlib.Path
+    extension : str, tuple
+        valid file extension(s). tuple must be tuple of strings.
+        Function expects that extensions will be specified with a period,
+        e.g. {'.phn', '.PHN'}
+
+    Returns
+    -------
+    files_validated : list
+        of filenames, all having validated extensions
     """
+    if isinstance(extension, str):
+        extension = (extension,)
+    elif isinstance(extension, tuple):
+        if not all([isinstance(element, str) for element in extension]):
+            raise TypeError(
+                "must specify all valid extensions as strings, but value was \n"
+                f"'{extension}' with types: {[type(element) for element in extension]}"
+            )
+    else:
+        raise TypeError(
+            f'extension must be str or tuple but type was {type(extension)}'
+        )
+
     if not(isinstance(file, str) or isinstance(file, PurePath) or isinstance(file, list)):
         raise TypeError(
             f"file must be a str or a pathlib.Path, but type of file was {type(file)}.\n"
@@ -94,8 +119,8 @@ def _parse_file(file, extension):
         # (because using Path.suffixes() would require too much special casing)
         a_file = str(a_file)
         if not a_file.endswith(extension):
-            raise ValueError(f"all filenames in 'file' must end with '{extension}' "
-                             f"but {a_file} does not")
+            raise ValueError(f"file does not have a valid extension: {a_file}"
+                             f"valid extension(s) for filenames are: '{extension}'")
         file_out.append(a_file)
 
     return file_out

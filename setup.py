@@ -40,7 +40,12 @@ ENTRY_POINTS = {
 }
 
 REQUIRED = [
-    'numpy', 'scipy', 'attrs', 'evfuncs', 'koumura',
+    'attrs',
+    'evfuncs',
+    'koumura',
+    'numpy',
+    'scipy',
+    'soundfile',
 ]
 
 DEV_DEPS = [

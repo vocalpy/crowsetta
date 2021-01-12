@@ -9,9 +9,9 @@ doi:10.1371/journal.pone.0159188
 import os
 from pathlib import Path
 import numpy as np
-import wave
 
 import koumura
+import soundfile
 
 from .annotation import Annotation
 from .sequence import Sequence
@@ -94,10 +94,7 @@ def koumura2annot(annot_path='Annotation.xml', concat_seqs_into_songs=True,
                 f'.wav file {wav_filename} specified in '
                 f'annotation file {annot_path} is not found'
             )
-        # found with %%timeit that Python wave module takes about 1/2 the time of
-        # scipy.io.wavfile for just reading sampling frequency from each file
-        with wave.open(wav_filename, 'rb') as wav_file:
-            samp_freq = wav_file.getframerate()
+        samp_freq = soundfile.info(wav_filename).samplerate
         onsets_s = np.round(onsets_Hz / samp_freq, decimals=3)
         offsets_s = np.round(offsets_Hz / samp_freq, decimals=3)
 
