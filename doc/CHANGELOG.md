@@ -5,7 +5,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### changed
+- switch to using `soundfile` library to parse .wav files
+  [#75](https://github.com/NickleDave/crowsetta/pull/75)
+  see discussion on issue [#67](https://github.com/NickleDave/crowsetta/issues/67).
 
+### fixed
+- fix `phn2annot` function so it works with `.PHN` and `.WAV` files found in 
+  some versions of TIMIT dataset
+  [#75](https://github.com/NickleDave/crowsetta/pull/75)
+  + needed to make extension checking case-insensitive, 
+    see issue [#68](https://github.com/NickleDave/crowsetta/issues/68)
+  + and also switch to `soundfile` library to be able to parse the specific NIST format of .WAV files
+ 
 ## 3.0.1
 ### fixed
 - add missing comma in `ENTRY_POINTS` in `setup.py` 
