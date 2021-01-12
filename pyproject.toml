@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "crowsetta"
+version = "3.1.0"
+description = "A tool to work with any format for annotating vocalizations"
+authors = ["David Nicholson <nickledave@users.noreply.github.com>"]
+license = "BSD"
+classifiers = [
+    'License :: OSI Approved :: BSD License',
+    'Development Status :: 5 - Production/Stable',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: Implementation :: CPython',
+]
+
+[tool.poetry.dependencies]
+python = "^3.6.2"
+attrs = "^20.3.0"
+evfuncs = "^0.3.1"
+koumura = "^0.2.0"
+numpy = "^1.19.5"
+scipy = "^1.5.2"
+SoundFile = "^0.10.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.1"
+Sphinx = "^3.4.3"
+jupyterlab = "^3.0.3"
+
+[tool.poetry.plugins]
+
+[tool.poetry.plugins."crowsetta.format"]
+csv = 'crowsetta.csv'
+koumura = 'crowsetta.koumura'
+notmat = 'crowsetta.notmat'
+phn = 'crowsetta.phn'
+textgrid = 'crowsetta.textgrid'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
