@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### changed
+- switch to using `poetry` for development
+  [#79](https://github.com/NickleDave/crowsetta/pull/79)
+- raise minimum version of `evfuncs` to 0.3.1
+  [#79](https://github.com/NickleDave/crowsetta/pull/79)
+- raise minimum version of `koumura` to 0.2.0
+  [#79](https://github.com/NickleDave/crowsetta/pull/79)
 
 ## 3.1.0
 ### changed
