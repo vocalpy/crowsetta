@@ -14,21 +14,20 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
-attrs = "^20.3.0"
-evfuncs = "^0.3.1"
-koumura = "^0.2.0"
-numpy = "^1.19.5"
-scipy = "^1.5.2"
-SoundFile = "^0.10.3"
+python = ">=3.6.2"
+attrs = ">=19.3.0"
+evfuncs = ">=0.3.2"
+koumura = ">=0.2.1"
+numpy = ">=1.18.1"
+scipy = ">=1.4.1"
+SoundFile = ">=0.10.3"
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.1"
-Sphinx = "^3.4.3"
-jupyterlab = "^3.0.3"
+pytest = ">=6.2.1"
+Sphinx = ">=3.4.3"
+jupyterlab = ">=3.0.3"
 
 [tool.poetry.plugins]
-
 [tool.poetry.plugins."crowsetta.format"]
 csv = 'crowsetta.csv'
 koumura = 'crowsetta.koumura'
