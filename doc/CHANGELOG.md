@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   [#79](https://github.com/NickleDave/crowsetta/pull/79)
 - raise minimum version of `koumura` to 0.2.0
   [#79](https://github.com/NickleDave/crowsetta/pull/79)
+- change to using GitHub Actions for continuous integration
+  [#83](https://github.com/NickleDave/crowsetta/pull/83)
+
+### fixed
+- fix dependencies and Python so they are not pinned to major version
+  [#83](https://github.com/NickleDave/crowsetta/pull/83)
 
 ## 3.1.0
 ### changed
