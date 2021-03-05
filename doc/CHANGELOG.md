@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.1.1.post1 -- 2021-03-04
+### fixed
+- add missing `packages` to pyproject.toml so that `textgrid` is included 
+  in build
+  [857ba09](https://github.com/NickleDave/crowsetta/commit/857ba097eedf45a38c33244fd7353bc7fdb48315)
+- add metadata to pyproject.toml so that README is used as "long description" 
+  and appears on PyPI
+  [e8b8209](https://github.com/NickleDave/crowsetta/commit/e8b8209fff5a3aa530b7ef93b015c6b35c5615a5)
+
 ## 3.1.1 -- 2021-03-04
 ### changed
 - switch to using `poetry` for development
