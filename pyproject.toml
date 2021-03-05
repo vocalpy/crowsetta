@@ -3,6 +3,9 @@ name = "crowsetta"
 version = "3.1.1"
 description = "A tool to work with any format for annotating vocalizations"
 authors = ["David Nicholson <nickledave@users.noreply.github.com>"]
+readme = "README.md"
+repository = "https://github.com/NickleDave/crowsetta"
+documentation = "https://crowsetta.readthedocs.io/en/latest/"
 license = "BSD"
 classifiers = [
     'License :: OSI Approved :: BSD License',
