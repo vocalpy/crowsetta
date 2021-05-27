@@ -23,7 +23,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.6.2"
+python = ">=3.6.2, <4"
 attrs = ">=19.3.0"
 evfuncs = ">=0.3.2"
 koumura = ">=0.2.1"
@@ -35,6 +35,7 @@ SoundFile = ">=0.10.3"
 pytest = ">=6.2.1"
 Sphinx = ">=3.4.3"
 jupyterlab = ">=3.0.3"
+pytest-cov = "^2.12.0"
 
 [tool.poetry.plugins]
 [tool.poetry.plugins."crowsetta.format"]

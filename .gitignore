@@ -1,12 +1,21 @@
+# python buildstuffs and other ephemera
 .cache/
 *.egg-info/
 build/*
 dist/*
 MANIFEST
 *.pyc
+
+# IDE
 .idea/
+
+# docs / jupyter
 doc/_build/
 doc/notebooks/data/*/
 .ipynb_checkpoints/
 ./notebooks/*.ipynb
 ./notebooks/data/*/
+
+# coverage / pytest-cov
+.coverage
+coverage.xml
