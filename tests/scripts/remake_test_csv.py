@@ -3,7 +3,7 @@ from pathlib import Path
 import crowsetta
 
 HERE = Path(__file__).parent
-TEST_DATA = HERE.joinpath('..', 'test_data')
+TEST_DATA = HERE.joinpath('..', 'data_for_tests')
 
 
 def main():
