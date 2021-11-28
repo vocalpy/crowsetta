@@ -1,0 +1,25 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: crowsetta
+message: >-
+  A tool to work with any format for annotating
+  vocalizations
+type: software
+authors:
+  - given-names: David
+    family-names: Nicholson
+    email: nicholdav@gmail.com
+    affiliation: Emory University
+    orcid: 'https://orcid.org/0000-0002-4261-4719'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.2525383
+repository-code: 'https://github.com/NickleDave/crowsetta'
+url: 'https://crowsetta.readthedocs.io'
+repository-artifact: 'https://pypi.org/project/crowsetta/'
+license: BSD-3-Clause
+commit: a6ec84fa93762a8ab9b4b063b65a51933e010892
+version: 3.1.0
+date-released: '2021-03-04'
