@@ -16,7 +16,6 @@ from .sequence import Sequence
 from .annotation import Annotation
 from .meta import Meta
 from . import csv
-from . import data
 from . import formats
 
 # built-in formats
