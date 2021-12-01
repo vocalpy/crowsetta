@@ -12,9 +12,9 @@ classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: Implementation :: CPython',
 ]
 packages = [
@@ -23,7 +23,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.6.2, <4"
+python = ">3.6, <3.10"
 attrs = ">=19.3.0"
 evfuncs = ">=0.3.2"
 koumura = ">=0.2.1"
