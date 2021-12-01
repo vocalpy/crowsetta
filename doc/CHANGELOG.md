@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- add a [CITATION.cff](https://citation-file-format.github.io/) file
+  [#103](https://github.com/NickleDave/vak/pull/103).
+
+### Changed
+- rewrite tests to use `pytest` [#106](https://github.com/NickleDave/crowsetta/pull/106)
+  Fixes [#89](https://github.com/NickleDave/crowsetta/issues/89).
+
 ## 3.1.1.post1 -- 2021-03-04
 ### fixed
 - add missing `packages` to pyproject.toml so that `textgrid` is included 
