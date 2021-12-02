@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - rewrite tests to use `pytest` [#106](https://github.com/NickleDave/crowsetta/pull/106)
   Fixes [#89](https://github.com/NickleDave/crowsetta/issues/89).
+- change compatible Python versions to >3.6 and <3.10
+  [#111](https://github.com/NickleDave/crowsetta/pull/111).
 
 ### Removed
 - remove `data` module [#110](https://github.com/NickleDave/crowsetta/pull/110) 
