@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - change compatible Python versions to >3.6 and <3.10
   [#111](https://github.com/NickleDave/crowsetta/pull/111).
 
+### Fixed
+- Fix .TextGrid and .phn docstrings that referred to ".not.mat files"
+  [#118](https://github.com/NickleDave/crowsetta/pull/118).
+  
 ### Removed
 - remove `data` module [#110](https://github.com/NickleDave/crowsetta/pull/110) 
   that downloaded data from other sources.
