@@ -114,8 +114,8 @@ def textgrid2annot(annot_path,
 
 def textgrid2csv(annot_path, csv_filename, abspath=False, basename=False):
     """saves annotation from TextGrid file(s) in a comma-separated values
-    (csv) file, where each row represents one syllable from one
-    .not.mat file.
+    (csv) file, where each row represents one annotated segment from one
+    .TextGrid file.
 
     Parameters
     ----------

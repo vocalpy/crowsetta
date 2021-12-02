@@ -23,8 +23,7 @@ def phn2annot(annot_path,
     Parameters
     ----------
     annot_path : str, Path, or list
-        filename of a .not.mat annotation file, created by the evsonganaly GUI for MATLAB,
-        or a list of paths to .not.mat files
+        filename of a .phn  annotation file, or a list of paths to .phn files
     abspath : bool
         if True, converts filename for each audio file into absolute path.
         Default is False.
@@ -120,14 +119,14 @@ def phn2annot(annot_path,
 
 
 def phn2csv(annot_path, csv_filename, abspath=False, basename=False):
-    """saves annotation from .not.mat file(s) in a comma-separated values
-    (csv) file, where each row represents one syllable from one
-    .not.mat file.
+    """saves annotation from .phn file(s) in a comma-separated values
+    (csv) file, where each row represents one annotated segment from one
+    .phn file.
 
     Parameters
     ----------
     annot_path : str, Path, or list
-        if list, list of strings or Path objects pointing to .not.mat files
+        if list, list of strings or Path objects pointing to .phn files
     csv_filename : str
         name for csv file that is created
 
