@@ -6,3 +6,4 @@ from .phn import *
 from .segment import *
 from .sequence import *
 from .textgrid import *
+from .yarden import *
