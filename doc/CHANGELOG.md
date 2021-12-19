@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - remove `data` module [#110](https://github.com/NickleDave/crowsetta/pull/110) 
   that downloaded data from other sources.
   Fixes [#93](https://github.com/NickleDave/crowsetta/issues/93).
+
 ## 3.1.1.post1 -- 2021-03-04
 ### fixed
 - add missing `packages` to pyproject.toml so that `textgrid` is included 
