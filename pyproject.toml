@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "crowsetta"
-version = "3.1.1.post1"
+version = "3.2.0"
 description = "A tool to work with any format for annotating vocalizations"
 authors = ["David Nicholson <nickledave@users.noreply.github.com>"]
 readme = "README.md"

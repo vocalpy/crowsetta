@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## 3.2.0 -- 2021-12-19
 ### Added
 - add a [CITATION.cff](https://citation-file-format.github.io/) file
   [#103](https://github.com/NickleDave/vak/pull/103).
@@ -24,12 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix .TextGrid and .phn docstrings that referred to ".not.mat files"
   [#118](https://github.com/NickleDave/crowsetta/pull/118).
-  
+
 ### Removed
 - remove `data` module [#110](https://github.com/NickleDave/crowsetta/pull/110) 
   that downloaded data from other sources.
   Fixes [#93](https://github.com/NickleDave/crowsetta/issues/93).
-
 ## 3.1.1.post1 -- 2021-03-04
 ### fixed
 - add missing `packages` to pyproject.toml so that `textgrid` is included 
