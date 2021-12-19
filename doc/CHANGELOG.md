@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - add a [CITATION.cff](https://citation-file-format.github.io/) file
   [#103](https://github.com/NickleDave/vak/pull/103).
+- add `'yarden'` format, that parses the `.mat` files saved by 
+  [`SongAnnotationGUI`](https://github.com/yardencsGitHub/BirdSongBout/blob/master/helpers/GUI/README.md), 
+  and is used with the canary song dataset that accompanies the 
+  [`tweetynet` paper](https://github.com/yardencsGitHub/tweetynet).
+  [#122](https://github.com/NickleDave/crowsetta/pull/122).
+  Fixes [#121](https://github.com/NickleDave/crowsetta/issues/121).
 
 ### Changed
 - rewrite tests to use `pytest` [#106](https://github.com/NickleDave/crowsetta/pull/106)
