@@ -44,6 +44,7 @@ koumura = 'crowsetta.koumura'
 notmat = 'crowsetta.notmat'
 phn = 'crowsetta.phn'
 textgrid = 'crowsetta.textgrid'
+yarden = 'crowsetta.yarden'
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

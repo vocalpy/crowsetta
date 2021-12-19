@@ -15,11 +15,12 @@ from .segment import Segment
 from .sequence import Sequence
 from .annotation import Annotation
 from .meta import Meta
-from . import csv
-from . import formats
-
-# built-in formats
-from . import koumura
-from . import notmat
-from . import phn
-from . import textgrid
+from . import (
+    csv,
+    formats,
+    koumura,
+    notmat,
+    phn,
+    textgrid,
+    yarden
+)

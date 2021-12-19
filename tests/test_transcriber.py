@@ -1,6 +1,4 @@
 import sys
-import os
-from pathlib import Path
 
 import crowsetta
 import pytest
@@ -38,6 +36,23 @@ def test_notmat_to_csv(notmats, tmp_path):
     scribe = crowsetta.Transcriber(format='notmat')
     csv_filename = tmp_path / 'Annotation.csv'
     scribe.to_csv(annot_path=notmats, csv_filename=csv_filename)
+    assert csv_filename.exists()
+
+
+def test_yarden_from_file(yarden_annot_mat):
+    scribe = crowsetta.Transcriber(format='yarden')
+    annots = scribe.from_file(annot_path=yarden_annot_mat)
+    assert type(annots) == list
+    assert all([type(annot) == crowsetta.Annotation
+                for annot in annots])
+
+
+def test_yarden_to_csv(tmp_path,
+                       yarden_annot_mat):
+    scribe = crowsetta.Transcriber(format='yarden')
+    csv_filename = tmp_path / 'Annotation.csv'
+    scribe.to_csv(annot_path=yarden_annot_mat,
+                  csv_filename=csv_filename)
     assert csv_filename.exists()
 
 
