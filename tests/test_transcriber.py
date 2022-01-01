@@ -4,9 +4,9 @@ import crowsetta
 import pytest
 
 
-def test_koumura_from_file(birdsong_rec_xml_file,
-                           birdsong_rec_wavpath):
-    scribe = crowsetta.Transcriber(format='koumura')
+def test_birdsongrec_from_file(birdsong_rec_xml_file,
+                               birdsong_rec_wavpath):
+    scribe = crowsetta.Transcriber(format='birdsong-recognition-dataset')
     annots = scribe.from_file(annot_path=birdsong_rec_xml_file,
                               wavpath=birdsong_rec_wavpath)
     assert type(annots) == list
@@ -14,10 +14,10 @@ def test_koumura_from_file(birdsong_rec_xml_file,
                 for annot in annots])
 
 
-def test_koumura_to_csv(tmp_path,
-                        birdsong_rec_xml_file,
-                        birdsong_rec_wavpath):
-    scribe = crowsetta.Transcriber(format='koumura')
+def test_birdsongrec_to_csv(tmp_path,
+                            birdsong_rec_xml_file,
+                            birdsong_rec_wavpath):
+    scribe = crowsetta.Transcriber(format='birdsong-recognition-dataset')
     csv_filename = tmp_path / 'Annotation.csv'
     scribe.to_csv(annot_path=birdsong_rec_xml_file,
                   wavpath=birdsong_rec_wavpath,

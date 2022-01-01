@@ -10,7 +10,7 @@ import os
 from pathlib import Path
 import numpy as np
 
-import koumura
+import birdsongrec
 import soundfile
 
 from .annotation import Annotation
@@ -19,8 +19,8 @@ from . import csv
 from .meta import Meta
 
 
-def koumura2annot(annot_path='Annotation.xml', concat_seqs_into_songs=True,
-                  wavpath=None):
+def birdsongrec2annot(annot_path='Annotation.xml', concat_seqs_into_songs=True,
+                      wavpath=None):
     """converts Annotation.xml from [1]_ into an annotation list
 
     Parameters
@@ -75,11 +75,10 @@ def koumura2annot(annot_path='Annotation.xml', concat_seqs_into_songs=True,
             f"\nValue for 'wavpath' was: {wavpath}"
         )
 
-    # confusingly, koumura also has an object named 'Sequence'
-    # (which is where I borrowed the idea from)
-    # but it has a totally different structure
-    seq_list_xml = koumura.parse_xml(annot_path,
-                                     concat_seqs_into_songs=concat_seqs_into_songs)
+    # `birdsong-recongition-dataset` also has a 'Sequence' class
+    # but it is slightly different from the `generic.Sequence` used by `crowsetta`
+    seq_list_xml = birdsongrec.parse_xml(annot_path,
+                                         concat_seqs_into_songs=concat_seqs_into_songs)
 
     annot_list = []
     for seq_xml in seq_list_xml:
@@ -109,8 +108,8 @@ def koumura2annot(annot_path='Annotation.xml', concat_seqs_into_songs=True,
     return annot_list
 
 
-def koumura2csv(annot_path, concat_seqs_into_songs=True, wavpath='./Wave',
-                csv_filename=None, abspath=False, basename=False):
+def birdsongrec2csv(annot_path, concat_seqs_into_songs=True, wavpath='./Wave',
+                    csv_filename=None, abspath=False, basename=False):
     """takes Annotation.xml file from BirdsongRecognition dataset
     and saves the annotation from all files in one comma-separated
     values (csv) file, where each row represents one syllable from
@@ -151,8 +150,8 @@ def koumura2csv(annot_path, concat_seqs_into_songs=True, wavpath='./Wave',
     see annot2scv function for explanation of when you would want to use
     the abspath and basename parameters
     """
-    annot = koumura2annot(annot_path, concat_seqs_into_songs=concat_seqs_into_songs,
-                          wavpath=wavpath)
+    annot = birdsongrec2annot(annot_path, concat_seqs_into_songs=concat_seqs_into_songs,
+                              wavpath=wavpath)
     if csv_filename is None:
         csv_filename = os.path.abspath(annot_path)
         csv_filename = csv_filename.replace('xml', 'csv')
@@ -160,8 +159,8 @@ def koumura2csv(annot_path, concat_seqs_into_songs=True, wavpath='./Wave',
 
 
 meta = Meta(
-    name='koumura',
+    name='birdsong-recognition-dataset',
     ext='xml',
-    from_file=koumura2annot,
-    to_csv=koumura2csv,
+    from_file=birdsongrec2annot,
+    to_csv=birdsongrec2csv,
 )
