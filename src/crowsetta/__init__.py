@@ -18,7 +18,7 @@ from .meta import Meta
 from . import (
     csv,
     formats,
-    koumura,
+    birdsongrec,
     notmat,
     phn,
     textgrid,
