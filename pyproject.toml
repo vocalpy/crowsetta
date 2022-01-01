@@ -1,12 +1,25 @@
-[tool.poetry]
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
 name = "crowsetta"
-version = "3.2.0"
 description = "A tool to work with any format for annotating vocalizations"
-authors = ["David Nicholson <nickledave@users.noreply.github.com>"]
+authors = [
+    {name = "David Nicholson", email = "nickledave@users.noreply.github.com"}
+]
+requires-python = ">=3.7"
+dependencies = [
+    "attrs >=19.3.0",
+    "evfuncs >=0.3.2",
+    "birdsong-recognition-dataset >=0.3.0",
+    "numpy >=1.18.1",
+    "scipy >=1.4.1",
+    "SoundFile >=0.10.3",
+]
+version = "3.2.0"
 readme = "README.md"
-repository = "https://github.com/NickleDave/crowsetta"
-documentation = "https://crowsetta.readthedocs.io/en/latest/"
-license = "BSD"
+license = {file = "LICENSE"}
 classifiers = [
     'License :: OSI Approved :: BSD License',
     'Development Status :: 5 - Production/Stable',
@@ -17,28 +30,19 @@ classifiers = [
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: Implementation :: CPython',
 ]
-packages = [
-    { include = "crowsetta", from = "src" },
-    { include = "textgrid", from = "src" },
+
+[project.optional-dependencies]
+test = [
+    "pytest >=6.2.1",
+    "pytest-cov >=2.12.0"
+]
+doc = [
+    "Sphinx>=3.4.3",
+    "jupyterlab>=3.0.3"
+
 ]
 
-[tool.poetry.dependencies]
-python = ">=3.7, <3.10"
-attrs = ">=19.3.0"
-evfuncs = ">=0.3.2"
-birdsong-recognition-dataset = ">=0.3.0"
-numpy = ">=1.18.1"
-scipy = ">=1.4.1"
-SoundFile = ">=0.10.3"
-
-[tool.poetry.dev-dependencies]
-pytest = ">=6.2.1"
-Sphinx = ">=3.4.3"
-jupyterlab = ">=3.0.3"
-pytest-cov = "^2.12.0"
-
-[tool.poetry.plugins]
-[tool.poetry.plugins."crowsetta.format"]
+[project.entry-points."crowsetta.format"]
 csv = 'crowsetta.csv'
 birdsong-recognition-dataset = 'crowsetta.birdsongrec'
 notmat = 'crowsetta.notmat'
@@ -46,6 +50,6 @@ phn = 'crowsetta.phn'
 textgrid = 'crowsetta.textgrid'
 yarden = 'crowsetta.yarden'
 
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[project.urls]
+Source = "https://github.com/NickleDave/crowsetta"
+Documentation = "https://crowsetta.readthedocs.io"
