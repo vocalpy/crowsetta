@@ -28,14 +28,14 @@ The code block below shows some of the features of these data types.
     >>> from crowsetta import Segment, Sequence
     >>> a_segment = Segment.from_keyword(
     ...     label='a',
-    ...     onset_Hz=16000,
-    ...     offset_Hz=32000,
+    ...     onset_ind=16000,
+    ...     offset_ind=32000,
     ...     file='bird21.wav'
     ...     )
     >>> another_segment = Segment.from_keyword(
     ...     label='b',
-    ...     onset_Hz=36000,
-    ...     offset_Hz=48000,
+    ...     onset_ind=36000,
+    ...     offset_ind=48000,
     ...     file='bird21.wav'
     ...     )
     >>> list_of_segments = [a_segment, another_segment]
@@ -43,11 +43,11 @@ The code block below shows some of the features of these data types.
     >>> print(seq)
     <Sequence with 2 segments>
     >>> for segment in seq.segments: print(segment)
-    Segment(label='a', file='bird21.wav', onset_s=None, offset_s=None, onset_Hz=16000, offset_Hz=32000)
-    Segment(label='b', file='bird21.wav', onset_s=None, offset_s=None, onset_Hz=36000, offset_Hz=48000)
+    Segment(label='a', file='bird21.wav', onset_s=None, offset_s=None, onset_ind=16000, offset_ind=32000)
+    Segment(label='b', file='bird21.wav', onset_s=None, offset_s=None, onset_ind=36000, offset_ind=48000)
     >>> seq.file
     bird21.wav
-    >>> seq.onsets_Hz
+    >>> seq.onset_inds
     array([16000, 36000])
 
 You load annotation from your format of choice into ``Sequence``\ s of ``Segment``\ s

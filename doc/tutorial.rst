@@ -205,8 +205,8 @@ part of the sequence defined by an ``onset`` and ``offset`` that has a
     first element of seq:  <Sequence with 54 segments>
     
     First two Segments of first Sequence:
-    Segment(label='i', file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin', onset_s=0.435, offset_s=0.511, onset_Hz=13924, offset_Hz=16350)
-    Segment(label='i', file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin', onset_s=0.583, offset_s=0.662, onset_Hz=18670, offset_Hz=21184)
+    Segment(label='i', file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin', onset_s=0.435, offset_s=0.511, onset_ind=13924, offset_ind=16350)
+    Segment(label='i', file='./data/cbin-notmat/032312/gy6or6_baseline_230312_0819.190.cbin', onset_s=0.583, offset_s=0.662, onset_ind=18670, offset_ind=21184)
 
 
 **Using** ``crowsetta`` **data types to write clean code**
@@ -329,7 +329,7 @@ the signal, and then smooths it with a sliding window.
         smoothed = evfuncs.smooth_data(raw_audio, samp_freq,
                                        freq_cutoffs=(500, 10000))
         for segment in sequence.segments:
-            smoothed_seg = smoothed[segment.onset_Hz:segment.offset_Hz]
+            smoothed_seg = smoothed[segment.onset_ind:segment.offset_ind]
             mean_seg_amp = np.mean(smoothed_seg)
             syl_amp_dict[segment.label].append(mean_seg_amp)
     

@@ -23,7 +23,7 @@ def main():
         TEST_DATA.joinpath('example_user_format', 'bird1_annotation.mat')
     )
     csv_filename = str(
-        TEST_DATA.joinpath('csv', 'example_annotation_with_onsets_Hz_offsets_Hz_None.csv')
+        TEST_DATA.joinpath('csv', 'example_annotation_with_onset_inds_offset_inds_None.csv')
     )
     scribe.to_csv(mat_file, csv_filename=csv_filename)
 

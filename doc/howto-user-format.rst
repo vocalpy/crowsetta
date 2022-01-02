@@ -225,8 +225,8 @@ us back an instance of a ``Sequence``. One such factory function is
     a_sequence = Sequence.from_keyword(labels=annot_dict['seg_types'],
                                        onsets_s=annot_dict['seg_start_times'],
                                        offsets_s=annot_dict['seg_end_times'],
-                                       onsets_Hz=annot_dict['seg_start_times_Hz'],
-                                       offsets_Hz=annot_dict['seg_end_times_Hz'],
+                                       onset_inds=annot_dict['seg_start_times_Hz'],
+                                       offset_inds=annot_dict['seg_end_times_Hz'],
                                        file=annot_dict['audio_file'])
     print("a_sequence:\n", a_sequence)
 
@@ -268,8 +268,8 @@ Then at the end of your main loop, instead of making your
                                 labels=seg_types,
                                 onsets_s=seg_start_times,
                                 offsets_s=seg_end_times,
-                                onsets_Hz=seg_start_times_Hz,
-                                offsets_Hz=seg_end_times_Hz)
+                                onset_inds=seg_start_times_Hz,
+                                offset_inds=seg_end_times_Hz)
     seq_list.append(seq)
         return seq_list
 
@@ -391,7 +391,7 @@ of ``Sequence``\ s from your format:
 
     First item in seq_list: <Sequence with 15 segments>
     First segment in first sequence:
-    Segment(label='1', file='lbr3009_0005_2017_04_27_06_14_46.wav', onset_s=0.0029761904761904934, offset_s=0.14150432900432905, onset_Hz=143, offset_Hz=6792)
+    Segment(label='1', file='lbr3009_0005_2017_04_27_06_14_46.wav', onset_s=0.0029761904761904934, offset_s=0.14150432900432905, onset_ind=143, offset_ind=6792)
 
 
 Notice that we also get a ``to_csv`` function for free:
@@ -411,7 +411,7 @@ Notice that we also get a ``to_csv`` function for free:
 
 .. parsed-literal::
 
-    ['label', 'onset_s', 'offset_s', 'onset_Hz', 'offset_Hz', 'file']
+    ['label', 'onset_s', 'offset_s', 'onset_ind', 'offset_ind', 'file']
     ['1', '0.0029761904761904934', '0.14150432900432905', '143', '6792', 'lbr3009_0005_2017_04_27_06_14_46.wav']
     ['1', '0.279125', '0.504625', '13398', '24222', 'lbr3009_0005_2017_04_27_06_14_46.wav']
     ['5', '0.5556472915365209', '0.5962916666666667', '26671', '28622', 'lbr3009_0005_2017_04_27_06_14_46.wav']

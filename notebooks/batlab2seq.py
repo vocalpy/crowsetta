@@ -57,7 +57,7 @@ def batlab2seq(mat_file):
                                     labels=seg_types,
                                     onsets_s=seg_start_times,
                                     offsets_s=seg_end_times,
-                                    onsets_Hz=seg_start_times_Hz,
-                                    offsets_Hz=seg_end_times_Hz)
+                                    onset_inds=seg_start_times_Hz,
+                                    offset_inds=seg_end_times_Hz)
         seq_list.append(seq)
     return seq_list

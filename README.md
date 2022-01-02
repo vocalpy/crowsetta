@@ -17,17 +17,17 @@ work with any format: namely, `Sequence`s made up of `Segment`s.
     >>> from crowsetta import Segment, Sequence
     >>> a_segment = Segment.from_keyword(
     ...     label='a',
-    ...     onset_Hz=16000,
-    ...     offset_Hz=32000,
+    ...     onset_ind=16000,
+    ...     offset_ind=32000,
     ...     file='bird21.wav'
     ...     )
     >>> list_of_segments = [a_segment] * 3
     >>> seq = Sequence(segments=list_of_segments)
     >>> print(seq)
-    Sequence(segments=[Segment(label='a', onset_s=None, offset_s=None, onset_Hz=16000, 
-    offset_Hz=32000, file='bird21.wav'), Segment(label='a', onset_s=None, offset_s=None, 
-    onset_Hz=16000, offset_Hz=32000, file='bird21.wav'), Segment(label='a', onset_s=None, 
-    offset_s=None, onset_Hz=16000, offset_Hz=32000, file='bird21.wav')])
+    Sequence(segments=[Segment(label='a', onset_s=None, offset_s=None, onset_ind=16000, 
+    offset_ind=32000, file='bird21.wav'), Segment(label='a', onset_s=None, offset_s=None, 
+    onset_ind=16000, offset_ind=32000, file='bird21.wav'), Segment(label='a', onset_s=None, 
+    offset_s=None, onset_ind=16000, offset_ind=32000, file='bird21.wav')])
 ```
 
 You can load annotation from your format of choice into `Sequence`s of `Segment`s 

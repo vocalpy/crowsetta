@@ -65,17 +65,17 @@ def phn2annot(annot_path,
 
     annot = []
     for a_phn in annot_path:
-        labels, onsets_Hz, offsets_Hz = [], [], []
+        labels, onset_inds, offset_inds = [], [], []
         with open(a_phn) as fp:
             lines = fp.read().splitlines()
         for line in lines:
             onset, offset, label = line.split()
-            onsets_Hz.append(int(onset))
-            offsets_Hz.append(int(offset))
+            onset_inds.append(int(onset))
+            offset_inds.append(int(offset))
             labels.append(label)
 
-        onsets_Hz = np.asarray(onsets_Hz)
-        offsets_Hz = np.asarray(offsets_Hz)
+        onset_inds = np.asarray(onset_inds)
+        offset_inds = np.asarray(offset_inds)
         labels = np.asarray(labels)
 
         # checking for audio_pathname need to be case insensitive
@@ -89,8 +89,8 @@ def phn2annot(annot_path,
                 )
 
         samp_freq = soundfile.info(audio_pathname).samplerate
-        onsets_s = onsets_Hz / samp_freq
-        offsets_s = offsets_Hz / samp_freq
+        onsets_s = onset_inds / samp_freq
+        offsets_s = offset_inds / samp_freq
 
         if round_times:
             onsets_s = np.around(onsets_s, decimals=decimals)
@@ -104,8 +104,8 @@ def phn2annot(annot_path,
             a_phn = os.path.basename(a_phn)
 
         phn_seq = Sequence.from_keyword(labels=labels,
-                                        onsets_Hz=onsets_Hz,
-                                        offsets_Hz=offsets_Hz,
+                                        onset_inds=onset_inds,
+                                        offset_inds=offset_inds,
                                         onsets_s=onsets_s,
                                         offsets_s=offsets_s)
         annot.append(
@@ -174,8 +174,8 @@ def annot2phn(annot,
     annot_path = Path(annot_path)
 
     lines = []
-    onsets_Hz, offsets_Hz, labels = annot.seq.onsets_Hz, annot.seq.offsets_Hz, annot.seq.labels
-    for onset, offset, label in zip(onsets_Hz, offsets_Hz, labels):
+    onset_inds, offset_inds, labels = annot.seq.onset_inds, annot.seq.offset_inds, annot.seq.labels
+    for onset, offset, label in zip(onset_inds, offset_inds, labels):
         lines.append(
             f'{onset} {offset} {label}\n'
         )

@@ -3,18 +3,18 @@ import numpy as np
 
 def from_segments(segments):
     labels = []
-    onsets_Hz = []
-    offsets_Hz = []
+    onset_inds = []
+    offset_inds = []
     onsets_s = []
     offsets_s = []
     for seg in segments:
         labels.append(seg.label)
-        onsets_Hz.append(seg.onset_Hz)
-        offsets_Hz.append(seg.offset_Hz)
+        onset_inds.append(seg.onset_ind)
+        offset_inds.append(seg.offset_ind)
         onsets_s.append(None)
         offsets_s.append(None)
-    onsets_Hz = np.asarray(onsets_Hz)
-    offsets_Hz = np.asarray(offsets_Hz)
+    onset_inds = np.asarray(onset_inds)
+    offset_inds = np.asarray(offset_inds)
     onsets_s = np.asarray(onsets_s)
     offsets_s = np.asarray(offsets_s)
-    return onsets_Hz, offsets_Hz, onsets_s, offsets_s, labels
+    return onset_inds, offset_inds, onsets_s, offsets_s, labels

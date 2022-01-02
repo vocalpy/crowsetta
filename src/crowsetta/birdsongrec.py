@@ -82,8 +82,8 @@ def birdsongrec2annot(annot_path='Annotation.xml', concat_seqs_into_songs=True,
 
     annot_list = []
     for seq_xml in seq_list_xml:
-        onsets_Hz = np.asarray([syl.position for syl in seq_xml.syls])
-        offsets_Hz = np.asarray([syl.position + syl.length for syl in seq_xml.syls])
+        onset_inds = np.asarray([syl.position for syl in seq_xml.syls])
+        offset_inds = np.asarray([syl.position + syl.length for syl in seq_xml.syls])
         labels = [syl.label for syl in seq_xml.syls]
 
         wav_filename = os.path.join(wavpath, seq_xml.wav_file)
@@ -94,11 +94,11 @@ def birdsongrec2annot(annot_path='Annotation.xml', concat_seqs_into_songs=True,
                 f'annotation file {annot_path} is not found'
             )
         samp_freq = soundfile.info(wav_filename).samplerate
-        onsets_s = np.round(onsets_Hz / samp_freq, decimals=3)
-        offsets_s = np.round(offsets_Hz / samp_freq, decimals=3)
+        onsets_s = np.round(onset_inds / samp_freq, decimals=3)
+        offsets_s = np.round(offset_inds / samp_freq, decimals=3)
 
-        seq = Sequence.from_keyword(onsets_Hz=onsets_Hz,
-                                    offsets_Hz=offsets_Hz,
+        seq = Sequence.from_keyword(onset_inds=onset_inds,
+                                    offset_inds=offset_inds,
                                     onsets_s=onsets_s,
                                     offsets_s=offsets_s,
                                     labels=labels
