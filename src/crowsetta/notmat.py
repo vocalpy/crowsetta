@@ -11,7 +11,7 @@ from .sequence import Sequence
 from .annotation import Annotation
 from .csv import annot2csv
 from .meta import Meta
-from .validation import _parse_file
+from .validation import validate_ext
 
 
 def notmat2annot(annot_path,
@@ -56,7 +56,7 @@ def notmat2annot(annot_path,
     due to floating point error, e.g. when loading .not.mat files and then sending them to
     a csv file, the result should be the same on Windows and Linux
     """
-    annot_path = _parse_file(annot_path, extension='.not.mat')
+    annot_path = validate_ext(annot_path, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -123,7 +123,7 @@ def notmat2csv(annot_path, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    annot_path = _parse_file(annot_path, extension='.not.mat')
+    annot_path = validate_ext(annot_path, extension='.not.mat')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '

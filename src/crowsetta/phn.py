@@ -10,7 +10,7 @@ from .sequence import Sequence
 from .annotation import Annotation
 from .csv import annot2csv
 from .meta import Meta
-from .validation import _parse_file
+from .validation import validate_ext
 
 
 def phn2annot(annot_path,
@@ -56,7 +56,7 @@ def phn2annot(annot_path,
     """
     # note multiple extensions, both all-uppercase and all-lowercase `.phn` exist,
     # depending on which version of TIMIT dataset you have
-    annot_path = _parse_file(annot_path, extension=('.phn', '.PHN'))
+    annot_path = validate_ext(annot_path, extension=('.phn', '.PHN'))
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
@@ -145,7 +145,7 @@ def phn2csv(annot_path, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    annot_path = _parse_file(annot_path, extension=('.phn', '.PHN'))
+    annot_path = validate_ext(annot_path, extension=('.phn', '.PHN'))
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '

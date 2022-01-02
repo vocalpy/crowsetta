@@ -14,7 +14,7 @@ from .annotation import Annotation
 from .csv import annot2csv
 from .meta import Meta
 from .sequence import Sequence
-from .validation import _parse_file
+from .validation import validate_ext
 
 
 def textgrid2annot(annot_path,
@@ -61,7 +61,7 @@ def textgrid2annot(annot_path,
         each Interval in the first IntervalTier in a TextGrid file
         will become one segment in a sequence.
     """
-    annot_path = _parse_file(annot_path, extension='.TextGrid')
+    annot_path = validate_ext(annot_path, extension='.TextGrid')
     annots = []
     for a_textgrid in annot_path:
         tg = TextGrid.fromFile(a_textgrid)
@@ -139,7 +139,7 @@ def textgrid2csv(annot_path, csv_filename, abspath=False, basename=False):
     -------
     None
     """
-    annot_path = _parse_file(annot_path, extension='.TextGrid')
+    annot_path = validate_ext(annot_path, extension='.TextGrid')
 
     if abspath and basename:
         raise ValueError('abspath and basename arguments cannot both be set to True, '
