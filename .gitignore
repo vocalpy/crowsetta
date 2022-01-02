@@ -5,6 +5,7 @@ build/*
 dist/*
 MANIFEST
 *.pyc
+.venv
 
 # IDE
 .idea/

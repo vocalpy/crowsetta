@@ -1,7 +1,6 @@
 import csv
 
 import crowsetta
-from crowsetta.segment import Segment
 
 
 def test_textgrid2annot_single_str(a_textgrid):
