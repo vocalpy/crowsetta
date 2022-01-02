@@ -13,12 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - switch to using `flit` to build / publish. Remove `poetry`.
   [#127](https://github.com/NickleDave/crowsetta/pull/127).
   Fixes [#125](https://github.com/NickleDave/crowsetta/issues/125).
-- Move `textgrid` package into sub-package `_vendor`, since `flit` only works 
+- move `textgrid` package into sub-package `_vendor`, since `flit` only works 
   with a single top-level package.
   [#127](https://github.com/NickleDave/crowsetta/pull/127).
   This is the approach `pip` takes, as discussed on https://github.com/pypa/flit/issues/497.
-  
-
+- rename attributes / variables `onsets_Hz` and `offsets_Hz` 
+  to `onset_inds` and `offset_inds`
+  [#128](https://github.com/NickleDave/crowsetta/pull/128).
+  Fixes [#87](https://github.com/NickleDave/crowsetta/pull/87).
 
 ## 3.2.0 -- 2021-12-19
 ### Added
