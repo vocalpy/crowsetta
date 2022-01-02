@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to `onset_inds` and `offset_inds`
   [#128](https://github.com/NickleDave/crowsetta/pull/128).
   Fixes [#87](https://github.com/NickleDave/crowsetta/pull/87).
+- rename function `crowsetta.validation._parse_file` to `validate_ext`
+  [#129](https://github.com/NickleDave/crowsetta/pull/129).
+  Fixes [#123](https://github.com/NickleDave/crowsetta/pull/123).
 
 ## 3.2.0 -- 2021-12-19
 ### Added
