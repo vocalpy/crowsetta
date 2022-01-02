@@ -12,7 +12,7 @@ from .annotation import Annotation
 from .csv import annot2csv
 from .meta import Meta
 from .sequence import Sequence
-from .validation import _parse_file
+from .validation import validate_ext
 
 
 def _cast_to_arr(val):

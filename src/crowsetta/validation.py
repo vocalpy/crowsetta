@@ -64,7 +64,7 @@ def column_or_row_or_1d(y):
         raise ValueError("bad input shape {0}".format(shape))
 
 
-def _parse_file(file, extension):
+def validate_ext(file, extension):
     """"check that all files have valid extensions,
     convert into a list that can be iterated over
 
