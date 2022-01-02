@@ -8,7 +8,7 @@ https://github.com/kylebgorman/textgrid/blob/master/LICENSE
 import os
 
 import numpy as np
-from textgrid import TextGrid, IntervalTier
+from crowsetta._vendor.textgrid import TextGrid, IntervalTier
 
 from .annotation import Annotation
 from .csv import annot2csv
