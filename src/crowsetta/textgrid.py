@@ -91,7 +91,7 @@ def textgrid2annot(annot_path,
         onsets_s = np.asarray(onsets_s)
         offsets_s = np.asarray(offsets_s)
 
-        # do this *after* converting onsets_s and offsets_s to onsets_Hz and offsets_Hz
+        # do this *after* converting onsets_s and offsets_s to onset_inds and offset_inds
         # probably doesn't matter but why introduce more noise?
         if round_times:
             onsets_s = np.around(onsets_s, decimals=decimals)

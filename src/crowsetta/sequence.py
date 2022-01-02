@@ -14,9 +14,9 @@ class Sequence:
     ----------
     segments : tuple
         of Segment objects.
-    onsets_Hz : numpy.ndarray or None
+    onset_inds : numpy.ndarray or None
         of type int, onset of each annotated segment in samples/second
-    offsets_Hz : numpy.ndarray or None
+    offset_inds : numpy.ndarray or None
         of type int, offset of each annotated segment in samples/second
     onsets_s : numpy.ndarray or None
         of type float, onset of each annotated segment in seconds
@@ -38,17 +38,17 @@ class Sequence:
                  labels,
                  onsets_s=None,
                  offsets_s=None,
-                 onsets_Hz=None,
-                 offsets_Hz=None):
+                 onset_inds=None,
+                 offset_inds=None):
         """Sequence __init__
 
         Parameters
         ----------
         segments : list or tuple
             of Segment objects.
-        onsets_Hz : numpy.ndarray or None
+        onset_inds : numpy.ndarray or None
             of type int, onset of each annotated segment in samples/second
-        offsets_Hz : numpy.ndarray or None
+        offset_inds : numpy.ndarray or None
             of type int, offset of each annotated segment in samples/second
         onsets_s : numpy.ndarray or None
             of type float, onset of each annotated segment in seconds
@@ -72,12 +72,12 @@ class Sequence:
 
         (onsets_s,
          offsets_s,
-         onsets_Hz,
-         offsets_Hz,
+         onset_inds,
+         offset_inds,
          labels) = self._validate_onsets_offsets_labels(onsets_s,
                                                         offsets_s,
-                                                        onsets_Hz,
-                                                        offsets_Hz,
+                                                        onset_inds,
+                                                        offset_inds,
                                                         labels)
 
         self._validate_segments_type(segments)
@@ -85,8 +85,8 @@ class Sequence:
         super().__setattr__('_segments', segments)
         super().__setattr__('_onsets_s', onsets_s)
         super().__setattr__('_offsets_s', offsets_s)
-        super().__setattr__('_onsets_Hz', onsets_Hz)
-        super().__setattr__('_offsets_Hz', offsets_Hz)
+        super().__setattr__('_onset_inds', onset_inds)
+        super().__setattr__('_offset_inds', offset_inds)
         super().__setattr__('_labels', labels)
 
     @property
@@ -102,12 +102,12 @@ class Sequence:
         return self._offsets_s
 
     @property
-    def onsets_Hz(self):
-        return self._onsets_Hz
+    def onset_inds(self):
+        return self._onset_inds
 
     @property
-    def offsets_Hz(self):
-        return self._offsets_Hz
+    def offset_inds(self):
+        return self._offset_inds
 
     @property
     def labels(self):
@@ -117,8 +117,8 @@ class Sequence:
         list_for_hash = [self._segments,
                          self._onsets_s,
                          self._offsets_s,
-                         self._onsets_Hz,
-                         self._offsets_Hz,
+                         self._onset_inds,
+                         self._offset_inds,
                          self._labels]
         list_for_hash = [tuple(item.tolist())
                          if type(item) == np.ndarray
@@ -137,7 +137,7 @@ class Sequence:
 
         eq = []
         for attr in ['_segments', '_labels', '_onsets_s', '_offsets_s',
-                     '_onsets_Hz', '_offsets_Hz']:
+                     '_onset_inds', '_offset_inds']:
             self_attr = getattr(self, attr)
             other_attr = getattr(other, attr)
             if type(self_attr) == np.ndarray:
@@ -195,8 +195,8 @@ class Sequence:
     @staticmethod
     def _validate_onsets_offsets_labels(onsets_s,
                                         offsets_s,
-                                        onsets_Hz,
-                                        offsets_Hz,
+                                        onset_inds,
+                                        offset_inds,
                                         labels):
         """validate onsets, offsets, and labels passed to __init__ or class methods
 
@@ -204,63 +204,63 @@ class Sequence:
         ----------
         onsets_s : numpy.ndarray or None
         offsets_s : numpy.ndarray or None
-        onsets_Hz : numpy.ndarray or None
-        offsets_Hz : numpy.ndarray or None
+        onset_inds : numpy.ndarray or None
+        offset_inds : numpy.ndarray or None
         labels : str, list, or tuple
 
         Returns
         -------
         onsets_s : numpy.ndarray
         offsets_s : numpy.ndarray
-        onsets_Hz : numpy.ndarray
-        offsets_Hz : numpy.ndarray
+        onset_inds : numpy.ndarray
+        offset_inds : numpy.ndarray
         labels : numpy.ndarray 
         """
-        # make sure user passed either onsets_Hz and offsets_Hz, or
+        # make sure user passed either onset_inds and offset_inds, or
         # onsets_s and offsets_s, or both.
         # first make sure at least one pair of onsets and offsets is specified
-        if ((onsets_Hz is None and offsets_Hz is None) and
+        if ((onset_inds is None and offset_inds is None) and
                 (onsets_s is None and offsets_s is None)):
-            raise ValueError('must provide either onsets_Hz and offsets_Hz, or '
+            raise ValueError('must provide either onset_inds and offset_inds, or '
                              'onsets_s and offsets_s')
 
         # then make sure both elements of each pair are specified
-        if onsets_Hz is not None and offsets_Hz is None:
-            raise ValueError(f'onset_Hz specified as {onsets_Hz} but offset_Hz is None')
-        if onsets_Hz is None and offsets_Hz is not None:
-            raise ValueError(f'offset_Hz specified as {offsets_Hz} but onset_Hz is None')
+        if onset_inds is not None and offset_inds is None:
+            raise ValueError(f'onset_ind specified as {onset_inds} but offset_ind is None')
+        if onset_inds is None and offset_inds is not None:
+            raise ValueError(f'offset_ind specified as {offset_inds} but onset_ind is None')
         if onsets_s is not None and offsets_s is None:
             raise ValueError(f'onset_s specified as {onsets_s} but offset_s is None')
         if onsets_s is None and offsets_s is not None:
-            raise ValueError(f'offset_s specified as {offsets_Hz} but onset_s is None')
+            raise ValueError(f'offset_s specified as {offset_inds} but onset_s is None')
 
         # then do type/shape checking on onsets and offsets;
         # also make sure everybody is the same length
-        if (not (onsets_Hz is None and offsets_Hz is None) and
-           not (np.all(onsets_Hz == None) and np.all(offsets_Hz == None))):
-            onsets_Hz = column_or_row_or_1d(onsets_Hz)
-            offsets_Hz = column_or_row_or_1d(offsets_Hz)
+        if (not (onset_inds is None and offset_inds is None) and
+           not (np.all(onset_inds == None) and np.all(offset_inds == None))):
+            onset_inds = column_or_row_or_1d(onset_inds)
+            offset_inds = column_or_row_or_1d(offset_inds)
 
-            if onsets_Hz.dtype != int or offsets_Hz.dtype != int:
-                raise TypeError('dtype of onsets_Hz and offsets_Hz '
+            if onset_inds.dtype != int or offset_inds.dtype != int:
+                raise TypeError('dtype of onset_inds and offset_inds '
                                 'must be some kind of int')
 
             try:
-                check_consistent_length([labels, onsets_Hz, offsets_Hz])
+                check_consistent_length([labels, onset_inds, offset_inds])
             except ValueError:
                 # try to give human-interpretable-error message
-                if not (onsets_Hz.shape[0] == offsets_Hz.shape[0]):
-                    raise ValueError('onsets_Hz and offsets_Hz have different lengths: '
-                                     f'labels: {onsets_Hz.shape[0]}, '
-                                     f'onsets_Hz: {offsets_Hz.shape[0]}')
-                if not (labels.shape[0] == onsets_Hz.shape[0]):
-                    raise ValueError('labels and onsets_Hz have different lengths: '
+                if not (onset_inds.shape[0] == offset_inds.shape[0]):
+                    raise ValueError('onset_inds and offset_inds have different lengths: '
+                                     f'labels: {onset_inds.shape[0]}, '
+                                     f'onset_inds: {offset_inds.shape[0]}')
+                if not (labels.shape[0] == onset_inds.shape[0]):
+                    raise ValueError('labels and onset_inds have different lengths: '
                                      f'labels: {labels.shape[0]}, '
-                                     f'onsets_Hz: {onsets_Hz.shape[0]}')
-                if not (labels.shape[0] == offsets_Hz.shape[0]):
-                    raise ValueError('labels and offsets_Hz have different lengths: '
+                                     f'onset_inds: {onset_inds.shape[0]}')
+                if not (labels.shape[0] == offset_inds.shape[0]):
+                    raise ValueError('labels and offset_inds have different lengths: '
                                      f'labels: {labels.shape[0]}, '
-                                     f'onsets_Hz: {offsets_Hz.shape[0]}')
+                                     f'onset_inds: {offset_inds.shape[0]}')
 
         if (not (onsets_s is None and offsets_s is None) and
            not (np.all(onsets_s == None) and np.all(offsets_s == None))):
@@ -272,33 +272,33 @@ class Sequence:
                                 'must be some kind of float')
 
             try:
-                check_consistent_length([labels, onsets_Hz, offsets_Hz])
+                check_consistent_length([labels, onset_inds, offset_inds])
             except ValueError:
                 # try to give human-interpretable-error message
                 if not (onsets_s.shape[0] == offsets_s.shape[0]):
-                    raise ValueError('onsets_Hz and offsets_Hz have different lengths: '
+                    raise ValueError('onset_inds and offset_inds have different lengths: '
                                      f'labels: {onsets_s.shape[0]}, '
-                                     f'onsets_Hz: {offsets_s.shape[0]}')
+                                     f'onset_inds: {offsets_s.shape[0]}')
                 if not (labels.shape[0] == onsets_s.shape[0]):
                     raise ValueError('labels and onsets_s have different lengths: '
                                      f'labels: {labels.shape[0]}, '
-                                     f'onsets_Hz: {onsets_Hz.shape[0]}')
-                if not (labels.shape[0] == offsets_Hz.shape[0]):
-                    raise ValueError('labels and offsets_Hz have different lengths: '
+                                     f'onset_inds: {onset_inds.shape[0]}')
+                if not (labels.shape[0] == offset_inds.shape[0]):
+                    raise ValueError('labels and offset_inds have different lengths: '
                                      f'labels: {labels.shape[0]}, '
-                                     f'onsets_Hz: {offsets_Hz.shape[0]}')
+                                     f'onset_inds: {offset_inds.shape[0]}')
 
         num_samples = _num_samples(labels)
 
         # need to make arrays to iterate over for onsets and offsets that are None
-        if onsets_Hz is None and offsets_Hz is None:
-            onsets_Hz = np.asarray([None] * num_samples)
-            offsets_Hz = np.asarray([None] * num_samples)
+        if onset_inds is None and offset_inds is None:
+            onset_inds = np.asarray([None] * num_samples)
+            offset_inds = np.asarray([None] * num_samples)
         elif onsets_s is None and offsets_s is None:
             onsets_s = np.asarray([None] * num_samples)
             offsets_s = np.asarray([None] * num_samples)
 
-        return onsets_s, offsets_s, onsets_Hz, offsets_Hz, labels
+        return onsets_s, offsets_s, onset_inds, offset_inds, labels
 
     @classmethod
     def from_segments(cls, segments):
@@ -317,52 +317,52 @@ class Sequence:
 
         onsets_s = []
         offsets_s = []
-        onsets_Hz = []
-        offsets_Hz = []
+        onset_inds = []
+        offset_inds = []
         labels = []
 
         for seg in segments:
             onsets_s.append(seg.onset_s)
             offsets_s.append(seg.offset_s)
-            onsets_Hz.append(seg.onset_Hz)
-            offsets_Hz.append(seg.offset_Hz)
+            onset_inds.append(seg.onset_ind)
+            offset_inds.append(seg.offset_ind)
             labels.append(seg.label)
 
         onsets_s = np.asarray(onsets_s)
         offsets_s = np.asarray(offsets_s)
-        onsets_Hz = np.asarray(onsets_Hz)
-        offsets_Hz = np.asarray(offsets_Hz)
+        onset_inds = np.asarray(onset_inds)
+        offset_inds = np.asarray(offset_inds)
         labels = np.asarray(labels)
 
         labels = cls._convert_labels(labels)
 
         (onsets_s,
          offsets_s,
-         onsets_Hz,
-         offsets_Hz,
+         onset_inds,
+         offset_inds,
          labels) = cls._validate_onsets_offsets_labels(onsets_s,
                                                        offsets_s,
-                                                       onsets_Hz,
-                                                       offsets_Hz,
+                                                       onset_inds,
+                                                       offset_inds,
                                                        labels)
 
         return cls(segments,
                    labels,
                    onsets_s,
                    offsets_s,
-                   onsets_Hz,
-                   offsets_Hz)
+                   onset_inds,
+                   offset_inds)
 
     @classmethod
-    def from_keyword(cls, labels, onsets_Hz=None, offsets_Hz=None,
+    def from_keyword(cls, labels, onset_inds=None, offset_inds=None,
                      onsets_s=None, offsets_s=None):
         """construct a Sequence from keyword arguments
 
         Parameters
         ----------
-        onsets_Hz : numpy.ndarray or None
+        onset_inds : numpy.ndarray or None
             of type int, onset of each annotated segment in samples/second
-        offsets_Hz : numpy.ndarray or None
+        offset_inds : numpy.ndarray or None
             of type int, offset of each annotated segment in samples/second
         onsets_s : numpy.ndarray or None
             of type float, onset of each annotated segment in seconds
@@ -377,20 +377,20 @@ class Sequence:
 
         (onsets_s,
          offsets_s,
-         onsets_Hz,
-         offsets_Hz,
+         onset_inds,
+         offset_inds,
          labels) = cls._validate_onsets_offsets_labels(onsets_s,
                                                        offsets_s,
-                                                       onsets_Hz,
-                                                       offsets_Hz,
+                                                       onset_inds,
+                                                       offset_inds,
                                                        labels)
 
         segments = []
-        zipped = zip(labels, onsets_Hz, offsets_Hz, onsets_s, offsets_s)
-        for label, onset_Hz, offset_Hz, onset_s, offset_s in zipped:
+        zipped = zip(labels, onset_inds, offset_inds, onsets_s, offsets_s)
+        for label, onset_ind, offset_ind, onset_s, offset_s in zipped:
             segments.append(Segment.from_keyword(label=label,
-                                                 onset_Hz=onset_Hz,
-                                                 offset_Hz=offset_Hz,
+                                                 onset_ind=onset_ind,
+                                                 offset_ind=offset_ind,
                                                  onset_s=onset_s,
                                                  offset_s=offset_s))
 
@@ -398,8 +398,8 @@ class Sequence:
                    labels,
                    onsets_s,
                    offsets_s,
-                   onsets_Hz,
-                   offsets_Hz
+                   onset_inds,
+                   offset_inds
                    )
 
     @classmethod
@@ -411,9 +411,9 @@ class Sequence:
         ----------
         seq_dict : dict
             with following key, value pairs
-            onsets_Hz : numpy.ndarray or None
+            onset_inds : numpy.ndarray or None
                 of type int, onset of each annotated segment in samples/second
-            offsets_Hz : numpy.ndarray or None
+            offset_inds : numpy.ndarray or None
                 of type int, offset of each annotated segment in samples/second
             onsets_s : numpy.ndarray or None
                 of type float, onset of each annotated segment in seconds
@@ -429,8 +429,8 @@ class Sequence:
         --------
         >>> seq_dict = {
         ...     'labels': 'abc',
-        ...     'onsets_Hz': np.asarray([16005, 17925, 19837]),
-        ...     'offsets_Hz': np.asarray([17602, 19520, 21435]),
+        ...     'onset_inds': np.asarray([16005, 17925, 19837]),
+        ...     'offset_inds': np.asarray([17602, 19520, 21435]),
         ...     'file': 'bird0.wav',
         ...     }
         >>> seq = Sequence.from_dict(seq_dict)
@@ -450,9 +450,9 @@ class Sequence:
         -------
         seq_dict : dict
             with the following key, value pairs:
-                onsets_Hz : numpy.ndarray or None
+                onset_inds : numpy.ndarray or None
                     of type int, onset of each annotated segment in samples/second
-                offsets_Hz : numpy.ndarray or None
+                offset_inds : numpy.ndarray or None
                     of type int, offset of each annotated segment in samples/second
                 onsets_s : numpy.ndarray or None
                     of type float, onset of each annotated segment in seconds
@@ -461,12 +461,12 @@ class Sequence:
                 labels : numpy.ndarray
                     of type str; label for each annotated segment
         """
-        seq_keys = ['onsets_Hz', 'offsets_Hz', 'onsets_s', 'offsets_s', 'labels']
+        seq_keys = ['onset_inds', 'offset_inds', 'onsets_s', 'offsets_s', 'labels']
         seq_dict = dict(zip(
             seq_keys, [getattr(self, seq_key) for seq_key in seq_keys]
         ))
 
-        for a_key in ['onsets_Hz', 'offsets_Hz', 'onsets_s', 'offsets_s']:
+        for a_key in ['onset_inds', 'offset_inds', 'onsets_s', 'offsets_s']:
             # if value is an array full of Nones, just convert to one None.
             # Use == to do elementwise comparison (so ignore warnings about
             # 'comparison with None performed with equality operators')

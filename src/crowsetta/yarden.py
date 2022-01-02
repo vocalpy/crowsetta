@@ -159,14 +159,14 @@ def yarden2annot(annot_path,
         )
         # we want to wait to add file to seq dict until *after* casting all values in dict to numpy arrays
         samp_freq = annotation[samp_freq_key].tolist()
-        seq_dict['onsets_Hz'] = np.round(seq_dict['onsets_s'] * samp_freq).astype(int)
-        seq_dict['offsets_Hz'] = np.round(seq_dict['offsets_s'] * samp_freq).astype(int)
+        seq_dict['onset_inds'] = np.round(seq_dict['onsets_s'] * samp_freq).astype(int)
+        seq_dict['offset_inds'] = np.round(seq_dict['offsets_s'] * samp_freq).astype(int)
 
-        # do this *after* converting onsets_s and offsets_s to onsets_Hz and offsets_Hz
+        # do this *after* converting onsets_s and offsets_s to onset_inds and offset_inds
         # probably doesn't matter but why introduce more noise?
         if round_times:
-            seq_dict['onsets_Hz'] = np.around(seq_dict['onsets_Hz'], decimals=decimals)
-            seq_dict['offsets_Hz'] = np.around(seq_dict['offsets_Hz'], decimals=decimals)
+            seq_dict['onset_inds'] = np.around(seq_dict['onset_inds'], decimals=decimals)
+            seq_dict['offset_inds'] = np.around(seq_dict['offset_inds'], decimals=decimals)
 
         seq = Sequence.from_dict(seq_dict)
         annot = Annotation(seq=seq,

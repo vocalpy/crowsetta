@@ -7,7 +7,7 @@ from crowsetta.segment import Segment
 def list_of_segments():
     list_of_segments = []
 
-    for label, onset_Hz, offset_Hz in zip(
+    for label, onset_ind, offset_ind in zip(
             ('a', 'b', 'c'),
             (16000, 32000, 64000),
             (17000, 33000, 65000)
@@ -15,8 +15,8 @@ def list_of_segments():
         list_of_segments.append(
             Segment.from_keyword(
                 label=label,
-                onset_Hz=onset_Hz,
-                offset_Hz=offset_Hz,
+                onset_ind=onset_ind,
+                offset_ind=offset_ind,
             )
         )
 
@@ -27,7 +27,7 @@ def list_of_segments():
 def different_list_of_segments():
     list_of_segments = []
 
-    for label, onset_Hz, offset_Hz in zip(
+    for label, onset_ind, offset_ind in zip(
             ('a', 'b', 'c', 'd'),
             (16000, 32000, 64000, 128000),
             (17100, 33100, 65100, 129100)
@@ -35,8 +35,8 @@ def different_list_of_segments():
         list_of_segments.append(
             Segment.from_keyword(
                 label=label,
-                onset_Hz=onset_Hz,
-                offset_Hz=offset_Hz,
+                onset_ind=onset_ind,
+                offset_ind=offset_ind,
             )
         )
 

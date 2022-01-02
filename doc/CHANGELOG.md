@@ -193,8 +193,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 0.2.0a5
 ### added
-- Sequence instances have attributes: labels, onsets_s, offsets_s, onsets_Hz, 
-  offsets_Hz, and file. 
+- Sequence instances have attributes: labels, onsets_s, offsets_s, onset_inds, 
+  offset_inds, and file. 
 - Explanation of default `to_csv` function for user formats in `howto-user-config`.
 
 ### changed

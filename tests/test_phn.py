@@ -60,8 +60,8 @@ def test_annot2phn(tmp_path, phns):
         shutil.copyfile(src=annot.audio_path, dst=Path(tmp_path).joinpath(Path(annot.audio_path.name)))
         crowsetta.phn.annot2phn(annot, annot_path)
         annot_made = crowsetta.phn.phn2annot(annot_path)
-        assert np.all(np.equal(annot.seq.onsets_Hz, annot_made.seq.onsets_Hz))
-        assert np.all(np.equal(annot.seq.offsets_Hz, annot_made.seq.offsets_Hz))
+        assert np.all(np.equal(annot.seq.onset_inds, annot_made.seq.onset_inds))
+        assert np.all(np.equal(annot.seq.offset_inds, annot_made.seq.offset_inds))
         assert np.all(np.char.equal(annot.seq.labels, annot_made.seq.labels))
 
 
@@ -132,6 +132,6 @@ def test_annot2PHN(tmp_path, PHNs):
         shutil.copyfile(src=annot.audio_path, dst=Path(tmp_path).joinpath(Path(annot.audio_path.name)))
         crowsetta.phn.annot2phn(annot, annot_path)
         annot_made = crowsetta.phn.phn2annot(annot_path)
-        assert np.all(np.equal(annot.seq.onsets_Hz, annot_made.seq.onsets_Hz))
-        assert np.all(np.equal(annot.seq.offsets_Hz, annot_made.seq.offsets_Hz))
+        assert np.all(np.equal(annot.seq.onset_inds, annot_made.seq.onset_inds))
+        assert np.all(np.equal(annot.seq.offset_inds, annot_made.seq.offset_inds))
         assert np.all(np.char.equal(annot.seq.labels, annot_made.seq.labels))

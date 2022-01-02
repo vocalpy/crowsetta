@@ -48,9 +48,9 @@ def test_annot2csv_when_one_pair_of_onsets_and_offsets_is_None(tmp_path,
                                                                example_user_format_root,
                                                                example_user_format_annotation_file):
     # example2seq only gets onset and offset times in seconds
-    # so onset_Hz and offset_Hz will be None
+    # so onset_ind and offset_ind will be None
     # Test that we can make a csv that has 'None' in columns for
-    # onset_Hz and offset_Hz when they are None for each segment
+    # onset_ind and offset_ind when they are None for each segment
     sys.path.append(str(example_user_format_root))
     example_module = import_module(name='example')
     sys.path.remove(str(example_user_format_root))
@@ -58,7 +58,7 @@ def test_annot2csv_when_one_pair_of_onsets_and_offsets_is_None(tmp_path,
     annot_list = example_module.example2annot(annot_path=example_user_format_annotation_file)
     assert(
         all(
-            [seg.onset_Hz is None and seg.offset_Hz is None
+            [seg.onset_ind is None and seg.offset_ind is None
              for annot in annot_list for seg in annot.seq.segments]
         )
     )
@@ -69,10 +69,10 @@ def test_annot2csv_when_one_pair_of_onsets_and_offsets_is_None(tmp_path,
     with open(csv_filename, 'r', newline='') as csvfile:
         reader = csv.reader(csvfile)
         header = next(reader)
-        onset_Hz_ind = header.index('onset_Hz')
-        offset_Hz_ind = header.index('offset_Hz')
+        onset_ind_ind = header.index('onset_ind')
+        offset_ind_ind = header.index('offset_ind')
         for row in reader:
-            assert row[onset_Hz_ind] == 'None' and row[offset_Hz_ind] == 'None'
+            assert row[onset_ind_ind] == 'None' and row[offset_ind_ind] == 'None'
 
 
 def test_toannot_func_to_csv_with_builtin_format(test_data_root, tmp_path):
@@ -141,12 +141,12 @@ def test_csv2annot_missing_fields_raises(test_data_root):
 
 def test_csv2annot_when_one_pair_of_onsets_and_offsets_is_None(test_data_root):
     # Test that we can load a csv that has 'None' in columns for
-    # onset_Hz and offset_Hz, so that they are None for each segment
+    # onset_ind and offset_ind, so that they are None for each segment
     csv_with_None_columns = test_data_root.joinpath(
-        'csv/example_annotation_with_onsets_Hz_offsets_Hz_None.csv'
+        'csv/example_annotation_with_onset_inds_offset_inds_None.csv'
     )
     seq = crowsetta.csv.csv2annot(csv_filename=csv_with_None_columns)
     assert (
-        seg.onset_Hz is None and seg.offset_Hz is None
+        seg.onset_ind is None and seg.offset_ind is None
         for a_seq in seq for seg in a_seq.segments
     )
