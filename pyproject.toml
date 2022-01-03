@@ -58,3 +58,8 @@ simple-csv = 'crowsetta.simple'
 [project.urls]
 Source = "https://github.com/NickleDave/crowsetta"
 Documentation = "https://crowsetta.readthedocs.io"
+
+[tool.flit.sdist]
+exclude = [
+    "tests/data_for_tests"
+]
