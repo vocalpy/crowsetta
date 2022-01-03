@@ -40,7 +40,10 @@ test = [
 doc = [
     "Sphinx>=3.4.3",
     "jupyterlab>=3.0.3"
-
+]
+dev = [
+    'flit',
+    'twine',
 ]
 
 [project.entry-points."crowsetta.format"]
