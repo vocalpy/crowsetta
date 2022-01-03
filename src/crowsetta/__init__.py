@@ -21,6 +21,7 @@ from . import (
     birdsongrec,
     notmat,
     phn,
+    simple,
     textgrid,
     yarden
 )
