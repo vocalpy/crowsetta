@@ -32,7 +32,6 @@ def test_birdsongrec2csv(tmp_path,
     filenames_from_csv = []
     with open(csv_filename, 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
-        header = next(reader)
         for row in reader:
             filenames_from_csv.append(row['audio_path'])
 

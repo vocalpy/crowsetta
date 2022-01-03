@@ -46,7 +46,6 @@ def test_notmat2csv(notmats,
     filenames_from_csv = []
     with open(csv_filename, 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
-        header = next(reader)
         for row in reader:
             filenames_from_csv.append(
                 os.path.basename(row['annot_path'])
