@@ -167,8 +167,7 @@ debug-venv:
 $(VENV):
 	$(PY) -m venv $(VENVDIR)
 	$(VENV)/python -m pip install --upgrade pip setuptools wheel
-	$(VENV)/python -m pip install flit
-	. $(VENV)/activate && flit install
+	. $(VENV)/activate && pip install -e '.[test,doc,dev]'
 
 $(VENV)/$(MARKER): $(VENVDEPENDS) | $(VENV)
 	$(call touch,$(VENV)/$(MARKER))
