@@ -80,9 +80,20 @@ but you don't want to require the user to install a large
 application in order to work with the annotation files.
 
 ## Getting Started
-You can install with pip:
-`$ pip install crowsetta`
+### Installation
+#### with `pip`
 
+```console
+$ pip install crowsetta
+```
+
+#### with `conda`
+
+```console
+$ conda install crowsetta -c conda-forge
+```
+
+### Usage
 To learn how to use `crowsetta`, please see the documentation at:  
 <https://crowsetta.readthedocs.io/en/latest/index.html>
 
