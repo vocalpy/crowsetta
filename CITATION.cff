@@ -15,11 +15,11 @@ authors:
     orcid: 'https://orcid.org/0000-0002-4261-4719'
 identifiers:
   - type: doi
-    value: 10.5281/zenodo.2525383
+    value: 10.5281/zenodo.5814012
 repository-code: 'https://github.com/NickleDave/crowsetta'
 url: 'https://crowsetta.readthedocs.io'
 repository-artifact: 'https://pypi.org/project/crowsetta/'
 license: BSD-3-Clause
-commit: a47798ac54440cd3a974a8dccb83154ae4ea7d1f
-version: 3.2.0
-date-released: '2021-12-19'
+commit: d9f97f6fc3a7ae9bb3e3465548d61d3a7484ebbc
+version: 3.3.0
+date-released: '2022-01-02'
