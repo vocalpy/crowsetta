@@ -23,7 +23,8 @@ jobs:
         run: sudo apt install libsndfile1
       - name: run tests
         run: |
+          pip install nox
           pip install '.[test]'
-          pytest --cov=./ --cov-report=xml
+          nox --session coverage
       - name: upload coverage to Codecov
         uses: codecov/codecov-action@v1
