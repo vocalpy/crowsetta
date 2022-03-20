@@ -46,6 +46,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Fixes [#89](https://github.com/NickleDave/crowsetta/issues/89).
 - change compatible Python versions to >3.6 and <3.10
   [#111](https://github.com/NickleDave/crowsetta/pull/111).
+- switch from using [Make](https://www.gnu.org/software/make/)
+  to using [nox](https://nox.thea.codes/en/stable/) 
+  for development tasks
+  [#137](https://github.com/NickleDave/crowsetta/pull/137).
+  As [suggsted by Scikit-HEP](https://scikit-hep.org/developer/tasks).
+  Fixes [#132](https://github.com/NickleDave/crowsetta/issues/132).
 
 ### Fixed
 - Fix .TextGrid and .phn docstrings that referred to ".not.mat files"
