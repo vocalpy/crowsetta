@@ -1,13 +1,19 @@
-"""module with functions that handle a simple .csv annotation format"""
+"""
+simple form of a sequence-like format
+
+Assumes that each source file (audio or spectrogram)
+has an annotation in a corresponding .csv file
+with the following header:
+onset_s, offset_s, label
+"""
 import os
 
 import numpy as np
 import pandas as pd
-import scipy.io
 
+from . import generic
 from .sequence import Sequence
 from .annotation import Annotation
-from .csv import annot2csv
 from .meta import Meta
 from .validation import validate_ext
 
@@ -17,8 +23,14 @@ def simple2annot(annot_path,
                  basename=False,
                  round_times=True,
                  decimals=3):
-    """parse annotation from simple .csv files,
+    """parse annotation of sequences from simple .csv files,
     and load into ``crowsetta.Annotation``s
+
+    Assumes that each source file (audio or spectrogram)
+    has an annotation in a corresponding .csv file
+    with the following header:
+    onset_s, offset_s, label
+    For more details, see Notes below.
 
     Parameters
     ----------
@@ -51,10 +63,10 @@ def simple2annot(annot_path,
     .csv files parsed by this function should have the following format:
     3 columns: 'onsets_s', 'offsets_s', and 'labels`.
     There should be a header with those column names.
-    The annotation file should have the same name as the audio file that
-    it annotates, with the extension .csv added.
-    E.g., if the audio file is named 'fly1-2020-12-03.wav' then the .csv file
-    should be named 'fly1-2020-12-03.wav.csv'.
+    The annotation file should have the same name as the source file
+    (audio or spectrogram) that it annotates, with the extension .csv added.
+    E.g., if an audio file is named 'fly1-2020-12-03.wav' then the .csv file
+    that annotates it should be named 'fly1-2020-12-03.wav.csv'.
 
     The abspath and basename parameters specify how file names for audio files are saved.
     These options are useful for working with multiple copies of files and for
@@ -139,11 +151,11 @@ def simple2csv(annot_path, csv_filename, abspath=False, basename=False):
                          'information (just base filename) should be saved.')
 
     annot = simple2annot(annot_path)
-    annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
+    generic.annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
 
 meta = Meta(
-    name='simple-csv',
+    name='simple-seq',
     ext='csv',
     from_file=simple2annot,
     to_csv=simple2csv,

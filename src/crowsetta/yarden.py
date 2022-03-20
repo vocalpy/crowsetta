@@ -8,11 +8,10 @@ from pathlib import Path
 import numpy as np
 from scipy.io import loadmat
 
+from . import generic
 from .annotation import Annotation
-from .csv import annot2csv
 from .meta import Meta
 from .sequence import Sequence
-from .validation import validate_ext
 
 
 def _cast_to_arr(val):
@@ -211,7 +210,7 @@ def yarden2csv(annot_path, csv_filename, abspath=False, basename=False):
                          'unclear whether absolute path should be saved or if no path '
                          'information (just base filename) should be saved.')
     annot = yarden2annot(annot_path)
-    annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
+    generic.annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
 
 meta = Meta(
