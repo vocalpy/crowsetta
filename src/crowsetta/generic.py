@@ -1,4 +1,19 @@
-"""module of functions for handling csv files"""
+"""
+generic format,
+meant to be an abstraction of
+any sequence-like format.
+
+Consists of ``Annotation``s,
+each with a ``Sequence`` made up
+of ``Segment``s.
+
+Functions in this module
+load the format from a .csv,
+or write a .csv in the generic format.
+Other formats that convert to ``Annotation``s
+with ``Sequence``s can be converted
+to this format.
+"""
 import os
 import csv
 
@@ -332,7 +347,7 @@ def csv2annot(csv_filename):
 
 
 meta = Meta(
-    name='csv',
+    name='generic-seq',
     ext='csv',
     from_file=csv2annot,
     to_csv=annot2csv,

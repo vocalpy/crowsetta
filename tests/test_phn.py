@@ -112,7 +112,7 @@ def test_PHN2csv(tmp_path, PHNs):
     filenames_from_csv = []
     with open(csv_filename, 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile,
-                                fieldnames=crowsetta.csv.CSV_FIELDNAMES)
+                                fieldnames=crowsetta.generic.CSV_FIELDNAMES)
         header = next(reader)
         for row in reader:
             filenames_from_csv.append(

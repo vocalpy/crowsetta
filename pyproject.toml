@@ -47,13 +47,13 @@ dev = [
 ]
 
 [project.entry-points."crowsetta.format"]
-csv = 'crowsetta.csv'
+generic-seq = 'crowsetta.generic'
 birdsong-recognition-dataset = 'crowsetta.birdsongrec'
 notmat = 'crowsetta.notmat'
 phn = 'crowsetta.phn'
 textgrid = 'crowsetta.textgrid'
 yarden = 'crowsetta.yarden'
-simple-csv = 'crowsetta.simple'
+simple-seq = 'crowsetta.simple'
 
 [project.urls]
 Source = "https://github.com/NickleDave/crowsetta"

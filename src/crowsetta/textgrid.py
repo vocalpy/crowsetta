@@ -10,8 +10,8 @@ import os
 import numpy as np
 from crowsetta._vendor.textgrid import TextGrid, IntervalTier
 
+from . import generic
 from .annotation import Annotation
-from .csv import annot2csv
 from .meta import Meta
 from .sequence import Sequence
 from .validation import validate_ext
@@ -147,7 +147,7 @@ def textgrid2csv(annot_path, csv_filename, abspath=False, basename=False):
                          'information (just base filename) should be saved.')
 
     annots = textgrid2annot(annot_path)
-    annot2csv(annots, csv_filename, abspath=abspath, basename=basename)
+    generic.annot2csv(annots, csv_filename, abspath=abspath, basename=basename)
 
 
 meta = Meta(

@@ -39,6 +39,13 @@ def test_notmat_to_csv(notmats, tmp_path):
     assert csv_filename.exists()
 
 
+def test_simple_seq_from_file(simple_csvs):
+    scribe = crowsetta.Transcriber(format='simple-seq')
+    for simple_csv in simple_csvs:
+        annot = scribe.from_file(annot_path=simple_csv)
+        assert type(annot) == crowsetta.Annotation
+
+
 def test_yarden_from_file(yarden_annot_mat):
     scribe = crowsetta.Transcriber(format='yarden')
     annots = scribe.from_file(annot_path=yarden_annot_mat)

@@ -16,9 +16,9 @@ from .sequence import Sequence
 from .annotation import Annotation
 from .meta import Meta
 from . import (
-    csv,
-    formats,
     birdsongrec,
+    formats,
+    generic,
     notmat,
     phn,
     simple,

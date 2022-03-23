@@ -15,7 +15,7 @@ import soundfile
 
 from .annotation import Annotation
 from .sequence import Sequence
-from . import csv
+from . import generic
 from .meta import Meta
 
 
@@ -155,7 +155,7 @@ def birdsongrec2csv(annot_path, concat_seqs_into_songs=True, wavpath='./Wave',
     if csv_filename is None:
         csv_filename = os.path.abspath(annot_path)
         csv_filename = csv_filename.replace('xml', 'csv')
-    csv.annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
+    generic.annot2csv(annot, csv_filename, abspath=abspath, basename=basename)
 
 
 meta = Meta(

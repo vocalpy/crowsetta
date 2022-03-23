@@ -24,9 +24,9 @@ def test_annot2csv(test_data_root,
                                 'test.csv')
     # below, set basename to True so we can easily run tests on any system without
     # worrying about where audio files are relative to root of directory tree
-    crowsetta.csv.annot2csv(annot_list,
-                            csv_filename,
-                            basename=True)
+    crowsetta.generic.annot2csv(annot_list,
+                                csv_filename,
+                                basename=True)
     assert os.path.isfile(csv_filename)
     test_rows = []
     with open(csv_filename, 'r', newline='') as csvfile:
@@ -64,7 +64,7 @@ def test_annot2csv_when_one_pair_of_onsets_and_offsets_is_None(tmp_path,
     )
     csv_filename = os.path.join(tmp_path,
                              'test_annot2csv_onset_None.csv')
-    crowsetta.csv.annot2csv(annot=annot_list, csv_filename=csv_filename)
+    crowsetta.generic.annot2csv(annot=annot_list, csv_filename=csv_filename)
 
     with open(csv_filename, 'r', newline='') as csvfile:
         reader = csv.reader(csvfile)
@@ -76,7 +76,7 @@ def test_annot2csv_when_one_pair_of_onsets_and_offsets_is_None(tmp_path,
 
 
 def test_toannot_func_to_csv_with_builtin_format(test_data_root, tmp_path):
-    notmat2csv = crowsetta.csv.toannot_func_to_csv(crowsetta.notmat.notmat2annot)
+    notmat2csv = crowsetta.generic.toannot_func_to_csv(crowsetta.notmat.notmat2annot)
     cbin_dir = test_data_root.joinpath('cbins/gy6or6/032312/')
     notmat_list = [str(path) for path in cbin_dir.glob('*.not.mat')]
     # below, sorted() so it's the same order on different platforms
@@ -106,7 +106,7 @@ def test_toannot_func_to_csv_with_builtin_format(test_data_root, tmp_path):
 def test_csv2annot(test_data_root):
     csv_filename = test_data_root.joinpath('csv/gy6or6_032312.csv')
     # convert csv to crowsetta list -- this is what we're testing
-    annot_list_from_csv = crowsetta.csv.csv2annot(csv_filename)
+    annot_list_from_csv = crowsetta.generic.csv2annot(csv_filename)
     cbin_dir = test_data_root.joinpath('cbins/gy6or6/032312/')
 
     # get what should be the same seq list from .not.mat files
@@ -128,7 +128,7 @@ def test_csv2annot_unrecognized_fields_raises(test_data_root):
         test_data_root.joinpath('csv/unrecognized_fields_in_header.csv')
     )
     with pytest.raises(ValueError):
-        crowsetta.csv.csv2annot(csv_filename=csv_filename)
+        crowsetta.generic.csv2annot(csv_filename=csv_filename)
 
 
 def test_csv2annot_missing_fields_raises(test_data_root):
@@ -136,7 +136,7 @@ def test_csv2annot_missing_fields_raises(test_data_root):
         test_data_root.joinpath('csv/missing_fields_in_header.csv')
     )
     with pytest.raises(ValueError):
-        crowsetta.csv.csv2annot(csv_filename=csv_filename)
+        crowsetta.generic.csv2annot(csv_filename=csv_filename)
 
 
 def test_csv2annot_when_one_pair_of_onsets_and_offsets_is_None(test_data_root):
@@ -145,7 +145,7 @@ def test_csv2annot_when_one_pair_of_onsets_and_offsets_is_None(test_data_root):
     csv_with_None_columns = test_data_root.joinpath(
         'csv/example_annotation_with_onset_inds_offset_inds_None.csv'
     )
-    seq = crowsetta.csv.csv2annot(csv_filename=csv_with_None_columns)
+    seq = crowsetta.generic.csv2annot(csv_filename=csv_with_None_columns)
     assert (
         seg.onset_ind is None and seg.offset_ind is None
         for a_seq in seq for seg in a_seq.segments
