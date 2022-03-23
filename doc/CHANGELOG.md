@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Changed
+- change format names 'simple-csv' and 'csv' to 'simple-seq' and 'generic-seq'.
+  With goal of eventually having 'simple-seq' work on other file formats, e.g. .txt,
+  and for 'csv' to be the "generic" sequence format that allow for converting between others.
+  [#140](https://github.com/NickleDave/crowsetta/pull/140).
+  Fixes [#133](https://github.com/NickleDave/crowsetta/issues/133).
+- switch to using `nox` for development, instead of `make`
+  [#137](https://github.com/NickleDave/crowsetta/pull/137).
+  Fixes [#132](https://github.com/NickleDave/crowsetta/issues/132.
+
 ## 3.3.0 -- 2022-01-02
 ### Added
 - add 'simple-csv' format 
