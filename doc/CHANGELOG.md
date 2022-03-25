@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and for 'csv' to be the "generic" sequence format that allow for converting between others.
   [#140](https://github.com/NickleDave/crowsetta/pull/140).
   Fixes [#133](https://github.com/NickleDave/crowsetta/issues/133).
+- deprecate the name 'csv' for the 'generic-seq' format;
+  a FutureWarning is raised when creating a `Transcriber` 
+  with `format='csv'`.
+  [#143](https://github.com/NickleDave/crowsetta/pull/143).
+  Fixes [#141](https://github.com/NickleDave/crowsetta/issues/141).
+
 - switch to using `nox` for development, instead of `make`
   [#137](https://github.com/NickleDave/crowsetta/pull/137).
   Fixes [#132](https://github.com/NickleDave/crowsetta/issues/132.
