@@ -47,8 +47,9 @@ dev = [
 ]
 
 [project.entry-points."crowsetta.format"]
-generic-seq = 'crowsetta.generic'
 birdsong-recognition-dataset = 'crowsetta.birdsongrec'
+csv = 'crowsetta.csv'
+generic-seq = 'crowsetta.generic'
 notmat = 'crowsetta.notmat'
 phn = 'crowsetta.phn'
 textgrid = 'crowsetta.textgrid'
