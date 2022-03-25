@@ -25,6 +25,25 @@ def test_birdsongrec_to_csv(tmp_path,
     assert csv_filename.exists()
 
 
+def test_csv_from_file(test_data_root):
+    with pytest.warns(FutureWarning):
+        scribe = crowsetta.Transcriber(format='csv')
+    generic_seq_csv = test_data_root.joinpath('csv/gy6or6_032312.csv')
+    annots = scribe.from_file(generic_seq_csv)
+    assert type(annots) == list
+    assert all([type(annot) == crowsetta.Annotation
+                for annot in annots])
+
+
+def test_generic_seq_from_file(test_data_root):
+    scribe = crowsetta.Transcriber(format='generic-seq')
+    generic_seq_csv = test_data_root.joinpath('csv/gy6or6_032312.csv')
+    annots = scribe.from_file(generic_seq_csv)
+    assert type(annots) == list
+    assert all([type(annot) == crowsetta.Annotation
+                for annot in annots])
+
+
 def test_notmat_from_file(notmats):
     scribe = crowsetta.Transcriber(format='notmat')
     for notmat in notmats:

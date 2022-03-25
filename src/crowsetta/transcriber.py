@@ -1,6 +1,7 @@
 import os
 from importlib import import_module
 import importlib.util
+import warnings
 
 from . import (
     formats,
@@ -86,6 +87,13 @@ class Transcriber:
                                    f'invalid keys: {extra_keys}')
 
         if format in formats._INSTALLED and config is None:
+            if format == 'csv':
+                warnings.warn(
+                    "The format 'csv' has been renamed to 'generic-seq', "
+                    "and the name 'csv' will stop working in the next version. "
+                    "Please change any usages of the name 'csv' to 'generic-seq'` now.",
+                    FutureWarning,
+                )
             voc_format_module = getattr(formats, format)
             self.from_file = voc_format_module.meta.from_file
             if hasattr(voc_format_module.meta, 'to_csv'):
