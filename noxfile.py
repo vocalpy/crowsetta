@@ -8,7 +8,7 @@ DIR = pathlib.Path(__file__).parent.resolve()
 VENV_DIR = pathlib.Path('./.venv').resolve()
 
 
-nox.options.sessions = ['tests', 'coverage']
+nox.options.sessions = ['test', 'coverage']
 
 
 @nox.session
@@ -47,11 +47,11 @@ def dev(session: nox.Session) -> None:
 
     # Use the venv's interpreter to install the project along with
     # all it's dev dependencies, this ensures it's installed in the right way
-    session.run(python, "-m", "pip", "install", "-e", ".[dev,tests,doc]", external=True)
+    session.run(python, "-m", "pip", "install", "-e", ".[dev,test,doc]", external=True)
 
 
 @nox.session
-def tests(session) -> None:
+def test(session) -> None:
     """
     Run the unit and regular tests.
     """
