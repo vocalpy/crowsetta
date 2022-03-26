@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- add a `__repr__` to the `Transcriber` class
+  [#145](https://github.com/NickleDave/crowsetta/pull/143).
+  Fixes [#142](https://github.com/NickleDave/crowsetta/issues/141).
+
 ### Changed
 - change format names 'simple-csv' and 'csv' to 'simple-seq' and 'generic-seq'.
   With goal of eventually having 'simple-seq' work on other file formats, e.g. .txt,
