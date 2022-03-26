@@ -196,3 +196,20 @@ def test_call_to_format_when_None_raises(example_user_format_script,
     scribe = crowsetta.Transcriber(format='example', config=config)
     with pytest.raises(NotImplementedError):
         scribe.to_format(annot_path=example_user_format_annotation_file, to_format='example')
+
+
+@pytest.mark.parametrize(
+    'format',
+    [
+        'birdsong-recognition-dataset',
+        'csv',
+        'notmat',
+        'generic-seq',
+        'simple-seq',
+        'yarden'
+    ]
+)
+def test_repr(format):
+    scribe = crowsetta.Transcriber(format=format)
+    repr_ = repr(scribe)
+    assert repr_ == f"crowsetta.Transcriber(format='{format}',config=None)"

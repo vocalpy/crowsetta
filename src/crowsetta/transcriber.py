@@ -60,7 +60,7 @@ class Transcriber:
         """
         # make sure format specified is either installed or that user also specified a config
         if (format in formats._INSTALLED and config is None) or (format and config is not None):
-            self.voc_format = format
+            pass
         else:
             raise ValueError(f"specified vocal annotation format, {format}, not installed, and no"
                              "configuration was specified. Either install format, or specify configuration "
@@ -68,14 +68,14 @@ class Transcriber:
 
         # make sure config is valid type
         if config is not None:
-            if type(config) != dict and type(config) != Meta:
+            if not isinstance(config, dict) and not isinstance(config, Meta):
                 raise TypeError(
                     "argument passed for config should be either a dict or "
                     f"an instance of crowsetta.Meta, but was a {type(config)}"
                 )
 
             # and if it's a dict it should have the right keys
-            if type(config) == dict:
+            if isinstance(config, dict):
                 config_keys = set(config.keys())
                 if not REQUIRED_CONFIG_DICT_KEYS.issubset(config_keys):
                     missing_keys = REQUIRED_CONFIG_DICT_KEYS - config_keys
@@ -86,7 +86,10 @@ class Transcriber:
                     raise KeyError(f'config for {format} contains '
                                    f'invalid keys: {extra_keys}')
 
-        if format in formats._INSTALLED and config is None:
+        self.format = format
+        self.config = config
+
+        if self.format in formats._INSTALLED and self.config is None:
             if format == 'csv':
                 warnings.warn(
                     "The format 'csv' has been renamed to 'generic-seq', "
@@ -94,7 +97,7 @@ class Transcriber:
                     "Please change any usages of the name 'csv' to 'generic-seq'` now.",
                     FutureWarning,
                 )
-            voc_format_module = getattr(formats, format)
+            voc_format_module = getattr(formats, self.format)
             self.from_file = voc_format_module.meta.from_file
             if hasattr(voc_format_module.meta, 'to_csv'):
                 self.to_csv = voc_format_module.meta.to_csv
@@ -105,9 +108,8 @@ class Transcriber:
             else:
                 self.to_format = not_implemented
 
-        elif format and config:
-            self.config = config
-            format_module = config['module']
+        elif self.format and self.config:
+            format_module = self.config['module']
 
             if os.path.isfile(format_module):
                 # if it's a file (e.g. some path), have to import
@@ -146,3 +148,6 @@ class Transcriber:
                 self.to_format = not_implemented
             else:
                 self.to_format = getattr(this_format_module, config['to_format'])
+
+    def __repr__(self):
+        return f"crowsetta.Transcriber(format='{self.format}',config={self.config})"
