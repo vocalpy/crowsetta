@@ -148,3 +148,6 @@ class Transcriber:
                 self.to_format = not_implemented
             else:
                 self.to_format = getattr(this_format_module, config['to_format'])
+
+    def __repr__(self):
+        return f"crowsetta.Transcriber(format='{self.format}',config={self.config})"
