@@ -10,11 +10,16 @@ from .__about__ import (
     __version__,
 )
 
+# --- need to import everything used by formats before importing formats
+from . import interface
+
 from .transcriber import Transcriber
 from .segment import Segment
 from .sequence import Sequence
 from .annotation import Annotation
 from .meta import Meta
+
+# ---- ok, now import formats
 from . import (
     birdsongrec,
     formats,

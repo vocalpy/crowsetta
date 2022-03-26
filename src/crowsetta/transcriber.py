@@ -3,12 +3,6 @@ from importlib import import_module
 import importlib.util
 import warnings
 
-from . import (
-    formats,
-    generic
-)
-from .meta import Meta
-
 HERE = os.path.dirname(__file__)
 
 VALID_CONFIG_DICT_KEYS = {'module', 'from_file', 'to_csv', 'to_format'}
@@ -58,6 +52,13 @@ class Transcriber:
         >>> scribe = crowsetta.Transcriber(format='myformat_name', config=my_config)
         >>> seq = scribe.from_file(file='my_annotation.mat')
         """
+        # avoid circular imports
+        from . import (
+            formats,
+            generic
+        )
+        from .meta import Meta
+
         # make sure format specified is either installed or that user also specified a config
         if (format in formats._INSTALLED and config is None) or (format and config is not None):
             pass
