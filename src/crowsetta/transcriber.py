@@ -68,14 +68,14 @@ class Transcriber:
 
         # make sure config is valid type
         if config is not None:
-            if type(config) != dict and type(config) != Meta:
+            if not isinstance(config, dict) and not isinstance(config, Meta):
                 raise TypeError(
                     "argument passed for config should be either a dict or "
                     f"an instance of crowsetta.Meta, but was a {type(config)}"
                 )
 
             # and if it's a dict it should have the right keys
-            if type(config) == dict:
+            if isinstance(config, dict):
                 config_keys = set(config.keys())
                 if not REQUIRED_CONFIG_DICT_KEYS.issubset(config_keys):
                     missing_keys = REQUIRED_CONFIG_DICT_KEYS - config_keys
