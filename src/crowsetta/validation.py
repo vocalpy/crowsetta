@@ -4,9 +4,12 @@ Some utilities adapted from scikit-learn under BSD 3 License
 https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/utils/validation.py
 """
 import numbers
-from pathlib import Path, PurePath
+from pathlib import PurePath
+from typing import Union
 
 import numpy as np
+
+from .typing import PathLike
 
 
 def _num_samples(x):
@@ -64,63 +67,41 @@ def column_or_row_or_1d(y):
         raise ValueError("bad input shape {0}".format(shape))
 
 
-def validate_ext(file, extension):
-    """"check that all files have valid extensions,
-    convert into a list that can be iterated over
+def validate_ext(file: PathLike,
+                 extension: Union[str, tuple]) -> None:
+    """"check that a file has a valid extension
 
     Parameters
     ----------
-    file : str, pathlib.Path, list
-        filename(s), list must be of str or pathlib.Path
+    file : str, pathlib.Path
+        path to a file; string or pathlib.Path
     extension : str, tuple
         valid file extension(s). tuple must be tuple of strings.
         Function expects that extensions will be specified with a period,
         e.g. {'.phn', '.PHN'}
-
-    Returns
-    -------
-    files_validated : list
-        of filenames, all having validated extensions
     """
     if isinstance(extension, str):
         extension = (extension,)
     elif isinstance(extension, tuple):
         if not all([isinstance(element, str) for element in extension]):
             raise TypeError(
-                "must specify all valid extensions as strings, but value was \n"
+                "Must specify all valid extensions as strings, but value was \n"
                 f"'{extension}' with types: {[type(element) for element in extension]}"
             )
     else:
         raise TypeError(
-            f'extension must be str or tuple but type was {type(extension)}'
+            f'Extension must be str or tuple but type was {type(extension)}'
         )
 
-    if not(isinstance(file, str) or isinstance(file, PurePath) or isinstance(file, list)):
+    if not(isinstance(file, str) or isinstance(file, PurePath)):
         raise TypeError(
-            f"file must be a str or a pathlib.Path, but type of file was {type(file)}.\n"
-            f"File was: {file}"
+            f"File must be a str or a pathlib.Path, but type of file was {type(file)}.\n"
+            f"File: {file}"
         )
 
-    if isinstance(file, list):
-        if not(all([isinstance(a_file, str) for a_file in file]) or
-               all([isinstance(a_file, PurePath) for a_file in file])):
-            raise ValueError(
-                f'all files in list of files must be either string or pathlib.Path'
-            )
-
-    if isinstance(file, str) or isinstance(file, PurePath):
-        # put in a list to iterate over
-        file = [file]
-
-    file_out = []
-    for a_file in file:
-        # cast to string (if it's not already, e.g. it's a Path)
-        # so we can use .endswith() to compare extensions
-        # (because using Path.suffixes() would require too much special casing)
-        a_file = str(a_file)
-        if not a_file.endswith(extension):
-            raise ValueError(f"file does not have a valid extension: {a_file}"
-                             f"valid extension(s) for filenames are: '{extension}'")
-        file_out.append(a_file)
-
-    return file_out
+    # we need to use `endswith` instead of
+    # e.g. comparing with `pathlib.Path.suffix`
+    # because suffix won't work for "multi-part" extensions like '.not.mat'
+    if not any([str(file).endswith(ext) for ext in extension]):
+        raise ValueError(f"Invalid extension for file: {file}.\n"
+                         f"Valid extension(s): '{extension}'")
