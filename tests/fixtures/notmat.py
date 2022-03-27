@@ -1,20 +1,24 @@
 import pytest
 
+from .data import TEST_DATA_ROOT
+
+NOTMATS_ROOT = TEST_DATA_ROOT / 'cbins/gy6or6/032312'
 
 @pytest.fixture
-def notmats_root(test_data_root):
+def notmats_root():
     """root of test data for .cbin audio / .not.mat annotation
     as from Bengalese Finch Song Repository dataset"""
-    return test_data_root / 'cbins/gy6or6/032312'
+    return NOTMATS_ROOT
+
+
+NOTMATS = sorted(NOTMATS_ROOT.glob('*.not.mat'))
 
 
 @pytest.fixture
-def notmats(notmats_root):
-    return [
-        str(notmat) for notmat in sorted(notmats_root.glob('*.not.mat'))
-    ]
+def notmat_paths(notmats_root):
+    return NOTMATS
 
 
-@pytest.fixture
-def a_notmat(notmats):
-    return notmats[0]
+@pytest.fixture(params=NOTMATS)
+def a_notmat_path(request):
+    return request.param
