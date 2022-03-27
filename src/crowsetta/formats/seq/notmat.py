@@ -1,0 +1,258 @@
+"""module with functions that handle .not.mat annotation files
+produced by evsonganaly GUI
+"""
+import pathlib
+from typing import ClassVar, Optional, Dict
+
+import attr
+import numpy as np
+import scipy.io
+import evfuncs
+
+import crowsetta
+from crowsetta.typing import PathLike
+
+
+@crowsetta.interface.SeqLike.register
+@attr.define
+class NotMat:
+    """Class that represents annotations
+    from .not.mat files
+    produced by evsonganaly GUI.
+
+    Attributes
+    ----------
+    name: str
+        Shorthand name for annotation format: ``'notmat'``.
+    ext: str
+        Extension of files in annotation format: ``'.not.mat'``.
+    onsets : numpy.ndarray
+        Onset times of segments, in seconds.
+    offsets : numpy.ndarray
+        Offset times of segments, in seconds.
+    labels : numpy.ndarray
+        Labels for segments.
+    notmat_path : str, pathlib.Path
+        Path to .not.mat file from which
+        annotations were loaded.
+    audio_path : str, pathlib.Path
+        Path to audio file that ``notmat_path`` annotates.
+
+    Notes
+    -----
+    This class uses the Python package ``evfuncs``
+    to load the annotations.
+    https://github.com/NickleDave/evfuncs
+    """
+    name: ClassVar[str] = 'notmat'
+    ext: ClassVar[str] = '.not.mat'
+
+    onsets: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
+    offsets: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
+    labels: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
+    notmat_path: pathlib.Path
+    audio_path: pathlib.Path
+
+    @classmethod
+    def from_file(cls,
+                  notmat_path: PathLike) -> 'Self':
+        """load annotations from .not.mat file
+
+        Parameters
+        ----------
+        notmat_path: str, pathlib.Path
+            Path to a .not.mat file saved by the evsonganaly GUI.
+        """
+        notmat_path = pathlib.Path(notmat_path)
+        crowsetta.validation.validate_ext(notmat_path, extension=cls.ext)
+        notmat_dict = evfuncs.load_notmat(notmat_path)
+        # in .not.mat files saved by evsonganaly,
+        # onsets and offsets are in units of ms, have to convert to s
+        onsets = notmat_dict['onsets'] / 1000
+        offsets = notmat_dict['offsets'] / 1000
+        labels = np.asarray(
+            list(notmat_dict['labels'])
+        )
+
+        audio_path = notmat_path.parent / notmat_path.name.replace('.not.mat', '')
+        return cls(notmat_path=notmat_path,
+                   onsets=onsets,
+                   offsets=offsets,
+                   labels=labels,
+                   audio_path=audio_path)
+
+    def to_seq(self,
+               round_times: bool = True,
+               decimals: int = 3) -> crowsetta.Sequence:
+        """Convert this .not.mat annotation to a ``crowsetta.Sequence``.
+
+        Parameters
+        ----------
+        round_times : bool
+            If True, round times of onsets and offsets.
+            Default is True.
+        decimals : int
+            Number of decimals places to round floating point numbers to.
+            Only meaningful if round_times is True.
+            Default is 3, so that times are rounded to milliseconds.
+
+        Returns
+        -------
+        seq : crowsetta.Sequence
+
+        Notes
+        -----
+        The ``round_times`` and ``decimals`` arguments are provided
+        to reduce differences across platforms
+        due to floating point error, e.g. when loading annotation files
+        and then sending them to a csv file,
+        the result should be the same on Windows and Linux.
+        """
+        if round_times:
+            onsets = np.around(self.onsets, decimals=decimals)
+            offsets = np.around(self.offsets, decimals=decimals)
+        else:
+            onsets = self.onsets
+            offsets = self.offsets
+
+        seq = crowsetta.Sequence.from_keyword(labels=self.labels,
+                                              onsets_s=onsets,
+                                              offsets_s=offsets)
+        return seq
+
+    def to_annot(self,
+                 round_times: bool = True,
+                 decimals: int = 3) -> crowsetta.Annotation:
+        """Convert this .not.mat annotation to a ``crowsetta.Annotation``.
+
+        Parameters
+        ----------
+        round_times : bool
+            If True, round times of onsets and offsets.
+            Default is True.
+        decimals : int
+            Number of decimals places to round floating point numbers to.
+            Only meaningful if round_times is True.
+            Default is 3, so that times are rounded to milliseconds.
+
+        Returns
+        -------
+        annot : crowsetta.Annotation
+
+        Notes
+        -----
+        The ``round_times`` and ``decimals`` arguments are provided
+        to reduce differences across platforms
+        due to floating point error, e.g. when loading annotation files
+        and then sending them to a csv file,
+        the result should be the same on Windows and Linux.
+        """
+        seq = self.to_seq(round_times=round_times, decimals=decimals)
+
+        return crowsetta.Annotation(annot_path=self.notmat_path,
+                                    audio_path=self.audio_path,
+                                    seq=seq)
+
+    def to_file(self,
+                samp_freq: int,
+                threshold: int,
+                min_syl_dur: float,
+                min_silent_dur: float,
+                fname: Optional[PathLike] = None,
+                dst: Optional[PathLike] = None,
+                other_vars: Optional[Dict] = None) -> None:
+        """Save as a .not.mat file
+        that can be read by evsonganaly
+        (MATLAB GUI for annotating vocalizations).
+
+        Parameters
+        ----------
+        samp_freq : int
+            Sampling frequency of audio file.
+        threshold : int
+            Value above which amplitude is considered part of a segment. default is 5000.
+        min_syl_dur : float
+            Minimum duration of a segment. default is 0.02, i.e. 20 ms.
+        min_silent_dur : float
+            Minimum duration of silent gap between segment. default is 0.002, i.e. 2 ms.
+        fname : str, pathlib.Path
+            Name of audio file associated with .not.mat,
+            will be used as base of name for .not.mat file.
+            e.g., if filename is
+            'bl26lb16\041912\bl26lb16_190412_0721.20144.cbin'
+            then the .not.mat file will be
+            'bl26lb16\041912\bl26lb16_190412_0721.20144.cbin.not.mat'
+            Default is None,
+            in which case ``self.audio_path.name`` is used.
+        dst : str, pathlib.Path
+            Directory where `.not.mat` should be saved.
+            Default is None, in which case it is saved in the
+            parent directory of ``fname``.
+        other_vars : dict
+            Mapping from variable names to other variables that should be saved
+            in the .not.mat file, e.g., if you need to add a variable named 'pitches'
+            that is an numpy array of float values.
+        """
+        if fname is None:
+            fname = self.audio_path
+        else:
+            fname = pathlib.Path(fname)
+
+        if dst is not None:
+            dst = pathlib.Path(dst)
+            if not dst.is_dir():
+                raise NotADirectoryError(
+                    f'Destination `dst` for .not.mat is not recognized as a directory: {dst}'
+                )
+
+        if other_vars is not None:
+            if not isinstance(other_vars,dict):
+                raise TypeError(f'other_vars must be a dict, not a {type(other_vars)}')
+            if not all(isinstance(key,str) for key in other_vars.keys()):
+                raise TypeError('all keys for other_vars dict must be of type str')
+
+        # chr() to convert back to character from uint32
+        if self.labels.dtype == 'int32':
+            labels = [chr(val) for val in self.labels]
+        elif self.labels.dtype == '<U1':
+            labels = self.labels.tolist()
+        else:
+            raise TypeError(
+                f'invalid dtype for self.labels: {self.labels.dtype}'
+            )
+
+        # convert into one long string, what evsonganaly expects
+        labels = ''.join(labels)
+        # notmat files have onsets/offsets in units of ms
+        # need to convert back from s
+        onsets = (self.onsets * 1e3).astype(float)
+        offsets = (self.offsets * 1e3).astype(float)
+
+        # same goes for min_int and min_dur
+        # also wrap everything in float so Matlab loads it as double
+        # because evsonganaly expects doubles
+        notmat_dict = {'fname': str(fname),
+                       'Fs': float(samp_freq),
+                       'min_dur': float(min_syl_dur * 1e3),
+                       'min_int': float(min_silent_dur * 1e3),
+                       'offsets': offsets,
+                       'onsets': onsets,
+                       'labels': labels,
+                       'sm_win': float(2),  # evsonganaly.m doesn't actually let user change this value
+                       'threshold': float(threshold)
+                       }
+
+        if other_vars:
+            notmat_dict.update(other_vars)
+
+        notmat_name = fname.name + '.not.mat'
+        if dst:
+            notmat_path = dst / notmat_name
+        else:
+            notmat_path = fname.parent / notmat_name
+        if notmat_path.exists():
+            raise FileExistsError(
+                f'File already exists: {notmat_path}'
+            )
+        else:
+            scipy.io.savemat(notmat_path, notmat_dict)
