@@ -11,7 +11,10 @@ from .__about__ import (
 )
 
 # --- need to import everything used by formats before importing formats
-from . import interface
+from . import (
+    interface,
+    typing
+)
 
 from .transcriber import Transcriber
 from .segment import Segment
