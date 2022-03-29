@@ -39,12 +39,16 @@ release = ''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'myst_parser',
     'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
+    'sphinx_copybutton',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
-    'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
+    'sphinx.ext.napoleon',
+    'sphinxext.opengraph',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
 ]
