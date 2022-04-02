@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Crowsetta'
-copyright = '2018, David Nicholson'
+copyright = '2018-present, David Nicholson'
 author = 'David Nicholson'
 
 # The short X.Y version
@@ -86,7 +86,7 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'pyramid'
+html_theme = 'sphinx_book_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
