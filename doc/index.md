@@ -1,200 +1,349 @@
-% Crowsetta documentation master file, created by
-% sphinx-quickstart on Sat Dec 22 21:16:45 2018.
-% You can adapt this file completely to your liking, but it should at least
-% contain the root `toctree` directive.
+---
+jupytext:
+  text_representation:
+    extension: .md
+    format_name: myst
+    format_version: 0.13
+    jupytext_version: 1.13.8
+kernelspec:
+  display_name: Python 3 (ipykernel)
+  language: python
+  name: python3
+execution:
+  timeout: 120
+---
 
-# **Crowsetta**
+# crowsetta
 
-`crowsetta` is a tool to work with any format for annotating vocalizations, like
-birdsong or human speech. **The goal of** `crowsetta` **is to make sure that your
-ability to work with a dataset of vocalizations does not depend on your ability to work with
-any given format for annotating that dataset.**
+crowsetta is a Python tool to work with any format for annotating 
+animal vocalizations and other bioacoustics data. 
+Many of these formats are for files created 
+by GUI-based apps that enable users to annotate audio and/or spectrograms. 
+Annotations include the times when sound events start and stop, 
+and labels that assign each sound to some set of classes 
+chosen by the annotator.
+crowsetta has built-in support for many widely used {ref}`formats <formats-index>` 
+such as {ref}`Audacity label tracks <aud-txt>`, 
+{ref}`Praat .TextGrid files <textgrid>`, 
+and {ref}`Raven .txt files <raven>`.
 
-## **Features**
-
-### **Data types that help you write clean code**
-
-What `crowsetta` gives you is **not** yet another format for
-annotation (I promise!). Instead you get some nice data types that make it easier to
-work with any format: namely, `Sequence`s made up of `Segment`s.
-The code block below shows some of the features of these data types.
-
-```python
->>> from crowsetta import Segment, Sequence
->>> a_segment = Segment.from_keyword(
-...     label='a',
-...     onset_ind=16000,
-...     offset_ind=32000,
-...     file='bird21.wav'
-...     )
->>> another_segment = Segment.from_keyword(
-...     label='b',
-...     onset_ind=36000,
-...     offset_ind=48000,
-...     file='bird21.wav'
-...     )
->>> list_of_segments = [a_segment, another_segment]
->>> seq = Sequence.from_segments(segments=list_of_segments)
->>> print(seq)
-<Sequence with 2 segments>
->>> for segment in seq.segments: print(segment)
-Segment(label='a', file='bird21.wav', onset_s=None, offset_s=None, onset_ind=16000, offset_ind=32000)
-Segment(label='b', file='bird21.wav', onset_s=None, offset_s=None, onset_ind=36000, offset_ind=48000)
->>> seq.file
-bird21.wav
->>> seq.onset_inds
-array([16000, 36000])
+```{figure} _static/example-textgrid-for-index.png
+---
+width: 90%
+figclass: margin-caption
+alt: example spectrogram showing Bengalese finch song with Praat TextGrid annotations indicated as segments underneath
+name: example-textgrid-for-index
+---
+**Spectrogram of the song of a Bengalese finch 
+with syllables annotated as segments underneath. 
+Annotations parsed by crowsetta 
+from a file in the {ref}`Praat TextGrid <textgrid>`.
+Example song from 
+[Bengalese finch song dataset](https://osf.io/r6paq/), 
+Tachibana and Morita 2021, adapated under 
+CC-By-4.0 License.**
 ```
 
-You load annotation from your format of choice into `Sequence`s of `Segment`s
-(most conveniently with the `Transcriber`, as explained below) and then use the
-`Sequence`s however you need to in your program.
-
-For example, if you want to loop through the `Segment`s of each `Sequence` to
-pull syllables out of a spectrogram, you can do something like this:
-
-```python
->>> list_of_sequences = my_sequence_loading_function(file='annotation.txt')
->>> syllables_from_sequences = []
->>> for a_sequence in list_of_sequences:
-...     # get name of the audio file associated with the Sequence
-...     audio_file = a_sequence.file
-...     # then create a spectrogram from that audio file
-...     spect = some_spectrogram_making_function(audio_file)
-...     syllables = []
-...     for segment in a_sequence.segments:
-...         ## spectrogram is a 2d numpy array so we index into using onset and offset from segment
-...         syllable = spect[:, segment.onset_s:segment.offset_s]
-...         syllables.append(syllable)
-...     syllables_from_sequences.append(syllables)
+```{figure} _static/example-raven-for-index.png
+---
+width: 90%
+figclass: margin-caption
+alt: example spectrogram from field recording with Raven annotations of birdsong indicated as rectangular bounding boxes
+name: example spectrogram with Raven annotations
+---
+**Spectrogram of a field recording 
+with annotations of songs of different bird species 
+indicated as bounding boxes.
+Annotations parsed by crowsetta 
+from a file in the {ref}`Raven Selection Table <raven>` format.
+Example song from 
+["An annotated set of audio recordings of Eastern North American birds containing frequency, time, and species information"](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3329), 
+Chronister et al., 2021, adapated under 
+CC0 1.0 License.**
 ```
 
-This code is succinct, compared to the data munging code you usually write when dealing with
-audio files and annotation formats. It reads like idiomatic Python.
-For a deeper dive into why this is useful, see {ref}`background`.
+Who would want to use crowsetta?
+Anyone that works with animal vocalizations 
+or other bioacoustics data that is annotated in some way.
+Maybe you are a neuroscientist trying to figure out how songbirds learn their song,
+or why mice emit ultrasonic calls. Or maybe you're an ecologist studying dialects of finches
+distributed across Asia, or maybe you are a linguist studying accents in the
+Caribbean, or a speech pathologist looking for phonetic changes that indicate early onset
+Alzheimer's disease. crowsetta makes it easier for you to work with 
+your annotations in Python, regardless of the format.
 
-### **A**  `Transcriber` **that makes it convenient to work with any annotation format**
+`crowsetta` was developed for use with the libraries 
+[vak](https://vak.readthedocs.io/en/latest/)
+and
+[hybrid-vocal-classifier](https://hybrid-vocal-classifier.readthedocs.io/en/latest/).
 
-As mentioned, `crowsetta` provides you with a `Transcriber` that comes equipped
-with convenience functions to do the work of loading and saving annotations for you.
+[hybrid-vocal-classifier]: https://hybrid-vocal-classifier.readthedocs.io/en/latest/
+[pandas]: https://pandas.pydata.org/
+[vak]: https://github.com/vocalpy/vak
 
-```python
->>> annotation_files = [
-...     '~/Data/bird1_day1/song1_2018-12-07_072135.not.mat',
-...     '~/Data/bird1_day1/song2_2018-12-07_072316.not.mat',
-...     '~/Data/bird1_day1/song3_2018-12-07_072749.not.mat'
-... ]
->>> from crowsetta import Transcriber
->>> scribe = Transcriber()
->>> seq = scribe.to_seq(file=annotation_files, format='notmat')
->>> len(seq)
-3
->>> print(seq[0])
-<Sequence with 55 segments>
+## Installation 
+
+```{eval-rst}
+
+.. tabs::
+
+   .. code-tab:: shell with ``pip``
+
+         pip install crowsetta
+
+   .. code-tab:: shell with ``conda``
+
+         conda install crowsetta -c conda-forge
+
 ```
 
-### **Easily use the** `Transcriber` **with your own annotation format**
+## Features
 
-You can even easily tell the `Transcriber` to use your own in-house format, like so:
+* take advantage of built-in support 
+  for many widely used {ref}`formats <formats-index>`
+  such as {ref}`Audacity label tracks <aud-txt>`, 
+  {ref}`Praat .TextGrid files <textgrid>`,
+  and {ref}`Raven .txt files <raven>`.
+* work with any format by remembering just one class:  
+  `annot = crowsetta.Transcriber(format='format').from_file('annotations.ext')`
+  - no need to remember different functions for different formats 
+* when needed, use classes that represent the formats 
+  to write readable scripts and libraries 
+* convert annotations to common file formats like `.csv`
+  that anyone can work with
+* work with custom formats that are not built in to `crowsetta` 
+  by writing simple classes, leveraging abstractions 
+  that can represent a wide array of annotation formats
 
-```python
->>> my_config = {
-...     'myformat_name': {
-...         'module': '/home/MyUserName/Documents/Python/convert_myformat.py'
-...         'to_seq': 'myformat2seq',
-...         'to_csv': 'myformat2csv'}
-...     }
-... }
->>> scribe = crowsetta.Transcriber(user_config=my_config)
->>> seq = scribe.toseq(file='my_annotation.mat', file_format='myformat_name')
+### Built-in support for many widely-used formats
+
+crowsetta has built-in support for many widely used {ref}`formats <formats-index>` 
+such as {ref}`Audacity label tracks <aud-txt>`, 
+{ref}`Praat .TextGrid files <textgrid>`, 
+and {ref}`Raven .txt files <raven>`.
+
+Here is an example of loading an example {ref}`Praat .TextGrid <textgrid>` file:
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+# We make the `user_data_dir` directory ahead of time
+# to avoid triggering a call to `input` prompting the user if it's ok
+# to make that directory
+import crowsetta
+crowsetta.data.extract_data_files()
 ```
 
-For more about how that works, please see {ref}`howto-user-format`.
+```{code-cell} ipython3
+import crowsetta
+example = crowsetta.data.get('textgrid')
+a_textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+print(f"`a_textgrid` is a {type(a_textgrid)}")
+print(f"The first five intervals from the interval tier in `a_textgrid`:\n{a_textgrid.textgrid[0][:5]}")
+```
 
-### **Save and load annotations in plain text files**
+Instead of writing out the class name, 
+each format can also be referred to by a shorthand string name:
 
-If you need it to, `crowsetta` can save your `Sequence`s of `Segment`s
-as a plain text file in the comma-separated values (csv) format. This file format
-was chosen because it is widely considered to be a very robust way to share data.
+```{code-cell} ipython3
+import crowsetta
+example = crowsetta.data.get('textgrid')
+a_textgrid = crowsetta.formats.by_name('textgrid').from_file(example.annot_path)
+print(f"`a_textgrid` is a {type(a_textgrid)} (even when we load it with `formats.by_name`)")
+```
 
-```python
+The shorthand string names of built-in format can be listed 
+by calling `crowsetta.formats.as_list()`:
+
+```{code-cell} ipython3
+import crowsetta
+crowsetta.formats.as_list()
+```
+
+### Load annotations from any format, using just one class
+
+To make things even simpler, you only need to remember a single class,
+``crowsetta.Transcriber``,  that you can use to work with any format, 
+given the format's shorthand string name.
+The class also makes it easier to operate on many annotation files all at once.
+
+Here is an example of using ``crowsetta.Transcriber`` to load 
+multiple annotation files. As shown in the example after, 
+this can be used to write succinct scripts for data processing, 
+or even applications that work with multiple annotation formats.
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+!curl --no-progress-meter -L 'https://ndownloader.figshare.com/files/9537253' -o './data/sober.repo1.gy6or6.032612.tar.gz'
+```
+
+```{code-cell} ipython3
+:tags: [remove-cell]
+
+import shutil
+shutil.unpack_archive('./data/sober.repo1.gy6or6.032612.tar.gz', './data/')
+```
+
+```{code-cell} ipython3
+annotation_files = [
+    './data/032612/gy6or6_baseline_260312_0810.3440.cbin.not.mat',
+    './data/032612/gy6or6_baseline_260312_0810.3442.cbin.not.mat',
+    './data/032612/gy6or6_baseline_260312_0811.3453.cbin.not.mat'
+]
 from crowsetta import Transcriber
-scribe = Transcriber(user_config=your_config)
-scribe.to_csv(file_'your_annotation_file.mat',
-              csv_filename='your_annotation.csv')
+scribe = Transcriber(format='notmat')
+seqs = [scribe.from_file(annotation_file).to_seq() 
+        for annotation_file in annotation_files]
+print(f"Loading {len(seqs)} sequence-like annotations")
+print(f"Sequence 1:\n{seqs[0]}")
 ```
 
-An example csv looks like this:
+### Write readable code, using classes that represent annotation formats
 
-```{literalinclude} ../tests/test_data/csv/gy6or6_032312.csv
+Although it is convenient to use the `Transcriber` class, 
+it can also be helpful to be very clear, 
+especially when writing code that is read and used by others, 
+such as scripts or libraries.
+To help make code readable and to make intent explicit, 
+crowsetta also provides classes for each format.
+
+Here's an example script written using one of the built-in 
+annotation formats, to make spectrograms of all the annotated 
+syllables in a bout of bird song.
+
+```python
+import librosa
+import numpy as np
+
+import crowsetta
+
+# load an example annotation file
+example = crowsetta.data.get('birdsong-recognition-dataset')
+# in the next line we use the class, to make it absolutely clear which format we are working with
+birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
+annots = birdsongrec.to_annot()  # returns a list of `crowsetta.Annotation`s
+
+syllables_spects = []
+for annot in annots:
+    # get name of the audio file associated with the Sequence
+    audio_path = annot.notated_path
+    # then create a spectrogram from that audio file
+    y, sr = librosa.load(audio_path, sr=None)
+    D = librosa.stft(y, n_fft=512, hop_length=256, win_length=512)
+    S_db = librosa.amplitude_to_db(np.abs(D), ref=np.max)
+
+    syllables = []
+    for segment in annot.seq.segments:
+        ## spectrogram is a 2d numpy array so we index into using onset and offset from segment
+        syllable = S_db[:, segment.onset_s:segment.offset_s]
+        syllables.append(syllable)
+    syllables_spects.append(syllables)
+```
+
++++
+
+### Convert annotations to common file formats like `.csv` that anyone can work with
+
+crowsetta makes it easier to share data 
+by converting formats to plain text files, 
+such as a comma-separated .csv file.
+
+Here is an example of converting a common format 
+to a generic sequence format that can then be saved to 
+a .csv file.
+
+```{code-cell} ipython3
+import crowsetta
+example = crowsetta.data.get('birdsong-recognition-dataset')
+birdsongrec = crowsetta.formats.by_name('birdsong-recognition-dataset').from_file(example.annot_path)
+annots = birdsongrec.to_annot(samplerate=32000)  # returns a list of `crowsetta.Annotation`s
+# the 'generic-seq' format can write .csv files from `Annotation`s with `Sequence`s.
+generic_seq = crowsetta.formats.by_name('generic-seq')(annots=annots)
+generic_seq.to_file(annot_path='./data/birdsong-rec.csv')
+```
+
+Here are the first few lines of the .csv created by the snippet above:
+
+```{literalinclude} ./data/birdsong-rec.csv
 :language: none
 :lines: 1-5
 ```
 
-Now that you have that, you can load it into a [pandas] dataframe or an Excel
-spreadsheet or an SQL database, or whatever you want.
+Now that you have that, you can load it into a [pandas](https://pandas.pydata.org/) dataframe 
+or an Excel spreadsheet or an SQL database, or whatever you want.
 
 You might find this useful in any situation where you want to share audio files of
 song and some associated annotations, but you don't want to require the user to
-install a large application in order to work with the annotation files.
+install a large application in order to work with those annotation files.
 
-### **Getting Started**
+For more detail and examples, please see 
+{ref}`howto-convert-to-generic-seq`
 
-Install `crowsetta` by running:
++++
 
-```console
-$ pip install crowsetta
+### For formats that are not built in, write custom classes and then register them
+
+You can even easily tell the `Transcriber` to use your own in-house format, like so:
+
+```python
+import crowsetta
+
+import MyFormatClass
+
+crowsetta.register_format(MyFormatClass)
 ```
+
+For more about how that works, please see {ref}`howto-user-format`.
+
+## Getting Started
 
 If you are new to the library, start with {ref}`tutorial`.
 
 To see an example of using `crowsetta` to work with your own annotation format,
 see {ref}`howto-user-format`.
 
-## **Table of Contents**
-
 ```{toctree}
+:hidden: true
 :maxdepth: 2
 
 tutorial
 howto
-background
+formats/index
+api/index
 ```
 
-## **Project Information**
+## Support
 
-`crowsetta` was developed for use with the [songdeck] and
-[hybrid-vocal-classifier] libraries.
+To report a bug or request a feature (such as a new annotation format), 
+please use the issue tracker on GitHub:  
+<https://github.com/vocalpy/crowsetta/issues>
 
-### Support
+To ask a question about crowsetta, discuss its development, 
+or share how you are using it, 
+please start a new topic on the VocalPy forum 
+with the crowsetta tag:  
+<https://forum.vocalpy.org/>
 
-If you are having issues, please let us know.
+## Contribute
 
-- Issue Tracker: <https://github.com/NickleDave/crowsetta/issues>
+- Issue Tracker: <https://github.com/vocalpy/crowsetta/issues>
+- Source Code: <https://github.com/vocalpy/crowsetta>
 
-### Contribute
-
-- Issue Tracker: <https://github.com/NickleDave/crowsetta/issues>
-- Source Code: <https://github.com/NickleDave/crowsetta>
-
-### License
+## License
 
 The project is licensed under the
-[BSD license](https://github.com/NickleDave/crowsetta/blob/master/LICENSE).
+[BSD license](https://github.com/vocalpy/crowsetta/blob/master/LICENSE).
 
-### CHANGELOG
+## CHANGELOG
 
 You can see project history and work in progress in the
-[CHANGELOG](https://github.com/NickleDave/crowsetta/blob/master/doc/CHANGELOG.md).
+[CHANGELOG](https://github.com/vocalpy/crowsetta/blob/main/doc/CHANGELOG.md).
 
-### Citation
+## Citation
 
 If you use `crowsetta`, please cite the DOI:
 
 ```{image} https://zenodo.org/badge/159904494.svg
 :target: https://zenodo.org/badge/latestdoi/159904494
 ```
-
-[hybrid-vocal-classifier]: https://hybrid-vocal-classifier.readthedocs.io/en/latest/
-[pandas]: https://pandas.pydata.org/
-[songdeck]: https://github.com/NickleDave/songdeck
