@@ -7,8 +7,10 @@ from .segment import Segment
 
 
 class Sequence:
-    """object that represents a sequence of segments, such as a bout of birdsong made
-    up of syllables
+    """object that represents a sequence of segments,
+    used to annotate animal communication.
+    e.g., a human sentence made up of syllables,
+    or a bout of birdsong made up of "syllables".
 
     Attributes
     ----------
