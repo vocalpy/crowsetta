@@ -64,37 +64,37 @@ def test_annot2phn(tmp_path, phns):
         assert np.all(np.char.equal(annot.seq.labels, annot_made.seq.labels))
 
 
-def test_PHN2annot_single_str(a_PHN):
+def test_PHN2annot_single_str(a_wav_nist_phn):
     """same unit-test as above, but here
     test function still works when .phn extension is capitalized
     and audio files are alternate .WAV format"""
-    annot = crowsetta.phn.phn2annot(a_PHN)
+    annot = crowsetta.phn.phn2annot(a_wav_nist_phn)
     assert type(annot) == crowsetta.Annotation
     assert hasattr(annot, 'seq')
 
 
-def test_PHN2annot_list_of_str(PHNs):
+def test_PHN2annot_list_of_str(wav_nist_phns):
     """same unit-test as above, but here
     test function still works when .phn extension is capitalized
     and audio files are alternate .WAV format"""
-    PHNs = [str(PHN) for PHN in PHNs]
+    PHNs = [str(PHN) for PHN in wav_nist_phns]
     annots = crowsetta.phn.phn2annot(PHNs)
     assert isinstance(annots, list)
     assert len(annots) == len(PHNs)
     assert all([type(annot) == crowsetta.Annotation for annot in annots])
 
 
-def test_PHN2annot_list_of_Path(PHNs):
+def test_PHN2annot_list_of_Path(wav_nist_phns):
     """same unit-test as above, but here
     test function still works when .phn extension is capitalized
     and audio files are alternate .WAV format"""
-    annots = crowsetta.phn.phn2annot(PHNs)
+    annots = crowsetta.phn.phn2annot(wav_nist_phns)
     assert isinstance(annots, list)
-    assert len(annots) == len(PHNs)
+    assert len(annots) == len(wav_nist_phns)
     assert all([type(annot) == crowsetta.Annotation for annot in annots])
 
 
-def test_PHN2csv(tmp_path, PHNs):
+def test_PHN2csv(tmp_path, wav_nist_phns):
     """same unit-test as above, but here
     test function still works when .phn extension is capitalized
     and audio files are alternate .WAV format"""
@@ -103,7 +103,7 @@ def test_PHN2csv(tmp_path, PHNs):
     # and those are tested above and in other test modules,
     # here just need to make sure this function doesn't fail
     csv_filename = tmp_path / 'test.csv'
-    crowsetta.phn.phn2csv(PHNs, csv_filename)
+    crowsetta.phn.phn2csv(wav_nist_phns, csv_filename)
     # make sure file was created
     assert csv_filename.exists()
 
@@ -118,12 +118,12 @@ def test_PHN2csv(tmp_path, PHNs):
             filenames_from_csv.append(
                 os.path.basename(row['annot_path'])
             )
-    for phn_name in PHNs:
+    for phn_name in wav_nist_phns:
         assert os.path.basename(phn_name) in filenames_from_csv
 
 
-def test_annot2PHN(tmp_path, PHNs):
-    for phn in PHNs:
+def test_annot2PHN(tmp_path, wav_nist_phns):
+    for phn in wav_nist_phns:
         annot = crowsetta.phn.phn2annot(phn, round_times=False)
         annot_path = Path(tmp_path).joinpath(Path(phn).name)
         # copy wav file to tmp_path so we can open the annot

@@ -17,15 +17,15 @@ def a_phn(phns):
 
 
 @pytest.fixture
-def audio_WAV_annot_PHN_root(test_data_root):
-    return test_data_root / 'audio_WAV_annot_PHN'
+def audio_wav_nist_annot_phn_root(test_data_root):
+    return test_data_root / 'audio_wav_nist_annot_phn'
 
 
 @pytest.fixture
-def PHNs(audio_WAV_annot_PHN_root):
-    return sorted(audio_WAV_annot_PHN_root.glob('*.PHN'))
+def wav_nist_phns(audio_wav_nist_annot_phn_root):
+    return sorted(audio_wav_nist_annot_phn_root.glob('*.PHN'))
 
 
 @pytest.fixture
-def a_PHN(PHNs):
-    return PHNs[0]
+def a_wav_nist_phn(wav_nist_phns):
+    return wav_nist_phns[0]
