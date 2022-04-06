@@ -137,20 +137,12 @@ class Sequence:
         if not isinstance(other, Sequence):
             return False
 
-        eq = []
-        for attr in ['_segments', '_labels', '_onsets_s', '_offsets_s',
-                     '_onset_inds', '_offset_inds']:
-            self_attr = getattr(self, attr)
-            other_attr = getattr(other, attr)
-            if type(self_attr) == np.ndarray:
-                eq.append(np.array_equal(self_attr, other_attr))
-            else:
-                eq.append(self_attr == other_attr)
-
-        if all(eq):
-            return True
-        else:
+        if len(self.segments) != len(other.segments):
             return False
+
+        return all(
+            [seg1 == seg2 for seg1, seg2 in zip(self.segments, other.segments)]
+        )
 
     def __ne__(self, other):
         if self.__class__ == other.__class__:
