@@ -1,13 +1,17 @@
 import pytest
 
+from .data import TEST_DATA_ROOT
 
-@pytest.fixture
-def textgrids(test_data_root):
-    return sorted(
-        test_data_root.glob('wav-textgrid/*.TextGrid')
+TEXTGRID_PATHS = sorted(
+        TEST_DATA_ROOT.glob('wav-textgrid/*.TextGrid')
     )
 
 
 @pytest.fixture
-def a_textgrid(textgrids):
-    return textgrids[0]
+def textgrid_paths():
+    return TEXTGRID_PATHS
+
+
+@pytest.fixture(params=TEXTGRID_PATHS)
+def a_textgrid_path(request):
+    return request.param
