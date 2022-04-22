@@ -105,8 +105,8 @@ class SimpleSeq:
                   annot_path: PathLike,
                   audio_path: Optional[PathLike] = None,
                   columns_map: Optional[Mapping] = None,
-                  sep: Optional[str] = None,
-                  header: Optional[List[str]] = 'infer') -> 'Self':
+                  read_csv_kwargs: Optional[Mapping] = None
+                  ) -> 'Self':
         """Load annotations from a file
 
         Parameters
@@ -122,21 +122,20 @@ class SimpleSeq:
             to the standardized names
             used by this format.
             E.g., ``{'begin_time': 'onset_s', 'end_time': 'offset_s', 'text': 'label'}``
-        sep : str
-            Separator in annotations file. Default is None,
-            in which case default for ``pandas.read_csv`` is used,
-            a comma (','). Can be used e.g. to load a space-separated
-            text-file.
-        header : int, list of int, None
-            Argument that determines header of annotation file.
-            Passed to ``pandas.read_csv``.
-            Default is the same as that for ``pandas.read_csv``: 'infer'.
+        read_csv_kwargs : dict
+            keyword arguments passed to
+            ``pandas.read_csv``. Default is None,
+            in which case all defaults for
+            ``pandas.read_csv`` will be used.
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
 
-        #  assume file is space-separated with no header
-        df = pd.read_csv(annot_path,  sep=sep, header=header)
+        if read_csv_kwargs:
+            df = pd.read_csv(annot_path, **read_csv_kwargs)
+        else:
+            df = pd.read_csv(annot_path)
+
         if columns_map:
             df.columns = [columns_map[column_name]
                           for column_name in df.columns]
@@ -231,11 +230,25 @@ class SimpleSeq:
             path with filename of .csv file that should be saved
         to_csv_kwargs : dict-like
             keyword arguments passed to
-            ``pandas.DataFrame.to_csv``
+            ``pandas.DataFrame.to_csv``.
+            Default is None, in which case
+            defaults for ``pandas.to_csv``
+            will be used, except ``index``
+            is set to False.
         """
         df = pd.DataFrame.from_records(
             {'onset_s': self.onsets_s,
              'offset_s': self.offsets_s,
              'label': self.labels}
         )
-        df.to_csv(annot_path, **to_csv_kwargs)
+        df = df[['onset_s', 'offset_s', 'label']]  # put in correct order
+        try:
+            df = SimpleSeqSchema.validate(df)
+        except pandera.errors.SchemaError as e:
+            raise ValueError(
+                f'Annotations produced an invalid dataframe, cannot convert to csv:\n{df}'
+            ) from e
+        if to_csv_kwargs:
+            df.to_csv(annot_path, **to_csv_kwargs)
+        else:
+            df.to_csv(annot_path, index=False)
