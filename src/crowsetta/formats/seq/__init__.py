@@ -5,6 +5,7 @@ from .notmat import NotMat
 from .simple import SimpleSeq
 from .textgrid import TextGrid
 from .timit import Timit
+from .yarden import SongAnnotationGUI
 
 __all__ = [
     'BirdsongRec',
@@ -12,6 +13,7 @@ __all__ = [
     'GenericSeq',
     'NotMat',
     'SimpleSeq',
+    'SongAnnotationGUI',
     'TextGrid',
     'Timit',
 ]
