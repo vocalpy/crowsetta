@@ -22,15 +22,3 @@ from .segment import Segment
 from .sequence import Sequence
 from .annotation import Annotation
 from .meta import Meta
-
-# ---- ok, now import formats
-from . import (
-    birdsongrec,
-    formats,
-    generic,
-    notmat,
-    phn,
-    simple,
-    textgrid,
-    yarden
-)
