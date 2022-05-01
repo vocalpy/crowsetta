@@ -11,6 +11,7 @@ from .__about__ import (
 )
 
 # --- need to import everything used by formats before importing formats
+# to avoid circular import errors
 from . import (
     interface,
     typing,
@@ -22,3 +23,6 @@ from .segment import Segment
 from .sequence import Sequence
 from .annotation import Annotation
 from .meta import Meta
+
+# ok, now it's safe to import formats
+from . import formats
