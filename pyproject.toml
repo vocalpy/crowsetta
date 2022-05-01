@@ -51,16 +51,6 @@ dev = [
     'twine',
 ]
 
-[project.entry-points."crowsetta.format"]
-birdsong-recognition-dataset = 'crowsetta.birdsongrec'
-csv = 'crowsetta.csv'
-generic-seq = 'crowsetta.generic'
-notmat = 'crowsetta.notmat'
-phn = 'crowsetta.phn'
-textgrid = 'crowsetta.textgrid'
-yarden = 'crowsetta.yarden'
-simple-seq = 'crowsetta.simple'
-
 [project.urls]
 Source = "https://github.com/NickleDave/crowsetta"
 Documentation = "https://crowsetta.readthedocs.io"
