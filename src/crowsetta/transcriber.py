@@ -1,95 +1,51 @@
-import os
-from importlib import import_module
-import importlib.util
+import inspect
+from typing import Union
 import warnings
-
-from . import (
-    formats,
-    generic
-)
-from .meta import Meta
-
-HERE = os.path.dirname(__file__)
-
-VALID_CONFIG_DICT_KEYS = {'module', 'from_file', 'to_csv', 'to_format'}
-REQUIRED_CONFIG_DICT_KEYS = {'module', 'from_file'}
-
-
-def not_implemented(*args, **kwargs):
-    raise NotImplementedError
 
 
 class Transcriber:
-    """class that loads vocal annotation files into Annotations
-    (the data structure used to work with annotations and enable
-    conversion between formats), and converts Annotations to
-    comma-separated values (csv) files or other formats.
+    """class that loads vocal annotations from files,
+    converts into ``Annotation`` instances
+    (the data structure used to work with annotations and
+    convert between formats), and save annotations to
+    comma-separated values (csv) files or other file formats.
 
     Attributes
     ----------
-    format : str
-        name of vocal annotation format that Transcriber will use
-    config : dict or crowsetta.meta.Meta
-        configuration for a format. Default is None.
-        Enables user to define a format without creating a Python package.
+    format : str or class
+        If a string, name of vocal annotation format that ``Transcriber`` will use.
+        Must be  one of ``crowsetta.formats``.
+        If a class, must be either sequence-like or bounding-box-like, i.e.,
+        registered as either `crowsetta.interface.SeqLike`` or ``crowsetta.interface.BBoxLike``.
 
     Methods
     -------
-    from_file : loads a file, returns an Annotation for that file
-    to_csv : converts a file in the format into a comma-separate values (csv) file
-    to_format : converts an Annotation to the format
+    from_file : Loads annotations from a file
     """
-    def __init__(self, format, config=None):
-        """__init__ method of Transciber class
+    def __init__(self,
+                 format: 'Union[str, crowsetta.interface.SeqLike, crowsetta.interface.BBoxLike]'):
+        """make a new ``Transcriber``
 
         Parameters
         ----------
-        format : str
-            name of format
-
-        Examples
-        --------
-        >>> my_config = {
-        ...     'module': convert_myformat.py
-        ...     'from_file': 'myformat2seq',
-        ...     'to_csv': 'myformat2csv',
-        ...     'to_format': 'to_myformat'
-        ... }
-        >>> scribe = crowsetta.Transcriber(format='myformat_name', config=my_config)
-        >>> seq = scribe.from_file(file='my_annotation.mat')
+        format : str or class
+            If a string, name of vocal annotation format that ``Transcriber`` will use.
+            Must be  one of ``crowsetta.formats``.
+            If a class, must be either sequence-like or bounding-box-like, i.e.,
+            registered as either `crowsetta.interface.SeqLike`` or ``crowsetta.interface.BBoxLike``.
         """
-        # make sure format specified is either installed or that user also specified a config
-        if (format in formats._INSTALLED and config is None) or (format and config is not None):
-            pass
-        else:
-            raise ValueError(f"specified vocal annotation format, {format}, not installed, and no"
-                             "configuration was specified. Either install format, or specify configuration "
-                             "by passing as the 'config' argument to Transcriber")
+        # avoid circular imports
+        from . import (
+            formats,
+            interface,
+        )
 
-        # make sure config is valid type
-        if config is not None:
-            if not isinstance(config, dict) and not isinstance(config, Meta):
-                raise TypeError(
-                    "argument passed for config should be either a dict or "
-                    f"an instance of crowsetta.Meta, but was a {type(config)}"
+        if isinstance(format, str):
+            if format not in formats.FORMATS:
+                raise ValueError(
+                    f"Format name '{format}' not recognized."
+                    f"Valid format names:\n{formats.as_list()}"
                 )
-
-            # and if it's a dict it should have the right keys
-            if isinstance(config, dict):
-                config_keys = set(config.keys())
-                if not REQUIRED_CONFIG_DICT_KEYS.issubset(config_keys):
-                    missing_keys = REQUIRED_CONFIG_DICT_KEYS - config_keys
-                    raise KeyError(f'config for {format} requires '
-                                   f'the following keys: {missing_keys}')
-                elif not config_keys.issubset(VALID_CONFIG_DICT_KEYS):
-                    extra_keys = config_keys - VALID_CONFIG_DICT_KEYS
-                    raise KeyError(f'config for {format} contains '
-                                   f'invalid keys: {extra_keys}')
-
-        self.format = format
-        self.config = config
-
-        if self.format in formats._INSTALLED and self.config is None:
             if format == 'csv':
                 warnings.warn(
                     "The format 'csv' has been renamed to 'generic-seq', "
@@ -97,57 +53,41 @@ class Transcriber:
                     "Please change any usages of the name 'csv' to 'generic-seq'` now.",
                     FutureWarning,
                 )
-            voc_format_module = getattr(formats, self.format)
-            self.from_file = voc_format_module.meta.from_file
-            if hasattr(voc_format_module.meta, 'to_csv'):
-                self.to_csv = voc_format_module.meta.to_csv
-            else:
-                self.to_csv = not_implemented
-            if hasattr(voc_format_module.meta, 'to_format'):
-                self.to_format = voc_format_module.meta.to_format
-            else:
-                self.to_format = not_implemented
-
-        elif self.format and self.config:
-            format_module = self.config['module']
-
-            if os.path.isfile(format_module):
-                # if it's a file (e.g. some path), have to import
-                # this more verbose way
-                module_name = os.path.basename(format_module)
-                if module_name.endswith('.py'):
-                    module_name = module_name.replace('.py', '')
-                spec = importlib.util.spec_from_file_location(name=module_name,
-                                                              location=format_module)
-                this_format_module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(this_format_module)
-
-            else:
-                # if it's not a file, it should be on the path or in the
-                # current directory, and we can just import it in one line
-                try:
-                    this_format_module = import_module(format_module)
-                except ModuleNotFoundError:
-                    # unless that didn't work either, in which case...
-                    raise FileNotFoundError(
-                        f'{format_module} could not be imported, '
-                        'and not recognized as a file')
-
-            self.from_file = getattr(this_format_module, config['from_file'])
-            # if to_csv not in config (not specified by user)
-            if 'to_csv' not in config:
-                # default to function returned by toseq_func_to_csv()
-                # when we pass it from_file
-                self.to_csv = generic.toannot_func_to_csv(self.from_file)
-            elif config['to_csv'] is None:
-                self.to_csv = not_implemented
-            else:
-                self.to_csv = getattr(this_format_module, config['to_csv'])
-
-            if 'to_format' not in config or config['to_format'] is None:
-                self.to_format = not_implemented
-            else:
-                self.to_format = getattr(this_format_module, config['to_format'])
+            _format_class = formats.by_name(format)
+        elif inspect.isclass(format):
+            if not issubclass(format, interface.BaseFormat):
+                raise TypeError(
+                    f'Format recognized as a class, but it is not a subclass of ``crowsetta.interface.BaseFormat``.'
+                    f'Please ``register`` the class as a subclass of either ``crowsetta.interface.SeqLike`` or '
+                    f'``crowsetta.interface.BBoxLike``'
+                )
+            _format_class = format
+        else:
+            raise ValueError(
+                f"Invalid value for ``format``: {format}"
+            )
+        self.format = format
+        self._format_class = _format_class
 
     def __repr__(self):
-        return f"crowsetta.Transcriber(format='{self.format}',config={self.config})"
+        return f"crowsetta.Transcriber(format='{self.format}')"
+
+    def from_file(self,
+                  annot_path,
+                  *args,
+                  **kwargs
+                  ) -> 'Union[crowsetta.interface.SeqLike,crowsetta.interface.BBoxLike]':
+        """load annotations from a file
+
+        Parameters
+        ----------
+        annot_path : str, pathlib.Path
+            path to annotations file
+
+        Returns
+        -------
+        annotations : class-instance
+            an instance of the class referred to by ``self.format``,
+            with annotations loaded from ``annot_path``
+        """
+        return self._format_class.from_file(annot_path, *args, **kwargs)

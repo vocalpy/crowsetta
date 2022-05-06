@@ -1,201 +1,65 @@
-import sys
+import pytest
 
 import crowsetta
-import pytest
 
 
 def test_birdsongrec_from_file(birdsong_rec_xml_file,
-                               birdsong_rec_wavpath):
+                               birdsong_rec_wav_path):
     scribe = crowsetta.Transcriber(format='birdsong-recognition-dataset')
-    annots = scribe.from_file(annot_path=birdsong_rec_xml_file,
-                              wavpath=birdsong_rec_wavpath)
-    assert type(annots) == list
-    assert all([type(annot) == crowsetta.Annotation
+    birdsongrec = scribe.from_file(annot_path=birdsong_rec_xml_file,
+                                   wav_path=birdsong_rec_wav_path)
+    assert isinstance(birdsongrec, crowsetta.formats.seq.BirdsongRec)
+    annots = birdsongrec.to_annot()
+    assert isinstance(annots, list)
+    assert all([isinstance(annot, crowsetta.Annotation)
                 for annot in annots])
 
 
-def test_birdsongrec_to_csv(tmp_path,
-                            birdsong_rec_xml_file,
-                            birdsong_rec_wavpath):
-    scribe = crowsetta.Transcriber(format='birdsong-recognition-dataset')
-    csv_filename = tmp_path / 'Annotation.csv'
-    scribe.to_csv(annot_path=birdsong_rec_xml_file,
-                  wavpath=birdsong_rec_wavpath,
-                  csv_filename=csv_filename)
-    assert csv_filename.exists()
-
-
-def test_csv_from_file(test_data_root):
+def test_csv_from_file(birdsongrec_as_generic_seq_csv):
     with pytest.warns(FutureWarning):
         scribe = crowsetta.Transcriber(format='csv')
-    generic_seq_csv = test_data_root.joinpath('csv/gy6or6_032312.csv')
-    annots = scribe.from_file(generic_seq_csv)
-    assert type(annots) == list
-    assert all([type(annot) == crowsetta.Annotation
+    generic = scribe.from_file(birdsongrec_as_generic_seq_csv)
+    assert isinstance(generic, crowsetta.formats.seq.GenericSeq)
+    annots = generic.to_annot()
+    assert isinstance(annots, list)
+    assert all([isinstance(annot, crowsetta.Annotation)
                 for annot in annots])
 
 
-def test_generic_seq_from_file(test_data_root):
+def test_generic_seq_from_file(birdsongrec_as_generic_seq_csv):
     scribe = crowsetta.Transcriber(format='generic-seq')
-    generic_seq_csv = test_data_root.joinpath('csv/gy6or6_032312.csv')
-    annots = scribe.from_file(generic_seq_csv)
-    assert type(annots) == list
-    assert all([type(annot) == crowsetta.Annotation
+    generic = scribe.from_file(birdsongrec_as_generic_seq_csv)
+    assert isinstance(generic, crowsetta.formats.seq.GenericSeq)
+    annots = generic.to_annot()
+    assert isinstance(annots, list)
+    assert all([isinstance(annot, crowsetta.Annotation)
                 for annot in annots])
 
 
-def test_notmat_from_file(notmats):
+def test_notmat_from_file(a_notmat_path):
     scribe = crowsetta.Transcriber(format='notmat')
-    for notmat in notmats:
-        annot = scribe.from_file(annot_path=notmat)
-        assert type(annot) == crowsetta.Annotation
+    notmat = scribe.from_file(annot_path=a_notmat_path)
+    assert isinstance(notmat, crowsetta.formats.seq.NotMat)
+    annot = notmat.to_annot()
+    assert isinstance(annot, crowsetta.Annotation)
 
 
-def test_notmat_to_csv(notmats, tmp_path):
-    scribe = crowsetta.Transcriber(format='notmat')
-    csv_filename = tmp_path / 'Annotation.csv'
-    scribe.to_csv(annot_path=notmats, csv_filename=csv_filename)
-    assert csv_filename.exists()
-
-
-def test_simple_seq_from_file(simple_csvs):
+def test_simple_seq_from_file(a_simple_csv_path):
     scribe = crowsetta.Transcriber(format='simple-seq')
-    for simple_csv in simple_csvs:
-        annot = scribe.from_file(annot_path=simple_csv)
-        assert type(annot) == crowsetta.Annotation
+    simple = scribe.from_file(a_simple_csv_path)
+    assert isinstance(simple, crowsetta.formats.seq.SimpleSeq)
+    annot = simple.to_annot()
+    assert isinstance(annot, crowsetta.Annotation)
 
 
 def test_yarden_from_file(yarden_annot_mat):
     scribe = crowsetta.Transcriber(format='yarden')
-    annots = scribe.from_file(annot_path=yarden_annot_mat)
-    assert type(annots) == list
-    assert all([type(annot) == crowsetta.Annotation
+    yarden = scribe.from_file(annot_path=yarden_annot_mat)
+    assert isinstance(yarden, crowsetta.formats.seq.SongAnnotationGUI)
+    annots = yarden.to_annot()
+    assert isinstance(annots, list)
+    assert all([isinstance(annot, crowsetta.Annotation)
                 for annot in annots])
-
-
-def test_yarden_to_csv(tmp_path,
-                       yarden_annot_mat):
-    scribe = crowsetta.Transcriber(format='yarden')
-    csv_filename = tmp_path / 'Annotation.csv'
-    scribe.to_csv(annot_path=yarden_annot_mat,
-                  csv_filename=csv_filename)
-    assert csv_filename.exists()
-
-
-def test_example_from_file_name_import(example_user_format_root,
-                                       example_user_format_annotation_file):
-    sys.path.append(str(example_user_format_root))
-    config = {
-        'module': 'example',
-        'from_file': 'example2annot',
-        'to_csv': None,
-        'to_format': None,
-    }
-    scribe = crowsetta.Transcriber(format='example', config=config)
-    sys.path.remove(str(example_user_format_root))  # not sure we need to do this but jic
-    annots = scribe.from_file(annot_path=example_user_format_annotation_file)
-    assert all([type(annot) == crowsetta.Annotation
-                         for annot in annots])
-
-
-def test_only_module_and_from_file_required(example_user_format_script,
-                                            example_user_format_annotation_file):
-    config = {
-        'module': str(example_user_format_script),
-        'from_file': 'example2annot',
-        }
-    scribe = crowsetta.Transcriber(format='example', config=config)
-    annots = scribe.from_file(annot_path=example_user_format_annotation_file)
-    assert all([type(annot) == crowsetta.Annotation
-                for annot in annots])
-
-
-def test_example_from_file_path_import(example_user_format_script,
-                                       example_user_format_annotation_file):
-    config = {
-        'module': example_user_format_script,
-        'from_file': 'example2annot',
-        'to_csv': None,
-        'to_format': None,
-    }
-    scribe = crowsetta.Transcriber(format='example', config=config)
-    annots = scribe.from_file(annot_path=example_user_format_annotation_file)
-    assert all([type(annot) == crowsetta.Annotation
-                         for annot in annots])
-
-
-def test_config_wrong_types_raise():
-    # should raise an error because config should be a dict
-    # not list of dicts
-    config = list({
-            'module': 'example',
-            'from_file': 'example2annot',
-            'to_csv': 'example2csv',
-            'to_format': 'None',
-        }
-    )
-    with pytest.raises(TypeError):
-        crowsetta.Transcriber(config=config)
-
-
-def test_missing_keys_in_config_raises():
-    config = {
-        # missing 'module' key
-        'from_file': 'example2annot',
-        'to_csv': None,
-        'to_format': None,
-    }
-
-    with pytest.raises(KeyError):
-        crowsetta.Transcriber(format='example', config=config)
-
-    config = {
-        'module': 'example',
-        # missing 'from_file' key
-        'to_csv': None,
-        'to_format': None,
-    }
-    with pytest.raises(KeyError):
-        crowsetta.Transcriber(format='example', config=config)
-
-
-def test_extra_keys_in_config_raises():
-    config = {
-        'module': 'example',
-        'from_file': 'example2annot',
-        'to_csv': 'example2csv',
-        'extra': 'key_right_here',
-        'to_format': 'None',
-    }
-    with pytest.raises(KeyError):
-        crowsetta.Transcriber(format='example', config=config)
-
-
-def test_call_to_csv_when_None_raises(example_user_format_script,
-                                      example_user_format_annotation_file):
-    config = {
-        'module': example_user_format_script,
-        'from_file': 'example2annot',
-        'to_csv': None,
-        'to_format': None,
-    }
-    scribe = crowsetta.Transcriber(format='example', config=config)
-    with pytest.raises(NotImplementedError):
-        scribe.to_csv(mat_file=example_user_format_annotation_file,
-                      csv_filename='bad.csv')
-
-
-def test_call_to_format_when_None_raises(example_user_format_script,
-                                         example_user_format_annotation_file):
-    config = {
-        'module': example_user_format_script,
-        'from_file': 'example2annot',
-        'to_csv': None,
-        'to_format': None,
-    }
-    scribe = crowsetta.Transcriber(format='example', config=config)
-    with pytest.raises(NotImplementedError):
-        scribe.to_format(annot_path=example_user_format_annotation_file, to_format='example')
 
 
 @pytest.mark.parametrize(
@@ -212,4 +76,4 @@ def test_call_to_format_when_None_raises(example_user_format_script,
 def test_repr(format):
     scribe = crowsetta.Transcriber(format=format)
     repr_ = repr(scribe)
-    assert repr_ == f"crowsetta.Transcriber(format='{format}',config=None)"
+    assert repr_ == f"crowsetta.Transcriber(format='{format}')"

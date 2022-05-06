@@ -10,18 +10,19 @@ from .__about__ import (
     __version__,
 )
 
+# --- need to import everything used by formats before importing formats
+# to avoid circular import errors
+from . import (
+    interface,
+    typing,
+    validation
+)
+
 from .transcriber import Transcriber
 from .segment import Segment
 from .sequence import Sequence
 from .annotation import Annotation
 from .meta import Meta
-from . import (
-    birdsongrec,
-    formats,
-    generic,
-    notmat,
-    phn,
-    simple,
-    textgrid,
-    yarden
-)
+
+# ok, now it's safe to import formats
+from . import formats

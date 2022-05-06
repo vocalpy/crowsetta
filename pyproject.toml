@@ -15,6 +15,7 @@ dependencies = [
     "birdsong-recognition-dataset >=0.3.0",
     "numpy >=1.18.1",
     "pandas >= 1.3.5",
+    "pandera >= 0.9.0",
     "scipy >=1.4.1",
     "SoundFile >=0.10.3",
 ]
@@ -49,16 +50,6 @@ dev = [
     'flit',
     'twine',
 ]
-
-[project.entry-points."crowsetta.format"]
-birdsong-recognition-dataset = 'crowsetta.birdsongrec'
-csv = 'crowsetta.csv'
-generic-seq = 'crowsetta.generic'
-notmat = 'crowsetta.notmat'
-phn = 'crowsetta.phn'
-textgrid = 'crowsetta.textgrid'
-yarden = 'crowsetta.yarden'
-simple-seq = 'crowsetta.simple'
 
 [project.urls]
 Source = "https://github.com/NickleDave/crowsetta"

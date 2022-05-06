@@ -7,8 +7,10 @@ from .segment import Segment
 
 
 class Sequence:
-    """object that represents a sequence of segments, such as a bout of birdsong made
-    up of syllables
+    """object that represents a sequence of segments,
+    used to annotate animal communication.
+    e.g., a human sentence made up of syllables,
+    or a bout of birdsong made up of "syllables".
 
     Attributes
     ----------
@@ -135,20 +137,12 @@ class Sequence:
         if not isinstance(other, Sequence):
             return False
 
-        eq = []
-        for attr in ['_segments', '_labels', '_onsets_s', '_offsets_s',
-                     '_onset_inds', '_offset_inds']:
-            self_attr = getattr(self, attr)
-            other_attr = getattr(other, attr)
-            if type(self_attr) == np.ndarray:
-                eq.append(np.array_equal(self_attr, other_attr))
-            else:
-                eq.append(self_attr == other_attr)
-
-        if all(eq):
-            return True
-        else:
+        if len(self.segments) != len(other.segments):
             return False
+
+        return all(
+            [seg1 == seg2 for seg1, seg2 in zip(self.segments, other.segments)]
+        )
 
     def __ne__(self, other):
         if self.__class__ == other.__class__:
@@ -241,7 +235,8 @@ class Sequence:
             onset_inds = column_or_row_or_1d(onset_inds)
             offset_inds = column_or_row_or_1d(offset_inds)
 
-            if onset_inds.dtype != int or offset_inds.dtype != int:
+            if (not np.issubdtype(onset_inds.dtype, np.integer)
+                    or not np.issubdtype(offset_inds.dtype, np.integer)):
                 raise TypeError('dtype of onset_inds and offset_inds '
                                 'must be some kind of int')
 
@@ -267,7 +262,8 @@ class Sequence:
             onsets_s = column_or_row_or_1d(onsets_s)
             offsets_s = column_or_row_or_1d(offsets_s)
 
-            if onsets_s.dtype != float or offsets_s.dtype != float:
+            if (not np.issubdtype(onsets_s.dtype, np.floating)
+                    or not np.issubdtype(offsets_s.dtype, np.floating)):
                 raise TypeError('dtype of onsets_s and offsets_s '
                                 'must be some kind of float')
 

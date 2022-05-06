@@ -23,7 +23,9 @@ def int_or_None(val):
 @attr.s(frozen=True)
 class Segment(object):
     """object that represents a segment of a time series,
-     usually a syllable in a bout of birdsong"""
+    used to annotate animal communication.
+    Typically, a single unit such as a syllable in human speech
+    or a "syllable" in birdsong."""
     _FIELDS = ('label', 'onset_s', 'offset_s', 'onset_ind', 'offset_ind')
 
     label = attr.ib(converter=str)
