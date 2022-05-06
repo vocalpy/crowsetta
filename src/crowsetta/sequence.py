@@ -235,7 +235,8 @@ class Sequence:
             onset_inds = column_or_row_or_1d(onset_inds)
             offset_inds = column_or_row_or_1d(offset_inds)
 
-            if onset_inds.dtype != int or offset_inds.dtype != int:
+            if (not np.issubdtype(onset_inds.dtype, np.integer)
+                    or not np.issubdtype(offset_inds.dtype, np.integer)):
                 raise TypeError('dtype of onset_inds and offset_inds '
                                 'must be some kind of int')
 
@@ -261,7 +262,8 @@ class Sequence:
             onsets_s = column_or_row_or_1d(onsets_s)
             offsets_s = column_or_row_or_1d(offsets_s)
 
-            if onsets_s.dtype != float or offsets_s.dtype != float:
+            if (not np.issubdtype(onsets_s.dtype, np.floating)
+                    or not np.issubdtype(offsets_s.dtype, np.floating)):
                 raise TypeError('dtype of onsets_s and offsets_s '
                                 'must be some kind of float')
 
