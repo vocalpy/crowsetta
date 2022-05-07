@@ -6,6 +6,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Changed
+- re-design API, and rewrite annotation formats as classes
+  [#161](https://github.com/NickleDave/crowsetta/pull/161).
+  + Re-writing as classes fixes [#99](https://github.com/NickleDave/crowsetta/issues/99).
+  + API re-design fixes [#120](https://github.com/NickleDave/crowsetta/issues/120).
+  + Adds an `interface` sub-package that specifies an interface for two 
+    types of annotations: *sequence-like* and *bounding-box like*.
+    Fixes [#105](https://github.com/NickleDave/crowsetta/issues/105)
+  + All existing annotation formats were sequence-like, and they now
+    adhere to that interface; the classes are registered as sub-classes.
+    + Some classes were additionally re-factored; e.g.
+      + `'generic-seq'` now uses `pandas` (fixes [#63](https://github.com/NickleDave/crowsetta/issues/63))
+      + `'simple-seq'` can parse multiple formats (fixes [#134](https://github.com/vocalpy/crowsetta/issues/134))
+  + Formats themselves are now in a `formats` sub-package, 
+    fixes [#109](https://github.com/NickleDave/crowsetta/issues/109)
+  + Add better functions to list the formats in this sub-package
+    (fixes [#92](https://github.com/NickleDave/crowsetta/issues/92)); 
+    can call `crowsetta.formats.as_list` to get a list of shorthand string names,
+    and `crowsetta.formats.by_name` with the shorthand string name to get back
+    to the corresponding class.
+  + `Transcriber.from_file` now returns an instance of an annotation format classes.
+    Methods like `to_annot` can be called on this instance.
+    This refactor greatly simplifies the `Transcriber` class while maintaining mostly 
+    the same API (now need to chain calls like `Transcriber.from_file().to_annot()`, 
+    or capture the returned annotation instance in a variable and use it instead).
+    Fixes [#144](https://github.com/NickleDave/crowsetta/issues/144).
+
 - convert docs to markdown and use `myst-parser`
   [#153](https://github.com/NickleDave/crowsetta/pull/153).
   Fixes [#151](https://github.com/NickleDave/crowsetta/issues/151).
