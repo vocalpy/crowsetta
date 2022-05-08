@@ -18,6 +18,7 @@ from . import (
     validation
 )
 
+from .bbox import BBox
 from .transcriber import Transcriber
 from .segment import Segment
 from .sequence import Sequence
