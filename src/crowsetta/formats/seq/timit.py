@@ -119,7 +119,7 @@ class Timit:
                round_times: bool = True,
                decimals: int = 3,
                samplerate: Optional[int] = None) -> crowsetta.Sequence:
-        """Convert this .TextGrid annotation to a ``crowsetta.Sequence``.
+        """Convert this TIMIT annotation to a ``crowsetta.Sequence``.
 
         Parameters
         ----------
@@ -187,7 +187,7 @@ class Timit:
                  round_times: bool = True,
                  decimals: int = 3,
                  samplerate: Optional[int] = None) -> crowsetta.Annotation:
-        """Convert this .TextGrid annotation to a ``crowsetta.Annotation``.
+        """Convert this TIMIT annotation to a ``crowsetta.Annotation``.
 
         Parameters
         ----------
