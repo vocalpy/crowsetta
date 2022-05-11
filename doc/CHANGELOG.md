@@ -5,7 +5,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Add Raven format
+  [#164](https://github.com/NickleDave/crowsetta/pull/164).
+  Fixes [#84](https://github.com/NickleDave/crowsetta/issues/84).
+
 ### Changed
+- change `Annotation` class to represent both sequence-like 
+  annotation formats and bounding box-like annotation formats
+  [#164](https://github.com/NickleDave/crowsetta/pull/164).
+  Resolves [#149](https://github.com/NickleDave/crowsetta/issues/149)
+  and [#150](https://github.com/NickleDave/crowsetta/issues/150).
 - re-design API, and rewrite annotation formats as classes
   [#161](https://github.com/NickleDave/crowsetta/pull/161).
   + Re-writing as classes fixes [#99](https://github.com/NickleDave/crowsetta/issues/99).
@@ -31,7 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     the same API (now need to chain calls like `Transcriber.from_file().to_annot()`, 
     or capture the returned annotation instance in a variable and use it instead).
     Fixes [#144](https://github.com/NickleDave/crowsetta/issues/144).
-
 - convert docs to markdown and use `myst-parser`
   [#153](https://github.com/NickleDave/crowsetta/pull/153).
   Fixes [#151](https://github.com/NickleDave/crowsetta/issues/151).
