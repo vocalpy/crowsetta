@@ -1,4 +1,4 @@
-label,onset_s,offset_s,audio_path,annot_path,sequence,annotation
+label,onset_s,offset_s,notated_path,annot_path,sequence,annotation
 1,0.0029761904761904,0.141504329004329,lbr3009_0005_2017_04_27_06_14_46.wav,../test_data/example_user_format/bird1_annotation.mat,0,0
 1,0.279125,0.504625,lbr3009_0005_2017_04_27_06_14_46.wav,../test_data/example_user_format/bird1_annotation.mat,0,0
 5,0.5556472915365209,0.5962916666666667,lbr3009_0005_2017_04_27_06_14_46.wav,../test_data/example_user_format/bird1_annotation.mat,0,0

@@ -1,4 +1,4 @@
-label,onset_s,offset_s,onset_ind,offset_ind,audio_path,annot_path,sequence,annotation
+label,onset_s,offset_s,onset_ind,offset_ind,notated_path,annot_path,sequence,annotation
 0,1.07,1.154,34240,36928,0.wav,Annotation.xml,0,0
 0,1.258,1.345,40256,43040,0.wav,Annotation.xml,0,0
 0,1.467,1.555,46944,49760,0.wav,Annotation.xml,0,0
