@@ -47,7 +47,7 @@ class GenericSeqSchema(pandera.SchemaModel):
     onset_ind: Optional[Series[int]] = pandera.Field()
     offset_ind: Optional[Series[int]] = pandera.Field()
 
-    audio_path: Series[str] = pandera.Field()
+    notated_path: Series[str] = pandera.Field()
     annot_path: Series[str] = pandera.Field()
     sequence: Series[int] = pandera.Field()
     annotation: Series[int] = pandera.Field()
@@ -144,20 +144,20 @@ def annot2csv(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
                     if not(val is None and any([key.startswith(prefix) for prefix in ('onset', 'offset')]))
                 })  # OrderedDict is default; being extra explicit here
                 annot_path = annot_.annot_path
-                audio_path = annot_.audio_path
+                notated_path = annot_.notated_path
                 if abspath:
                     annot_path = os.path.abspath(annot_path)
-                    if audio_path is not None:
-                        audio_path = os.path.abspath(audio_path)
+                    if notated_path is not None:
+                        notated_path = os.path.abspath(notated_path)
                 elif basename:
                     annot_path = os.path.basename(annot_path)
-                    if audio_path is not None:
-                        audio_path = os.path.basename(audio_path)
-                # need to put in audio_path before annot_path
-                if audio_path is not None:
-                    row['audio_path'] = audio_path
+                    if notated_path is not None:
+                        notated_path = os.path.basename(notated_path)
+                # need to put in notated_path before annot_path
+                if notated_path is not None:
+                    row['notated_path'] = notated_path
                 else:
-                    row['audio_path'] = 'None'
+                    row['notated_path'] = 'None'
                 row['annot_path'] = annot_path
                 # we use 'sequence' and 'annotation' fields when we are
                 # loading back into Annotations
@@ -203,14 +203,14 @@ def csv2annot(csv_path: PathLike) -> List[crowsetta.Annotation]:
                 f"\n{annot_path}"
             )
         annot_path = annot_path[0]
-        # 2. audio_path
-        audio_path = df_annot.audio_path.unique()
-        if len(audio_path) > 1:
+        # 2. notated_path
+        notated_path = df_annot.notated_path.unique()
+        if len(notated_path) > 1:
             raise ValueError(
-                f"found multiple values for 'audio_path' for annotation #{annotation_ind}:"
-                f"\n{audio_path}"
+                f"found multiple values for 'notated_path' for annotation #{annotation_ind}:"
+                f"\n{notated_path}"
             )
-        audio_path = audio_path[0]
+        notated_path = notated_path[0]
         # 3. Sequence
         seq_uniq = df_annot.sequence.unique()
         assert len(seq_uniq) > 0
@@ -240,7 +240,7 @@ def csv2annot(csv_path: PathLike) -> List[crowsetta.Annotation]:
         )
         annot = crowsetta.Annotation(
             annot_path=annot_path,
-            audio_path=audio_path,
+            notated_path=notated_path,
             seq=seq
         )
         annot_list.append(annot)

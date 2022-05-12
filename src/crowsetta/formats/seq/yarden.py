@@ -213,7 +213,7 @@ class SongAnnotationGUI:
         for audio_path, seq in zip(self.audio_paths, seqs):
             annots.append(
                 crowsetta.Annotation(annot_path=self.annot_path,
-                                     audio_path=audio_path,
+                                     notated_path=audio_path,
                                      seq=seq)
             )
         return annots

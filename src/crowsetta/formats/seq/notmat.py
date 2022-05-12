@@ -150,7 +150,7 @@ class NotMat:
         seq = self.to_seq(round_times=round_times, decimals=decimals)
 
         return crowsetta.Annotation(annot_path=self.notmat_path,
-                                    audio_path=self.audio_path,
+                                    notated_path=self.audio_path,
                                     seq=seq)
 
     def to_file(self,

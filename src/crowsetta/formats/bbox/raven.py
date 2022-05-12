@@ -147,7 +147,7 @@ class Raven:
         """
         bboxes = self.to_bbox()
         return crowsetta.Annotation(annot_path=self.annot_path,
-                                    audio_path=self.audio_path,
+                                    notated_path=self.audio_path,
                                     bboxes=bboxes)
 
     def to_file(self,
