@@ -44,6 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - convert docs to markdown and use `myst-parser`
   [#153](https://github.com/NickleDave/crowsetta/pull/153).
   Fixes [#151](https://github.com/NickleDave/crowsetta/issues/151).
+- Require Python >= 3.8 
+  to adhere to [NEP-29]()
+  [#168](https://github.com/NickleDave/crowsetta/pull/168).
+  Fixes [#166](https://github.com/NickleDave/crowsetta/issues/166).
 
 ## 3.4.0 -- 2022-03-26
 ### Added
