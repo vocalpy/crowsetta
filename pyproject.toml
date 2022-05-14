@@ -8,11 +8,11 @@ description = "A tool to work with any format for annotating vocalizations"
 authors = [
     {name = "David Nicholson", email = "nickledave@users.noreply.github.com"}
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 dependencies = [
     "attrs >=19.3.0",
-    "evfuncs >=0.3.2",
-    "birdsong-recognition-dataset >=0.3.0",
+    "evfuncs >=0.3.5",
+    "birdsong-recognition-dataset >=0.3.2",
     "numpy >=1.18.1",
     "pandas >= 1.3.5",
     "scipy >=1.4.1",
@@ -26,9 +26,9 @@ classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: Implementation :: CPython',
 ]
 
