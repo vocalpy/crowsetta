@@ -189,5 +189,5 @@ class TextGrid:
                           decimals=decimals)
 
         return crowsetta.Annotation(annot_path=self.textgrid_path,
-                                    audio_path=self.audio_path,
+                                    notated_path=self.audio_path,
                                     seq=seq)

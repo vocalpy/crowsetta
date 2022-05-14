@@ -1,4 +1,4 @@
-onset_s,offset_s,audio_path,annot_path,sequence,annotation
+onset_s,offset_s,notated_path,annot_path,sequence,annotation
 1.278,1.351,gy6or6_baseline_230312_0808.138.cbin,gy6or6_baseline_230312_0808.138.cbin.not.mat,0,0
 1.452,1.536,gy6or6_baseline_230312_0808.138.cbin,gy6or6_baseline_230312_0808.138.cbin.not.mat,0,0
 1.605,1.712,gy6or6_baseline_230312_0808.138.cbin,gy6or6_baseline_230312_0808.138.cbin.not.mat,0,0

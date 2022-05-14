@@ -17,8 +17,10 @@ class Annotation:
     ----------
     annot_path : str, pathlib.Path
         path to file from which annotations were loaded
-    audio_path : str, pathlib.Path
-        path to audio file that ``annot_path`` annotates.
+    notated_path : str, pathlib.Path
+        path to file that ``annot_path`` annotates.
+        E.g., an audio file, or an array file
+        that contains a spectrogram generated from audio.
         Optional, default is None.
     seq : crowsetta.Sequence
         a sequence of annotated segments,
@@ -38,7 +40,7 @@ class Annotation:
     """
     def __init__(self,
                  annot_path: PathLike,
-                 audio_path: Optional[PathLike] = None,
+                 notated_path: Optional[PathLike] = None,
                  seq: Optional[Sequence] = None,
                  bboxes: Optional[List[BBox]] = None):
         if seq is None and bboxes is None:
@@ -73,13 +75,13 @@ class Annotation:
             self.bboxes = bboxes
 
         self.annot_path = Path(annot_path)
-        if audio_path:
-            self.audio_path = Path(audio_path)
+        if notated_path:
+            self.notated_path = Path(notated_path)
         else:
-            self.audio_path = audio_path
+            self.notated_path = notated_path
 
     def __repr__(self):
-        repr_ = f'Annotation(annot_path={repr(self.annot_path)}, audio_path={repr(self.audio_path)}, '
+        repr_ = f'Annotation(annot_path={repr(self.annot_path)}, notated_path={repr(self.notated_path)}, '
         if hasattr(self, 'seq'):
             repr_ += f'seq={self.seq})'
         elif hasattr(self, 'bboxes'):
@@ -88,7 +90,7 @@ class Annotation:
 
     def __eq__(self, other):
         is_annot_and_audio_eq = (self.annot_path == other.annot_path and
-                                 self.audio_path == other.audio_path)
+                                 self.notated_path == other.notated_path)
         if hasattr(self, 'seq') and hasattr(other, 'seq'):
             return is_annot_and_audio_eq and self.seq == other.seq
         elif hasattr(self, 'bboxes') and hasattr(other, 'bboxes'):

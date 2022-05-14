@@ -221,7 +221,7 @@ class Timit:
         the result should be the same on Windows and Linux.
         """
         phn_seq = self.to_seq(round_times, decimals, samplerate)
-        return crowsetta.Annotation(annot_path=self.transcript_path, audio_path=self.audio_path, seq=phn_seq)
+        return crowsetta.Annotation(annot_path=self.transcript_path, notated_path=self.audio_path, seq=phn_seq)
 
     def to_file(self,
                 transcript_path: PathLike) -> None:

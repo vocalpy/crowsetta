@@ -87,8 +87,11 @@ class SimpleSeq:
         or a single phonetic transcription code.
     annot_path : str, pathlib.Path
         Path to file from which annotations were loaded.
-    audio_path : str. pathlib.Path
-        Path to audio file that the ``annot_path`` annotates.
+    notated_path : str. pathlib.Path
+        path to file that ``annot_path`` annotates.
+        E.g., an audio file, or an array file
+        that contains a spectrogram generated from audio.
+        Optional, default is None.
     """
     name: ClassVar[str] = 'simple-seq'
     ext: ClassVar[str] = ('.csv', '.txt')
@@ -97,13 +100,13 @@ class SimpleSeq:
     offsets_s: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     labels: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     annot_path: pathlib.Path
-    audio_path: Optional[pathlib.Path] = attr.field(default=None,
-                                                    converter=attr.converters.optional(pathlib.Path))
+    notated_path: Optional[pathlib.Path] = attr.field(default=None,
+                                                      converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
     def from_file(cls,
                   annot_path: PathLike,
-                  audio_path: Optional[PathLike] = None,
+                  notated_path: Optional[PathLike] = None,
                   columns_map: Optional[Mapping] = None,
                   read_csv_kwargs: Optional[Mapping] = None
                   ) -> 'Self':
@@ -114,14 +117,18 @@ class SimpleSeq:
         annot_path : str, pathlib.Path
             Path to an annotation file,
             with one of the extensions {'.csv', '.txt'}.
-        audio_path : str, pathlib.Path
-            Optional, path to audio file
-            that ``annot_path`` annotates.
+        notated_path : str, pathlib.Path
+            path to file that ``annot_path`` annotates.
+            E.g., an audio file, or an array file
+            that contains a spectrogram generated from audio.
+            Optional, default is None.
         columns_map : dict-like
             Maps column names in header of ``annot_path``
             to the standardized names
             used by this format.
-            E.g., ``{'begin_time': 'onset_s', 'end_time': 'offset_s', 'text': 'label'}``
+            E.g., ``{'begin_time': 'onset_s', 'end_time': 'offset_s', 'text': 'label'}``.
+            Optional, default is None--assumes that
+            columns have the standardized names.
         read_csv_kwargs : dict
             keyword arguments passed to
             ``pandas.read_csv``. Default is None,
@@ -147,7 +154,7 @@ class SimpleSeq:
             offsets_s=df['offset_s'].values,
             labels=df['label'].values,
             annot_path=annot_path,
-            audio_path=audio_path,
+            notated_path=notated_path,
         )
 
     def to_seq(self,
@@ -217,7 +224,7 @@ class SimpleSeq:
         the result should be the same on Windows and Linux.
         """
         seq = self.to_seq(round_times, decimals)
-        return crowsetta.Annotation(annot_path=self.annot_path, audio_path=self.audio_path, seq=seq)
+        return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.notated_path, seq=seq)
 
     def to_file(self,
                 annot_path: PathLike,

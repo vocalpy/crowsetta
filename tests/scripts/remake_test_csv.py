@@ -14,43 +14,43 @@ TEST_DATA = HERE.joinpath('..', 'data_for_tests')
 def remake_notmat_as_generic_seq_csv():
     cbin_dir = TEST_DATA.joinpath('cbins/gy6or6/032312/')
     notmat_paths = sorted(cbin_dir.glob('*.not.mat'))
-    annots = [crowsetta.formats.NotMat.from_file(notmat_path).to_annot()
+    annots = [crowsetta.formats.seq.NotMat.from_file(notmat_path).to_annot()
               for notmat_path in notmat_paths]
-    notmat_generic_seq = crowsetta.formats.GenericSeq(annots=annots)
+    notmat_generic_seq = crowsetta.formats.seq.GenericSeq(annots=annots)
     csv_path = TEST_DATA / 'csv' / 'notmat_gy6or6_032312.csv'
     print(
         f'saving csv: {csv_path}'
     )
-    notmat_generic_seq.to_csv(csv_path=csv_path, basename=True)
+    notmat_generic_seq.to_file(csv_path=csv_path, basename=True)
 
 
 def remake_birdsongrec_as_generic_seq_csv():
     birdsongrec_dir = TEST_DATA / 'birdsongrec' / 'Bird0'
     birdsongrec_xml_file = birdsongrec_dir / 'Annotation.xml'
     birdsongrec_wavpath = birdsongrec_dir / 'Wave'
-    birdsongrec = crowsetta.formats.BirdsongRec.from_file(xml_path=birdsongrec_xml_file,
-                                                          wav_path=birdsongrec_wavpath,
-                                                          concat_seqs_into_songs=True)
+    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsongrec_xml_file,
+                                                              wav_path=birdsongrec_wavpath,
+                                                              concat_seqs_into_songs=True)
     annots = birdsongrec.to_annot()
-    generic_seq = crowsetta.formats.GenericSeq(annots=annots)
+    generic_seq = crowsetta.formats.seq.GenericSeq(annots=annots)
     csv_path = TEST_DATA / 'csv' / 'birdsongrec_Bird0_Annotation.csv'
     print(
         f'saving csv: {csv_path}'
     )
-    generic_seq.to_csv(csv_path=csv_path, basename=True)
+    generic_seq.to_file(csv_path=csv_path, basename=True)
 
 
 def remake_timit_phn_as_generic_seq_csv():
     timit_kaggle_dir = TEST_DATA / 'timit_kaggle' / 'dr1-fvmh0'
     phn_paths = sorted(timit_kaggle_dir.glob('*.phn'))
-    annots = [crowsetta.formats.Timit.from_file(phn_path).to_annot()
+    annots = [crowsetta.formats.seq.Timit.from_file(phn_path).to_annot()
               for phn_path in phn_paths]
-    timit_generic_seq = crowsetta.formats.GenericSeq(annots=annots)
+    timit_generic_seq = crowsetta.formats.seq.GenericSeq(annots=annots)
     csv_path = TEST_DATA / 'csv' / 'timit-dr1-fvmh0-phn.csv'
     print(
         f'saving csv: {csv_path}'
     )
-    timit_generic_seq.to_csv(csv_path=csv_path, basename=True)
+    timit_generic_seq.to_file(csv_path=csv_path, basename=True)
 
 
 def remake_invalid_fields_in_header_csv(source_csv_path):

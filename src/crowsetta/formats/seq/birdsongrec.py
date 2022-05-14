@@ -288,6 +288,6 @@ class BirdsongRec:
         annot_list = []
         for seq, wav_filename in zip(seqs, wav_filenames):
             annot_list.append(
-                crowsetta.Annotation(seq=seq, annot_path=self.xml_path, audio_path=wav_filename)
+                crowsetta.Annotation(seq=seq, annot_path=self.xml_path, notated_path=wav_filename)
             )
         return annot_list
