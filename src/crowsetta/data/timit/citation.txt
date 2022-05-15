@@ -1,0 +1,4 @@
+Garofolo, John S., et al. 
+"DARPA TIMIT acoustic-phonetic continous speech corpus." 
+NASA STI/Recon technical report n 93 (1993): 27403. 
+https://doi.org/10.35111/17gk-bn40
