@@ -9,35 +9,35 @@ def test_Segment_init_onset_offset_in_seconds_from_keyword():
                                      offset_s=0.170)
     for attr in ['label', 'onset_s', 'offset_s']:
         assert hasattr(a_segment, attr)
-    for attr in ['onset_ind', 'offset_ind']:
+    for attr in ['onset_sample', 'offset_sample']:
         assert getattr(a_segment, attr) is None
 
 
 def test_Segment_init_onset_offset_in_Hertz_from_keyword():
     a_segment = Segment.from_keyword(label='a',
-                                     onset_ind=15655,
-                                     offset_ind=20001)
-    for attr in ['label', 'onset_ind', 'offset_ind']:
+                                     onset_sample=15655,
+                                     offset_sample=20001)
+    for attr in ['label', 'onset_sample', 'offset_sample']:
         assert hasattr(a_segment, attr)
     for attr in ['onset_s', 'offset_s']:
         assert getattr(a_segment, attr) is None
 
 
 def test_Segment_init_onset_offset_in_seconds_from_row():
-    header = ['label', 'onset_s', 'offset_s', 'onset_ind', 'offset_ind']
+    header = ['label', 'onset_s', 'offset_s', 'onset_sample', 'offset_sample']
     row = ['a', '0.123', '0.170', 'None', 'None']
     a_segment = Segment.from_row(row=row, header=header)
     for attr in ['label', 'onset_s', 'offset_s']:
         assert hasattr(a_segment, attr)
-    for attr in ['onset_ind', 'offset_ind']:
+    for attr in ['onset_sample', 'offset_sample']:
         assert getattr(a_segment, attr) is None
 
 
 def test_Segment_init_onset_offset_in_Hertz_from_row():
-    header = ['label', 'onset_s', 'offset_s', 'onset_ind', 'offset_ind']
+    header = ['label', 'onset_s', 'offset_s', 'onset_sample', 'offset_sample']
     row = ['a', 'None', 'None', '15655', '20001']
     a_segment = Segment.from_row(row=row, header=header)
-    for attr in ['label', 'onset_ind', 'offset_ind']:
+    for attr in ['label', 'onset_sample', 'offset_sample']:
         assert hasattr(a_segment, attr)
     for attr in ['onset_s', 'offset_s']:
         assert getattr(a_segment, attr) is None
@@ -63,10 +63,10 @@ def test_Segment_init_missing_onset_seconds_raises():
 def test_Segment_init_missing_offset_Hertz_raises():
     with pytest.raises(ValueError):
         a_segment = Segment.from_keyword(label='a',
-                                         onset_ind=0.123)
+                                         onset_sample=0.123)
 
 
 def test_Segment_init_missing_onset_Hertz_raises():
     with pytest.raises(ValueError):
         a_segment = Segment.from_keyword(label='a',
-                                         offset_ind=0.177)
+                                         offset_sample=0.177)

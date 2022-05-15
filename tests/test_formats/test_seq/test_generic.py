@@ -71,11 +71,11 @@ class TestGeneralSeqSchema:
         with pytest.raises(pandera.errors.SchemaError):
             crowsetta.formats.seq.generic.GenericSeqSchema.validate(no_offset_s_df)
 
-    def test_onset_ind_with_no_offset_ind_raises(self, csv_with_onset_ind_but_no_offset_ind):
-        """test that an 'onset_ind' column with no 'offset_ind' column raises a schema error"""
-        no_offset_ind_df = pd.read_csv(csv_with_onset_ind_but_no_offset_ind)
+    def test_onset_sample_with_no_offset_sample_raises(self, csv_with_onset_sample_but_no_offset_sample):
+        """test that an 'onset_sample' column with no 'offset_sample' column raises a schema error"""
+        no_offset_sample_df = pd.read_csv(csv_with_onset_sample_but_no_offset_sample)
         with pytest.raises(pandera.errors.SchemaError):
-            crowsetta.formats.seq.generic.GenericSeqSchema.validate(no_offset_ind_df)
+            crowsetta.formats.seq.generic.GenericSeqSchema.validate(no_offset_sample_df)
 
     def test_no_onset_or_offset_column_raises(self, csv_with_no_onset_or_offset_column):
         """test that **no** onset or offset columns raises a schema error"""
@@ -140,7 +140,7 @@ class TestAnnot2CsvFunction:
         df_compare = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_compare)
         pd.testing.assert_frame_equal(df_created, df_compare)
 
-    def test_annot2csv_onset_offset_ind_only(self,
+    def test_annot2csv_onset_offset_sample_only(self,
                                              kaggle_phn_paths,
                                              timit_phn_as_generic_seq_csv,
                                              test_data_root,
