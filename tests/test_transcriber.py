@@ -55,10 +55,12 @@ def test_yarden_from_file(yarden_annot_mat):
     'format',
     [
         'birdsong-recognition-dataset',
-        'csv',
-        'notmat',
         'generic-seq',
+        'notmat',
+        'raven',
         'simple-seq',
+        'textgrid',
+        'timit',
         'yarden'
     ]
 )
