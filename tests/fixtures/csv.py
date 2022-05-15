@@ -37,12 +37,12 @@ def timit_phn_as_generic_seq_csv():
     return TIMIT_PHN_AS_GENERIC_SEQ_CSV
 
 
-EXAMPLE_USER_FORMAT_AS_GENERIC_SEQ_CSV = CSV_ROOT / 'example_user_annotation.csv'
+EXAMPLE_CUSTOM_FORMAT_AS_GENERIC_SEQ_CSV = CSV_ROOT / 'example_custom_format.csv'
 
 
 @pytest.fixture
 def example_user_format_as_generic_seq_csv():
-    return EXAMPLE_USER_FORMAT_AS_GENERIC_SEQ_CSV
+    return EXAMPLE_CUSTOM_FORMAT_AS_GENERIC_SEQ_CSV
 
 
 CSV_MISSING_FIELDS_IN_HEADER = CSV_ROOT / 'missing_fields_in_header.csv'
