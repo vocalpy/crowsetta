@@ -44,11 +44,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - convert docs to markdown and use `myst-parser`
   [#153](https://github.com/NickleDave/crowsetta/pull/153).
   Fixes [#151](https://github.com/NickleDave/crowsetta/issues/151).
-- Require Python >= 3.8 
+- require Python >= 3.8 
   to adhere to [NEP-29]()
   [#168](https://github.com/NickleDave/crowsetta/pull/168).
   Fixes [#166](https://github.com/NickleDave/crowsetta/issues/166).
-
+- rename `Annotation.audio_path` attribute to `notated_path`
+  to be more general, e.g., because annotations can also annotate 
+  a spectrogram
+  [#169](https://github.com/NickleDave/crowsetta/pull/169).
+  Fixes [#148](https://github.com/NickleDave/crowsetta/issues/148).
+  
 ## 3.4.0 -- 2022-03-26
 ### Added
 - add a `__repr__` to the `Transcriber` class
