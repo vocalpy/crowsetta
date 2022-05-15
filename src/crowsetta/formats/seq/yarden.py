@@ -167,8 +167,8 @@ class SongAnnotationGUI:
             )
 
             samp_freq = annotation['fs'].tolist()
-            seq_dict['onset_inds'] = np.round(seq_dict['onsets_s'] * samp_freq).astype(int)
-            seq_dict['offset_inds'] = np.round(seq_dict['offsets_s'] * samp_freq).astype(int)
+            seq_dict['onset_samples'] = np.round(seq_dict['onsets_s'] * samp_freq).astype(int)
+            seq_dict['offset_samples'] = np.round(seq_dict['offsets_s'] * samp_freq).astype(int)
 
             if round_times:
                 seq_dict['onsets_s'] = np.around(seq_dict['onsets_s'], decimals=decimals)

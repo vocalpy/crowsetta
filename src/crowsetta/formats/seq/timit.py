@@ -152,8 +152,8 @@ class Timit:
         and then sending them to a csv file,
         the result should be the same on Windows and Linux.
         """
-        onset_inds = self.begin_samples
-        offset_inds = self.end_samples
+        onset_samples = self.begin_samples
+        offset_samples = self.end_samples
         labels = self.text
 
         if samplerate is None:
@@ -169,16 +169,16 @@ class Timit:
                 )
                 samplerate = None
 
-        onsets_s = onset_inds / samplerate
-        offsets_s = offset_inds / samplerate
+        onsets_s = onset_samples / samplerate
+        offsets_s = offset_samples / samplerate
 
         if round_times:
             onsets_s = np.around(onsets_s, decimals=decimals)
             offsets_s = np.around(offsets_s, decimals=decimals)
 
         phn_seq = crowsetta.Sequence.from_keyword(labels=labels,
-                                                  onset_inds=onset_inds,
-                                                  offset_inds=offset_inds,
+                                                  onset_samples=onset_samples,
+                                                  offset_samples=offset_samples,
                                                   onsets_s=onsets_s,
                                                   offsets_s=offsets_s)
         return phn_seq

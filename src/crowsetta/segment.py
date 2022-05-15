@@ -26,13 +26,13 @@ class Segment(object):
     used to annotate animal communication.
     Typically, a single unit such as a syllable in human speech
     or a "syllable" in birdsong."""
-    _FIELDS = ('label', 'onset_s', 'offset_s', 'onset_ind', 'offset_ind')
+    _FIELDS = ('label', 'onset_s', 'offset_s', 'onset_sample', 'offset_sample')
 
     label = attr.ib(converter=str)
     onset_s = attr.ib(converter=attr.converters.optional(float_or_None))
     offset_s = attr.ib(converter=attr.converters.optional(float_or_None))
-    onset_ind = attr.ib(converter=attr.converters.optional(int_or_None))
-    offset_ind = attr.ib(converter=attr.converters.optional(int_or_None))
+    onset_sample = attr.ib(converter=attr.converters.optional(int_or_None))
+    offset_sample = attr.ib(converter=attr.converters.optional(int_or_None))
     asdict = attr.asdict
 
     @classmethod
@@ -66,20 +66,20 @@ class Segment(object):
 
     @classmethod
     def from_keyword(cls, label, onset_s=None, offset_s=None,
-                     onset_ind=None, offset_ind=None):
-        if ((onset_ind is None and offset_ind is None) and
+                     onset_sample=None, offset_sample=None):
+        if ((onset_sample is None and offset_sample is None) and
                 (onset_s is None and offset_s is None)):
-            raise ValueError('must provide either onset_ind and offset_ind, or '
+            raise ValueError('must provide either onset_sample and offset_sample, or '
                              'onsets_s and offsets_s')
 
-        if onset_ind and offset_ind is None:
-            raise ValueError(f'onset_ind specified as {onset_ind} but offset_ind is None')
-        if onset_ind is None and offset_ind:
-            raise ValueError(f'offset_ind specified as {offset_ind} but onset_ind is None')
+        if onset_sample and offset_sample is None:
+            raise ValueError(f'onset_sample specified as {onset_sample} but offset_sample is None')
+        if onset_sample is None and offset_sample:
+            raise ValueError(f'offset_sample specified as {offset_sample} but onset_sample is None')
         if onset_s and offset_s is None:
             raise ValueError(f'onset_s specified as {onset_s} but offset_s is None')
         if onset_s is None and offset_s:
-            raise ValueError(f'offset_s specified as {offset_ind} but onset_s is None')
+            raise ValueError(f'offset_s specified as {offset_sample} but onset_s is None')
 
         return cls(label=label, onset_s=onset_s, offset_s=offset_s,
-                   onset_ind=onset_ind, offset_ind=offset_ind)
+                   onset_sample=onset_sample, offset_sample=offset_sample)
