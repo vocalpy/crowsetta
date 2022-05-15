@@ -1,3 +1,5 @@
+import importlib
+
 import pytest
 
 import crowsetta
@@ -49,6 +51,20 @@ def test_yarden_from_file(yarden_annot_mat):
     assert isinstance(annots, list)
     assert all([isinstance(annot, crowsetta.Annotation)
                 for annot in annots])
+
+
+def test_example_custom_format(test_data_root):
+    example_custom_format_dir = test_data_root / 'example_custom_format'
+    example_module = example_custom_format_dir / 'example.py'
+    # line below imports example, which uses `register_format` as decorator on Custom class
+    spec = importlib.util.spec_from_file_location("example", example_module)
+    example = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(example)
+
+    annot_path = example_custom_format_dir / 'bird1_annotation.mat'
+    scribe = crowsetta.Transcriber(format='example-custom-format')
+    example_ = scribe.from_file(annot_path)
+    assert isinstance(example_, example.Custom)
 
 
 @pytest.mark.parametrize(
