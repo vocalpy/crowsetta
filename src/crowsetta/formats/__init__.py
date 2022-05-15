@@ -51,6 +51,5 @@ def register_format(format_class):
         raise TypeError(
             f'format class must be subclass of SeqLike or BBoxLike, but was not: {format_class}'
         )
-    name = format_class.__name__
-    FORMATS[name] = format_class
+    FORMATS[format_class.name] = format_class
     return format_class
