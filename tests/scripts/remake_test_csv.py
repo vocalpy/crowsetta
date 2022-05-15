@@ -61,8 +61,8 @@ def remake_example_custom_format_as_generic_seq_csv():
 
     annot_path = example_custom_format_dir / 'bird1_annotation.mat'
     scribe = crowsetta.Transcriber(format='example-custom-format')
-    example = scribe.from_file(annot_path)
-    annots = example.to_annot()
+    example_ = scribe.from_file(annot_path)
+    annots = example_.to_annot()
     custom_format_generic_seq = crowsetta.formats.seq.GenericSeq(annots=annots)
     csv_path = TEST_DATA / 'csv' / 'example_custom_format.csv'
     print(
