@@ -2,6 +2,7 @@
 remakes the .csv files used for testing the `'generic-seq'` format
 """
 from pathlib import Path
+import sys
 
 import pandas as pd
 
@@ -51,6 +52,23 @@ def remake_timit_phn_as_generic_seq_csv():
         f'saving csv: {csv_path}'
     )
     timit_generic_seq.to_file(csv_path=csv_path, basename=True)
+
+
+def remake_example_custom_format_as_generic_seq_csv():
+    example_custom_format_dir = TEST_DATA / 'example_custom_format'
+    sys.path.append(example_custom_format_dir)
+    import example  # registers custom format using `crowsetta.formats.register_format`
+
+    annot_path = example_custom_format_dir / 'bird1_annotation.mat'
+    scribe = crowsetta.Transcriber(format='example-custom-format')
+    example = scribe.from_file(annot_path)
+    annots = example.to_annot()
+    custom_format_generic_seq = crowsetta.formats.seq.GenericSeq(annots=annots)
+    csv_path = TEST_DATA / 'csv' / 'example_custom_format.csv'
+    print(
+        f'saving csv: {csv_path}'
+    )
+    custom_format_generic_seq.to_file(csv_path=csv_path, basename=True)
 
 
 def remake_invalid_fields_in_header_csv(source_csv_path):
