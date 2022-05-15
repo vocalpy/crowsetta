@@ -1,4 +1,4 @@
-label,onset_s,offset_s,onset_ind,offset_ind,notated_path,annot_path,sequence,annotation
+label,onset_s,offset_s,onset_sample,offset_sample,notated_path,annot_path,sequence,annotation
 h#,0.0,0.488,0,7812,sa1.wav,sa1.phn,0,0
 sh,0.488,0.594,7812,9507,sa1.wav,sa1.phn,0,0
 iy,0.594,0.663,9507,10610,sa1.wav,sa1.phn,0,0

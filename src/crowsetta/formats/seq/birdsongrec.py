@@ -185,8 +185,8 @@ class BirdsongRec:
         """
         seqs = []
         for birdsongrec_seq in self.sequences:
-            onset_inds = np.array([syl.position for syl in birdsongrec_seq.syls])
-            offset_inds = np.array([syl.position + syl.length for syl in birdsongrec_seq.syls])
+            onset_samples = np.array([syl.position for syl in birdsongrec_seq.syls])
+            offset_samples = np.array([syl.position + syl.length for syl in birdsongrec_seq.syls])
             labels = np.array(
                 # NOTE we convert syl.label to string so dtype is consistent across formats
                 # and to adhere to schema for `'generic-seq'`
@@ -211,8 +211,8 @@ class BirdsongRec:
                 samplerate_this_wav = samplerate
 
             if samplerate_this_wav:
-                onsets_s = onset_inds / samplerate_this_wav
-                offsets_s = offset_inds / samplerate_this_wav
+                onsets_s = onset_samples / samplerate_this_wav
+                offsets_s = offset_samples / samplerate_this_wav
                 if round_times:
                     onsets_s = np.round(onsets_s, decimals=decimals)
                     offsets_s = np.round(offsets_s , decimals=decimals)
@@ -220,8 +220,8 @@ class BirdsongRec:
                 onsets_s = None
                 offsets_s = None
 
-            seq = crowsetta.Sequence.from_keyword(onset_inds=onset_inds,
-                                                  offset_inds=offset_inds,
+            seq = crowsetta.Sequence.from_keyword(onset_samples=onset_samples,
+                                                  offset_samples=offset_samples,
                                                   onsets_s=onsets_s,
                                                   offsets_s=offsets_s,
                                                   labels=labels

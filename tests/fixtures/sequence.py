@@ -7,15 +7,15 @@ from ..helpers import keywords
 
 @pytest.fixture
 def a_seq(list_of_segments):
-    (onset_inds,
-     offset_inds,
+    (onset_samples,
+     offset_samples,
      onsets_s,
      offsets_s,
      labels) = keywords.from_segments(list_of_segments)
 
     a_seq = Sequence(segments=list_of_segments,
-                     onset_inds=onset_inds,
-                     offset_inds=offset_inds,
+                     onset_samples=onset_samples,
+                     offset_samples=offset_samples,
                      onsets_s=onsets_s,
                      offsets_s=offsets_s,
                      labels=labels,
@@ -25,15 +25,15 @@ def a_seq(list_of_segments):
 
 @pytest.fixture
 def same_seq(list_of_segments):
-    (onset_inds,
-     offset_inds,
+    (onset_samples,
+     offset_samples,
      onsets_s,
      offsets_s,
      labels) = keywords.from_segments(list_of_segments)
 
     same_seq = Sequence(segments=list_of_segments,
-                        onset_inds=onset_inds,
-                        offset_inds=offset_inds,
+                        onset_samples=onset_samples,
+                        offset_samples=offset_samples,
                         onsets_s=onsets_s,
                         offsets_s=offsets_s,
                         labels=labels,
@@ -43,15 +43,15 @@ def same_seq(list_of_segments):
 
 @pytest.fixture
 def different_seq(different_list_of_segments):
-    (onset_inds,
-     offset_inds,
+    (onset_samples,
+     offset_samples,
      onsets_s,
      offsets_s,
      labels) = keywords.from_segments(different_list_of_segments)
 
     different_seq = Sequence(segments=different_list_of_segments,
-                             onset_inds=onset_inds,
-                             offset_inds=offset_inds,
+                             onset_samples=onset_samples,
+                             offset_samples=offset_samples,
                              onsets_s=onsets_s,
                              offsets_s=offsets_s,
                              labels=labels,

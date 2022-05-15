@@ -31,7 +31,7 @@ from crowsetta.typing import PathLike
 ONSET_OFFSET_COLS_ERR = """For onset times and offset times, 
 all values must be specified in at least one unit: 
 seconds (float), or sample number (integer). All rows must be non-null for either 
-'onset_s' and 'offset_s' or 'onset_ind' and 'offset_ind'.
+'onset_s' and 'offset_s' or 'onset_sample' and 'offset_sample'.
 Both units can also be specified. Conversion between units is not validated.
 """
 
@@ -44,8 +44,8 @@ class GenericSeqSchema(pandera.SchemaModel):
     label: Series[pd.StringDtype] = pandera.Field(coerce=True)
     onset_s: Optional[Series[float]] = pandera.Field()
     offset_s: Optional[Series[float]] = pandera.Field()
-    onset_ind: Optional[Series[int]] = pandera.Field()
-    offset_ind: Optional[Series[int]] = pandera.Field()
+    onset_sample: Optional[Series[int]] = pandera.Field()
+    offset_sample: Optional[Series[int]] = pandera.Field()
 
     notated_path: Series[str] = pandera.Field()
     annot_path: Series[str] = pandera.Field()
@@ -62,23 +62,23 @@ class GenericSeqSchema(pandera.SchemaModel):
             return True
 
     @pandera.dataframe_check(error=ONSET_OFFSET_COLS_ERR)
-    def both_onset_ind_and_offset_ind_if_either(cls, df: pd.DataFrame) -> bool:
-        """check that, if one of {'onset_ind', 'offset_ind'} column is present,
+    def both_onset_sample_and_offset_sample_if_either(cls, df: pd.DataFrame) -> bool:
+        """check that, if one of {'onset_sample', 'offset_sample'} column is present,
         then both are present"""
-        if any([col in df for col in ('onset_ind', 'offset_ind')]):
-            return all([col in df for col in ('onset_ind', 'offset_ind')])
+        if any([col in df for col in ('onset_sample', 'offset_sample')]):
+            return all([col in df for col in ('onset_sample', 'offset_sample')])
         else:
             return True
 
     @pandera.dataframe_check(error=ONSET_OFFSET_COLS_ERR)
     def onset_offset_s_and_ind_are_not_both_missing(cls, df: pd.DataFrame) -> bool:
         """check that at least one of the on/offset column pairs is present:
-        either {'onset_s', 'offset_s'} or {'onset_ind', 'offset_ind'}"""
+        either {'onset_s', 'offset_s'} or {'onset_sample', 'offset_sample'}"""
         if 'onset_s' not in df and 'offset_s' not in df:
-            return 'onset_ind' in df and 'offset_ind' in df
-        elif 'onset_ind' not in df and 'offset_ind' not in df:
+            return 'onset_sample' in df and 'offset_sample' in df
+        elif 'onset_sample' not in df and 'offset_sample' not in df:
             return 'onset_s' in df and 'offset_s' in df
-        elif all([col in df for col in ('onset_s', 'offset_s', 'onset_ind', 'offset_ind')]):
+        elif all([col in df for col in ('onset_s', 'offset_s', 'onset_sample', 'offset_sample')]):
             #  i.e., else return True, but extra verbose for clarity
             return True
 
@@ -225,9 +225,9 @@ def csv2annot(csv_path: PathLike) -> List[crowsetta.Annotation]:
         else:
             onsets_s = None
             offsets_s = None
-        if 'onset_ind' and 'offset_ind' in df_annot:
-            onsets_inds = df_annot.onset_ind.values
-            offsets_inds = df_annot.offset_ind.values
+        if 'onset_sample' and 'offset_sample' in df_annot:
+            onsets_inds = df_annot.onset_sample.values
+            offsets_inds = df_annot.offset_sample.values
         else:
             onsets_inds = None
             offsets_inds = None
@@ -235,8 +235,8 @@ def csv2annot(csv_path: PathLike) -> List[crowsetta.Annotation]:
             labels=labels,
             onsets_s=onsets_s,
             offsets_s=offsets_s,
-            onset_inds=onsets_inds,
-            offset_inds=offsets_inds,
+            onset_samples=onsets_inds,
+            offset_samples=offsets_inds,
         )
         annot = crowsetta.Annotation(
             annot_path=annot_path,

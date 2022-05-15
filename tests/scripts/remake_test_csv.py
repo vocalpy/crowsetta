@@ -86,11 +86,11 @@ def remake_onset_s_column_but_no_offset_s_column_csv(source_csv_path):
     df.to_csv(csv_path, index=False)
 
 
-def remake_onset_ind_column_but_no_offset_ind_column_csv(source_csv_path):
+def remake_onset_sample_column_but_no_offset_sample_column_csv(source_csv_path):
     df = pd.read_csv(source_csv_path)
-    df = df.drop(columns=['offset_ind'])
+    df = df.drop(columns=['offset_sample'])
 
-    csv_path = TEST_DATA / 'csv' / 'onset_ind_column_but_no_offset_ind_column.csv'
+    csv_path = TEST_DATA / 'csv' / 'onset_sample_column_but_no_offset_sample_column.csv'
     print(
         f'saving csv: {csv_path}'
     )
@@ -123,7 +123,7 @@ def main():
     remake_no_onset_or_offset_column_csv(source_csv_path)
 
     source_csv_path = TEST_DATA / 'csv' / 'timit-dr1-fvmh0-phn.csv'
-    remake_onset_ind_column_but_no_offset_ind_column_csv(source_csv_path)
+    remake_onset_sample_column_but_no_offset_sample_column_csv(source_csv_path)
 
 
 if __name__ == '__main__':

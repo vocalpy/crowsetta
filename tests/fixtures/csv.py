@@ -69,11 +69,11 @@ def csv_with_onset_s_but_no_offset_s():
     return CSV_WITH_ONSET_S_BUT_NO_OFFSET_S
 
 
-CSV_WITH_ONSET_IND_BUT_NO_OFFSET_IND = CSV_ROOT / 'onset_ind_column_but_no_offset_ind_column.csv'
+CSV_WITH_ONSET_IND_BUT_NO_OFFSET_IND = CSV_ROOT / 'onset_sample_column_but_no_offset_sample_column.csv'
 
 
 @pytest.fixture
-def csv_with_onset_ind_but_no_offset_ind():
+def csv_with_onset_sample_but_no_offset_sample():
     return CSV_WITH_ONSET_IND_BUT_NO_OFFSET_IND
 
 

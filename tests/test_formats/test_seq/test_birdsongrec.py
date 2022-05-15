@@ -113,15 +113,15 @@ def test_to_seq_round_times_false(test_data_root,
     onsets_s_from_birdsongrec = []
     offsets_s_from_birdsongrec = []
     for birdsongrec_seq in birdsongrec.sequences:
-        onset_inds = np.array([syl.position for syl in birdsongrec_seq.syls])
-        offset_inds = np.array([syl.position + syl.length for syl in birdsongrec_seq.syls])
+        onset_samples = np.array([syl.position for syl in birdsongrec_seq.syls])
+        offset_samples = np.array([syl.position + syl.length for syl in birdsongrec_seq.syls])
         wav_filename = birdsongrec.wav_path / birdsongrec_seq.wav_file
         samplerate_this_wav = soundfile.info(wav_filename).samplerate
         onsets_s_from_birdsongrec.extend(
-            (onset_inds / samplerate_this_wav).tolist()
+            (onset_samples / samplerate_this_wav).tolist()
         )
         offsets_s_from_birdsongrec.extend(
-            (offset_inds / samplerate_this_wav).tolist()
+            (offset_samples / samplerate_this_wav).tolist()
         )
 
     assert np.all(
@@ -202,15 +202,15 @@ def test_to_annot_round_times_false(test_data_root,
     onsets_s_from_birdsongrec = []
     offsets_s_from_birdsongrec = []
     for birdsongrec_seq in birdsongrec.sequences:
-        onset_inds = np.array([syl.position for syl in birdsongrec_seq.syls])
-        offset_inds = np.array([syl.position + syl.length for syl in birdsongrec_seq.syls])
+        onset_samples = np.array([syl.position for syl in birdsongrec_seq.syls])
+        offset_samples = np.array([syl.position + syl.length for syl in birdsongrec_seq.syls])
         wav_filename = birdsongrec.wav_path / birdsongrec_seq.wav_file
         samplerate_this_wav = soundfile.info(wav_filename).samplerate
         onsets_s_from_birdsongrec.extend(
-            (onset_inds / samplerate_this_wav).tolist()
+            (onset_samples / samplerate_this_wav).tolist()
         )
         offsets_s_from_birdsongrec.extend(
-            (offset_inds / samplerate_this_wav).tolist()
+            (offset_samples / samplerate_this_wav).tolist()
         )
 
     assert np.all(
