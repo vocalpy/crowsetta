@@ -15,17 +15,6 @@ def test_birdsongrec_from_file(birdsong_rec_xml_file,
                 for annot in annots])
 
 
-def test_csv_from_file(birdsongrec_as_generic_seq_csv):
-    with pytest.warns(FutureWarning):
-        scribe = crowsetta.Transcriber(format='csv')
-    generic = scribe.from_file(birdsongrec_as_generic_seq_csv)
-    assert isinstance(generic, crowsetta.formats.seq.GenericSeq)
-    annots = generic.to_annot()
-    assert isinstance(annots, list)
-    assert all([isinstance(annot, crowsetta.Annotation)
-                for annot in annots])
-
-
 def test_generic_seq_from_file(birdsongrec_as_generic_seq_csv):
     scribe = crowsetta.Transcriber(format='generic-seq')
     generic = scribe.from_file(birdsongrec_as_generic_seq_csv)
