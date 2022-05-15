@@ -53,6 +53,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   a spectrogram
   [#169](https://github.com/NickleDave/crowsetta/pull/169).
   Fixes [#148](https://github.com/NickleDave/crowsetta/issues/148).
+- rename `onset_ind` and `offset_ind` to `onset_sample` and 
+  `offset_sample` for clarity
+  [#174](https://github.com/NickleDave/crowsetta/pull/174).
+  Fixes [#156](https://github.com/NickleDave/crowsetta/issues/156).
 
 ## Removed
 - remove `Stack` class -- was not being used
