@@ -57,7 +57,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Removed
 - remove `Stack` class -- was not being used
   [#172](https://github.com/NickleDave/crowsetta/pull/172).
-  Fixes [#172](https://github.com/NickleDave/crowsetta/issues/172).
+  Fixes [#170](https://github.com/NickleDave/crowsetta/issues/170).
+- remove deprecated `'csv'` format that was replaced by `'generic-seq'`
+  [#173](https://github.com/NickleDave/crowsetta/pull/173).
+  Fixes [#171](https://github.com/NickleDave/crowsetta/issues/171).
 
 ## 3.4.0 -- 2022-03-26
 ### Added
