@@ -62,6 +62,12 @@ class NotMat:
         ----------
         notmat_path: str, pathlib.Path
             Path to a .not.mat file saved by the evsonganaly GUI.
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('notmat')
+        >>> with example.annot_path as annot_path:
+        ...     notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=annot_path)
         """
         notmat_path = pathlib.Path(notmat_path)
         crowsetta.validation.validate_ext(notmat_path, extension=cls.ext)
@@ -99,6 +105,13 @@ class NotMat:
         Returns
         -------
         seq : crowsetta.Sequence
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('notmat')
+        >>> with example.annot_path as annot_path:
+        ...     notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=annot_path)
+        >>> seq = notmat.to_seq()
 
         Notes
         -----
@@ -138,6 +151,13 @@ class NotMat:
         Returns
         -------
         annot : crowsetta.Annotation
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('notmat')
+        >>> with example.annot_path as annot_path:
+        ...     notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=annot_path)
+        >>> annot = notmat.to_annot()
 
         Notes
         -----

@@ -134,6 +134,16 @@ class SimpleSeq:
             ``pandas.read_csv``. Default is None,
             in which case all defaults for
             ``pandas.read_csv`` will be used.
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('simple-seq')
+        >>> with example.annot_path as annot_path:
+        ...    simple = crowsetta.formats.seq.SimpleSeq.from_file(annot_path,
+        ...                                                       columns_map={'start_seconds': 'onset_s', 
+        ...                                                                    'stop_seconds': 'offset_s', 
+        ...                                                                    'name': 'label'},
+        ...                                                       read_csv_kwargs={'index_col': 0})
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -176,6 +186,17 @@ class SimpleSeq:
         -------
         seq : crowsetta.Sequence
 
+        Examples
+        --------
+        >>> example = crowsetta.data.get('simple-seq')
+        >>> with example.annot_path as annot_path:
+        ...    simple = crowsetta.formats.seq.SimpleSeq.from_file(annot_path,
+        ...                                                       columns_map={'start_seconds': 'onset_s', 
+        ...                                                                    'stop_seconds': 'offset_s', 
+        ...                                                                    'name': 'label'},
+        ...                                                       read_csv_kwargs={'index_col': 0})
+        >>> seq = simple.to_seq()
+
         Notes
         -----
         The ``round_times`` and ``decimals`` arguments are provided
@@ -214,6 +235,17 @@ class SimpleSeq:
         Returns
         -------
         annot : crowsetta.Annotation
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('simple-seq')
+        >>> with example.annot_path as annot_path:
+        ...    simple = crowsetta.formats.seq.SimpleSeq.from_file(annot_path,
+        ...                                                       columns_map={'start_seconds': 'onset_s', 
+        ...                                                                    'stop_seconds': 'offset_s', 
+        ...                                                                    'name': 'label'},
+        ...                                                       read_csv_kwargs={'index_col': 0})
+        >>> annot = simple.to_annot()
 
         Notes
         -----

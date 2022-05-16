@@ -83,6 +83,12 @@ class Timit:
             and if either file exists, that one is used. Otherwise,
             defaults to '.wav' in lowercase.
 
+        Examples
+        --------
+        >>> example = crowsetta.data.get('timit')
+        >>> with example.annot_path as annot_path:
+        ...     timit = crowsetta.formats.seq.Timit.from_file(notmat_path=annot_path)
+
         Notes
         -----
         Versions of the dataset exist with the extensions
@@ -139,6 +145,13 @@ class Timit:
             the actual sampling rate. If this does not work,
             then the ``onsets_s`` and ``offsets_s`` attributes
             of the ``crowsetta.Sequence`` are left as None.
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('timit')
+        >>> with example.annot_path as annot_path:
+        ...     timit = crowsetta.formats.seq.Timit.from_file(notmat_path=annot_path)
+        >>> seq = timit.to_seq()
 
         Returns
         -------
@@ -207,6 +220,13 @@ class Timit:
             the actual sampling rate. If this does not work,
             then the ``onsets_s`` and ``offsets_s`` attributes
             of the ``crowsetta.Sequence`` are left as None.
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('timit')
+        >>> with example.annot_path as annot_path:
+        ...     timit = crowsetta.formats.seq.Timit.from_file(notmat_path=annot_path)
+        >>> annot = timit.to_annot()
 
         Returns
         -------

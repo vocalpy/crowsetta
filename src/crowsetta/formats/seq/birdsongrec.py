@@ -115,6 +115,12 @@ class BirdsongRec:
         concat_seqs_into_songs : bool
             If True, concatenate sequences from xml_file, so that
             one sequence = one song / .wav file. Default is True.
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('birdsong-recognition-dataset')
+        >>> with example.annot_path as annot_path:
+        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=annot_path)
         """
         xml_path = pathlib.Path(xml_path)
         crowsetta.validation.validate_ext(xml_path, extension=cls.ext)
@@ -164,6 +170,13 @@ class BirdsongRec:
         -------
         seqs : list
             List of ``crowsetta.Sequence``s.
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('birdsong-recognition-dataset')
+        >>> with example.annot_path as annot_path:
+        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=annot_path)
+        >>> seqs = birdsongrec.to_seq()
 
         Notes
         -----
@@ -260,6 +273,13 @@ class BirdsongRec:
         annots : list
             Of ``crowsetta.Annotation``.
 
+        Examples
+        --------
+        >>> example = crowsetta.data.get('birdsong-recognition-dataset')
+        >>> with example.annot_path as annot_path:
+        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=annot_path)
+        >>> annots = birdsongrec.to_annot()
+
         Notes
         -----
         The ``round_times`` and ``decimals`` arguments are provided
@@ -276,7 +296,7 @@ class BirdsongRec:
         If you need to specify some other location for the ``.wav`` files,
         pass in the ``wavpath`` argument when you first load the annotations:
 
-        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(wav_path='./actually/wavs/are/here')
+        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(wav_path='./actually/wavs/are/here')  # doctest: +SKIP
         """
         seqs = self.to_seq(round_times=round_times,
                            decimals=decimals,
