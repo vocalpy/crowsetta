@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Raven format
   [#164](https://github.com/NickleDave/crowsetta/pull/164).
   Fixes [#84](https://github.com/NickleDave/crowsetta/issues/84).
+- Add example data
+  [#180](https://github.com/NickleDave/crowsetta/pull/180).
+  Fixes [#90](https://github.com/NickleDave/crowsetta/issues/90).
+- Add examples to docstrings, using example data
+  [#180](https://github.com/NickleDave/crowsetta/pull/180).
+  Fixes [#158](https://github.com/NickleDave/crowsetta/issues/158).
 
 ### Changed
 - change `Annotation` class to represent both sequence-like 
