@@ -122,7 +122,7 @@ class TestAnnot2CsvFunction:
         the annotations have onsets and offsets specified in seconds and in samples.
         To test this we use the 'birdsong-recognition-dataset' format.
         """
-        birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+        birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                                   wav_path=birdsong_rec_wav_path,
                                                                   concat_seqs_into_songs=True)
         annot_list = birdsongrec.to_annot()
@@ -235,7 +235,7 @@ class TestCsv2AnnotFunction:
         with onsets and offsets in both seconds and samples.
         """
         annots = crowsetta.formats.seq.generic.csv2annot(csv_path=birdsongrec_as_generic_seq_csv)
-        birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+        birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                                   wav_path=birdsong_rec_wav_path,
                                                                   concat_seqs_into_songs=True)
         annots_from_birdsongrec = birdsongrec.to_annot()
@@ -266,7 +266,7 @@ class TestCsv2AnnotFunction:
         as an example of a format
         with onsets and offsets in both seconds and samples.
         """
-        annots_from_birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+        annots_from_birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                                               wav_path=birdsong_rec_wav_path,
                                                                               concat_seqs_into_songs=True).to_annot()
 
@@ -386,7 +386,7 @@ class TestGenericSeqClass:
         the onsets and offsets specified in both seconds and sample number,
         `'birdsong-recognition-dataset'`
         """
-        birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+        birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                                   wav_path=birdsong_rec_wav_path,
                                                                   concat_seqs_into_songs=True)
         annots = birdsongrec.to_annot()

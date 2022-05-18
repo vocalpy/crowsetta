@@ -10,18 +10,18 @@ from .asserts import assert_rounded_correct_num_decimals
 
 
 def test_from_file(a_notmat_path):
-    notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=a_notmat_path)
+    notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=a_notmat_path)
     assert isinstance(notmat, crowsetta.formats.seq.NotMat)
 
 
 def test_from_file_str(a_notmat_path):
     a_notmat_path_str = str(a_notmat_path)
-    notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=a_notmat_path_str)
+    notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=a_notmat_path_str)
     assert isinstance(notmat, crowsetta.formats.seq.NotMat)
 
 
 def test_to_seq(a_notmat_path):
-    notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=a_notmat_path)
+    notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=a_notmat_path)
     seq = notmat.to_seq()
     assert isinstance(seq, crowsetta.Sequence)
 
@@ -39,7 +39,7 @@ def test_to_seq(a_notmat_path):
 def test_to_seq_round_times_true(test_data_root,
                                  a_notmat_path,
                                  decimals):
-    notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=a_notmat_path)
+    notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=a_notmat_path)
     seq = notmat.to_seq(round_times=True, decimals=decimals)
     assert_rounded_correct_num_decimals(seq.onsets_s, decimals)
     assert_rounded_correct_num_decimals(seq.offsets_s, decimals)
@@ -47,7 +47,7 @@ def test_to_seq_round_times_true(test_data_root,
 
 def test_to_seq_round_times_false(test_data_root,
                                   a_notmat_path):
-    notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=a_notmat_path)
+    notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=a_notmat_path)
     seq = notmat.to_seq(round_times=False)
 
     assert np.all(
@@ -59,7 +59,7 @@ def test_to_seq_round_times_false(test_data_root,
 
 
 def test_to_annot(a_notmat_path):
-    notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=a_notmat_path)
+    notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=a_notmat_path)
     annot = notmat.to_annot()
     assert isinstance(annot, crowsetta.Annotation)
     assert hasattr(annot, 'seq')
@@ -78,7 +78,7 @@ def test_to_annot(a_notmat_path):
 def test_to_annot_round_times_true(test_data_root,
                                    a_notmat_path,
                                    decimals):
-    notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=a_notmat_path)
+    notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=a_notmat_path)
     annot = notmat.to_annot(round_times=True, decimals=decimals)
     assert_rounded_correct_num_decimals(annot.seq.onsets_s, decimals)
     assert_rounded_correct_num_decimals(annot.seq.offsets_s, decimals)
@@ -86,7 +86,7 @@ def test_to_annot_round_times_true(test_data_root,
 
 def test_to_annot_round_times_false(test_data_root,
                                     a_notmat_path):
-    notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=a_notmat_path)
+    notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=a_notmat_path)
     annot = notmat.to_annot(round_times=False)
 
     assert np.all(

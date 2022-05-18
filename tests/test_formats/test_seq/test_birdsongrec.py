@@ -18,7 +18,7 @@ from .asserts import assert_rounded_correct_num_decimals
 def test_from_file(birdsong_rec_xml_file,
                    birdsong_rec_wav_path,
                    concat_seqs_into_songs):
-    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                               wav_path=birdsong_rec_wav_path,
                                                               concat_seqs_into_songs=concat_seqs_into_songs)
     assert isinstance(birdsongrec, crowsetta.formats.seq.BirdsongRec)
@@ -56,7 +56,7 @@ def test_to_seq(test_data_root,
         wav_path = birdsong_rec_wav_path
     else:
         wav_path = test_data_root / wav_path
-    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                               wav_path=wav_path,
                                                               concat_seqs_into_songs=concat_seqs_into_songs)
     if not wav_path.exists():
@@ -88,7 +88,7 @@ def test_to_seq_round_times_true(test_data_root,
                                  birdsong_rec_xml_file,
                                  birdsong_rec_wav_path,
                                  decimals):
-    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                               wav_path=birdsong_rec_wav_path,
                                                               concat_seqs_into_songs=True)
     seqs = birdsongrec.to_seq(round_times=True, decimals=decimals)
@@ -102,7 +102,7 @@ def test_to_seq_round_times_true(test_data_root,
 def test_to_seq_round_times_false(test_data_root,
                                   birdsong_rec_xml_file,
                                   birdsong_rec_wav_path):
-    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                               wav_path=birdsong_rec_wav_path,
                                                               concat_seqs_into_songs=True)
     seqs = birdsongrec.to_seq(round_times=False)
@@ -145,7 +145,7 @@ def test_to_annot(test_data_root,
         wav_path = birdsong_rec_wav_path
     else:
         wav_path = test_data_root / wav_path
-    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                               wav_path=wav_path,
                                                               concat_seqs_into_songs=concat_seqs_into_songs)
     if not wav_path.exists():
@@ -177,7 +177,7 @@ def test_to_annot_round_times_true(test_data_root,
                                    birdsong_rec_xml_file,
                                    birdsong_rec_wav_path,
                                    decimals):
-    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                               wav_path=birdsong_rec_wav_path,
                                                               concat_seqs_into_songs=True)
     annots = birdsongrec.to_annot(round_times=True, decimals=decimals)
@@ -191,7 +191,7 @@ def test_to_annot_round_times_true(test_data_root,
 def test_to_annot_round_times_false(test_data_root,
                                     birdsong_rec_xml_file,
                                     birdsong_rec_wav_path):
-    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=birdsong_rec_xml_file,
+    birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
                                                               wav_path=birdsong_rec_wav_path,
                                                               concat_seqs_into_songs=True)
     annots = birdsongrec.to_annot(round_times=False)
