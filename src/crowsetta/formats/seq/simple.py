@@ -18,7 +18,7 @@ corresponds to one annotated source file,
 i.e. a single audio or spectrogram file.
 """
 import pathlib
-from typing import ClassVar, List, Mapping, Optional
+from typing import ClassVar, Mapping, Optional
 
 import attr
 import numpy as np
