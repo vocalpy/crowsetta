@@ -28,3 +28,4 @@ from .meta import Meta
 
 # ok, now it's safe to import formats
 from . import formats
+from .formats import register_format
