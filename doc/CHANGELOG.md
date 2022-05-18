@@ -6,15 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Add Raven format
+- add Raven format
   [#164](https://github.com/NickleDave/crowsetta/pull/164).
   Fixes [#84](https://github.com/NickleDave/crowsetta/issues/84).
-- Add example data
+- add example data
   [#180](https://github.com/NickleDave/crowsetta/pull/180).
   Fixes [#90](https://github.com/NickleDave/crowsetta/issues/90).
-- Add examples to docstrings, using example data
+- add examples to docstrings, using example data
   [#180](https://github.com/NickleDave/crowsetta/pull/180).
   Fixes [#158](https://github.com/NickleDave/crowsetta/issues/158).
+- import `register_format` at top level of package, 
+  to be able to just write `@crowsetta.register_format`
+  [#181](https://github.com/NickleDave/crowsetta/pull/181).
+  Fixes [#177](https://github.com/NickleDave/crowsetta/issues/177).
 
 ### Changed
 - change `Annotation` class to represent both sequence-like 
