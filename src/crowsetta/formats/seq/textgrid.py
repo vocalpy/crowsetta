@@ -36,10 +36,10 @@ class TextGrid:
         Extension of files in annotation format: ``'.TextGrid'``.
     textgrid : textgrid.TextGrid
         object that contains annotations from the a '.TextGrid' file.
-    textgrid_path : str, pathlib.Path
+    annot_path : str, pathlib.Path
         Path to .TextGrid file from which annotations were loaded.
     audio_path : str, pathlib.Path
-        Path to audio file that ``textgrid_path`` annotates.
+        Path to audio file that ``annot_path`` annotates.
 
     Notes
     -----
@@ -59,12 +59,12 @@ class TextGrid:
     ext: ClassVar[str] = '.TextGrid'
 
     textgrid: textgrid.TextGrid
-    textgrid_path: pathlib.Path
+    annot_path: pathlib.Path
     audio_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
     def from_file(cls,
-                  textgrid_path: PathLike,
+                  annot_path: PathLike,
                   audio_path: Optional[PathLike] = None,
                   ) -> 'Self':
         """load annotations from .TextGrid file,
@@ -72,7 +72,7 @@ class TextGrid:
 
         Parameters
         ----------
-        textgrid_path: str, pathlib.Path
+        annot_path: str, pathlib.Path
             Path to a .TextGrid file in the format used by Praat.
         audio_path : str. pathlib.Path
             Path to audio file that the ``annot_path`` annotates.
@@ -82,15 +82,15 @@ class TextGrid:
         --------
         >>> example = crowsetta.data.get('textgrid')
         >>> with example.annot_path as annot_path:
-        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(textgrid_path=annot_path)
+        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(annot_path=annot_path)
         """
-        textgrid_path = pathlib.Path(textgrid_path)
-        crowsetta.validation.validate_ext(textgrid_path, extension=cls.ext)
+        annot_path = pathlib.Path(annot_path)
+        crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
 
-        tg = textgrid.TextGrid.fromFile(textgrid_path)
+        tg = textgrid.TextGrid.fromFile(annot_path)
 
         return cls(textgrid=tg,
-                   textgrid_path=textgrid_path,
+                   annot_path=annot_path,
                    audio_path=audio_path)
 
     def to_seq(self,
@@ -125,7 +125,7 @@ class TextGrid:
         --------
         >>> example = crowsetta.data.get('textgrid')
         >>> with example.annot_path as annot_path:
-        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(textgrid_path=annot_path)
+        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(annot_path=annot_path)
         >>> seq = textgrid.to_seq()
 
         Notes
@@ -193,7 +193,7 @@ class TextGrid:
         --------
         >>> example = crowsetta.data.get('textgrid')
         >>> with example.annot_path as annot_path:
-        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(textgrid_path=annot_path)
+        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(annot_path=annot_path)
         >>> annot = textgrid.to_annot()
 
         Notes
@@ -208,6 +208,6 @@ class TextGrid:
                           round_times=round_times,
                           decimals=decimals)
 
-        return crowsetta.Annotation(annot_path=self.textgrid_path,
+        return crowsetta.Annotation(annot_path=self.annot_path,
                                     notated_path=self.audio_path,
                                     seq=seq)

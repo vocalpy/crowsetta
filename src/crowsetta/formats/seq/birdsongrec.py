@@ -36,8 +36,9 @@ class BirdsongRec:
         Extension of files in annotation format: ``'.xml'``.
     sequences: list
         List of ``birdsongrec.Sequence`` instances.
-    xml_path: pathlib.Path
+    annot_path: pathlib.Path
         Path to file from which annotations were loaded.
+        Typically with filename 'Annotation.xml'.
     wav_path: pathlib.Path
         Path to directory containing .wav files annotated by the .xml file.
         If not specified, defaults to directory "Wave", relative to the parent
@@ -82,19 +83,19 @@ class BirdsongRec:
     ext: ClassVar[str] = '.xml'
 
     sequences: List[birdsongrec.Sequence]
-    xml_path: pathlib.Path = attr.field(converter=pathlib.Path)
+    annot_path: pathlib.Path = attr.field(converter=pathlib.Path)
     wav_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
     def from_file(cls,
-                  xml_path: PathLike,
+                  annot_path: PathLike,
                   wav_path: Optional[PathLike] = None,
                   concat_seqs_into_songs: bool = True) -> 'Self':
         """Load BirdsongRecognition annotations from an .xml file.
 
         Parameters
         ----------
-        xml_path : str, pathlib.Path
+        annot_path : str, pathlib.Path
             Path to .xml file from BirdsongRecognition dataset
             that contains annotations.
         wav_path : str, pathlib.Path
@@ -120,25 +121,25 @@ class BirdsongRec:
         --------
         >>> example = crowsetta.data.get('birdsong-recognition-dataset')
         >>> with example.annot_path as annot_path:
-        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=annot_path)
+        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=annot_path)
         """
-        xml_path = pathlib.Path(xml_path)
-        crowsetta.validation.validate_ext(xml_path, extension=cls.ext)
-        if not xml_path.exists():
+        annot_path = pathlib.Path(annot_path)
+        crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
+        if not annot_path.exists():
             raise FileNotFoundError(
-                f"xml_path not found: {xml_path}"
+                f"annot_path not found: {annot_path}"
             )
 
         if wav_path is None:
-            wav_path = xml_path.parent.joinpath('Wave')
+            wav_path = annot_path.parent.joinpath('Wave')
         else:
             wav_path = pathlib.Path(wav_path)
 
         # `birdsong-recongition-dataset` has a 'Sequence' class
         # but it is different from a `crowsetta.Sequence`
-        birdsongrec_seqs = birdsongrec.parse_xml(xml_path,
+        birdsongrec_seqs = birdsongrec.parse_xml(annot_path,
                                                  concat_seqs_into_songs=concat_seqs_into_songs)
-        return cls(sequences=birdsongrec_seqs, xml_path=xml_path, wav_path=wav_path)
+        return cls(sequences=birdsongrec_seqs, annot_path=annot_path, wav_path=wav_path)
 
     def to_seq(self,
                round_times: bool = True,
@@ -175,7 +176,7 @@ class BirdsongRec:
         --------
         >>> example = crowsetta.data.get('birdsong-recognition-dataset')
         >>> with example.annot_path as annot_path:
-        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=annot_path)
+        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=annot_path)
         >>> seqs = birdsongrec.to_seq()
 
         Notes
@@ -277,7 +278,7 @@ class BirdsongRec:
         --------
         >>> example = crowsetta.data.get('birdsong-recognition-dataset')
         >>> with example.annot_path as annot_path:
-        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(xml_path=annot_path)
+        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=annot_path)
         >>> annots = birdsongrec.to_annot()
 
         Notes
@@ -308,6 +309,6 @@ class BirdsongRec:
         annot_list = []
         for seq, wav_filename in zip(seqs, wav_filenames):
             annot_list.append(
-                crowsetta.Annotation(seq=seq, annot_path=self.xml_path, notated_path=wav_filename)
+                crowsetta.Annotation(seq=seq, annot_path=self.annot_path, notated_path=wav_filename)
             )
         return annot_list

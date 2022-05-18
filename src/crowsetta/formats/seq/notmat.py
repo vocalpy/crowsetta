@@ -32,11 +32,11 @@ class NotMat:
         Offset times of segments, in seconds.
     labels : numpy.ndarray
         Labels for segments.
-    notmat_path : str, pathlib.Path
+    annot_path : str, pathlib.Path
         Path to .not.mat file from which
         annotations were loaded.
     audio_path : str, pathlib.Path
-        Path to audio file that ``notmat_path`` annotates.
+        Path to audio file that ``annot_path`` annotates.
 
     Notes
     -----
@@ -50,28 +50,28 @@ class NotMat:
     onsets: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     offsets: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     labels: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
-    notmat_path: pathlib.Path
+    annot_path: pathlib.Path
     audio_path: pathlib.Path
 
     @classmethod
     def from_file(cls,
-                  notmat_path: PathLike) -> 'Self':
+                  annot_path: PathLike) -> 'Self':
         """load annotations from .not.mat file
 
         Parameters
         ----------
-        notmat_path: str, pathlib.Path
+        annot_path: str, pathlib.Path
             Path to a .not.mat file saved by the evsonganaly GUI.
 
         Examples
         --------
         >>> example = crowsetta.data.get('notmat')
         >>> with example.annot_path as annot_path:
-        ...     notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=annot_path)
+        ...     notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=annot_path)
         """
-        notmat_path = pathlib.Path(notmat_path)
-        crowsetta.validation.validate_ext(notmat_path, extension=cls.ext)
-        notmat_dict = evfuncs.load_notmat(notmat_path)
+        annot_path = pathlib.Path(annot_path)
+        crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
+        notmat_dict = evfuncs.load_notmat(annot_path)
         # in .not.mat files saved by evsonganaly,
         # onsets and offsets are in units of ms, have to convert to s
         onsets = notmat_dict['onsets'] / 1000
@@ -80,8 +80,8 @@ class NotMat:
             list(notmat_dict['labels'])
         )
 
-        audio_path = notmat_path.parent / notmat_path.name.replace('.not.mat', '')
-        return cls(notmat_path=notmat_path,
+        audio_path = annot_path.parent / annot_path.name.replace('.not.mat', '')
+        return cls(annot_path=annot_path,
                    onsets=onsets,
                    offsets=offsets,
                    labels=labels,
@@ -110,7 +110,7 @@ class NotMat:
         --------
         >>> example = crowsetta.data.get('notmat')
         >>> with example.annot_path as annot_path:
-        ...     notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=annot_path)
+        ...     notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=annot_path)
         >>> seq = notmat.to_seq()
 
         Notes
@@ -156,7 +156,7 @@ class NotMat:
         --------
         >>> example = crowsetta.data.get('notmat')
         >>> with example.annot_path as annot_path:
-        ...     notmat = crowsetta.formats.seq.NotMat.from_file(notmat_path=annot_path)
+        ...     notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=annot_path)
         >>> annot = notmat.to_annot()
 
         Notes
@@ -169,7 +169,7 @@ class NotMat:
         """
         seq = self.to_seq(round_times=round_times, decimals=decimals)
 
-        return crowsetta.Annotation(annot_path=self.notmat_path,
+        return crowsetta.Annotation(annot_path=self.annot_path,
                                     notated_path=self.audio_path,
                                     seq=seq)
 

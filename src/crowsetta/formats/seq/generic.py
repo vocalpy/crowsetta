@@ -280,12 +280,12 @@ class GenericSeq:
 
     @classmethod
     def from_file(cls,
-                  csv_path: PathLike) -> 'Self':
+                  annot_path: PathLike) -> 'Self':
         """load annotations in 'generic-seq' format from a .csv file
 
         Parameters
         ----------
-        csv_path : str, pathlib.Path
+        annot_path : str, pathlib.Path
             Path to .csv file containing annotations
             saved in the ``'generic-seq'`` format.
 
@@ -295,7 +295,7 @@ class GenericSeq:
         >>> with example.annot_path as annot_path:
         ...     generic = crowsetta.formats.seq.GenericSeq.from_file(annot_path))
         """
-        annots = csv2annot(csv_path=csv_path)
+        annots = csv2annot(csv_path=annot_path)
         return cls(annots=annots)
 
     def to_seq(self) -> List[crowsetta.Sequence]:
@@ -329,7 +329,7 @@ class GenericSeq:
         return self.annots
 
     def to_file(self,
-                csv_path: PathLike,
+                annot_path: PathLike,
                 abspath: bool = False,
                 basename: bool = False) -> None:
         """writes these annotations to a .csv file
@@ -337,7 +337,7 @@ class GenericSeq:
 
         Parameters
         ----------
-        csv_path : str, pathlib.Path
+        annot_path : str, pathlib.Path
             path including filename of .csv to write to,
             will be created (or overwritten if it exists already)
         abspath : bool
@@ -347,7 +347,7 @@ class GenericSeq:
             if True, discard any information about path and just use file name.
             Default is False.
         """
-        annot2csv(csv_path=csv_path,
+        annot2csv(csv_path=annot_path,
                   annot=self.annots,
                   abspath=abspath,
                   basename=basename)
