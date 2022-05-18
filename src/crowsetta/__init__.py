@@ -13,6 +13,7 @@ from .__about__ import (
 # --- need to import everything used by formats before importing formats
 # to avoid circular import errors
 from . import (
+    data,
     interface,
     typing,
     validation

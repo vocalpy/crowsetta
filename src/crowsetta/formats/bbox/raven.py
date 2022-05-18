@@ -90,6 +90,12 @@ class Raven:
         audio_path : str, pathlib.Path
             Path to audio file that the Raven .txt file annotates.
             Optional, defaults to None.
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('raven')
+        >>> with example.annot_path as annot_path:
+        ...     raven = crowsetta.formats.bbox.Raven.from_file(annot_path=annot_path)
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -120,6 +126,13 @@ class Raven:
         -------
         bboxes : list
             of ``crowsetta.BBox``
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('raven')
+        >>> with example.annot_path as annot_path:
+        ...     raven = crowsetta.formats.bbox.Raven.from_file(annot_path=annot_path)
+        >>> bboxes = raven.to_bbox()
         """
         bboxes = []
         for begin_time, end_time, low_freq, high_freq, label in zip(
@@ -144,6 +157,13 @@ class Raven:
         Returns
         -------
         annot : crowsetta.Annotation
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('raven')
+        >>> with example.annot_path as annot_path:
+        ...     raven = crowsetta.formats.bbox.Raven.from_file(annot_path=annot_path)
+        >>> annot = raven.to_annot()
         """
         bboxes = self.to_bbox()
         return crowsetta.Annotation(annot_path=self.annot_path,

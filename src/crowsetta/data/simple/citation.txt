@@ -1,0 +1,5 @@
+Clemens, Jan, 2021, 
+"Bengalese finch - train and test data", 
+https://doi.org/10.25625/ENKMJS, 
+Göttingen Research Online / Data, V1. 
+https://data.goettingen-research-online.de/dataverse/das

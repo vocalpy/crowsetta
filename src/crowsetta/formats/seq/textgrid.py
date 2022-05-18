@@ -77,6 +77,12 @@ class TextGrid:
         audio_path : str. pathlib.Path
             Path to audio file that the ``annot_path`` annotates.
             Optional, default is None.
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('textgrid')
+        >>> with example.annot_path as annot_path:
+        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(textgrid_path=annot_path)
         """
         textgrid_path = pathlib.Path(textgrid_path)
         crowsetta.validation.validate_ext(textgrid_path, extension=cls.ext)
@@ -114,6 +120,13 @@ class TextGrid:
         Returns
         -------
         seq : crowsetta.Sequence
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('textgrid')
+        >>> with example.annot_path as annot_path:
+        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(textgrid_path=annot_path)
+        >>> seq = textgrid.to_seq()
 
         Notes
         -----
@@ -175,6 +188,13 @@ class TextGrid:
         Returns
         -------
         annot : crowsetta.Annotation
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('textgrid')
+        >>> with example.annot_path as annot_path:
+        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(textgrid_path=annot_path)
+        >>> annot = textgrid.to_annot()
 
         Notes
         -----

@@ -1,0 +1,4 @@
+Chronister, L. M., Rhinehart, T. A., Place, A., & Kitzes, J. (2021). 
+An annotated set of audio recordings of Eastern North American birds 
+containing frequency, time, and species information.
+https://datadryad.org/stash/dataset/doi:10.5061/dryad.d2547d81z

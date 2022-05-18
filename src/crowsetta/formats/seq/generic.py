@@ -288,24 +288,45 @@ class GenericSeq:
         csv_path : str, pathlib.Path
             Path to .csv file containing annotations
             saved in the ``'generic-seq'`` format.
-            """
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('generic-seq')
+        >>> with example.annot_path as annot_path:
+        ...     generic = crowsetta.formats.seq.GenericSeq.from_file(annot_path))
+        """
         annots = csv2annot(csv_path=csv_path)
         return cls(annots=annots)
 
-    def to_annot(self) -> List[crowsetta.Annotation]:
-        """returns these ``crowsetta.Annotation`` instances
-         as a list
-
-         This is the same as accessing the list of ``Annotation``
-         instances directly. It is implemented so that this class
-         conforms with the ``SeqLike`` interface.
-         """
-        return self.annots
-
     def to_seq(self) -> List[crowsetta.Sequence]:
         """return a list of ``crowsetta.Sequence``,
-        one for every annotation"""
+        one for every annotation
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('generic-seq')
+        >>> with example.annot_path as annot_path:
+        ...     generic = crowsetta.formats.seq.GenericSeq.from_file(annot_path)
+        >>> seqs = generic.to_seq()
+        """
         return [annot.seq for annot in self.annots]
+
+    def to_annot(self) -> List[crowsetta.Annotation]:
+        """returns these ``crowsetta.Annotation`` instances
+        as a list
+
+        This is the same as accessing the list of ``Annotation``
+        instances directly. It is implemented so that this class
+        conforms with the ``SeqLike`` interface.
+
+        Examples
+        --------
+        >>> example = crowsetta.data.get('generic-seq')
+        >>> with example.annot_path as annot_path:
+        ...     generic = crowsetta.formats.seq.GenericSeq.from_file(annot_path)
+        >>> annots = generic.to_annot()
+        """
+        return self.annots
 
     def to_file(self,
                 csv_path: PathLike,

@@ -1,0 +1,4 @@
+Hedley, Richard (2016): Data used in PLoS One article 
+"Complexity, Predictability and Time Homogeneity of Syntax 
+in the Songs of Cassin’s Vireo (Vireo cassini)". 
+figshare. Dataset. https://doi.org/10.6084/m9.figshare.3081814.v1
