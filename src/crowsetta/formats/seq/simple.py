@@ -76,15 +76,13 @@ class SimpleSeq:
         Extension of files in annotation format:
         ``('.csv', '.txt')``
     onsets_s : numpy.ndarray
-        Vector of integer sample numbers corresponding
-        to beginning of segments, i.e. onsets
+        Vector of floats corresponding
+        to beginning of segments, i.e. onsets, in seconds
     offsets_s : numpy.ndarray
-        Vector of integer sample numbers corresponding
-        to ends of segments, i.e. offsets
+        Vector of floats corresponding
+        to ends of segments, i.e. offsets, in seconds
     labels : numpy.ndarray
-        Vector of string labels for segments;
-        each element is either a single word,
-        or a single phonetic transcription code.
+        Vector of string labels for segments
     annot_path : str, pathlib.Path
         Path to file from which annotations were loaded.
     notated_path : str. pathlib.Path
