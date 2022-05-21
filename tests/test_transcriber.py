@@ -5,6 +5,14 @@ import pytest
 import crowsetta
 
 
+def test_audtxt_from_file(an_audtxt_path):
+    scribe = crowsetta.Transcriber(format='aud-txt')
+    audtxt = scribe.from_file(annot_path=an_audtxt_path)
+    assert isinstance(audtxt, crowsetta.formats.seq.AudTxt)
+    annot = audtxt.to_annot()
+    assert isinstance(annot, crowsetta.Annotation)
+
+
 def test_birdsongrec_from_file(birdsong_rec_xml_file,
                                birdsong_rec_wav_path):
     scribe = crowsetta.Transcriber(format='birdsong-recognition-dataset')
