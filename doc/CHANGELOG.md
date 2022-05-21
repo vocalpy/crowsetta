@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to be able to just write `@crowsetta.register_format`
   [#181](https://github.com/NickleDave/crowsetta/pull/181).
   Fixes [#177](https://github.com/NickleDave/crowsetta/issues/177).
+- add `'aud-txt'` format, for Audacity standard LabelTracks exported to .txt files
+  [#183](https://github.com/NickleDave/crowsetta/pull/183).
+  Fixes [#96](https://github.com/NickleDave/crowsetta/issues/96).
 
 ### Changed
 - change `Annotation` class to represent both sequence-like 
