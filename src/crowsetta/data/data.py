@@ -45,6 +45,8 @@ class ExampleAnnotFile:
 
 
 DATA = {
+    'aud-txt': FormatPathArgs(package='crowsetta.data.audtxt',
+                              resource='405_marron1_June_14_2016_69640887.audacity.txt'),
     'birdsong-recognition-dataset': FormatPathArgs(package='crowsetta.data.birdsongrec',
                                                    resource='Annotation.xml'),
     'generic-seq': FormatPathArgs(package='crowsetta.data.generic',
