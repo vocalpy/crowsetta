@@ -67,6 +67,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `offset_sample` for clarity
   [#174](https://github.com/NickleDave/crowsetta/pull/174).
   Fixes [#156](https://github.com/NickleDave/crowsetta/issues/156).
+- rename first parameter of `from_file` method for all format classes 
+  to `annot_path` for consistency.
+  [#182](https://github.com/NickleDave/crowsetta/pull/174).
+  Fixes [#178](https://github.com/NickleDave/crowsetta/issues/178).
 
 ## Fixed
 - fix `crowsetta.formats.register_format` function added in 
