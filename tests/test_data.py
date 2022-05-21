@@ -6,6 +6,7 @@ import crowsetta
 @pytest.mark.parametrize(
     'format, format_class',
     [
+        ('aud-txt', crowsetta.formats.seq.AudTxt),
         ('birdsong-recognition-dataset', crowsetta.formats.seq.BirdsongRec),
         ('generic-seq', crowsetta.formats.seq.GenericSeq),
         ('notmat', crowsetta.formats.seq.NotMat),
