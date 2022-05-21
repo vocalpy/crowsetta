@@ -129,7 +129,4 @@ def test_to_file(a_simple_csv_path,
     simple = crowsetta.formats.seq.SimpleSeq.from_file(annot_path=a_simple_csv_path)
     csv_path = tmp_path / a_simple_csv_path.name
     simple.to_file(annot_path=csv_path)
-    try:
-        assert filecmp.cmp(a_simple_csv_path, csv_path)
-    except AssertionError:
-        breakpoint()
+    assert filecmp.cmp(a_simple_csv_path, csv_path)
