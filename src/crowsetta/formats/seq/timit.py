@@ -86,8 +86,7 @@ class Timit:
         Examples
         --------
         >>> example = crowsetta.data.get('timit')
-        >>> with example.annot_path as annot_path:
-        ...     timit = crowsetta.formats.seq.Timit.from_file(annot_path=annot_path)
+        >>> timit = crowsetta.formats.seq.Timit.from_file(example.annot_path)
 
         Notes
         -----
@@ -149,8 +148,7 @@ class Timit:
         Examples
         --------
         >>> example = crowsetta.data.get('timit')
-        >>> with example.annot_path as annot_path:
-        ...     timit = crowsetta.formats.seq.Timit.from_file(annot_path=annot_path)
+        >>> timit = crowsetta.formats.seq.Timit.from_file(example.annot_path)
         >>> seq = timit.to_seq()
 
         Returns
@@ -224,8 +222,7 @@ class Timit:
         Examples
         --------
         >>> example = crowsetta.data.get('timit')
-        >>> with example.annot_path as annot_path:
-        ...     timit = crowsetta.formats.seq.Timit.from_file(annot_path=annot_path)
+        >>> timit = crowsetta.formats.seq.Timit.from_file(example.annot_path)
         >>> annot = timit.to_annot()
 
         Returns

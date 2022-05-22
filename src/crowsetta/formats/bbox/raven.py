@@ -94,8 +94,7 @@ class Raven:
         Examples
         --------
         >>> example = crowsetta.data.get('raven')
-        >>> with example.annot_path as annot_path:
-        ...     raven = crowsetta.formats.bbox.Raven.from_file(annot_path=annot_path)
+        >>> raven = crowsetta.formats.bbox.Raven.from_file(example.annot_path)
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -130,8 +129,7 @@ class Raven:
         Examples
         --------
         >>> example = crowsetta.data.get('raven')
-        >>> with example.annot_path as annot_path:
-        ...     raven = crowsetta.formats.bbox.Raven.from_file(annot_path=annot_path)
+        >>> raven = crowsetta.formats.bbox.Raven.from_file(example.annot_path)
         >>> bboxes = raven.to_bbox()
         """
         bboxes = []
@@ -161,8 +159,7 @@ class Raven:
         Examples
         --------
         >>> example = crowsetta.data.get('raven')
-        >>> with example.annot_path as annot_path:
-        ...     raven = crowsetta.formats.bbox.Raven.from_file(annot_path=annot_path)
+        >>> raven = crowsetta.formats.bbox.Raven.from_file(example.annot_path)
         >>> annot = raven.to_annot()
         """
         bboxes = self.to_bbox()

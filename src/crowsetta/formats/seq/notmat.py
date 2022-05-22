@@ -66,8 +66,7 @@ class NotMat:
         Examples
         --------
         >>> example = crowsetta.data.get('notmat')
-        >>> with example.annot_path as annot_path:
-        ...     notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=annot_path)
+        >>> notmat = crowsetta.formats.seq.NotMat.from_file(example.annot_path)
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -109,8 +108,7 @@ class NotMat:
         Examples
         --------
         >>> example = crowsetta.data.get('notmat')
-        >>> with example.annot_path as annot_path:
-        ...     notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=annot_path)
+        >>> notmat = crowsetta.formats.seq.NotMat.from_file(example.annot_path)
         >>> seq = notmat.to_seq()
 
         Notes
@@ -155,8 +153,7 @@ class NotMat:
         Examples
         --------
         >>> example = crowsetta.data.get('notmat')
-        >>> with example.annot_path as annot_path:
-        ...     notmat = crowsetta.formats.seq.NotMat.from_file(annot_path=annot_path)
+        >>> notmat = crowsetta.formats.seq.NotMat.from_file(example.annot_path)
         >>> annot = notmat.to_annot()
 
         Notes
