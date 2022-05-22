@@ -68,3 +68,27 @@ def coverage(session) -> None:
     session.run(
         "pytest", "--cov=./", "--cov-report=xml", *session.posargs
     )
+
+
+@nox.session
+def doc(session: nox.Session) -> None:
+    """
+    Build the docs. 
+
+    To run ``sphinx-autobuild``,  do:
+
+    .. code-block::console
+
+       nox -s doc -- autobuild
+    
+    Otherwise the docs will be built once using
+    """
+    session.install(".[doc]")
+    if session.posargs:
+        if "autobuild" in session.posargs:
+            print("Building docs at http://127.0.0.1:8000 with sphinx-autobuild -- use Ctrl-C to quit")
+            session.run("sphinx-autobuild", "doc", "doc/_build/html")
+        else:
+            print("Unsupported argument to docs")
+    else:
+        session.run("sphinx-build", "-nW", "--keep-going", "-b", "html", "doc/", "doc/_build/html")
