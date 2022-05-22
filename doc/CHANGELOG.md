@@ -22,6 +22,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add `'aud-txt'` format, for Audacity standard LabelTracks exported to .txt files
   [#183](https://github.com/NickleDave/crowsetta/pull/183).
   Fixes [#96](https://github.com/NickleDave/crowsetta/issues/96).
+- add ability to extract example data to local file system;
+  avoids need to use context manager returned by `importlib.resources` 
+  to access the example data files.
+  [#185](https://github.com/NickleDave/crowsetta/pull/185).
+  Fixes [#184](https://github.com/NickleDave/crowsetta/issues/184).
 
 ### Changed
 - change `Annotation` class to represent both sequence-like 
