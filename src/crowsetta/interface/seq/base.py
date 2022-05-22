@@ -1,3 +1,4 @@
+"""abstract base class for sequence-like annotation formats"""
 import abc
 
 from ..base import BaseFormat
