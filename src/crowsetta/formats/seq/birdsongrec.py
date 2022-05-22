@@ -120,8 +120,7 @@ class BirdsongRec:
         Examples
         --------
         >>> example = crowsetta.data.get('birdsong-recognition-dataset')
-        >>> with example.annot_path as annot_path:
-        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=annot_path)
+        >>> birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -175,8 +174,7 @@ class BirdsongRec:
         Examples
         --------
         >>> example = crowsetta.data.get('birdsong-recognition-dataset')
-        >>> with example.annot_path as annot_path:
-        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=annot_path)
+        >>> birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
         >>> seqs = birdsongrec.to_seq()
 
         Notes
@@ -195,7 +193,7 @@ class BirdsongRec:
         If you need to specify some other location for the ``.wav`` files,
         pass in the ``wavpath`` argument when you first load the annotations:
 
-        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(wav_path='./actually/wavs/are/here')
+        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(annot_path, wav_path='./actually/wavs/are/here')  # doctest: +SKIP
         """
         seqs = []
         for birdsongrec_seq in self.sequences:
@@ -277,8 +275,7 @@ class BirdsongRec:
         Examples
         --------
         >>> example = crowsetta.data.get('birdsong-recognition-dataset')
-        >>> with example.annot_path as annot_path:
-        ...     birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=annot_path)
+        >>> birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
         >>> annots = birdsongrec.to_annot()
 
         Notes
@@ -297,7 +294,7 @@ class BirdsongRec:
         If you need to specify some other location for the ``.wav`` files,
         pass in the ``wavpath`` argument when you first load the annotations:
 
-        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(wav_path='./actually/wavs/are/here')  # doctest: +SKIP
+        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(annot_path, wav_path='./actually/wavs/are/here')  # doctest: +SKIP
         """
         seqs = self.to_seq(round_times=round_times,
                            decimals=decimals,

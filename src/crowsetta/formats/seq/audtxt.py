@@ -98,8 +98,7 @@ class AudTxt:
         Examples
         --------
         >>> example = crowsetta.data.get('aud-txt')
-        >>> with example.annot_path as annot_path:
-        ...    simple = crowsetta.formats.seq.AudTxt.from_file(annot_path)
+        >>> audtxt = crowsetta.formats.seq.AudTxt.from_file(example.annot_path)
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -137,9 +136,8 @@ class AudTxt:
         Examples
         --------
         >>> example = crowsetta.data.get('aud-txt')
-        >>> with example.annot_path as annot_path:
-        ...    simple = crowsetta.formats.seq.AudTxt.from_file(annot_path)
-        >>> seq = simple.to_seq()
+        >>> audtxt = crowsetta.formats.seq.AudTxt.from_file(example.annot_path)
+        >>> seq = audtxt.to_seq()
 
         Notes
         -----
@@ -183,9 +181,8 @@ class AudTxt:
         Examples
         --------
         >>> example = crowsetta.data.get('aud-txt')
-        >>> with example.annot_path as annot_path:
-        ...    simple = crowsetta.formats.seq.AudTxt.from_file(annot_path)
-        >>> annot = simple.to_annot()
+        >>> audtxt = crowsetta.formats.seq.AudTxt.from_file(example.annot_path)
+        >>> annot = audtxt.to_annot()
 
         Notes
         -----

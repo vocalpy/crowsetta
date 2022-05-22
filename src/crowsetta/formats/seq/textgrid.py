@@ -81,8 +81,7 @@ class TextGrid:
         Examples
         --------
         >>> example = crowsetta.data.get('textgrid')
-        >>> with example.annot_path as annot_path:
-        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(annot_path=annot_path)
+        >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -124,8 +123,7 @@ class TextGrid:
         Examples
         --------
         >>> example = crowsetta.data.get('textgrid')
-        >>> with example.annot_path as annot_path:
-        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(annot_path=annot_path)
+        >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
         >>> seq = textgrid.to_seq()
 
         Notes
@@ -192,8 +190,7 @@ class TextGrid:
         Examples
         --------
         >>> example = crowsetta.data.get('textgrid')
-        >>> with example.annot_path as annot_path:
-        ...    textgrid = crowsetta.formats.seq.TextGrid.from_file(annot_path=annot_path)
+        >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
         >>> annot = textgrid.to_annot()
 
         Notes
