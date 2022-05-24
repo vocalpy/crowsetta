@@ -42,12 +42,13 @@ test = [
 ]
 doc = [
     "myst-parser >=0.17.0",
-    "Sphinx>=3.4.3",
-    "jupyterlab>=3.0.3",
+    "Sphinx >=3.4.3",
+    "jupyterlab >=3.0.3",
     "sphinxext-opengraph  >=0.5.1",
     "sphinx-copybutton >=0.4.0",
     "sphinx-autobuild >= 2021.3.14",
-    "sphinx-book-theme>=0.3.2",
+    "sphinx-book-theme >=0.3.2",
+    "sphinx-tabs >= 3.3.1",
 ]
 dev = [
     'flit',
