@@ -48,9 +48,10 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
-    'sphinxext.opengraph',
     'sphinx.ext.ifconfig',
+    'sphinxext.opengraph',
     'sphinx.ext.viewcode',
+    'sphinx_tabs.tabs',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
