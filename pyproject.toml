@@ -42,7 +42,7 @@ test = [
 ]
 doc = [
     "librosa >=0.9.1",
-    "myst-parser >=0.17.0",
+    "myst-nb >=0.15.0",
     "pyprojroot >=0.2.0",
     "Sphinx >=3.4.3",
     "jupyterlab >=3.0.3",
