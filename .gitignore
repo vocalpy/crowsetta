@@ -20,3 +20,9 @@ doc/notebooks/data/*/
 # coverage / pytest-cov
 .coverage
 coverage.xml
+
+# docs
+doc/data/*/
+doc/data/*csv
+doc/data/*.tar.gz
+doc/data/*.zip
