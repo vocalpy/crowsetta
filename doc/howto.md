@@ -5,7 +5,7 @@
 This section shows you how to use `crowsetta` for specific tasks.
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 
-howto-user-format
+howto-user-format/howto-user-format
 ```
