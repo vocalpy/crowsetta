@@ -15,7 +15,7 @@ import crowsetta
 @attr.define
 class Batlab:
     """Example custom annotation format"""
-    name: ClassVar[str] = 'example-custom-format'
+    name: ClassVar[str] = 'batlab'
     ext: ClassVar[str] = '.mat'
 
     annotations: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
