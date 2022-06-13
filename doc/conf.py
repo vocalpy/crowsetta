@@ -41,6 +41,7 @@ release = ''
 extensions = [
     'myst_nb',
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
     'sphinx_copybutton',
     'sphinx.ext.doctest',
@@ -187,6 +188,7 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+autosummary_generate = True
 
 # -- Options for intersphinx extension ---------------------------------------
 
