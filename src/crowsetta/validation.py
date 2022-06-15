@@ -1,4 +1,4 @@
-"""utilities for input validation.
+"""Module with functions for data validation.
 
 Some utilities adapted from scikit-learn under BSD 3 License
 https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/utils/validation.py
