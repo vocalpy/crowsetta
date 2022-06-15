@@ -1,4 +1,5 @@
-"""defines Segment class"""
+"""A class that represents a segment of a time series, 
+used to annotate animal communication."""
 import warnings
 
 import attr
@@ -22,8 +23,9 @@ def int_or_None(val):
 
 @attr.s(frozen=True)
 class Segment(object):
-    """object that represents a segment of a time series,
+    """A class that represents a segment of a time series,
     used to annotate animal communication.
+
     Typically, a single unit such as a syllable in human speech
     or a "syllable" in birdsong."""
     _FIELDS = ('label', 'onset_s', 'offset_s', 'onset_sample', 'offset_sample')
