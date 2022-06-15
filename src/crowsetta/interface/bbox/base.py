@@ -1,10 +1,13 @@
+"""An abstract base class defining the interface
+for any annotation format
+that can be represented as a set of bounding boxes"""
 import abc
 
 from ..base import BaseFormat
 
 
 class BBoxLike(BaseFormat, abc.ABC):
-    """abstract base class defining the interface
+    """An abstract base class defining the interface
     for any annotation format
     that can be represented as a set of bounding boxes,
     where each bounding box has corners
@@ -12,7 +15,7 @@ class BBoxLike(BaseFormat, abc.ABC):
     and a label.
     """
     def to_bbox(self) -> 'Union[crowsetta.BBox, Sequence[crowsetta.BBox]]':
-        """converts the annotation to
+        """Converts the annotation to
         a ``crowsetta.BBox`` instance
         or a python set of
         ``crowsetta.BBox`` instances.
