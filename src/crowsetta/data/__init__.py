@@ -1,3 +1,4 @@
+"""Module that handles example data built into ``crowsetta``"""
 from . import (
     birdsongrec,
     generic,
