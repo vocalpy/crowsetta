@@ -4,7 +4,10 @@ import warnings
 
 
 class Transcriber:
-    """class that loads vocal annotations from files,
+    """A single class for working with all annotation formats in ``crowsetta``,  
+    making it possible to load multiple files from a single ``Transcriber``, 
+    without needing to know the names of classes that represent formats.
+
     converts into ``Annotation`` instances
     (the data structure used to work with annotations and
     convert between formats), and save annotations to
@@ -30,7 +33,7 @@ class Transcriber:
         ----------
         format : str or class
             If a string, name of vocal annotation format that ``Transcriber`` will use.
-            Must be  one of ``crowsetta.formats``.
+            Must be one of ``crowsetta.formats``.
             If a class, must be either sequence-like or bounding-box-like, i.e.,
             registered as either `crowsetta.interface.SeqLike`` or ``crowsetta.interface.BBoxLike``.
         """
@@ -77,7 +80,7 @@ class Transcriber:
                   *args,
                   **kwargs
                   ) -> 'Union[crowsetta.interface.SeqLike,crowsetta.interface.BBoxLike]':
-        """load annotations from a file
+        """Load annotations from a file.
 
         Parameters
         ----------
