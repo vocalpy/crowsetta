@@ -1,4 +1,4 @@
-"""class that represents annotations from a single file"""
+"""A class to represent annotations for a single file."""
 from pathlib import Path
 from typing import List, Optional
 
@@ -10,6 +10,7 @@ from .typing import PathLike
 
 class Annotation:
     """A class to represent annotations for a single file.
+
     The annotations can be one of two types:
     a single sequence, or a list of bounding boxes.
 
