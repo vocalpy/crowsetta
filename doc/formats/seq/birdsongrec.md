@@ -2,7 +2,7 @@
 
 # BirdsongRecognition dataset
 
-A {ref}`sequence-like <seq-like>` annotation format 
+A {ref}`sequence-like <formats-seq-like>` annotation format 
 used with the following dataset:  
 Koumura, T. (2016). BirdsongRecognition (Version 1). figshare.  
 <https://doi.org/10.6084/m9.figshare.3470165.v1>  
@@ -20,9 +20,5 @@ adapted [from the original](https://github.com/cycentum/birdsong-recognition/blo
 under the [GNU license](https://github.com/cycentum/birdsong-recognition/blob/master/LICENSE)
 (file is unchanged except for formatting for readability).
 
-The annnotations can be loaded with the following class:
-```{eval-rst}
-.. autoclass:: crowsetta.formats.seq.birdsongrec.BirdsongRec
-    :show-inheritance:
-    :members:
-```
+The annotations can be loaded with the following class: 
+{py:class}`crowsetta.formats.seq.birdsongrec.BirdsongRec`.
