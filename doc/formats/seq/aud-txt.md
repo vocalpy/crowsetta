@@ -6,7 +6,6 @@ The `'aud-txt'` format describes
 [Audacity label tracks](https://manual.audacityteam.org/man/label_tracks.html) 
 that have been exported to the 
 [standard format](https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format).
-Annotations in this format can be loaded with the class {py:class}`crowsetta.formats.seq.audtxt.AudTxt`.
 
 As described on the "standard format" page above:
 
@@ -21,3 +20,6 @@ As described on the "standard format" page above:
 > the second column has the end time, and the third column if present shows the text of the label. 
 > Start time and end time are identical for a point label. Values are separated by tab characters 
 > (which will often appear as an arrow in text editors, as shown above). 
+
+Annotations in this format can be loaded with the following class: 
+{py:class}`crowsetta.formats.seq.audtxt.AudTxt`.
