@@ -86,6 +86,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   [#35](https://github.com/NickleDave/crowsetta/issues/35),
   [#138](https://github.com/NickleDave/crowsetta/issues/138),
   and [#157](https://github.com/NickleDave/crowsetta/issues/157).
+- have `formats.as_list` return list `sorted` (i.e., alphabetically)
+  [#194](https://github.com/NickleDave/crowsetta/pull/194).
+  Fixes [#187](https://github.com/NickleDave/crowsetta/issues/187).
 
 ## Fixed
 - fix `crowsetta.formats.register_format` function added in 
