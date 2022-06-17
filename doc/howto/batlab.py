@@ -15,26 +15,26 @@ import crowsetta
 @attr.define
 class Batlab:
     """Example custom annotation format"""
-    name: ClassVar[str] = 'example-custom-format'
+    name: ClassVar[str] = 'batlab'
     ext: ClassVar[str] = '.mat'
 
     annotations: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     audio_paths: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
-    mat_path: pathlib.Path = attr.field(converter=pathlib.Path)
+    annot_path: pathlib.Path = attr.field(converter=pathlib.Path)
 
     @classmethod
     def from_file(cls,
-                  mat_path: PathLike):
+                  annot_path: PathLike):
         """load BatLAB annotations from .mat file
 
         Parameters
         ----------
         mat_path : str, pathlib.Path
         """
-        mat_path = pathlib.Path(mat_path)
-        crowsetta.validation.validate_ext(mat_path, extension=cls.ext)
+        annot_path = pathlib.Path(annot_path)
+        crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
 
-        annot_mat = scipy.io.loadmat(mat_path, squeeze_me=True)
+        annot_mat = scipy.io.loadmat(annot_path, squeeze_me=True)
 
         audio_paths = annot_mat['filenames']
         annotations = annot_mat['annotations']
@@ -45,7 +45,7 @@ class Batlab:
 
         return cls(annotations=annotations,
                    audio_paths=audio_paths,
-                   annot_path=mat_path)
+                   annot_path=annot_path)
 
 
     def to_seq(self):
@@ -78,7 +78,7 @@ class Batlab:
                 # this happens when there's only one syllable in the file
                 # with only one corresponding label
                 seg_types = np.asarray([seg_types])  # so make it a one-element list
-            elif type(seg_types) == np.ndarray:
+            elif type(labels) == np.ndarray:
                 # this should happen whenever there's more than one label
                 pass
             else:

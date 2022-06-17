@@ -41,12 +41,18 @@ test = [
     "pytest-cov >=2.12.0"
 ]
 doc = [
-    "myst-parser >=0.17.0",
-    "Sphinx>=3.4.3",
-    "jupyterlab>=3.0.3",
+    "jupytext >=1.13.8",
+    "librosa >=0.9.1",
+    "myst-nb >=0.15.0",
+    "pyprojroot >=0.2.0",
+    "seaborn >=0.11.2",
+    "Sphinx >=3.4.3",
+    "jupyterlab >=3.0.3",
     "sphinxext-opengraph  >=0.5.1",
     "sphinx-copybutton >=0.4.0",
     "sphinx-autobuild >= 2021.3.14",
+    "sphinx-book-theme >=0.3.2",
+    "sphinx-tabs >= 3.3.1",
 ]
 dev = [
     'flit',

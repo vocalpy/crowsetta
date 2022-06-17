@@ -1,3 +1,6 @@
+"""A class that represents a bounding box on a spectrogram,
+drawn around animal communication or other sounds.
+"""
 import attrs
 from attrs import field
 
@@ -11,10 +14,10 @@ def is_positive(self, attribute, value):
 
 @attrs.define
 class BBox:
-    """Class that represents a bounding box
+    """A class that represents a bounding box
     on a spectrogram,
-    drawn around an animal vocalization
-    or other sound.
+    drawn around animal communication 
+    or other sounds.
 
     Attributes
     ----------

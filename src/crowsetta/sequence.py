@@ -1,4 +1,5 @@
-"""defines Sequence class"""
+"""A class that represents a sequence of segments,
+used to annotate animal communication."""
 import numpy as np
 
 from .validation import _num_samples, check_consistent_length, column_or_row_or_1d 
@@ -7,9 +8,10 @@ from .segment import Segment
 
 
 class Sequence:
-    """object that represents a sequence of segments,
+    """A class that represents a sequence of segments,
     used to annotate animal communication.
-    e.g., a human sentence made up of syllables,
+
+    E.g., a human sentence made up of syllables,
     or a bout of birdsong made up of "syllables".
 
     Attributes

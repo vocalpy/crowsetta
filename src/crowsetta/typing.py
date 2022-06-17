@@ -1,3 +1,4 @@
+"""Module for type hinting that is specific to ``crowsetta``"""
 import os
 import pathlib
 import typing

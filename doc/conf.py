@@ -20,7 +20,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Crowsetta'
-copyright = '2018, David Nicholson'
+copyright = '2018-present, David Nicholson'
 author = 'David Nicholson'
 
 # The short X.Y version
@@ -39,8 +39,9 @@ release = ''
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'myst_parser',
+    'myst_nb',
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
     'sphinx_copybutton',
     'sphinx.ext.doctest',
@@ -48,9 +49,10 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
-    'sphinxext.opengraph',
     'sphinx.ext.ifconfig',
+    'sphinxext.opengraph',
     'sphinx.ext.viewcode',
+    'sphinx_tabs.tabs',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -86,7 +88,7 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'pyramid'
+html_theme = 'sphinx_book_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -186,11 +188,17 @@ epub_exclude_files = ['search.html']
 
 
 # -- Extension configuration -------------------------------------------------
+autosummary_generate = True
 
 # -- Options for intersphinx extension ---------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
+    "pandera": ("https://pandera.readthedocs.io/en/stable/", None)
+}
 
 # -- Options for todo extension ----------------------------------------------
 
