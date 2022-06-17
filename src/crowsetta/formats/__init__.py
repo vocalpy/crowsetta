@@ -42,7 +42,7 @@ def as_list():
     List of strings, shorthand names that can be used
     to access the class by calling
     by their shorthand names"""
-    return list(FORMATS.keys())
+    return sorted(FORMATS.keys())
 
 
 def register_format(format_class):

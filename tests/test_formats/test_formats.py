@@ -23,6 +23,7 @@ BUILTIN_FORMAT_NAMES = (
 def test_as_list():
     formats_list = crowsetta.formats.as_list()
     assert isinstance(formats_list, list)
+    assert formats_list == sorted(crowsetta.formats.FORMATS.keys())
     assert all(
         [isinstance(format_name, str)
          for format_name in formats_list]
