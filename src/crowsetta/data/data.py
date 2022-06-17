@@ -245,6 +245,7 @@ def get(format: str,
         )
         if y_or_n.lower().startswith('y') or y_or_n == "":
             extract_data_files(user_data_dir)
+            return _get_example_from_user_data_dir(format, user_data_dir)
         else:
             print(
                 """Not extracting data. Will return a context manager.\n

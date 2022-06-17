@@ -136,9 +136,52 @@ def test__get_example_from_user_data_dir(format,
     FORMATS_PARAMETRIZE_ARGVALUES
 )
 def test_get_with_extract(format,
-                          format_class):
+                          format_class,
+                          monkeypatch):
     """test that ``crowsetta.data.get`` works 
     when we **do** extract annotation files 
+    to the local file system
+
+    Added as a regression test,
+    to make sure #186 stays fixed:
+    https://github.com/vocalpy/crowsetta/issues/186
+    """
+    # set up
+    delete_default_user_data_dir()
+
+    # this will cause the call to ``input`` in ``crowsetta.data.get``
+    # to return ``Yes``, so that data is extracted
+    monkeypatch.setattr('builtins.input', lambda _: "Yes")
+
+    example = crowsetta.data.get(format)
+
+    assert isinstance(example, crowsetta.data.ExampleAnnotFile)
+    assert hasattr(example, 'annot_path')
+    assert isinstance(example.annot_path, pathlib.Path)
+    assert hasattr(example, 'citation')
+    assert isinstance(example.citation, str)
+
+    if format_class is crowsetta.formats.bbox.Raven:
+        annot_instance = format_class.from_file(example.annot_path,
+                                                annot_col='Species')
+    elif format_class is crowsetta.formats.seq.SimpleSeq:
+        annot_instance = format_class.from_file(example.annot_path,
+                                                columns_map={'start_seconds': 'onset_s', 
+                                                             'stop_seconds': 'offset_s', 
+                                                             'name': 'label'},
+                                                read_csv_kwargs={'index_col': 0})
+    else:
+        annot_instance = format_class.from_file(example.annot_path)
+    assert isinstance(annot_instance, format_class)
+
+@pytest.mark.parametrize(
+    FORMATS_PARAMETRIZE_ARGNAMES,
+    FORMATS_PARAMETRIZE_ARGVALUES
+)
+def test_get_with_extracted_already(format,
+                                    format_class):
+    """test that ``crowsetta.data.get`` works 
+    when annotation files are **already** extracted  
     to the local file system"""
     # set up
     delete_default_user_data_dir()
