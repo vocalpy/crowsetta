@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to access the example data files.
   [#185](https://github.com/NickleDave/crowsetta/pull/185).
   Fixes [#184](https://github.com/NickleDave/crowsetta/issues/184).
+- add logo
+  [#198](https://github.com/NickleDave/crowsetta/pull/198).
+  Fixes [#17](https://github.com/NickleDave/crowsetta/issues/17).
 
 ### Changed
 - change `Annotation` class to represent both sequence-like 
