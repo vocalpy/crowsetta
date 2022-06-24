@@ -50,8 +50,9 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'sphinx.ext.ifconfig',
-    'sphinxext.opengraph',
     'sphinx.ext.viewcode',
+    'sphinx_design',
+    'sphinxext.opengraph',
     'sphinx_tabs.tabs',
 ]
 
@@ -82,6 +83,18 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
+myst_enable_extensions = [
+    # "dollarmath",
+    # "amsmath",
+    # "deflist",
+    # "html_admonition",
+    # "html_image",
+    "colon_fence",
+    # "smartquotes",
+    # "replacements",
+    # "linkify",
+    # "substitution",
+]
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -90,11 +103,15 @@ pygments_style = None
 #
 html_theme = 'sphinx_book_theme'
 
+html_logo = "_static/crowsetta-primary-logo.png"
+
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    "logo_only": True,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

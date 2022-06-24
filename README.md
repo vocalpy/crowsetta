@@ -1,16 +1,21 @@
-# crowsetta
+<br>
+<div align="center"><img src="./doc/_static/crowsetta-primary-logo.png" width="400"></div>
+<hr>
+
+## a tool to work with any format for annotating vocalizations
+
 [![Build Status](https://github.com/NickleDave/crowsetta/actions/workflows/ci.yml/badge.svg)](https://github.com/NickleDave/crowsetta/actions)
 [![Documentation Status](https://readthedocs.org/projects/crowsetta/badge/?version=latest)](https://crowsetta.readthedocs.io/en/latest/?badge=latest)
 [![DOI](https://zenodo.org/badge/159904494.svg)](https://zenodo.org/badge/latestdoi/159904494)
 [![PyPI version](https://badge.fury.io/py/crowsetta.svg)](https://badge.fury.io/py/crowsetta)
 [![codecov](https://codecov.io/gh/NickleDave/crowsetta/branch/main/graph/badge.svg?token=TXtNTxXKmb)](https://codecov.io/gh/NickleDave/crowsetta)
 
-`crowsetta` is a tool to work with any format for annotating vocalizations: speech, birdsong, 
+`crowsetta` is a tool to work with any format for annotating vocalizations: speech, birdsong,
 mouse ultrasonic calls (insert your favorite animal vocalization here).
-**The goal of** `crowsetta` **is to make sure that your ability to work with a dataset 
-of vocalizations does not depend on your ability to work with any given format for 
-annotating that dataset.** What `crowsetta` gives you is **not** yet another format for 
-annotation (I promise!); instead you get some nice data types that make it easy to 
+**The goal of** `crowsetta` **is to make sure that your ability to work with a dataset
+of vocalizations does not depend on your ability to work with any given format for
+annotating that dataset.** What `crowsetta` gives you is **not** yet another format for
+annotation (I promise!); instead you get some nice data types that make it easy to
 work with any format: namely, `Sequence`s made up of `Segment`s.
 
 ```Python
@@ -24,23 +29,23 @@ work with any format: namely, `Sequence`s made up of `Segment`s.
     >>> list_of_segments = [a_segment] * 3
     >>> seq = Sequence(segments=list_of_segments)
     >>> print(seq)
-    Sequence(segments=[Segment(label='a', onset_s=None, offset_s=None, onset_ind=16000, 
-    offset_ind=32000, file='bird21.wav'), Segment(label='a', onset_s=None, offset_s=None, 
-    onset_ind=16000, offset_ind=32000, file='bird21.wav'), Segment(label='a', onset_s=None, 
+    Sequence(segments=[Segment(label='a', onset_s=None, offset_s=None, onset_ind=16000,
+    offset_ind=32000, file='bird21.wav'), Segment(label='a', onset_s=None, offset_s=None,
+    onset_ind=16000, offset_ind=32000, file='bird21.wav'), Segment(label='a', onset_s=None,
     offset_s=None, onset_ind=16000, offset_ind=32000, file='bird21.wav')])
 ```
 
-You can load annotation from your format of choice into `Sequence`s of `Segment`s 
-(most conveniently with the `Transcriber`, as explained below) and then use the 
+You can load annotation from your format of choice into `Sequence`s of `Segment`s
+(most conveniently with the `Transcriber`, as explained below) and then use the
 `Sequence`s however you need to in your program.
 
-For example, if you want to loop through the `Segment`s of each `Sequence`s to 
+For example, if you want to loop through the `Segment`s of each `Sequence`s to
 pull syllables out of a spectrogram, you can do something like this, very Pythonically:
 
 ```Python
    >>> syllables_from_sequences = []
    >>> for a_seq in seq:
-   ...     seq_dict = seq.to_dict()  # convert to dict with 
+   ...     seq_dict = seq.to_dict()  # convert to dict with
    ...     spect = some_spectrogram_making_function(seq['file'])
    ...     syllables = []
    ...     for seg in seq.segments:
@@ -50,7 +55,7 @@ pull syllables out of a spectrogram, you can do something like this, very Python
 ```
 
 As mentioned above, `crowsetta` provides you with a `Transcriber` that comes equipped
-with convenience functions to do the work of converting for you. 
+with convenience functions to do the work of converting for you.
 
 ```Python
     from crowsetta import Transcriber
@@ -74,9 +79,9 @@ You can even easily adapt the `Transcriber` to use your own in-house format, lik
 - load comma-separated values files back into Python and convert to other formats
 - easily use with your own annotation format
 
-You might find it useful in any situation where you want 
-to share audio files of song and some associated annotations, 
-but you don't want to require the user to install a large 
+You might find it useful in any situation where you want
+to share audio files of song and some associated annotations,
+but you don't want to require the user to install a large
 application in order to work with the annotation files.
 
 ## Getting Started

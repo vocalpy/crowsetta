@@ -13,13 +13,34 @@ execution:
   timeout: 120
 ---
 
-# crowsetta
+::::{grid}
+:reverse:
+:gutter: 2 1 1 1
+:margin: 4 4 1 1
 
-crowsetta is a Python tool to work with any format for annotating 
-animal vocalizations and other bioacoustics data. 
-Many of these formats are for files created 
-by GUI-based apps that enable users to annotate audio and/or spectrograms. 
-Annotations include the times when sound events start and stop, 
+:::{grid-item}
+:columns: 8
+:class: sd-fs-3
+
+A Python tool to work with any format for annotating 
+animal vocalizations and bioacoustics data.
+:::
+
+:::{grid-item}
+:columns: 4
+
+```{image} ./_static/crowsetta-secondary-logo.png
+:width: 150px
+```
+:::
+
+::::
+
+crowsetta provides a Pythonic way to work with annotation formats 
+for animal vocalizations and bioacoustics data. 
+These formats are used, for example, by 
+applications that enable users to annotate audio and/or spectrograms. 
+Such annotations typically include the times when sound events start and stop, 
 and labels that assign each sound to some set of classes 
 chosen by the annotator.
 crowsetta has built-in support for many widely used {ref}`formats <formats-index>` 
@@ -27,7 +48,7 @@ such as {ref}`Audacity label tracks <aud-txt>`,
 {ref}`Praat .TextGrid files <textgrid>`, 
 and {ref}`Raven .txt files <raven>`.
 
-```{figure} _static/example-textgrid-for-index.png
+:::{figure} _static/example-textgrid-for-index.png
 ---
 width: 90%
 figclass: margin-caption
@@ -42,9 +63,9 @@ Example song from
 [Bengalese finch song dataset](https://osf.io/r6paq/), 
 Tachibana and Morita 2021, adapated under 
 CC-By-4.0 License.**
-```
+:::
 
-```{figure} _static/example-raven-for-index.png
+:::{figure} _static/example-raven-for-index.png
 ---
 width: 90%
 figclass: margin-caption
@@ -60,7 +81,7 @@ Example song from
 ["An annotated set of audio recordings of Eastern North American birds containing frequency, time, and species information"](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3329), 
 Chronister et al., 2021, adapated under 
 CC0 1.0 License.**
-```
+:::
 
 Who would want to use crowsetta?
 Anyone that works with animal vocalizations 
