@@ -50,8 +50,9 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
     'sphinx.ext.ifconfig',
-    'sphinxext.opengraph',
     'sphinx.ext.viewcode',
+    'sphinx_design',
+    'sphinxext.opengraph',
     'sphinx_tabs.tabs',
 ]
 
