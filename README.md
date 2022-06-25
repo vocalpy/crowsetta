@@ -1,5 +1,7 @@
 <br>
-<div align="center"><img src="./doc/_static/crowsetta-primary-logo.png" width="400"></div>
+<div align="center">
+<img src="https://github.com/vocalpy/crowsetta/blob/main/doc/_static/crowsetta-primary-logo.png?raw=True" width="400">
+</div>
 <hr>
 
 ## A Python tool to work with any format for annotating animal vocalizations and bioacoustics data
@@ -29,7 +31,7 @@ and [Raven .txt files](https://crowsetta.readthedocs.io/en/latest/formats/bbox/r
 <img align="left"
 width="600"
 alt="example spectrogram showing Bengalese finch song with Praat TextGrid annotations indicated as segments underneath"
-src="./doc/_static/example-textgrid-for-index.png">
+src="https://github.com/vocalpy/crowsetta/blob/main/doc/_static/example-textgrid-for-index.png?raw=True">
 
 Spectrogram of the song of a Bengalese finch 
 with syllables annotated as segments underneath. 
@@ -49,7 +51,7 @@ CC-By-4.0 License.
 <img align="left"
 width="600"
 alt="example spectrogram from field recording with Raven annotations of birdsong indicated as rectangular bounding boxes"
-src="./doc/_static/example-raven-for-index.png">
+src="https://github.com/vocalpy/crowsetta/blob/main/doc/_static/example-raven-for-index.png?raw=True">
 
 Spectrogram of a field recording 
 with annotations of songs of different bird species
