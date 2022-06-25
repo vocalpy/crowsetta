@@ -58,10 +58,10 @@ name: example-textgrid-for-index
 **Spectrogram of the song of a Bengalese finch 
 with syllables annotated as segments underneath. 
 Annotations parsed by crowsetta 
-from a file in the {ref}`Praat TextGrid <textgrid>`.
+from a file in the {ref}`Praat TextGrid <textgrid>` format.
 Example song from 
 [Bengalese finch song dataset](https://osf.io/r6paq/), 
-Tachibana and Morita 2021, adapated under 
+Tachibana and Morita 2021, adapted under 
 CC-By-4.0 License.**
 :::
 
@@ -79,7 +79,7 @@ Annotations parsed by crowsetta
 from a file in the {ref}`Raven Selection Table <raven>` format.
 Example song from 
 ["An annotated set of audio recordings of Eastern North American birds containing frequency, time, and species information"](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3329), 
-Chronister et al., 2021, adapated under 
+Chronister et al., 2021, adapted under 
 CC0 1.0 License.**
 :::
 
@@ -93,7 +93,7 @@ Caribbean, or a speech pathologist looking for phonetic changes that indicate ea
 Alzheimer's disease. crowsetta makes it easier for you to work with 
 your annotations in Python, regardless of the format.
 
-`crowsetta` was developed for use with the libraries 
+crowsetta was developed for use with the libraries 
 [vak](https://vak.readthedocs.io/en/latest/)
 and
 [hybrid-vocal-classifier](https://hybrid-vocal-classifier.readthedocs.io/en/latest/).
@@ -132,7 +132,7 @@ and
   to write readable scripts and libraries 
 * convert annotations to common file formats like `.csv`
   that anyone can work with
-* work with custom formats that are not built in to `crowsetta` 
+* work with custom formats that are not built in to crowsetta 
   by writing simple classes, leveraging abstractions 
   that can represent a wide array of annotation formats
 
@@ -321,7 +321,7 @@ For more about how that works, please see {ref}`howto-user-format`.
 
 If you are new to the library, start with {ref}`tutorial`.
 
-To see an example of using `crowsetta` to work with your own annotation format,
+To see an example of using crowsetta to work with your own annotation format,
 see {ref}`howto-user-format`.
 
 ```{toctree}
@@ -363,7 +363,7 @@ You can see project history and work in progress in the
 
 ## Citation
 
-If you use `crowsetta`, please cite the DOI:
+If you use crowsetta, please cite the DOI:
 
 ```{image} https://zenodo.org/badge/159904494.svg
 :target: https://zenodo.org/badge/latestdoi/159904494

@@ -13,15 +13,15 @@ kernelspec:
 
 (howto-user-format)=
 
-# How to use `crowsetta` with your own annotation format
+# How to use crowsetta with your own annotation format
 
-This section shows you how to use `crowsetta` for working with your
+This section shows you how to use crowsetta for working with your
 own annotation format for vocalizations (or some other format not
 currently built into the library).
 
-## Steps to using `crowsetta` with your own annotation format
+## Steps to using crowsetta with your own annotation format
 
-Below we’ll walk through a case study for using `crowsetta` with your
+Below we’ll walk through a case study for using crowsetta with your
 annotation format. Here’s an outline of the steps we’ll go through:
 
 1. get your annotations into some variables in Python (maybe you already
@@ -31,7 +31,7 @@ annotation format. Here’s an outline of the steps we’ll go through:
 4. use your format with the `crowsetta.Transcriber` class to work with your annotations
 
 If writing a class to represent your format sounds difficult, 
-don't worry. We show you how and `crowsetta` gives you tools that 
+don't worry. We show you how and crowsetta gives you tools that 
 make it easy. If you've written some Python code 
 to work with your annotations before 
 then you're probably already halfway done.
@@ -43,7 +43,7 @@ stop time, and label. Many common annotation formats for animal vocalizations
 are sequence-like.
 
 ```{note}
-Sequence-like formats are one of the two types in `crowsetta`. 
+Sequence-like formats are one of the two types in crowsetta. 
 The other is {ref}`bounding-box <formats-bbox-like>` formats, 
 which annotate sound events with boxes, as the name implies. 
 The steps for working with your own bounding box-like format 
@@ -116,7 +116,7 @@ can run your analysis scripts and reproduce your figures for himself.
 What you really want is to share your data and write your code in a way
 that doesn’t depend on anyone knowing anything about `BatLAB`
 or`SoNAR` and how those programs save data and annotations. This is
-where `crowsetta` comes to your rescue.
+where crowsetta comes to your rescue.
 
 Okay, now that we’ve set up some background for our case study, let’s go
 through the steps we outlined above.
@@ -296,7 +296,7 @@ the [`attrs` library](https://www.attrs.org/en/stable/).
 Then we later add a couple methods to this class that do things 
 like turn the annotations into `crowsetta.Sequence`s and `crowsetta.Annotation`s.
 
-To start writing the class, copy one of the existing classes in `crowsetta`, by looking at its code.  
+To start writing the class, copy one of the existing classes in crowsetta, by looking at its code.  
 Here's a stub of a `Batlab` class that we wrote by 
 copying the [`'yarden'` format](https://github.com/vocalpy/crowsetta/blob/main/src/crowsetta/formats/seq/yarden.py) and changing a couple things -- we'll explain what we changed below.
 
@@ -355,7 +355,7 @@ class Batlab:
 
 This might seem overwhelming at first, but we only changed a few things.
 
-To tell `crowsetta` how to handle our format,
+To tell crowsetta how to handle our format,
 we need to change exactly two of the class attributes: 
 (1) the `name` and (2) the `ext`.
 
@@ -363,7 +363,7 @@ The `name` attribute is the shorthand string name that we use to refer to our fo
 for example when we call `crowsetta.format.by_name` or we make a new `Transcriber`, 
 passing in this `name` as the `format` argument (like so: `scribe = crowsetta.Transcriber(format='name')`).
 
-The `ext` attribute tells `crowsetta` what a valid file extension is for this annotation format: 
+The `ext` attribute tells crowsetta what a valid file extension is for this annotation format: 
 is it a `.mat` file or a `.csv` file? Can it be both `('txt', 'csv')`? 
 We then use this attribute in other places in the class, 
 like when we write a `from_file` method, to validate the file name that gets passed into that method.
@@ -503,7 +503,7 @@ To see the entire example, check out the [batlab.py](./batlab.py) file
 
 ### 3. Register your new format by calling `crowsetta.register_format`
 
-To make it so that `crowsetta` knows about your format, 
+To make it so that crowsetta knows about your format, 
 you call the `crowsetta.register_format` function 
 and pass in the class you have written.
 
@@ -546,7 +546,7 @@ class Batlab:
 check out this primer: https://realpython.com/primer-on-python-decorators/)
 
 This works because decorators are executed at import time. 
-Notice we also used other decorators, another from `crowsetta` 
+Notice we also used other decorators, another from crowsetta 
 that registers our class as sequence-like, 
 and one from `attrs` that helps us easily define a class.
 You need to make sure that `reigster_format` the outermost decorator, 

@@ -4,7 +4,7 @@
 
 This page documents the API of the `crowsetta.formats` module.
 It is generated automatically. 
-If you are a `crowsetta` user looking for 
+If you are a crowsetta user looking for 
 more detail about the built-in formats,
 please see: {ref}`formats-index`.
 

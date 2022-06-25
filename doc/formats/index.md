@@ -2,7 +2,7 @@
 
 # Formats
 
-This page documents the annotation formats built in to `crowsetta`. 
+This page documents the annotation formats built in to crowsetta. 
 The purpose of this section is to provide more information about 
 the formats themselves, including links, citations, 
 and schema where possible.

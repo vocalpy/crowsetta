@@ -15,9 +15,9 @@ kernelspec:
 
 # Tutorial
 
-This tutorial introduces users to `crowsetta`.
+This tutorial introduces users to crowsetta.
 
-## Finding out what annotation formats are built in to `crowsetta`
+## Finding out what annotation formats are built in to crowsetta
 
 The first thing we need to do to work with any Python library is import
 it.
@@ -35,7 +35,7 @@ crowsetta.formats.as_list()
 
 ## Getting some example data to work with
 
-Since `crowsetta` is a tool to working with annotations of
+Since crowsetta is a tool to working with annotations of
 vocalizations, we need some audio files containing vocalizations that
 are annotated.
 
@@ -68,7 +68,7 @@ print(f'The first five are:\n{first_five}')
 
 ## Using the `Transcriber` to load annotation files
 
-Now we want to use `crowsetta` to load the annotations from files.
+Now we want to use crowsetta to load the annotations from files.
 
 First we get all the annotation files in some variable.
 (We have already done this using `pathlib.Path.glob` above.)
@@ -106,10 +106,10 @@ Now that we have loaded the annotations, we want to get them into some
 *data type* that makes it easier to get what we want out of the annotated files 
 (in this case, audio files).
 Just like Python has data types like a `list` or `dict` that make it
-easy to work with data, `crowsetta` provides data types meant to 
+easy to work with data, crowsetta provides data types meant to 
 work with many different formats.
 
-For any format built into `crowsetta`, we can convert the annotations 
+For any format built into crowsetta, we can convert the annotations 
 that we load into a generic `crowsetta.Annotation` (or a `list` of 
 `Annotation`s, if a single annotation file contains annotations 
 for multiple annotated audio files or spectrograms).
@@ -231,7 +231,7 @@ print("\nFirst two Segments of first Sequence:")
 for seg in seqs[0].segments[0:2]: print(seg)
 ```
 
-## **Using** `crowsetta` **data types to write clean code**
+## **Using** crowsetta **data types to write clean code**
 
 Now that we have a `list` of `Sequence`s, we can `iterate`
 (loop) through it to get at our  data in a clean, Pythonic way.
@@ -310,7 +310,7 @@ We can see that each phrase has a roughly similar distribution of durations. We 
 
 +++
 
-Okay, now you’ve seen the basics of working with `crowsetta`. Get out
+Okay, now you’ve seen the basics of working with crowsetta. Get out
 there and analyze some vocalizations!
 
 ```{code-cell} ipython3

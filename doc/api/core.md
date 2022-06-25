@@ -2,7 +2,7 @@
 
 # Core
 
-This page documents the core API of `crowsetta`, 
+This page documents the core API of crowsetta, 
 including data types, other classes, and modules.
 
 ## Data types
