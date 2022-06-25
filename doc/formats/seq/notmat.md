@@ -13,7 +13,7 @@ Nature 450.7173 (2007): 1240.
 This format is used for the dataset in this repository:
 <https://figshare.com/articles/dataset/Bengalese_Finch_song_repository/4805749>
 
-Internally, `crowsetta` loads this format using the 
+Internally, crowsetta loads this format using the 
 Python tool [evfuncs](https://github.com/NickleDave/evfuncs).
 
 The annotations can be loaded with the following class: 

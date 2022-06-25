@@ -7,7 +7,7 @@ DARPA TIMIT Acoustic-Phonetic Continuous Speech Corpus (TIMIT).
 See the README for the dataset here in the U. Penn Catalog:  
 <https://catalog.ldc.upenn.edu/docs/LDC93S1/timit.readme.html>
 
-The formats that can be loaded with `crowsetta` are those used 
+The formats that can be loaded with crowsetta are those used 
 by the .wrd and .phn transcription files, 
 where each segment is specified in terms of 
 the sample number in the audio files where it begins, 
