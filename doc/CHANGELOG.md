@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Changed
+- clean up README and make other doc fixes
+  [#201](https://github.com/NickleDave/crowsetta/pull/201).
+  Fixes [#199](https://github.com/NickleDave/crowsetta/issues/199).
+
 ## 4.0.0 -- 2022-06-25
 ### Added
 - add Raven format
