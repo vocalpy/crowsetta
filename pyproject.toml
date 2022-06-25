@@ -21,7 +21,7 @@ dependencies = [
     "scipy >=1.4.1",
     "SoundFile >=0.10.3",
 ]
-version = "4.0.0"
+version = "4.0.0.post1"
 readme = "README.md"
 license = {file = "LICENSE"}
 classifiers = [
