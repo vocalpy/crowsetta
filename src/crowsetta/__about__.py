@@ -20,8 +20,8 @@ except NameError:
 
 
 __title__ = "crowsetta"
-__summary__ = "A tool to work with any format for annotating vocalizations"
-__uri__ = "https://github.com/NickleDave/crowsetta"
+__summary__ = "A Python tool to work with any format for annotating animal vocalizations and bioacoustics data"
+__uri__ = "https://github.com/vocalpy/crowsetta"
 
 __version__ = "4.0.0.post1"
 
