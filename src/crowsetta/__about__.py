@@ -23,7 +23,7 @@ __title__ = "crowsetta"
 __summary__ = "A Python tool to work with any format for annotating animal vocalizations and bioacoustics data"
 __uri__ = "https://github.com/vocalpy/crowsetta"
 
-__version__ = "4.0.0.post1"
+__version__ = "4.0.0.post2"
 
 if base_dir is not None and os.path.exists(os.path.join(base_dir, ".commit")):
     with open(os.path.join(base_dir, ".commit")) as fp:
