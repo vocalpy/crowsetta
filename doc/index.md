@@ -58,10 +58,10 @@ name: example-textgrid-for-index
 **Spectrogram of the song of a Bengalese finch 
 with syllables annotated as segments underneath. 
 Annotations parsed by crowsetta 
-from a file in the {ref}`Praat TextGrid <textgrid>`.
+from a file in the {ref}`Praat TextGrid <textgrid>` format.
 Example song from 
 [Bengalese finch song dataset](https://osf.io/r6paq/), 
-Tachibana and Morita 2021, adapated under 
+Tachibana and Morita 2021, adapted under 
 CC-By-4.0 License.**
 :::
 
@@ -79,7 +79,7 @@ Annotations parsed by crowsetta
 from a file in the {ref}`Raven Selection Table <raven>` format.
 Example song from 
 ["An annotated set of audio recordings of Eastern North American birds containing frequency, time, and species information"](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3329), 
-Chronister et al., 2021, adapated under 
+Chronister et al., 2021, adapted under 
 CC0 1.0 License.**
 :::
 
