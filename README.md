@@ -2,7 +2,7 @@
 <div align="center"><img src="./doc/_static/crowsetta-primary-logo.png" width="400"></div>
 <hr>
 
-## a tool to work with any format for annotating vocalizations
+## A Python tool to work with any format for annotating animal vocalizations and bioacoustics data
 
 [![Build Status](https://github.com/NickleDave/crowsetta/actions/workflows/ci.yml/badge.svg)](https://github.com/NickleDave/crowsetta/actions)
 [![Documentation Status](https://readthedocs.org/projects/crowsetta/badge/?version=latest)](https://crowsetta.readthedocs.io/en/latest/?badge=latest)
@@ -10,79 +10,92 @@
 [![PyPI version](https://badge.fury.io/py/crowsetta.svg)](https://badge.fury.io/py/crowsetta)
 [![codecov](https://codecov.io/gh/NickleDave/crowsetta/branch/main/graph/badge.svg?token=TXtNTxXKmb)](https://codecov.io/gh/NickleDave/crowsetta)
 
-`crowsetta` is a tool to work with any format for annotating vocalizations: speech, birdsong,
-mouse ultrasonic calls (insert your favorite animal vocalization here).
-**The goal of** `crowsetta` **is to make sure that your ability to work with a dataset
-of vocalizations does not depend on your ability to work with any given format for
-annotating that dataset.** What `crowsetta` gives you is **not** yet another format for
-annotation (I promise!); instead you get some nice data types that make it easy to
-work with any format: namely, `Sequence`s made up of `Segment`s.
+crowsetta provides a Pythonic way to work with annotation formats 
+for animal vocalizations and bioacoustics data. 
+These formats are used, for example, by 
+applications that enable users to annotate audio and/or spectrograms. 
+Such annotations typically include the times when sound events start and stop, 
+and labels that assign each sound to some set of classes 
+chosen by the annotator.
+crowsetta has built-in support for many widely used 
+[formats](https://crowsetta.readthedocs.io/en/latest/formats/index.html),
+such as 
+[Audacity label tracks](https://crowsetta.readthedocs.io/en/latest/formats/seq/aud-txt.html#aud-txt), 
+[Praat .TextGrid files](https://crowsetta.readthedocs.io/en/latest/formats/seq/textgrid.html#textgrid), 
+and [Raven .txt files](https://crowsetta.readthedocs.io/en/latest/formats/bbox/raven.html#raven).
 
-```Python
-    >>> from crowsetta import Segment, Sequence
-    >>> a_segment = Segment.from_keyword(
-    ...     label='a',
-    ...     onset_ind=16000,
-    ...     offset_ind=32000,
-    ...     file='bird21.wav'
-    ...     )
-    >>> list_of_segments = [a_segment] * 3
-    >>> seq = Sequence(segments=list_of_segments)
-    >>> print(seq)
-    Sequence(segments=[Segment(label='a', onset_s=None, offset_s=None, onset_ind=16000,
-    offset_ind=32000, file='bird21.wav'), Segment(label='a', onset_s=None, offset_s=None,
-    onset_ind=16000, offset_ind=32000, file='bird21.wav'), Segment(label='a', onset_s=None,
-    offset_s=None, onset_ind=16000, offset_ind=32000, file='bird21.wav')])
-```
+---
 
-You can load annotation from your format of choice into `Sequence`s of `Segment`s
-(most conveniently with the `Transcriber`, as explained below) and then use the
-`Sequence`s however you need to in your program.
+<img align="left"
+width="600"
+alt="example spectrogram showing Bengalese finch song with Praat TextGrid annotations indicated as segments underneath"
+src="./doc/_static/example-textgrid-for-index.png">
 
-For example, if you want to loop through the `Segment`s of each `Sequence`s to
-pull syllables out of a spectrogram, you can do something like this, very Pythonically:
+Spectrogram of the song of a Bengalese finch 
+with syllables annotated as segments underneath. 
+Annotations parsed by crowsetta 
+from a file in the Praat .TextGrid  format.
+Example song from 
+[Bengalese finch song dataset](https://osf.io/r6paq/), 
+Tachibana and Morita 2021, adapted under 
+CC-By-4.0 License.
 
-```Python
-   >>> syllables_from_sequences = []
-   >>> for a_seq in seq:
-   ...     seq_dict = seq.to_dict()  # convert to dict with
-   ...     spect = some_spectrogram_making_function(seq['file'])
-   ...     syllables = []
-   ...     for seg in seq.segments:
-   ...         syllable = spect[:, seg.onset:seg.offset]  ## spectrogram is a 2d numpy array
-   ...         syllables.append(syllable)
-   ...     syllables_from_sequences.append(syllables)
-```
+<br>
 
-As mentioned above, `crowsetta` provides you with a `Transcriber` that comes equipped
-with convenience functions to do the work of converting for you.
+<br>
 
-```Python
-    from crowsetta import Transcriber
-    scribe = Transcriber()
-    seq = scribe.to_seq(file=notmat_files, format='notmat')
-```
+---
 
-You can even easily adapt the `Transcriber` to use your own in-house format, like so:
+<img align="left"
+width="600"
+alt="example spectrogram from field recording with Raven annotations of birdsong indicated as rectangular bounding boxes"
+src="./doc/_static/example-raven-for-index.png">
 
-```Python
-    from crowsetta import Transcriber
-    scribe = Transciber(user_config=your_config)
-    scribe.to_csv(file_'your_annotation_file.mat',
-                  csv_filename='your_annotation.csv')
-```
+Spectrogram of a field recording 
+with annotations of songs of different bird species
+indicated as bounding boxes.
+Annotations parsed by crowsetta 
+from a file in the 
+[Raven Selection Table](https://crowsetta.readthedocs.io/en/latest/formats/bbox/raven.html#raven) 
+format.
+Example song from 
+["An annotated set of audio recordings of Eastern North American birds containing frequency, time, and species information"](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecy.3329), 
+Chronister et al., 2021, adapted under 
+CC0 1.0 License.
+
+---
+
+Who would want to use crowsetta?
+Anyone that works with animal vocalizations 
+or other bioacoustics data that is annotated in some way.
+Maybe you are a neuroscientist trying to figure out how songbirds learn their song,
+or why mice emit ultrasonic calls. Or maybe you're an ecologist studying dialects of finches
+distributed across Asia, or maybe you are a linguist studying accents in the
+Caribbean, or a speech pathologist looking for phonetic changes that indicate early onset
+Alzheimer's disease. crowsetta makes it easier for you to work with 
+your annotations in Python, regardless of the format.
 
 ## Features
 
-- convert annotation formats to `Sequence` objects that can be easily used in a Python program
-- convert `Sequence` objects to comma-separated value text files that can be read on any system
-- load comma-separated values files back into Python and convert to other formats
-- easily use with your own annotation format
+* take advantage of built-in support 
+  for many widely used
+  [formats](https://crowsetta.readthedocs.io/en/latest/formats/index.html),
+  such as 
+  [Audacity label tracks](https://crowsetta.readthedocs.io/en/latest/formats/seq/aud-txt.html#aud-txt), 
+  [Praat .TextGrid files](https://crowsetta.readthedocs.io/en/latest/formats/seq/textgrid.html#textgrid), 
+  and [Raven .txt files](https://crowsetta.readthedocs.io/en/latest/formats/bbox/raven.html#raven).
+* work with any format by remembering just one class:  
+  `annot = crowsetta.Transcriber(format='format').from_file('annotations.ext')`
+  - no need to remember different functions for different formats 
+* when needed, use classes that represent the formats 
+  to write readable scripts and libraries 
+* convert annotations to common file formats like `.csv`
+  that anyone can work with
+* work with custom formats that are not built in to `crowsetta` 
+  by writing simple classes, leveraging abstractions 
+  that can represent a wide array of annotation formats
 
-You might find it useful in any situation where you want
-to share audio files of song and some associated annotations,
-but you don't want to require the user to install a large
-application in order to work with the annotation files.
+For examples of these features, please see: https://crowsetta.readthedocs.io/en/latest/index.html#features
 
 ## Getting Started
 ### Installation
@@ -99,47 +112,39 @@ $ conda install crowsetta -c conda-forge
 ```
 
 ### Usage
-To learn how to use `crowsetta`, please see the documentation at:  
-<https://crowsetta.readthedocs.io/en/latest/index.html>
 
-### Development Installation
+If you are new to crowsetta, start with 
+[tutorial](https://crowsetta.readthedocs.io/en/latest/tutorial.html).
 
-Currently `crowsetta` is developed with `conda`.
-To set up a development environment:
-```
-$ conda create crowsetta-dev
-$ conda create -n crowsetta-dev python=3.6 numpy scipy attrs
-$ conda activate crowsetta-dev
-$ $ pip install evfuncs koumura
-$ git clone https://github.com/NickleDave/crowsetta.git
-$ cd crowsetta
-$ pip install -e .
-```
-
+For vignettes showing how to use crowsetta for various tasks, 
+such as working with your own annotation format, 
+please see the [how-to](https://crowsetta.readthedocs.io/en/latest/howto.html)
+section.
 
 ## Project Information
 
 ### Background
 
-`crowsetta` was developed for two libraries:
-- `hybrid-vocal-classifier` <https://github.com/NickleDave/hybrid-vocal-classifier>
-- `vak` <https://github.com/NickleDave/vak>
-
-Testing relies on the `Vocalization Annotation Formats Dataset` which you may find useful if you need
-small samples of different audio files and associated annotation formats
-- on Figshare: <https://figshare.com/articles/Vocalization_Annotation_Formats_Dataset/8046920>
-- built from this GitHub repository: <https://github.com/NickleDave/vocal-annotation-formats>
+crowsetta was developed for two libraries:
+- `hybrid-vocal-classifier` <https://github.com/vocalpy/hybrid-vocal-classifier>
+- `vak` <https://github.com/vocalpy/vak>
 
 ### Support
 
-If you are having issues, please let us know.
+To report a bug or request a feature (such as a new annotation format), 
+please use the issue tracker on GitHub:  
+<https://github.com/vocalpy/crowsetta/issues>
 
-- Issue Tracker: <https://github.com/NickleDave/crowsetta/issues>
+To ask a question about crowsetta, discuss its development, 
+or share how you are using it, 
+please start a new topic on the VocalPy forum 
+with the crowsetta tag:  
+<https://forum.vocalpy.org/>
 
 ### Contribute
 
-- Issue Tracker: <https://github.com/NickleDave/crowsetta/issues>
-- Source Code: <https://github.com/NickleDave/crowsetta>
+- Issue Tracker: <https://github.com/vocalpy/crowsetta/issues>
+- Source Code: <https://github.com/vocalpy/crowsetta>
 
 ### CHANGELOG
 You can see project history and work in progress in the [CHANGELOG](./doc/CHANGELOG.md)
@@ -149,5 +154,5 @@ You can see project history and work in progress in the [CHANGELOG](./doc/CHANGE
 The project is licensed under the [BSD license](./LICENSE).
 
 ### Citation
-If you use `crowsetta`, please cite the DOI:
+If you use crowsetta, please cite the DOI:
 [![DOI](https://zenodo.org/badge/159904494.svg)](https://zenodo.org/badge/latestdoi/159904494)
