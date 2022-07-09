@@ -6,11 +6,11 @@
 
 ## A Python tool to work with any format for annotating animal vocalizations and bioacoustics data
 
-[![Build Status](https://github.com/NickleDave/crowsetta/actions/workflows/ci.yml/badge.svg)](https://github.com/NickleDave/crowsetta/actions)
+[![Build Status](https://github.com/vocalpy/crowsetta/actions/workflows/ci.yml/badge.svg)](https://github.com/vocalpy/crowsetta/actions)
 [![Documentation Status](https://readthedocs.org/projects/crowsetta/badge/?version=latest)](https://crowsetta.readthedocs.io/en/latest/?badge=latest)
 [![DOI](https://zenodo.org/badge/159904494.svg)](https://zenodo.org/badge/latestdoi/159904494)
 [![PyPI version](https://badge.fury.io/py/crowsetta.svg)](https://badge.fury.io/py/crowsetta)
-[![codecov](https://codecov.io/gh/NickleDave/crowsetta/branch/main/graph/badge.svg?token=TXtNTxXKmb)](https://codecov.io/gh/NickleDave/crowsetta)
+[![codecov](https://codecov.io/gh/vocalpy/crowsetta/branch/main/graph/badge.svg?token=TXtNTxXKmb)](https://codecov.io/gh/vocalpy/crowsetta)
 
 crowsetta provides a Pythonic way to work with annotation formats 
 for animal vocalizations and bioacoustics data. 
