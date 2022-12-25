@@ -332,6 +332,7 @@ tutorial
 howto
 formats/index
 api/index
+development/index
 ```
 
 ## Support
