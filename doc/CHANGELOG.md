@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+- Add information on contributing and setting up a development environment
+  [#212](https://github.com/NickleDave/crowsetta/pull/212).
+  Fixes [#30](https://github.com/NickleDave/crowsetta/issues/30).
+
 ## 4.0.0.post2 -- 2022-06-25
 ### Changed
 - [c6ba100](https://github.com/vocalpy/crowsetta/commit/c6ba100d7335a880f2e1dbf66f5673ef562f3cc5)
