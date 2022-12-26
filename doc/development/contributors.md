@@ -52,7 +52,7 @@ on GitHub and filling out the template.
 
 * **Please try to fill out the template with as much detail as you can**.
 * After submitting your bug report or feature request,
-  try to answer any follow up questions as best as you can.
+  try to answer any follow-up questions as best as you can.
 
 ## General Guidelines
 
@@ -182,30 +182,30 @@ After completing these steps, you are ready for development!
 
 ### crowsetta Code Overview
 
-The source code for crowsetta is located in the directory ``./src/crowsetta``. When contributing
+The source code for crowsetta is located in the directory `./src/crowsetta`. When contributing
 code, be sure to follow the general guidelines in the
-:ref:`dev-workflow` section.
+{ref}`dev-workflow` section.
 
 ### Code Style
 
 In general, crowsetta code should
 
-* follow the `Zen of Python <https://www.python.org/dev/peps/pep-0020/#id2>`_ in terms of implementation
-* follow the `PEP8 style guide <https://www.python.org/dev/peps/pep-0008/>`_ for code
-* follow the `numpy standard for docstrings <https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard>`_
+* follow the [Zen of Python](https://www.python.org/dev/peps/pep-0020/#id2) in terms of implementation
+* follow the [PEP8 style guide](https://www.python.org/dev/peps/pep-0008/) for code
+* follow the [numpy standard for docstrings](https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard)
 
-We also use the tool `Black <https://github.com/psf/black>`_ to format the code, so we don't have to think about it.
+We also use the tool [Black](https://github.com/psf/black) to format the code, so we don't have to think about it.
 
 ### Testing your Code
 
 Automated testing helps ensure that our code is as free of bugs as it can be.
 It also lets us know immediately if a change we make breaks any other part of the code.
 
-All of our test code and data are stored in the directory ``./tests``,
+All of our test code and data are stored in the directory `./tests`,
 that is set up as if it were a Python package.
-We use the `pytest <https://pytest.org>`_ framework to run the test suite.
+We use the [pytest](https://pytest.org) framework to run the test suite.
 While developing, you can run the entire test suite inside an
-activated virtual environment by running ``pytest`` from the command line:
+activated virtual environment by running `pytest` from the command line:
 
 ```shell
 pytest
