@@ -109,6 +109,23 @@ class SimpleSeq:
                   read_csv_kwargs: Optional[Mapping] = None
                   ) -> 'Self':
         """Load annotations from a file
+        in the 'simple-seq' format.
+
+        Can be a .csv or .txt file;
+        should have 3 columns that represent
+        the onset time, offset time,
+        and labels of the segments
+        in the annotated sequences.
+
+        The default is to assume
+        a comma-separated values file
+        with a header 'onset_s, offset_s, label',
+        but this can be modified
+        with keyword arguments.
+
+        This format also assumes that each annotation file
+        corresponds to one annotated source file,
+        i.e. a single audio or spectrogram file.
 
         Parameters
         ----------
@@ -256,7 +273,7 @@ class SimpleSeq:
     def to_file(self,
                 annot_path: PathLike,
                 to_csv_kwargs: Optional[Mapping] = None) -> None:
-        """save this 'simple-seq' annotation to a .csv file
+        """Save this 'simple-seq' annotation to a .csv file.
 
         Parameters
         ----------
