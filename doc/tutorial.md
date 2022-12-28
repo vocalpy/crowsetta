@@ -51,7 +51,7 @@ by Giraudon et al., 2021.
 
 ```{code-cell} ipython3
 import shutil
-shutil.unpack_archive('./data/M1-2016-spring_audacity_annotations.zip', './data/')
+shutil.unpack_archive('./data/M1-2016-spring_audacity_annotations.zip', './data/giraudon-et-al-2021')
 ```
 
 We use `pathlib` from the Python standard library to 
@@ -59,7 +59,7 @@ get a list of those files.
 
 ```{code-cell} ipython3
 import pathlib
-audtxt_paths = sorted(pathlib.Path('./data/audacity-annotations').glob('*.txt'))
+audtxt_paths = sorted(pathlib.Path('./data/giraudon-et-al-2021/audacity-annotations').glob('*.txt'))
 
 print(f'There are {len(audtxt_paths)} Audacity LabelTrack .txt files')
 first_five = "\n".join([str(path) for path in audtxt_paths[:5]])
@@ -315,5 +315,5 @@ there and analyze some vocalizations!
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
-shutil.rmtree('./data/audacity-annotations')
+shutil.rmtree('./data/giraudon-et-al-2021/audacity-annotations')
 ```
