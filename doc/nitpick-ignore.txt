@@ -1,0 +1,41 @@
+# numpy inherited docstrings
+py:obj dtype
+py:obj a
+py:obj a.size == 1
+py:obj n
+py:obj ndarray
+py:obj args
+
+# other classes and functions that cannot be linked to
+py:class numpy.ma.core.MaskedArray
+py:class numpy.core.records.recarray
+py:class xmlrpclib.Fault
+py:class xmlrpclib.Error
+py:class xmlrpc.client.Fault
+py:class xmlrpc.client.Error
+py:obj distutils.version.LooseVersion
+py:obj pkg_resources.parse_version
+
+
+# Pending on python docs links issue #11975
+py:class list
+py:obj list.append
+py:obj list.append
+py:obj list.count
+py:obj list.extend
+py:obj list.index
+py:obj list.insert
+py:meth list.pop
+py:obj list.remove
+py:class classmethod
+
+# attrs
+py:class callable
+py:exc attr.exceptions.NotAnAttrsClassError
+
+# pandera
+py:class pandera.DataFrameSchema
+py:class SchemaModel
+py:class SchemaError
+py:class pandera.model.TSchemaModel
+py:class pandera.typing.common.DataFrameBase
