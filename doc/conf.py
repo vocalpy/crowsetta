@@ -216,6 +216,20 @@ intersphinx_mapping = intersphinx_mapping = {
     "pandera": ("https://pandera.readthedocs.io/en/stable/", None)
 }
 
+# -- Options for nitpicky mode
+
+# ensure that all references in the docs resolve.
+nitpicky = True
+nitpick_ignore = []
+
+for line in open('nitpick-ignore.txt'):
+    if line.strip() == "" or line.startswith("#"):
+        continue
+    dtype, target = line.split(None, 1)
+    target = target.strip()
+    nitpick_ignore.append((dtype, target))
+
+
 # -- Options for todo extension ----------------------------------------------
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
