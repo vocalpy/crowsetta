@@ -89,20 +89,23 @@ def extract_data_files(user_data_dir: PathLike | None = None):
     if user_data_dir is None:
         user_data_dir = APP_DIRS.user_data_dir
     user_data_dir = pathlib.Path(user_data_dir)
-    user_data_dir.mkdir(parents=True)
+    user_data_dir.mkdir(parents=True, exist_ok=True)
     for format_name, path_args in DATA.items():
         # don't use full name `importlib.resources` here
         # because we need to use backport package, not stdlib, on Python 3.8
         source = files(path_args.package).joinpath(path_args.resource)
         annot_path = as_file(source)
         dst_annot_dir = user_data_dir / path_args.package.split('.')[-1]
-        dst_annot_dir.mkdir()
+        dst_annot_dir.mkdir(exist_ok=True)
         dst_annot_path = dst_annot_dir / path_args.resource
-        with annot_path as annot_path:
-            shutil.copy(annot_path, dst_annot_path)
+        # don't bother copying if we already did this
+        if not dst_annot_path.exists():
+            with annot_path as annot_path:
+                shutil.copy(annot_path, dst_annot_path)
         dst_citation_txt_path = dst_annot_dir / 'citation.txt'
-        with as_file(files(path_args.package).joinpath('citation.txt')) as citation_txt_path:
-            shutil.copy(citation_txt_path, dst_citation_txt_path)
+        if not dst_citation_txt_path.exists():
+            with as_file(files(path_args.package).joinpath('citation.txt')) as citation_txt_path:
+                shutil.copy(citation_txt_path, dst_citation_txt_path)
 
 
 def _get_example_from_user_data_dir(format: str,
