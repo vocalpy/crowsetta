@@ -87,18 +87,17 @@ class GenericSeqSchema(pandera.SchemaModel):
         strict = True
 
 
-def annot2csv(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
-              csv_path: PathLike,
-              abspath: bool = False,
-              basename: bool = False) -> None:
-    """write sequence-like ``crowsetta.Annotation``
-    to a .csv file in the ``'generic-seq'`` format
+def annot2df(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
+             abspath: bool = False,
+             basename: bool = False) -> pd.DataFrame:
+    """Convert sequence-like ``crowsetta.Annotation``
+    to a ``pandas.DataFrame`` in the ``'generic-seq'`` format.
 
     Parameters
     ----------
     annot : crowsetta.Annotation, or list of Annotations
     csv_path : str, pathlib.Path
-        path including filename of .csv to write to,
+        Path including filename of .csv to write to,
         will be created (or overwritten if it exists already)
     abspath : bool
         if True, converts filename for each audio file into absolute path.
@@ -166,7 +165,39 @@ def annot2csv(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
                 records.append(row)
 
     df = pd.DataFrame.from_records(records)
-    GenericSeqSchema.validate(df)
+    df = GenericSeqSchema.validate(df)
+    return df
+
+
+def annot2csv(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
+              csv_path: PathLike,
+              abspath: bool = False,
+              basename: bool = False) -> None:
+    """write sequence-like ``crowsetta.Annotation``
+    to a .csv file in the ``'generic-seq'`` format
+
+    Parameters
+    ----------
+    annot : crowsetta.Annotation, or list of Annotations
+    csv_path : str, pathlib.Path
+        path including filename of .csv to write to,
+        will be created (or overwritten if it exists already)
+    abspath : bool
+        if True, converts filename for each audio file into absolute path.
+        Default is False.
+    basename : bool
+        if True, discard any information about path and just use file name.
+        Default is False.
+
+    Notes
+    -----
+    The abspath and basename parameters specify how file names for audio files are saved.
+    These options are useful when working with multiple copies of files, and for
+    reproducibility (so you know which copy of a file you were working with).
+    Default for both is False, in which case the filename is saved just as it is passed to
+    this function in a Sequence object.
+    """
+    df = annot2df(annot, abspath, basename)
     df.to_csv(csv_path, index=False)
 
 
@@ -324,23 +355,38 @@ class GenericSeq:
         """
         return self.annots
 
+    def to_df(self,
+              abspath: bool = False,
+              basename: bool = False) -> pd.DataFrame:
+        """Convert these annotations to a
+        ``pandas.DataFrame``
+
+        abspath : bool
+            If True, converts filename for each audio file into absolute path.
+            Default is False.
+        basename : bool
+            If True, discard any information about path and just use file name.
+            Default is False.
+        """
+        return annot2df(self.annots, abspath, basename)
+
     def to_file(self,
                 annot_path: PathLike,
                 abspath: bool = False,
                 basename: bool = False) -> None:
-        """writes these annotations to a .csv file
+        """Write these annotations to a .csv file
         in ``'generic-seq'`` format.
 
         Parameters
         ----------
         annot_path : str, pathlib.Path
-            path including filename of .csv to write to,
+            Path including filename of .csv to write to,
             will be created (or overwritten if it exists already)
         abspath : bool
-            if True, converts filename for each audio file into absolute path.
+            If True, converts filename for each audio file into absolute path.
             Default is False.
         basename : bool
-            if True, discard any information about path and just use file name.
+            If True, discard any information about path and just use file name.
             Default is False.
         """
         annot2csv(csv_path=annot_path,
