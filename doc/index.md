@@ -1,4 +1,5 @@
 ---
+title: crowsetta
 jupytext:
   text_representation:
     extension: .md
@@ -38,7 +39,7 @@ animal vocalizations and bioacoustics data.
 
 crowsetta provides a Pythonic way to work with annotation formats 
 for animal vocalizations and bioacoustics data. 
-These formats are used, for example, by 
+Files in these formats are created by
 applications that enable users to annotate audio and/or spectrograms. 
 Such annotations typically include the times when sound events start and stop, 
 and labels that assign each sound to some set of classes 
@@ -47,6 +48,8 @@ crowsetta has built-in support for many widely used {ref}`formats <formats-index
 such as {ref}`Audacity label tracks <aud-txt>`, 
 {ref}`Praat .TextGrid files <textgrid>`, 
 and {ref}`Raven .txt files <raven>`.
+The images below show examples of the two families of annotation formats 
+built into crowsetta, sequence-like formats and bounding box-like formats.
 
 :::{figure} _static/example-textgrid-for-index.png
 ---
@@ -83,7 +86,17 @@ Chronister et al., 2021, adapted under
 CC0 1.0 License.**
 :::
 
-Who would want to use crowsetta?
+# About
+
+<h3>What can you do with crowsetta?</h3>
+
+- Analyze your annotations with Python scripts
+- Develop Python libraries that can work with a wide array of annotation formats
+- Convert your annotations to a file format that's easy for you to share and for anyone to load, 
+  like a single csv file
+- Convert your annotations into a format that's needed to train machine learning models
+
+<h3>Who would want to use crowsetta?</h3>
 Anyone that works with animal vocalizations 
 or other bioacoustics data that is annotated in some way.
 Maybe you are a neuroscientist trying to figure out how songbirds learn their song,
@@ -91,9 +104,9 @@ or why mice emit ultrasonic calls. Or maybe you're an ecologist studying dialect
 distributed across Asia, or maybe you are a linguist studying accents in the
 Caribbean, or a speech pathologist looking for phonetic changes that indicate early onset
 Alzheimer's disease. crowsetta makes it easier for you to work with 
-your annotations in Python, regardless of the format.
+your annotations in Python, regardless of the format.  
 
-crowsetta was developed for use with the libraries 
+It was originally developed for use with the libraries 
 [vak](https://vak.readthedocs.io/en/latest/)
 and
 [hybrid-vocal-classifier](https://hybrid-vocal-classifier.readthedocs.io/en/latest/).
@@ -102,7 +115,7 @@ and
 [pandas]: https://pandas.pydata.org/
 [vak]: https://github.com/vocalpy/vak
 
-## Installation 
+# Installation 
 
 ```{eval-rst}
 
@@ -118,25 +131,29 @@ and
 
 ```
 
-## Features
+# Features
 
-* take advantage of built-in support 
+With crowsetta, you can:
+* work with your annotations in Python,
+  taking advantage of built-in support 
   for many widely used {ref}`formats <formats-index>`
   such as {ref}`Audacity label tracks <aud-txt>`, 
   {ref}`Praat .TextGrid files <textgrid>`,
   and {ref}`Raven .txt files <raven>`.
 * work with any format by remembering just one class:  
   `annot = crowsetta.Transcriber(format='format').from_file('annotations.ext')`
-  - no need to remember different functions for different formats 
+  - no need to remember different functions for different formats
+  - great for interactive analysis and scripts
 * when needed, use classes that represent the formats 
-  to write readable scripts and libraries 
+  to develop software libraries that access annotations through 
+  class attributes and methods 
 * convert annotations to common file formats like `.csv`
   that anyone can work with
-* work with custom formats that are not built in to crowsetta 
-  by writing simple classes, leveraging abstractions 
+* work with custom formats that are not built in 
+  by writing simple classes, leveraging abstractions in crowsetta 
   that can represent a wide array of annotation formats
 
-### Built-in support for many widely-used formats
+<h3>Built-in support for many widely-used formats</h3>
 
 crowsetta has built-in support for many widely used {ref}`formats <formats-index>` 
 such as {ref}`Audacity label tracks <aud-txt>`, 
@@ -181,7 +198,7 @@ import crowsetta
 crowsetta.formats.as_list()
 ```
 
-### Load annotations from any format, using just one class
+<h3>Load annotations from any format, using just one class</h3>
 
 To make things even simpler, you only need to remember a single class,
 ``crowsetta.Transcriber``,  that you can use to work with any format, 
@@ -189,9 +206,9 @@ given the format's shorthand string name.
 The class also makes it easier to operate on many annotation files all at once.
 
 Here is an example of using ``crowsetta.Transcriber`` to load 
-multiple annotation files. As shown in the example after, 
-this can be used to write succinct scripts for data processing, 
-or even applications that work with multiple annotation formats.
+multiple annotation files.  
+This class can be used to write succinct scripts for data processing, 
+or even to write applications that work with multiple annotation formats.
 
 ```{code-cell} ipython3
 :tags: [remove-cell]
@@ -220,18 +237,20 @@ print(f"Loading {len(seqs)} sequence-like annotations")
 print(f"Sequence 1:\n{seqs[0]}")
 ```
 
-### Write readable code, using classes that represent annotation formats
+<h3>Write readable code, using classes that represent annotation formats</h3>
 
 Although it is convenient to use the `Transcriber` class, 
 it can also be helpful to be very clear, 
 especially when writing code that is read and used by others, 
-such as scripts or libraries.
+such as libraries developed by a team of research software engineers.
 To help make code readable and to make intent explicit, 
 crowsetta also provides classes for each format.
 
 Here's an example script written using one of the built-in 
 annotation formats, to make spectrograms of all the annotated 
 syllables in a bout of bird song.
+Notice that we explicitly access the `segments` attribute 
+of a `sequence`
 
 ```python
 import librosa
@@ -264,22 +283,22 @@ for annot in annots:
 
 +++
 
-### Convert annotations to common file formats like `.csv` that anyone can work with
+<h3>Convert annotations to common file formats like csv files that anyone can work with</h3>
 
 crowsetta makes it easier to share data 
 by converting formats to plain text files, 
-such as a comma-separated .csv file.
+such as a comma-separated csv file.
 
 Here is an example of converting a common format 
 to a generic sequence format that can then be saved to 
-a .csv file.
+a csv file.
 
 ```{code-cell} ipython3
 import crowsetta
 example = crowsetta.data.get('birdsong-recognition-dataset')
 birdsongrec = crowsetta.formats.by_name('birdsong-recognition-dataset').from_file(example.annot_path)
 annots = birdsongrec.to_annot(samplerate=32000)  # returns a list of `crowsetta.Annotation`s
-# the 'generic-seq' format can write .csv files from `Annotation`s with `Sequence`s.
+# the 'generic-seq' format can write csv files from `Annotation`s with `Sequence`s.
 generic_seq = crowsetta.formats.by_name('generic-seq')(annots=annots)
 generic_seq.to_file(annot_path='./data/birdsong-rec.csv')
 ```
@@ -303,7 +322,7 @@ For more detail and examples, please see
 
 +++
 
-### For formats that are not built in, write custom classes and then register them
+<h3>Write custom classes for formats that are not built in, and then register them</h3>
 
 You can even easily tell the `Transcriber` to use your own in-house format, like so:
 
@@ -317,7 +336,7 @@ crowsetta.register_format(MyFormatClass)
 
 For more about how that works, please see {ref}`howto-user-format`.
 
-## Getting Started
+# Getting Started
 
 If you are new to the library, start with {ref}`tutorial`.
 
@@ -335,7 +354,7 @@ api/index
 development/index
 ```
 
-## Support
+# Support
 
 To report a bug or request a feature (such as a new annotation format), 
 please use the issue tracker on GitHub:  
@@ -347,22 +366,22 @@ please start a new topic on the VocalPy forum
 with the crowsetta tag:  
 <https://forum.vocalpy.org/>
 
-## Contribute
+# Contribute
 
 - Issue Tracker: <https://github.com/vocalpy/crowsetta/issues>
 - Source Code: <https://github.com/vocalpy/crowsetta>
 
-## License
+# License
 
 The project is licensed under the
 [BSD license](https://github.com/vocalpy/crowsetta/blob/master/LICENSE).
 
-## CHANGELOG
+# CHANGELOG
 
 You can see project history and work in progress in the
 [CHANGELOG](https://github.com/vocalpy/crowsetta/blob/main/doc/CHANGELOG.md).
 
-## Citation
+# Citation
 
 If you use crowsetta, please cite the DOI:
 
