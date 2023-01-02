@@ -110,6 +110,7 @@ html_logo = "_static/crowsetta-primary-logo.png"
 #
 html_theme_options = {
     "logo_only": True,
+    "show_toc_level": 1,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
