@@ -83,7 +83,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 pygments_style = None
 
 myst_enable_extensions = [
-    # "dollarmath",
+    "dollarmath",
     # "amsmath",
     # "deflist",
     # "html_admonition",
