@@ -84,6 +84,74 @@ class TestGeneralSeqSchema:
             crowsetta.formats.seq.generic.GenericSeqSchema.validate(no_onset_or_offset_column_df)
 
 
+class TestAnnot2DfFunction:
+    """tests for ``annot2df`` function"""
+
+    def test_annot2df_onset_offset_s_only(self,
+                                          notmat_paths,
+                                          notmat_as_generic_seq_csv):
+        """test whether `annot2df` works when
+        the annotations have onsets and offsets specified in seconds only.
+        To test this we use the 'notmat' format.
+        """
+        annot_list = [crowsetta.formats.seq.NotMat.from_file(notmat_path).to_annot()
+                      for notmat_path in notmat_paths]
+        # below, set basename to True so we can easily run tests on any system without
+        # worrying about where audio files are relative to root of directory tree
+        df_created = crowsetta.formats.seq.generic.annot2df(annot_list,
+                                                            basename=True)
+
+        assert isinstance(df_created, pd.DataFrame)
+        df_compare = pd.read_csv(notmat_as_generic_seq_csv)
+        df_compare = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_compare)
+        pd.testing.assert_frame_equal(df_created, df_compare)
+
+    def test_annot2df_onset_offset_s_and_ind(self,
+                                             birdsong_rec_xml_file,
+                                             birdsong_rec_wav_path,
+                                             birdsongrec_as_generic_seq_csv):
+        """test whether `annot2df` works when
+        the annotations have onsets and offsets specified in seconds and in samples.
+        To test this we use the 'birdsong-recognition-dataset' format.
+        """
+        birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
+                                                                  wav_path=birdsong_rec_wav_path,
+                                                                  concat_seqs_into_songs=True)
+        annot_list = birdsongrec.to_annot()
+        # below, set basename to True so we can easily run tests on any system without
+        # worrying about where audio files are relative to root of directory tree
+        df_created = crowsetta.formats.seq.generic.annot2df(annot_list,
+                                                            basename=True)
+
+        assert isinstance(df_created, pd.DataFrame)
+        df_created = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_created)
+
+        df_compare = pd.read_csv(birdsongrec_as_generic_seq_csv)
+        df_compare = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_compare)
+        pd.testing.assert_frame_equal(df_created, df_compare)
+
+    def test_annot2df_onset_offset_sample_only(self,
+                                               kaggle_phn_paths,
+                                               timit_phn_as_generic_seq_csv):
+        """test whether `annot2df` works when
+        the annotations have onsets and offsets specified in seconds only.
+        To test this we use the 'timit' format."""
+        annot_list = [crowsetta.formats.seq.Timit.from_file(phn_path).to_annot()
+                      for phn_path in kaggle_phn_paths]
+
+        # below, set basename to True so we can easily run tests on any system without
+        # worrying about where audio files are relative to root of directory tree
+        df_created = crowsetta.formats.seq.generic.annot2df(annot_list,
+                                                            basename=True)
+
+        assert isinstance(df_created, pd.DataFrame)
+        df_created = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_created)
+
+        df_compare = pd.read_csv(timit_phn_as_generic_seq_csv)
+        df_compare = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_compare)
+        pd.testing.assert_frame_equal(df_created, df_compare)
+
+
 class TestAnnot2CsvFunction:
     """tests for ``annot2csv`` function"""
 
@@ -395,3 +463,66 @@ class TestGenericSeqClass:
         generic_seq.to_file(csv_path)
         other_generic_seq = crowsetta.formats.seq.GenericSeq.from_file(csv_path)
         assert generic_seq == other_generic_seq
+
+    def test_annot2df_onset_offset_s_only(self,
+                                          notmat_paths,
+                                          notmat_as_generic_seq_csv):
+        """test whether `annot2df` works when
+        the annotations have onsets and offsets specified in seconds only.
+        To test this we use the 'notmat' format.
+        """
+        annot_list = [crowsetta.formats.seq.NotMat.from_file(notmat_path).to_annot()
+                      for notmat_path in notmat_paths]
+        generic_seq = crowsetta.formats.seq.GenericSeq(annots=annot_list)
+        # below, set basename to True so we can easily run tests on any system without
+        # worrying about where audio files are relative to root of directory tree
+        df_created = generic_seq.to_df(basename=True)
+
+        assert isinstance(df_created, pd.DataFrame)
+        df_compare = pd.read_csv(notmat_as_generic_seq_csv)
+        df_compare = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_compare)
+        pd.testing.assert_frame_equal(df_created, df_compare)
+
+    def test_to_df_onset_offset_s_and_ind(self,
+                                          birdsong_rec_xml_file,
+                                          birdsong_rec_wav_path,
+                                          birdsongrec_as_generic_seq_csv):
+        """test whether `GenericSeq.to_df` works when
+        the annotations have onsets and offsets specified in seconds and in samples.
+        To test this we use the 'birdsong-recognition-dataset' format.
+        """
+        birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(annot_path=birdsong_rec_xml_file,
+                                                                  wav_path=birdsong_rec_wav_path,
+                                                                  concat_seqs_into_songs=True)
+        annot_list = birdsongrec.to_annot()
+        generic_seq = crowsetta.formats.seq.GenericSeq(annots=annot_list)
+        # below, set basename to True so we can easily run tests on any system without
+        # worrying about where audio files are relative to root of directory tree
+        df_created = generic_seq.to_df(basename=True)
+
+        assert isinstance(df_created, pd.DataFrame)
+        df_created = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_created)
+
+        df_compare = pd.read_csv(birdsongrec_as_generic_seq_csv)
+        df_compare = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_compare)
+        pd.testing.assert_frame_equal(df_created, df_compare)
+
+    def test_to_df_onset_offset_sample_only(self,
+                                            kaggle_phn_paths,
+                                            timit_phn_as_generic_seq_csv):
+        """test whether `annot2df` works when
+        the annotations have onsets and offsets specified in seconds only.
+        To test this we use the 'timit' format."""
+        annot_list = [crowsetta.formats.seq.Timit.from_file(phn_path).to_annot()
+                      for phn_path in kaggle_phn_paths]
+        generic_seq = crowsetta.formats.seq.GenericSeq(annots=annot_list)
+        # below, set basename to True so we can easily run tests on any system without
+        # worrying about where audio files are relative to root of directory tree
+        df_created = generic_seq.to_df(basename=True)
+
+        assert isinstance(df_created, pd.DataFrame)
+        df_created = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_created)
+
+        df_compare = pd.read_csv(timit_phn_as_generic_seq_csv)
+        df_compare = crowsetta.formats.seq.generic.GenericSeqSchema.validate(df_compare)
+        pd.testing.assert_frame_equal(df_created, df_compare)
