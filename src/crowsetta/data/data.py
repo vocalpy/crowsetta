@@ -1,3 +1,4 @@
+from __future__ import annotations
 import contextlib
 try:
     from importlib.resources import as_file, files, open_text 
@@ -31,7 +32,7 @@ class FormatPathArgs:
 
 @attr.define
 class ExampleAnnotFile:
-    """class representing
+    """Class representing
     an example annotation file.
     Returned by ``crowsetta.data.get``.
 
@@ -47,7 +48,7 @@ class ExampleAnnotFile:
         ``annot_path`` as a context manager 
         that will provide a path to a temporary file.
     citation : str
-        citation for dataset
+        Citation for dataset
         from which example is taken
     """
     annot_path: Union[PathLike, contextlib._GeneratorContextManager]
@@ -74,39 +75,45 @@ DATA = {
 }
 
 
-def extract_data_files(user_data_dir: PathLike = APP_DIRS.user_data_dir):
-    """extract example annotation files from ``crowsetta.data`` 
+def extract_data_files(user_data_dir: PathLike | None = None):
+    """Extract example annotation files from ``crowsetta.data``
     to a local directory on the file system.
 
     Parameters
     ----------
     user_data_dir : str, pathlib.Path
         Location where example annotation files should be extracted to.
-        Default is ``crowsetta.data.data.APP_DIRS.user_data_dir``.
+        If none is given, defaults to the value of
+        ``crowsetta.data.data.APP_DIRS.user_data_dir``
     """
+    if user_data_dir is None:
+        user_data_dir = APP_DIRS.user_data_dir
     user_data_dir = pathlib.Path(user_data_dir)
-    user_data_dir.mkdir(parents=True)
+    user_data_dir.mkdir(parents=True, exist_ok=True)
     for format_name, path_args in DATA.items():
         # don't use full name `importlib.resources` here
         # because we need to use backport package, not stdlib, on Python 3.8
         source = files(path_args.package).joinpath(path_args.resource)
         annot_path = as_file(source)
         dst_annot_dir = user_data_dir / path_args.package.split('.')[-1]
-        dst_annot_dir.mkdir()
+        dst_annot_dir.mkdir(exist_ok=True)
         dst_annot_path = dst_annot_dir / path_args.resource
-        with annot_path as annot_path:
-            shutil.copy(annot_path, dst_annot_path)
+        # don't bother copying if we already did this
+        if not dst_annot_path.exists():
+            with annot_path as annot_path:
+                shutil.copy(annot_path, dst_annot_path)
         dst_citation_txt_path = dst_annot_dir / 'citation.txt'
-        with as_file(files(path_args.package).joinpath('citation.txt')) as citation_txt_path:
-            shutil.copy(citation_txt_path, dst_citation_txt_path)
+        if not dst_citation_txt_path.exists():
+            with as_file(files(path_args.package).joinpath('citation.txt')) as citation_txt_path:
+                shutil.copy(citation_txt_path, dst_citation_txt_path)
 
 
 def _get_example_from_user_data_dir(format: str,
-                                    user_data_dir: PathLike = APP_DIRS.user_data_dir) -> ExampleAnnotFile:
-    """returns example from ``user_data_dir``.
+                                    user_data_dir: PathLike | None = None) -> ExampleAnnotFile:
+    """Returns example from ``user_data_dir``.
+
     Assumes that example data has already been copied to 
     ``user_data_dir`` by calling ``_extract_data_files``.
-
     Helper function used by ``crowsetta.data.get``.
 
     Parameters
@@ -117,8 +124,9 @@ def _get_example_from_user_data_dir(format: str,
         as listed by ``crowsetta.formats.as_list``.
     user_data_dir : str, pathlib.Path
         Location where example annotation files have been extracted to,
-        by calling ``crowsetta.data.extract_
-        Default is ``crowsetta.data.data.APP_DIRS.user_data_dir``.
+        by calling ``crowsetta.data.extract_data_files``.
+        If none is given, defaults to the value of
+        ``crowsetta.data.data.APP_DIRS.user_data_dir``
 
     Returns
     -------
@@ -132,6 +140,9 @@ def _get_example_from_user_data_dir(format: str,
             f'format not recognized: {format}'
         ) from e
 
+    if user_data_dir is None:
+        user_data_dir = APP_DIRS.user_data_dir
+
     format_pkg = path_args.package.split('.')[-1]
     annot_path = user_data_dir / format_pkg / path_args.resource
     citation_txt = user_data_dir / format_pkg / 'citation.txt'
@@ -143,7 +154,7 @@ def _get_example_from_user_data_dir(format: str,
 
 
 def _get_example_as_context_manager(format: str) -> ExampleAnnotFile:
-    """gets an example annotation file
+    """Gets an example annotation file
     as a context manager, that can be used 
     as shown in the example below.
 
@@ -188,8 +199,8 @@ def _get_example_as_context_manager(format: str) -> ExampleAnnotFile:
 
 
 def get(format: str,
-        user_data_dir: PathLike = APP_DIRS.user_data_dir) -> ExampleAnnotFile:
-    """get example annotation files
+        user_data_dir: PathLike | None = None) -> ExampleAnnotFile:
+    """Get an example annotation files.
 
     Parameters
     ----------
@@ -200,7 +211,8 @@ def get(format: str,
     user_data_dir : str, pathlib.Path
         Location where example annotation files 
         are stored.
-        Default is ``crowsetta.data.data.APP_DIRS.user_data_dir``.
+        If none is given, defaults to the value of
+        ``crowsetta.data.data.APP_DIRS.user_data_dir``
         This default can be changed, but will require 
         passing the same path in every time 
         this function is called to avoid 
@@ -233,6 +245,9 @@ def get(format: str,
         raise ValueError(
             f'format not recognized: {format}'
         )
+
+    if user_data_dir is None:
+        user_data_dir = APP_DIRS.user_data_dir
 
     user_data_dir = pathlib.Path(user_data_dir)
     if not user_data_dir.exists():

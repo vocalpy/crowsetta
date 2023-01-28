@@ -62,8 +62,7 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The master toctree document.
 master_doc = 'index'
@@ -84,7 +83,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 pygments_style = None
 
 myst_enable_extensions = [
-    # "dollarmath",
+    "dollarmath",
     # "amsmath",
     # "deflist",
     # "html_admonition",
@@ -111,6 +110,7 @@ html_logo = "_static/crowsetta-primary-logo.png"
 #
 html_theme_options = {
     "logo_only": True,
+    "show_toc_level": 1,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -216,6 +216,20 @@ intersphinx_mapping = intersphinx_mapping = {
     "pandas": ("https://pandas.pydata.org/pandas-docs/stable/", None),
     "pandera": ("https://pandera.readthedocs.io/en/stable/", None)
 }
+
+# -- Options for nitpicky mode
+
+# ensure that all references in the docs resolve.
+nitpicky = True
+nitpick_ignore = []
+
+for line in open('nitpick-ignore.txt'):
+    if line.strip() == "" or line.startswith("#"):
+        continue
+    dtype, target = line.split(None, 1)
+    target = target.strip()
+    nitpick_ignore.append((dtype, target))
+
 
 # -- Options for todo extension ----------------------------------------------
 
