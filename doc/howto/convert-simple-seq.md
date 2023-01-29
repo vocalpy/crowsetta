@@ -107,18 +107,7 @@ cd ..
 ```
 
 ```{code-cell} ipython3
-import pathlib
-
-if not pathlib.Path('./data/M1-2016-spring_audacity_annotations.zip').exists():
-    import subprocess
-    process = subprocess.Popen(
-        ["!curl", "--no-progress-meter", "-L", 
-         "'https://zenodo.org/record/6521932/files/M1-2016-spring_audacity_annotations.zip?download=1'",
-         "-o", "'./data/M1-2016-spring_audacity_annotations.zip'"],
-        stdout=subprocess.PIPE, 
-        stderr=subprocess.PIPE
-    )
-    stdout, stderr = process.communicate()
+!curl --no-progress-meter -L 'https://zenodo.org/record/6521932/files/M1-2016-spring_audacity_annotations.zip?download=1' -o './data/M1-2016-spring_audacity_annotations.zip'
 ```
 
 ```{code-cell} ipython3

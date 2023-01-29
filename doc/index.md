@@ -147,9 +147,9 @@ With crowsetta, you can:
 * when needed, use classes that represent the formats 
   to develop software libraries that access annotations through 
   class attributes and methods 
-* convert annotations to common file formats like `.csv`
-  that anyone can work with
-* work with custom formats that are not built in 
+* convert annotations to widely-used, easy to access file formats
+  (like csv files and json files) that anyone can work with
+* work with custom annotation formats that are not built in 
   by writing simple classes, leveraging abstractions in crowsetta 
   that can represent a wide array of annotation formats
 
@@ -287,7 +287,7 @@ for annot in annots:
 
 crowsetta makes it easier to share data 
 by converting formats to plain text files, 
-such as a comma-separated csv file.
+such as a csv (comma-separated values) file.
 
 Here is an example of converting a common format 
 to a generic sequence format that can then be saved to 

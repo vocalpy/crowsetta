@@ -9,6 +9,8 @@ kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
+execution:
+  timeout: 120
 ---
 
 (howto-remove-silent-labels-textgrid)=
@@ -36,9 +38,12 @@ we need to remove the *intervals*
 that have empty labels.
 [Praat allows annotators to create multiple *tiers*](https://www.fon.hum.uva.nl/praat/manual/Intro_7__Annotation.html), or
 or levels, of labeling 
-(e.g., phoneme, syllable, word, sentence).
-In this example we will work with an interval tier, 
-that consists of a set of *intervals* as the name suggests. 
+E.g., if we were annotating speech, 
+we could have a tier each for phonemes, syllables, 
+words, and sentences.
+In this example we will work with interval tiers, 
+that consists of a set of *intervals* as the name suggests.
+(There are also point tiers where annotators label single time points.)
 Each interval has a start time, stop time, and label,
 all created by an annotator working with the Praat GUI.
 When the annotator does not assign a label to some interval, 
@@ -60,8 +65,8 @@ Here's the steps we'll follow:
 0. Write code for analysis
 1. Download data from Open Science Framework
 2. Load data with crowsetta
-2. Remove `None` labels
-3. Compute transition matrix
+3. Remove `None` labels
+4. Compute transition matrix
 
 For this vignette, we use annotations from the 
 [Bengalese finch song dataset](https://osf.io/r6paq/), 
@@ -474,6 +479,8 @@ for textgrid_path in textgrid_paths:
             continue
 ```
 
+## 3. Remove `None` labels
+
 Now we can look at the counts of the different classes of labels.  
 This helps us get an overview of our data before we do anything to it.
 
@@ -602,7 +609,7 @@ import numpy as np
 
 bouts = {}
 for bird_id, df in dfs.items():
-    inds = df['between_bouts'].values.nonzero()[0].tolist()
+    inds = np.nonzero(df['between_bouts'].values)[0].tolist()
     bouts_bird = np.array_split(df, inds)
     bouts[bird_id] = bouts_bird
 ```
@@ -722,6 +729,8 @@ for bird_id, annots_list in annots_munged.items():
     )
 ```
 
+## 4. Compute transition matrix
+
 Okay, let's finally build a Markov model!
 
 All we want now is the `labels` attributes from our sequence-like annotations; we will throw away the rest of the information for this step.
@@ -736,7 +745,7 @@ for bird_id, annots in annots_munged.items():
     models[bird_id] = (counts, matrix, states)
 ```
 
-Lastly we visualize the transition matrices as heatmaps. 
+Lastly we visualize the transition matrices as heatmaps.
 
 ```{code-cell} ipython3
 import seaborn as sns
