@@ -97,22 +97,25 @@ annotated with {ref}`Audacity Labeltrack <aud-txt>` files.
 cd ..
 ```
 
+First we download and extract the dataset, if we haven't already.
+
 ```{code-cell} ipython3
 !curl --no-progress-meter -L 'https://zenodo.org/record/6521932/files/M1-2016-spring_audacity_annotations.zip?download=1' -o './data/M1-2016-spring_audacity_annotations.zip'
 ```
 
 ```{code-cell} ipython3
 import shutil
-shutil.unpack_archive('./data/M1-2016-spring_audacity_annotations.zip', './data/')
+shutil.unpack_archive('./data/M1-2016-spring_audacity_annotations.zip', './data/giraudon-et-al-2021')
 ```
 
-#TODO: show with scribe and then with class, explain difference
+
+Now we load the annotation files.
 
 ```{code-cell} ipython3
 import pathlib
 import crowsetta
 
-audtxt_paths = sorted(pathlib.Path('./data/audacity-annotations').glob('*.txt'))
+audtxt_paths = sorted(pathlib.Path('./data/giraudon-et-al-2021/audacity-annotations').glob('*.txt'))
 # we make the list of ``Annotation``s "by hand" instead of getting it from a `to_annot` call
 annots = []
 for audtxt_path in audtxt_paths:
@@ -124,6 +127,8 @@ print(
     f"Number of annotation instances from dataset: {len(annots)}"
 ) 
 ```
+
+We create a set of annotations in the generic sequence format, by making an instance of the `GenericSeq` class, passing in our list of `crowsetta.Annotation` instances.
 
 ```{code-cell} ipython3
 # pass in annots when creating generic-seq instance
@@ -146,7 +151,9 @@ and the `to_annot` method of the corresponding class
 will return multiple `crowsetta.Annotation` instances. 
 To convert this format to `'generic-seq'`, 
 just pass in those `Annotation`s when 
-creating an instance of `'generic-seq'`
+creating an instance of `'generic-seq'`.
+We demonstrate that here with the format of the Birdsong-Recognition dataset, 
+using sample data built into the `crowsetta` package.
 
 ```{code-cell} ipython3
 :tags: [hide-cell]
@@ -161,7 +168,8 @@ import crowsetta
 
 example = crowsetta.data.get('birdsong-recognition-dataset')
 birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
-annots = birdsongrec.to_annot()
+# we pass a fake samplerate to suppress a warning about not finding .wav files
+annots = birdsongrec.to_annot(samplerate=32000)
 print(
     f"Number of annotation instances in example 'birdsong-recognition-dataset' file: {len(annots)}"
 ) 
@@ -178,3 +186,13 @@ df.head()
 print("Last five rows of annotations (converted to pandas.DataFrame)")
 df.tail()
 ```
+
+To save these as a csv file, you can either call the `pandas.DataFrame.to_csv` method directly, or you can equivalently call the `GenericSeq` method `to_csv`.
+
+```{code-cell} ipython3
+df.to_csv('./data/birdsong-rec-pandas.csv', index=False)
+
+generic.to_file('./data/birdsong-rec-generic-seq.csv')
+```
+
+Now you have seen two different ways to create a `GenericSeq` instance from a set of annotations, and then save them to a csv file so anyone can work with them!
