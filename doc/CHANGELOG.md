@@ -5,9 +5,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+## Added
 - Add information on contributing and setting up a development environment
   [#212](https://github.com/NickleDave/crowsetta/pull/212).
   Fixes [#30](https://github.com/NickleDave/crowsetta/issues/30).
+- Add method to convert generic sequence format to a pandas DataFrame
+  [#216](https://github.com/NickleDave/crowsetta/pull/216).
+- Add additional vignettes to docs:
+  on removing "silent" labels from TextGrid annotations,
+  on converting to the simple sequence and generic sequence formats
+  [#216](https://github.com/NickleDave/crowsetta/pull/216).
+  Fixes [#152](https://github.com/NickleDave/crowsetta/issues/152)
+  and [#197](https://github.com/NickleDave/crowsetta/issues/197).
+
+## Fixed
+- Revise landing page of docs, and some vignettes. 
+  Make other changes to clean up the docs build process 
+  [#216](https://github.com/NickleDave/crowsetta/pull/216).
 
 ## 4.0.0.post2 -- 2022-06-25
 ### Changed
