@@ -30,7 +30,12 @@ If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
  - Operating System: [Linux, Windows, Mac]
- - Version [e.g. 22]. You can determine this in Python by running `vak.__version__`
+ - Version [e.g. 22]. You can determine this in Python by running
+
+```python
+import crowsetta
+print(crowsetta.__version__) 
+```
 
 **Additional context**
 Add any other context about the problem here.
