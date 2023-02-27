@@ -59,6 +59,7 @@ doc = [
 ]
 dev = [
     'flit',
+    'isort >=5.12.0',
     'twine',
 ]
 
