@@ -9,8 +9,8 @@ Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
 doi:10.1371/journal.pone.0159188
 """
 import pathlib
-from typing import ClassVar, List, Optional
 import warnings
+from typing import ClassVar, List, Optional
 
 import attr
 import birdsongrec

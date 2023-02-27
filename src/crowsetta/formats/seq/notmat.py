@@ -2,12 +2,12 @@
 produced by evsonganaly GUI
 """
 import pathlib
-from typing import ClassVar, Optional, Dict
+from typing import ClassVar, Dict, Optional
 
 import attr
+import evfuncs
 import numpy as np
 import scipy.io
-import evfuncs
 
 import crowsetta
 from crowsetta.typing import PathLike

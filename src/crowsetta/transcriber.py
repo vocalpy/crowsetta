@@ -1,6 +1,6 @@
 import inspect
-from typing import Union
 import warnings
+from typing import Union
 
 
 class Transcriber:
@@ -38,10 +38,7 @@ class Transcriber:
             registered as either `crowsetta.interface.SeqLike`` or ``crowsetta.interface.BBoxLike``.
         """
         # avoid circular imports
-        from . import (
-            formats,
-            interface,
-        )
+        from . import formats, interface
 
         if isinstance(format, str):
             if format not in formats.FORMATS:

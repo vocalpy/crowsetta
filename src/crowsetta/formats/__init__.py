@@ -1,11 +1,7 @@
 import inspect
 
 from .. import interface
-
-from . import (
-    bbox,
-    seq
-)
+from . import bbox, seq
 
 FORMATS = {}
 for module in (bbox, seq):

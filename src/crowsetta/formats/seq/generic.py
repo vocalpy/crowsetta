@@ -16,7 +16,6 @@ to this format.
 """
 import os
 from collections import OrderedDict
-
 from typing import ClassVar, List, Optional, Union
 
 import attr
@@ -26,7 +25,6 @@ from pandera.typing import Series
 
 import crowsetta
 from crowsetta.typing import PathLike
-
 
 ONSET_OFFSET_COLS_ERR = """For onset times and offset times, 
 all values must be specified in at least one unit: 

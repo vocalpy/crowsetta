@@ -29,12 +29,11 @@
 
 from __future__ import print_function
 
-import re
 import codecs
 import os.path
-
-from sys import stderr
+import re
 from bisect import bisect_left
+from sys import stderr
 
 from .exceptions import TextGridError
 

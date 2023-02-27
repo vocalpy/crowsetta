@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List, Optional
 
 import crowsetta
+
 from .bbox import BBox
 from .sequence import Sequence
 from .typing import PathLike

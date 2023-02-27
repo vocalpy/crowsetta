@@ -1,16 +1,18 @@
 from __future__ import annotations
+
 import contextlib
+
 try:
     from importlib.resources import as_file, files, open_text 
 except ImportError:
     from importlib_resources import as_file, files, open_text 
+
+import pathlib
 import shutil
 from typing import Union
 
-import pathlib
-
-import attr
 import appdirs
+import attr
 
 from ..__about__ import __version__ as version
 from ..typing import PathLike

@@ -1,15 +1,15 @@
 """module with functions that handle .phn annotation files from the TIMIT dataset
 """
 import pathlib
-from typing import ClassVar, Optional
 import warnings
+from typing import ClassVar, Optional
 
 import attr
 import numpy as np
 import pandas as pd
 import pandera
-from pandera.typing import Series
 import soundfile
+from pandera.typing import Series
 
 import crowsetta
 from crowsetta.typing import PathLike

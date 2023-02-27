@@ -2,9 +2,9 @@
 used to annotate animal communication."""
 import numpy as np
 
-from .validation import _num_samples, check_consistent_length, column_or_row_or_1d 
-
 from .segment import Segment
+from .validation import (_num_samples, check_consistent_length,
+                         column_or_row_or_1d)
 
 
 class Sequence:

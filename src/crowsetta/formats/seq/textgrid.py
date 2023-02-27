@@ -12,8 +12,8 @@ import attr
 import numpy as np
 
 import crowsetta
-from crowsetta.typing import PathLike
 from crowsetta._vendor import textgrid
+from crowsetta.typing import PathLike
 
 
 @crowsetta.interface.SeqLike.register
