@@ -34,7 +34,7 @@ __all__ = [
     "__uri__",
     "__version__",
     "Annotation",
-    "Bbox",
+    "BBox",
     "data",
     "formats",
     "interface",
