@@ -5,8 +5,4 @@ from .base import BaseFormat
 from .bbox import BBoxLike
 from .seq import SeqLike
 
-__all__ = [
-    'BaseFormat',
-    'BBoxLike',
-    'SeqLike'
-]
+__all__ = ["BaseFormat", "BBoxLike", "SeqLike"]

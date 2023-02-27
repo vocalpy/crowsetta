@@ -39,6 +39,7 @@ class GenericSeqSchema(pandera.SchemaModel):
     loaded from a .csv file  in the ``'generic-seq'`` annotation
     format.
     """
+
     label: Series[pd.StringDtype] = pandera.Field(coerce=True)
     onset_s: Optional[Series[float]] = pandera.Field()
     offset_s: Optional[Series[float]] = pandera.Field()
@@ -54,8 +55,8 @@ class GenericSeqSchema(pandera.SchemaModel):
     def both_onset_s_and_offset_s_if_either(cls, df: pd.DataFrame) -> bool:
         """check that, if one of {'onset_s', 'offset_s'} column is present,
         then both are present"""
-        if any([col in df for col in ('onset_s', 'offset_s')]):
-            return all([col in df for col in ('onset_s', 'offset_s')])
+        if any([col in df for col in ("onset_s", "offset_s")]):
+            return all([col in df for col in ("onset_s", "offset_s")])
         else:
             return True
 
@@ -63,8 +64,8 @@ class GenericSeqSchema(pandera.SchemaModel):
     def both_onset_sample_and_offset_sample_if_either(cls, df: pd.DataFrame) -> bool:
         """check that, if one of {'onset_sample', 'offset_sample'} column is present,
         then both are present"""
-        if any([col in df for col in ('onset_sample', 'offset_sample')]):
-            return all([col in df for col in ('onset_sample', 'offset_sample')])
+        if any([col in df for col in ("onset_sample", "offset_sample")]):
+            return all([col in df for col in ("onset_sample", "offset_sample")])
         else:
             return True
 
@@ -72,11 +73,11 @@ class GenericSeqSchema(pandera.SchemaModel):
     def onset_offset_s_and_ind_are_not_both_missing(cls, df: pd.DataFrame) -> bool:
         """check that at least one of the on/offset column pairs is present:
         either {'onset_s', 'offset_s'} or {'onset_sample', 'offset_sample'}"""
-        if 'onset_s' not in df and 'offset_s' not in df:
-            return 'onset_sample' in df and 'offset_sample' in df
-        elif 'onset_sample' not in df and 'offset_sample' not in df:
-            return 'onset_s' in df and 'offset_s' in df
-        elif all([col in df for col in ('onset_s', 'offset_s', 'onset_sample', 'offset_sample')]):
+        if "onset_s" not in df and "offset_s" not in df:
+            return "onset_sample" in df and "offset_sample" in df
+        elif "onset_sample" not in df and "offset_sample" not in df:
+            return "onset_s" in df and "offset_s" in df
+        elif all([col in df for col in ("onset_s", "offset_s", "onset_sample", "offset_sample")]):
             #  i.e., else return True, but extra verbose for clarity
             return True
 
@@ -85,9 +86,9 @@ class GenericSeqSchema(pandera.SchemaModel):
         strict = True
 
 
-def annot2df(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
-             abspath: bool = False,
-             basename: bool = False) -> pd.DataFrame:
+def annot2df(
+    annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]], abspath: bool = False, basename: bool = False
+) -> pd.DataFrame:
     """Convert sequence-like ``crowsetta.Annotation``
     to a ``pandas.DataFrame`` in the ``'generic-seq'`` format.
 
@@ -113,33 +114,36 @@ def annot2df(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
     this function in a Sequence object.
     """
     if not (isinstance(annot, crowsetta.Annotation) or isinstance(annot, list)):
-        raise TypeError('annot must be Annotation or list of Annotations, '
-                        f'not type {type(annot)})')
+        raise TypeError("annot must be Annotation or list of Annotations, " f"not type {type(annot)})")
 
     if isinstance(annot, crowsetta.Annotation):
         # put in a list so we can iterate over it
         annot = [annot]
 
     if not all([isinstance(annot_, crowsetta.Annotation) for annot_ in annot]):
-        raise TypeError('not all objects in annot are of type Annotation')
+        raise TypeError("not all objects in annot are of type Annotation")
 
     if abspath and basename:
-        raise ValueError('abspath and basename arguments cannot both be set to True, '
-                         'unclear whether absolute path should be saved or if no path '
-                         'information (just base filename) should be saved.')
+        raise ValueError(
+            "abspath and basename arguments cannot both be set to True, "
+            "unclear whether absolute path should be saved or if no path "
+            "information (just base filename) should be saved."
+        )
 
     records = []
     for annot_num, annot_ in enumerate(annot):
         seq_list = [annot_.seq]
         for seq_num, seq in enumerate(seq_list):
             for segment in seq.segments:
-                row = OrderedDict({
-                    key: val
-                    for key, val in segment.asdict().items()
-                    # don't keep onset or offset if they are None
-                    # but keep any other Nones, so those other Nones will raise expected errors downstreams
-                    if not(val is None and any([key.startswith(prefix) for prefix in ('onset', 'offset')]))
-                })  # OrderedDict is default; being extra explicit here
+                row = OrderedDict(
+                    {
+                        key: val
+                        for key, val in segment.asdict().items()
+                        # don't keep onset or offset if they are None
+                        # but keep any other Nones, so those other Nones will raise expected errors downstreams
+                        if not (val is None and any([key.startswith(prefix) for prefix in ("onset", "offset")]))
+                    }
+                )  # OrderedDict is default; being extra explicit here
                 annot_path = annot_.annot_path
                 notated_path = annot_.notated_path
                 if abspath:
@@ -152,14 +156,14 @@ def annot2df(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
                         notated_path = os.path.basename(notated_path)
                 # need to put in notated_path before annot_path
                 if notated_path is not None:
-                    row['notated_path'] = notated_path
+                    row["notated_path"] = notated_path
                 else:
-                    row['notated_path'] = 'None'
-                row['annot_path'] = annot_path
+                    row["notated_path"] = "None"
+                row["annot_path"] = annot_path
                 # we use 'sequence' and 'annotation' fields when we are
                 # loading back into Annotations
-                row['sequence'] = seq_num
-                row['annotation'] = annot_num
+                row["sequence"] = seq_num
+                row["annotation"] = annot_num
                 records.append(row)
 
     df = pd.DataFrame.from_records(records)
@@ -167,10 +171,12 @@ def annot2df(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
     return df
 
 
-def annot2csv(annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
-              csv_path: PathLike,
-              abspath: bool = False,
-              basename: bool = False) -> None:
+def annot2csv(
+    annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]],
+    csv_path: PathLike,
+    abspath: bool = False,
+    basename: bool = False,
+) -> None:
     """write sequence-like ``crowsetta.Annotation``
     to a .csv file in the ``'generic-seq'`` format
 
@@ -228,33 +234,29 @@ def csv2annot(csv_path: PathLike) -> List[crowsetta.Annotation]:
         annot_path = df_annot.annot_path.unique()
         if len(annot_path) > 1:
             raise ValueError(
-                f"found multiple values for 'annot_path' for annotation #{annotation_ind}:"
-                f"\n{annot_path}"
+                f"found multiple values for 'annot_path' for annotation #{annotation_ind}:" f"\n{annot_path}"
             )
         annot_path = annot_path[0]
         # 2. notated_path
         notated_path = df_annot.notated_path.unique()
         if len(notated_path) > 1:
             raise ValueError(
-                f"found multiple values for 'notated_path' for annotation #{annotation_ind}:"
-                f"\n{notated_path}"
+                f"found multiple values for 'notated_path' for annotation #{annotation_ind}:" f"\n{notated_path}"
             )
         notated_path = notated_path[0]
         # 3. Sequence
         seq_uniq = df_annot.sequence.unique()
         assert len(seq_uniq) > 0
         if len(seq_uniq) > 1:
-            raise ValueError(
-                'Multiple sequences per annotation are not implemented'
-            )
+            raise ValueError("Multiple sequences per annotation are not implemented")
         labels = df_annot.label.values
-        if 'onset_s' and 'offset_s' in df_annot:
+        if "onset_s" and "offset_s" in df_annot:
             onsets_s = df_annot.onset_s.values
             offsets_s = df_annot.offset_s.values
         else:
             onsets_s = None
             offsets_s = None
-        if 'onset_sample' and 'offset_sample' in df_annot:
+        if "onset_sample" and "offset_sample" in df_annot:
             onsets_inds = df_annot.onset_sample.values
             offsets_inds = df_annot.offset_sample.values
         else:
@@ -267,11 +269,7 @@ def csv2annot(csv_path: PathLike) -> List[crowsetta.Annotation]:
             onset_samples=onsets_inds,
             offset_samples=offsets_inds,
         )
-        annot = crowsetta.Annotation(
-            annot_path=annot_path,
-            notated_path=notated_path,
-            seq=seq
-        )
+        annot = crowsetta.Annotation(annot_path=annot_path, notated_path=notated_path, seq=seq)
         annot_list.append(annot)
 
     return annot_list
@@ -302,14 +300,14 @@ class GenericSeq:
     annots : list
         of ``crowsetta.Annotation`` instances
     """
-    name: ClassVar[str] = 'generic-seq'
-    ext: ClassVar[str] = '.csv'
+
+    name: ClassVar[str] = "generic-seq"
+    ext: ClassVar[str] = ".csv"
 
     annots: List[crowsetta.Annotation]
 
     @classmethod
-    def from_file(cls,
-                  annot_path: PathLike) -> 'Self':
+    def from_file(cls, annot_path: PathLike) -> "Self":
         """load annotations in 'generic-seq' format from a .csv file
 
         Parameters
@@ -321,7 +319,7 @@ class GenericSeq:
         Examples
         --------
         >>> example = crowsetta.data.get('generic-seq')
-        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(example.annot_path)        """
+        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(example.annot_path)"""
         annots = csv2annot(csv_path=annot_path)
         return cls(annots=annots)
 
@@ -353,9 +351,7 @@ class GenericSeq:
         """
         return self.annots
 
-    def to_df(self,
-              abspath: bool = False,
-              basename: bool = False) -> pd.DataFrame:
+    def to_df(self, abspath: bool = False, basename: bool = False) -> pd.DataFrame:
         """Convert these annotations to a
         ``pandas.DataFrame``
 
@@ -368,10 +364,7 @@ class GenericSeq:
         """
         return annot2df(self.annots, abspath, basename)
 
-    def to_file(self,
-                annot_path: PathLike,
-                abspath: bool = False,
-                basename: bool = False) -> None:
+    def to_file(self, annot_path: PathLike, abspath: bool = False, basename: bool = False) -> None:
         """Write these annotations to a .csv file
         in ``'generic-seq'`` format.
 
@@ -387,7 +380,4 @@ class GenericSeq:
             If True, discard any information about path and just use file name.
             Default is False.
         """
-        annot2csv(csv_path=annot_path,
-                  annot=self.annots,
-                  abspath=abspath,
-                  basename=basename)
+        annot2csv(csv_path=annot_path, annot=self.annots, abspath=abspath, basename=basename)

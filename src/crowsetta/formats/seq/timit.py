@@ -19,6 +19,7 @@ class TimitTranscriptSchema(pandera.SchemaModel):
     """A ``pandera.SchemaModel`` that validates ``pandas`` dataframes
     loaded from a .phn or .wrd file in the TIMIT transcription format.
     """
+
     begin_sample: Optional[Series[int]] = pandera.Field()
     end_sample: Optional[Series[int]] = pandera.Field()
     text: Series[pd.StringDtype] = pandera.Field(coerce=True)
@@ -56,20 +57,18 @@ class Timit:
     audio_path : str. pathlib.Path
         Path to audio file that the TIMIT transcription file annotates.
     """
-    name: ClassVar[str] = 'timit'
-    ext: ClassVar[str] = ('.phn', '.PHN', '.wrd', '.WRD')
+
+    name: ClassVar[str] = "timit"
+    ext: ClassVar[str] = (".phn", ".PHN", ".wrd", ".WRD")
 
     begin_samples: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     end_samples: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     text: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     annot_path: pathlib.Path
-    audio_path: Optional[pathlib.Path] = attr.field(default=None,
-                                                    converter=attr.converters.optional(pathlib.Path))
+    audio_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
-    def from_file(cls,
-                  annot_path: PathLike,
-                  audio_path: Optional[PathLike] = None) -> 'Self':
+    def from_file(cls, annot_path: PathLike, audio_path: Optional[PathLike] = None) -> "Self":
         """Load annotations from a TIMIT transcription file
 
         Parameters
@@ -99,31 +98,30 @@ class Timit:
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
 
         #  assume file is space-separated with no header
-        df = pd.read_csv(annot_path,  sep=' ', header=None)
-        df.columns = ['begin_sample', 'end_sample', 'text']
+        df = pd.read_csv(annot_path, sep=" ", header=None)
+        df.columns = ["begin_sample", "end_sample", "text"]
         df = TimitTranscriptSchema.validate(df)
 
         if audio_path is None:
-            for ext in ('.wav', '.WAV'):
+            for ext in (".wav", ".WAV"):
                 audio_path = annot_path.parent / (annot_path.stem + ext)
                 if audio_path.exists():
                     break
             if not audio_path.exists():
                 # just default to lower-case .wav
-                audio_path = annot_path.parent / (annot_path.stem + '.wav')
+                audio_path = annot_path.parent / (annot_path.stem + ".wav")
 
         return cls(
             annot_path=annot_path,
-            begin_samples=df['begin_sample'].values,
-            end_samples=df['end_sample'].values,
-            text=df['text'].values,
+            begin_samples=df["begin_sample"].values,
+            end_samples=df["end_sample"].values,
+            text=df["text"].values,
             audio_path=audio_path,
         )
 
-    def to_seq(self,
-               round_times: bool = True,
-               decimals: int = 3,
-               samplerate: Optional[int] = None) -> crowsetta.Sequence:
+    def to_seq(
+        self, round_times: bool = True, decimals: int = 3, samplerate: Optional[int] = None
+    ) -> crowsetta.Sequence:
         """Convert this TIMIT annotation to a ``crowsetta.Sequence``.
 
         Parameters
@@ -172,11 +170,11 @@ class Timit:
                 samplerate = soundfile.info(self.audio_path).samplerate
             except RuntimeError:
                 warnings.warn(
-                    f'wav file not found: {self.audio_path}.'
-                    f'Could not determine sampling rate to convert onsets and offsets to seconds. '
-                    f'To use a fixed sampling rate for all files, pass in a value for the `samplerate` '
-                    f'argument, but be aware that this may not be the correct sampling rate for some files.',
-                    UserWarning
+                    f"wav file not found: {self.audio_path}."
+                    f"Could not determine sampling rate to convert onsets and offsets to seconds. "
+                    f"To use a fixed sampling rate for all files, pass in a value for the `samplerate` "
+                    f"argument, but be aware that this may not be the correct sampling rate for some files.",
+                    UserWarning,
                 )
                 samplerate = None
 
@@ -187,17 +185,18 @@ class Timit:
             onsets_s = np.around(onsets_s, decimals=decimals)
             offsets_s = np.around(offsets_s, decimals=decimals)
 
-        phn_seq = crowsetta.Sequence.from_keyword(labels=labels,
-                                                  onset_samples=onset_samples,
-                                                  offset_samples=offset_samples,
-                                                  onsets_s=onsets_s,
-                                                  offsets_s=offsets_s)
+        phn_seq = crowsetta.Sequence.from_keyword(
+            labels=labels,
+            onset_samples=onset_samples,
+            offset_samples=offset_samples,
+            onsets_s=onsets_s,
+            offsets_s=offsets_s,
+        )
         return phn_seq
 
-    def to_annot(self,
-                 round_times: bool = True,
-                 decimals: int = 3,
-                 samplerate: Optional[int] = None) -> crowsetta.Annotation:
+    def to_annot(
+        self, round_times: bool = True, decimals: int = 3, samplerate: Optional[int] = None
+    ) -> crowsetta.Annotation:
         """Convert this TIMIT annotation to a ``crowsetta.Annotation``.
 
         Parameters
@@ -240,8 +239,7 @@ class Timit:
         phn_seq = self.to_seq(round_times, decimals, samplerate)
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.audio_path, seq=phn_seq)
 
-    def to_file(self,
-                annot_path: PathLike) -> None:
+    def to_file(self, annot_path: PathLike) -> None:
         """make a .phn file from an annotation
 
         Parameters
@@ -254,12 +252,10 @@ class Timit:
         crowsetta.validation.validate_ext(annot_path, extension=self.ext)
 
         lines = []
-        for begin_sample, end_sample, text in zip(self.begin_samples.tolist(),
-                                                  self.end_samples.tolist(),
-                                                  list(self.text)):
-            lines.append(
-                f'{begin_sample} {end_sample} {text}\n'
-            )
+        for begin_sample, end_sample, text in zip(
+            self.begin_samples.tolist(), self.end_samples.tolist(), list(self.text)
+        ):
+            lines.append(f"{begin_sample} {end_sample} {text}\n")
 
-        with annot_path.open('w') as fp:
+        with annot_path.open("w") as fp:
             fp.writelines(lines)

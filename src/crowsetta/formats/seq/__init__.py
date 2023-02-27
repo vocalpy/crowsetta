@@ -8,12 +8,12 @@ from .timit import Timit
 from .yarden import SongAnnotationGUI
 
 __all__ = [
-    'AudTxt',
-    'BirdsongRec',
-    'GenericSeq',
-    'NotMat',
-    'SimpleSeq',
-    'SongAnnotationGUI',
-    'TextGrid',
-    'Timit',
+    "AudTxt",
+    "BirdsongRec",
+    "GenericSeq",
+    "NotMat",
+    "SimpleSeq",
+    "SongAnnotationGUI",
+    "TextGrid",
+    "Timit",
 ]

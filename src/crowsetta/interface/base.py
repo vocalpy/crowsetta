@@ -10,15 +10,16 @@ class BaseFormat(abc.ABC):
     in a specific format
     for annotating vocalizations.
     """
+
     @classmethod
     @abc.abstractmethod
-    def from_file(cls) -> 'Self':
+    def from_file(cls) -> "Self":
         """Loads an annotation from a file
         in a given format.
         """
         ...
 
-    def to_annot(self) -> 'Union[crowsetta.Annotation,List[crowsetta.Annotation]]':
+    def to_annot(self) -> "Union[crowsetta.Annotation,List[crowsetta.Annotation]]":
         """Converts the instance representing annotations
         loaded from a file into a `crowsetta.Annotation`
         or a list of `crowsetta.Annotation`s,

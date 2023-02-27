@@ -38,6 +38,7 @@ class SimpleSeqSchema(pandera.SchemaModel):
     and makes any changes needed to get it to this format
     before validation, e.g., changing column names.
     """
+
     onset_s: Optional[Series[float]] = pandera.Field()
     offset_s: Optional[Series[float]] = pandera.Field()
     label: Series[pd.StringDtype] = pandera.Field(coerce=True)
@@ -91,23 +92,24 @@ class SimpleSeq:
         that contains a spectrogram generated from audio.
         Optional, default is None.
     """
-    name: ClassVar[str] = 'simple-seq'
-    ext: ClassVar[str] = ('.csv', '.txt')
+
+    name: ClassVar[str] = "simple-seq"
+    ext: ClassVar[str] = (".csv", ".txt")
 
     onsets_s: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     offsets_s: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     labels: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     annot_path: pathlib.Path
-    notated_path: Optional[pathlib.Path] = attr.field(default=None,
-                                                      converter=attr.converters.optional(pathlib.Path))
+    notated_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
-    def from_file(cls,
-                  annot_path: PathLike,
-                  notated_path: Optional[PathLike] = None,
-                  columns_map: Optional[Mapping] = None,
-                  read_csv_kwargs: Optional[Mapping] = None
-                  ) -> 'Self':
+    def from_file(
+        cls,
+        annot_path: PathLike,
+        notated_path: Optional[PathLike] = None,
+        columns_map: Optional[Mapping] = None,
+        read_csv_kwargs: Optional[Mapping] = None,
+    ) -> "Self":
         """Load annotations from a file
         in the 'simple-seq' format.
 
@@ -154,8 +156,8 @@ class SimpleSeq:
         --------
         >>> example = crowsetta.data.get('simple-seq')
         >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(example.annot_path,
-        >>>                                                    columns_map={'start_seconds': 'onset_s', 
-        >>>                                                                 'stop_seconds': 'offset_s', 
+        >>>                                                    columns_map={'start_seconds': 'onset_s',
+        >>>                                                                 'stop_seconds': 'offset_s',
         >>>                                                                 'name': 'label'},
         >>>                                                    read_csv_kwargs={'index_col': 0})
         """
@@ -168,22 +170,19 @@ class SimpleSeq:
             df = pd.read_csv(annot_path)
 
         if columns_map:
-            df.columns = [columns_map[column_name]
-                          for column_name in df.columns]
-        df = df[['onset_s','offset_s', 'label']]  # put in correct order
+            df.columns = [columns_map[column_name] for column_name in df.columns]
+        df = df[["onset_s", "offset_s", "label"]]  # put in correct order
         df = SimpleSeqSchema.validate(df)
 
         return cls(
-            onsets_s=df['onset_s'].values,
-            offsets_s=df['offset_s'].values,
-            labels=df['label'].values,
+            onsets_s=df["onset_s"].values,
+            offsets_s=df["offset_s"].values,
+            labels=df["label"].values,
             annot_path=annot_path,
             notated_path=notated_path,
         )
 
-    def to_seq(self,
-               round_times: bool = True,
-               decimals: int = 3) -> crowsetta.Sequence:
+    def to_seq(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Sequence:
         """Convert this annotation to a ``crowsetta.Sequence``.
 
         Parameters
@@ -204,8 +203,8 @@ class SimpleSeq:
         --------
         >>> example = crowsetta.data.get('simple-seq')
         >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(example.annot_path,
-        >>>                                                    columns_map={'start_seconds': 'onset_s', 
-        >>>                                                                 'stop_seconds': 'offset_s', 
+        >>>                                                    columns_map={'start_seconds': 'onset_s',
+        >>>                                                                 'stop_seconds': 'offset_s',
         >>>                                                                 'name': 'label'},
         >>>                                                    read_csv_kwargs={'index_col': 0})
         >>> seq = simple.to_seq()
@@ -225,14 +224,10 @@ class SimpleSeq:
             onsets_s = self.onsets_s
             offsets_s = self.offsets_s
 
-        seq = crowsetta.Sequence.from_keyword(labels=self.labels,
-                                              onsets_s=onsets_s,
-                                              offsets_s=offsets_s)
+        seq = crowsetta.Sequence.from_keyword(labels=self.labels, onsets_s=onsets_s, offsets_s=offsets_s)
         return seq
 
-    def to_annot(self,
-                 round_times: bool = True,
-                 decimals: int = 3) -> crowsetta.Annotation:
+    def to_annot(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Annotation:
         """Convert this annotation to a ``crowsetta.Annotation``.
 
         Parameters
@@ -253,8 +248,8 @@ class SimpleSeq:
         --------
         >>> example = crowsetta.data.get('simple-seq')
         >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(example.annot_path,
-        >>>                                                    columns_map={'start_seconds': 'onset_s', 
-        >>>                                                                 'stop_seconds': 'offset_s', 
+        >>>                                                    columns_map={'start_seconds': 'onset_s',
+        >>>                                                                 'stop_seconds': 'offset_s',
         >>>                                                                 'name': 'label'},
         >>>                                                    read_csv_kwargs={'index_col': 0})
         >>> annot = simple.to_annot()
@@ -270,9 +265,7 @@ class SimpleSeq:
         seq = self.to_seq(round_times, decimals)
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.notated_path, seq=seq)
 
-    def to_file(self,
-                annot_path: PathLike,
-                to_csv_kwargs: Optional[Mapping] = None) -> None:
+    def to_file(self, annot_path: PathLike, to_csv_kwargs: Optional[Mapping] = None) -> None:
         """Save this 'simple-seq' annotation to a .csv file.
 
         Parameters
@@ -287,18 +280,12 @@ class SimpleSeq:
             will be used, except ``index``
             is set to False.
         """
-        df = pd.DataFrame.from_records(
-            {'onset_s': self.onsets_s,
-             'offset_s': self.offsets_s,
-             'label': self.labels}
-        )
-        df = df[['onset_s', 'offset_s', 'label']]  # put in correct order
+        df = pd.DataFrame.from_records({"onset_s": self.onsets_s, "offset_s": self.offsets_s, "label": self.labels})
+        df = df[["onset_s", "offset_s", "label"]]  # put in correct order
         try:
             df = SimpleSeqSchema.validate(df)
         except pandera.errors.SchemaError as e:
-            raise ValueError(
-                f'Annotations produced an invalid dataframe, cannot convert to csv:\n{df}'
-            ) from e
+            raise ValueError(f"Annotations produced an invalid dataframe, cannot convert to csv:\n{df}") from e
         if to_csv_kwargs:
             df.to_csv(annot_path, **to_csv_kwargs)
         else:

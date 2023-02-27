@@ -79,18 +79,18 @@ class BirdsongRec:
     https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0159188
     doi:10.1371/journal.pone.0159188
     """
-    name: ClassVar[str] = 'birdsong-recognition-dataset'
-    ext: ClassVar[str] = '.xml'
+
+    name: ClassVar[str] = "birdsong-recognition-dataset"
+    ext: ClassVar[str] = ".xml"
 
     sequences: List[birdsongrec.Sequence]
     annot_path: pathlib.Path = attr.field(converter=pathlib.Path)
     wav_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
-    def from_file(cls,
-                  annot_path: PathLike,
-                  wav_path: Optional[PathLike] = None,
-                  concat_seqs_into_songs: bool = True) -> 'Self':
+    def from_file(
+        cls, annot_path: PathLike, wav_path: Optional[PathLike] = None, concat_seqs_into_songs: bool = True
+    ) -> "Self":
         """Load BirdsongRecognition annotations from an .xml file.
 
         Parameters
@@ -125,25 +125,21 @@ class BirdsongRec:
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
         if not annot_path.exists():
-            raise FileNotFoundError(
-                f"annot_path not found: {annot_path}"
-            )
+            raise FileNotFoundError(f"annot_path not found: {annot_path}")
 
         if wav_path is None:
-            wav_path = annot_path.parent.joinpath('Wave')
+            wav_path = annot_path.parent.joinpath("Wave")
         else:
             wav_path = pathlib.Path(wav_path)
 
         # `birdsong-recongition-dataset` has a 'Sequence' class
         # but it is different from a `crowsetta.Sequence`
-        birdsongrec_seqs = birdsongrec.parse_xml(annot_path,
-                                                 concat_seqs_into_songs=concat_seqs_into_songs)
+        birdsongrec_seqs = birdsongrec.parse_xml(annot_path, concat_seqs_into_songs=concat_seqs_into_songs)
         return cls(sequences=birdsongrec_seqs, annot_path=annot_path, wav_path=wav_path)
 
-    def to_seq(self,
-               round_times: bool = True,
-               decimals: int = 3,
-               samplerate: Optional[int] = None) -> List[crowsetta.Sequence]:
+    def to_seq(
+        self, round_times: bool = True, decimals: int = 3, samplerate: Optional[int] = None
+    ) -> List[crowsetta.Sequence]:
         """Convert this set of ``'birdsong-recognition-dataset'``
         annotations to a list of ``crowsetta.Sequence`` instances.
 
@@ -202,8 +198,7 @@ class BirdsongRec:
             labels = np.array(
                 # NOTE we convert syl.label to string so dtype is consistent across formats
                 # and to adhere to schema for `'generic-seq'`
-                [str(syl.label)
-                 for syl in birdsongrec_seq.syls]
+                [str(syl.label) for syl in birdsongrec_seq.syls]
             )
             wav_filename = self.wav_path / birdsongrec_seq.wav_file
 
@@ -212,11 +207,11 @@ class BirdsongRec:
                     samplerate_this_wav = soundfile.info(wav_filename).samplerate
                 except RuntimeError:
                     warnings.warn(
-                        f'wav file not found: {wav_filename}.'
-                        f'Could not determine sampling rate to convert onsets and offsets to seconds. '
-                        f'To use a fixed sampling rate for all files, pass in a value for the `samplerate` '
-                        f'argument. Be aware that this may not be the correct sampling rate for all files.',
-                        UserWarning
+                        f"wav file not found: {wav_filename}."
+                        f"Could not determine sampling rate to convert onsets and offsets to seconds. "
+                        f"To use a fixed sampling rate for all files, pass in a value for the `samplerate` "
+                        f"argument. Be aware that this may not be the correct sampling rate for all files.",
+                        UserWarning,
                     )
                     samplerate_this_wav = None
             else:
@@ -227,24 +222,24 @@ class BirdsongRec:
                 offsets_s = offset_samples / samplerate_this_wav
                 if round_times:
                     onsets_s = np.round(onsets_s, decimals=decimals)
-                    offsets_s = np.round(offsets_s , decimals=decimals)
+                    offsets_s = np.round(offsets_s, decimals=decimals)
             else:
                 onsets_s = None
                 offsets_s = None
 
-            seq = crowsetta.Sequence.from_keyword(onset_samples=onset_samples,
-                                                  offset_samples=offset_samples,
-                                                  onsets_s=onsets_s,
-                                                  offsets_s=offsets_s,
-                                                  labels=labels
-                                                  )
+            seq = crowsetta.Sequence.from_keyword(
+                onset_samples=onset_samples,
+                offset_samples=offset_samples,
+                onsets_s=onsets_s,
+                offsets_s=offsets_s,
+                labels=labels,
+            )
             seqs.append(seq)
         return seqs
 
-    def to_annot(self,
-                 round_times: bool = True,
-                 decimals: int = 3,
-                 samplerate: Optional[int] = None) -> List[crowsetta.Annotation]:
+    def to_annot(
+        self, round_times: bool = True, decimals: int = 3, samplerate: Optional[int] = None
+    ) -> List[crowsetta.Annotation]:
         """Convert this set of ``'birdsong-recognition-dataset'``
         annotations to a list of ``crowsetta.Annotation`` instances
 
@@ -296,16 +291,9 @@ class BirdsongRec:
 
         >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(annot_path, wav_path='./actually/wavs/are/here')  # doctest: +SKIP
         """
-        seqs = self.to_seq(round_times=round_times,
-                           decimals=decimals,
-                           samplerate=samplerate)
-        wav_filenames = [
-            self.wav_path / birdsongrec_seq.wav_file
-            for birdsongrec_seq in self.sequences
-        ]
+        seqs = self.to_seq(round_times=round_times, decimals=decimals, samplerate=samplerate)
+        wav_filenames = [self.wav_path / birdsongrec_seq.wav_file for birdsongrec_seq in self.sequences]
         annot_list = []
         for seq, wav_filename in zip(seqs, wav_filenames):
-            annot_list.append(
-                crowsetta.Annotation(seq=seq, annot_path=self.annot_path, notated_path=wav_filename)
-            )
+            annot_list.append(crowsetta.Annotation(seq=seq, annot_path=self.annot_path, notated_path=wav_filename))
         return annot_list

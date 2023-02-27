@@ -28,9 +28,7 @@ def by_name(name):
     try:
         return FORMATS[name]
     except KeyError:
-        raise AttributeError(
-            f"module {__name__!r} has no attribute {name!r}"
-        ) from None
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}") from None
 
 
 def as_list():
@@ -44,8 +42,6 @@ def as_list():
 def register_format(format_class):
     """Decorator to register annotation formats"""
     if not issubclass(format_class, interface.seq.SeqLike) and not issubclass(format_class, interface.bbox.BBoxLike):
-        raise TypeError(
-            f'format class must be subclass of SeqLike or BBoxLike, but was not: {format_class}'
-        )
+        raise TypeError(f"format class must be subclass of SeqLike or BBoxLike, but was not: {format_class}")
     FORMATS[format_class.name] = format_class
     return format_class

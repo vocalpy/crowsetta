@@ -40,7 +40,8 @@ class SeqLike(BaseFormat, abc.ABC):
        >>> seq.onset_inds
        array([16000, 36000])
     """
-    def to_seq(self) -> 'Union[crowsetta.Sequence, Sequence[crowsetta.Sequence]]':
+
+    def to_seq(self) -> "Union[crowsetta.Sequence, Sequence[crowsetta.Sequence]]":
         """Converts the annotation to
         a ``crowsetta.Sequence`` instance
         or a python sequence of

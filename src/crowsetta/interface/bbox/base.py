@@ -41,7 +41,8 @@ class BBoxLike(BaseFormat, abc.ABC):
        >>> a_bbox.onset
        1.0
     """
-    def to_bbox(self) -> 'Union[crowsetta.BBox, Sequence[crowsetta.BBox]]':
+
+    def to_bbox(self) -> "Union[crowsetta.BBox, Sequence[crowsetta.BBox]]":
         """Converts the annotation to
         a ``crowsetta.BBox`` instance
         or a python sequence of
