@@ -2,9 +2,7 @@ import pytest
 
 from .data import TEST_DATA_ROOT
 
-AUDTXT_PATHS = sorted(
-        TEST_DATA_ROOT.glob('aud-txt/giraudon-et-al-2022/audacity-annotations/*.audacity.txt')
-    )
+AUDTXT_PATHS = sorted(TEST_DATA_ROOT.glob("aud-txt/giraudon-et-al-2022/audacity-annotations/*.audacity.txt"))
 
 
 @pytest.fixture

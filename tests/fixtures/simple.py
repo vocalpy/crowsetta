@@ -2,9 +2,7 @@ import pytest
 
 from .data import TEST_DATA_ROOT
 
-SIMPLE_CSVS = sorted(
-        TEST_DATA_ROOT.glob('simple-csv/hmbg-sound-analysis-workshop/*.csv')
-    )
+SIMPLE_CSVS = sorted(TEST_DATA_ROOT.glob("simple-csv/hmbg-sound-analysis-workshop/*.csv"))
 
 
 @pytest.fixture
@@ -17,9 +15,7 @@ def a_simple_csv_path(request):
     return request.param
 
 
-DAS_CSVS = sorted(
-        TEST_DATA_ROOT.glob('simple-csv/steinfath-et-al-2021/*.csv')
-    )
+DAS_CSVS = sorted(TEST_DATA_ROOT.glob("simple-csv/steinfath-et-al-2021/*.csv"))
 
 
 @pytest.fixture
