@@ -33,7 +33,6 @@ import codecs
 import os.path
 import re
 from bisect import bisect_left
-from sys import stderr
 
 from .exceptions import TextGridError
 

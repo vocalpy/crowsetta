@@ -13,3 +13,26 @@ from .transcriber import Transcriber
 from . import formats
 from .formats import register_format
 # isort: on
+
+__all__ = [
+    '__author__',
+    '__commit__',
+    '__copyright__',
+    '__email__',
+    '__license__',
+    '__summary__',
+    '__title__',
+    '__uri__',
+    '__version__',
+    'Annotation',
+    'Bbox',
+    'data',
+    'formats',
+    'interface',
+    'register_format',
+    'Segment',
+    'Sequence',
+    'Transcriber',
+    'typing',
+    'validation',
+]
