@@ -1,8 +1,8 @@
 """
 remakes the .csv files used for testing the `'generic-seq'` format
 """
-from pathlib import Path
 import sys
+from pathlib import Path
 
 import pandas as pd
 

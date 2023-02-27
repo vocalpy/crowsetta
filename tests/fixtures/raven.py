@@ -2,7 +2,6 @@ import pytest
 
 from .data import TEST_DATA_ROOT
 
-
 RAVEN_ROOT = TEST_DATA_ROOT / 'raven'
 
 

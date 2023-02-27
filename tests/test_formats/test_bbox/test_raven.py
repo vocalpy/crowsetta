@@ -1,8 +1,7 @@
 
-import pytest
-
 import pandas as pd
 import pandera
+import pytest
 
 import crowsetta.formats
 

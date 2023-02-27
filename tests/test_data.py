@@ -1,15 +1,16 @@
 import contextlib
+
 try:
     from importlib.resources import as_file, files, open_text 
 except ImportError:
     from importlib_resources import as_file, files, open_text 
+
 import pathlib
 import shutil
 
 import pytest
 
 import crowsetta
-
 
 DEFAULT_USER_DATA_DIR = pathlib.Path(crowsetta.data.data.APP_DIRS.user_data_dir)
 

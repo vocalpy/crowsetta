@@ -3,7 +3,6 @@ import pytest
 
 from .data import TEST_DATA_ROOT
 
-
 BIRDSONG_REC_ROOT = TEST_DATA_ROOT / 'birdsongrec'
 
 

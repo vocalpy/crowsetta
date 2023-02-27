@@ -2,7 +2,6 @@ import pytest
 
 from .data import TEST_DATA_ROOT
 
-
 SIMPLE_CSVS = sorted(
         TEST_DATA_ROOT.glob('simple-csv/hmbg-sound-analysis-workshop/*.csv')
     )

@@ -5,9 +5,10 @@ import attr
 import numpy as np
 import scipy.io
 
-from crowsetta import Sequence, Annotation
-from crowsetta.typing import PathLike
 import crowsetta
+from crowsetta import Annotation, Sequence
+from crowsetta.typing import PathLike
+
 
 @crowsetta.formats.register_format
 @crowsetta.interface.SeqLike.register
