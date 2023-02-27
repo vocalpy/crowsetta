@@ -51,6 +51,15 @@ def dev(session: nox.Session) -> None:
 
 
 @nox.session
+def lint(session):
+    """
+    Run the linter.
+    """
+    session.install("pre-commit")
+    session.run("pre-commit", "run", "--all-files", *session.posargs)
+
+
+@nox.session
 def test(session) -> None:
     """
     Run the unit and regular tests.
