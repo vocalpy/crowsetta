@@ -1,0 +1,26 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "rhine3",
+      "name": "Tessa Rhinehart",
+      "avatar_url": "https://avatars.githubusercontent.com/u/27306428?v=4",
+      "profile": "http://tessarhinehart.com",
+      "contributions": [
+        "doc",
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "crowsetta",
+  "projectOwner": "vocalpy"
+}
