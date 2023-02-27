@@ -1,4 +1,3 @@
-import filecmp
 
 import pytest
 
