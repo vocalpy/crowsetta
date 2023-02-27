@@ -60,6 +60,7 @@ doc = [
 ]
 dev = [
     'flit',
+    'crowsetta[doc, test]',
     'isort >=5.12.0',
     'twine',
 ]
