@@ -2,6 +2,7 @@
 for any annotation format
 that can be represented as a set of bounding boxes"""
 import abc
+from typing import Sequence, Union
 
 from ..base import BaseFormat
 
@@ -42,7 +43,7 @@ class BBoxLike(BaseFormat, abc.ABC):
        1.0
     """
 
-    def to_bbox(self) -> "Union[crowsetta.BBox, Sequence[crowsetta.BBox]]":
+    def to_bbox(self) -> "Union[crowsetta.BBox, Sequence[crowsetta.BBox]]":  # noqa : F821
         """Converts the annotation to
         a ``crowsetta.BBox`` instance
         or a python sequence of

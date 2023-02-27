@@ -26,7 +26,7 @@ class Transcriber:
     from_file : Loads annotations from a file
     """
 
-    def __init__(self, format: "Union[str, crowsetta.interface.SeqLike, crowsetta.interface.BBoxLike]"):
+    def __init__(self, format: "Union[str, crowsetta.interface.SeqLike, crowsetta.interface.BBoxLike]"):  # noqa: F821
         """make a new ``Transcriber``
 
         Parameters
@@ -54,9 +54,9 @@ class Transcriber:
         elif inspect.isclass(format):
             if not issubclass(format, interface.BaseFormat):
                 raise TypeError(
-                    f"Format recognized as a class, but it is not a subclass of ``crowsetta.interface.BaseFormat``."
-                    f"Please ``register`` the class as a subclass of either ``crowsetta.interface.SeqLike`` or "
-                    f"``crowsetta.interface.BBoxLike``"
+                    "Format recognized as a class, but it is not a subclass of ``crowsetta.interface.BaseFormat``."
+                    "Please ``register`` the class as a subclass of either ``crowsetta.interface.SeqLike`` or "
+                    f"``crowsetta.interface.BBoxLike``. Class was: {format}"
                 )
             _format_class = format
         else:
@@ -69,7 +69,7 @@ class Transcriber:
 
     def from_file(
         self, annot_path, *args, **kwargs
-    ) -> "Union[crowsetta.interface.SeqLike,crowsetta.interface.BBoxLike]":
+    ) -> "Union[crowsetta.interface.SeqLike,crowsetta.interface.BBoxLike]":  # noqa: F821
         """Load annotations from a file.
 
         Parameters

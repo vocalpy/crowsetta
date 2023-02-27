@@ -1,4 +1,4 @@
-"""module for Audacity LabelTrack 
+"""module for Audacity LabelTrack
 in standard/default format exported to .txt files
 https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
 """
@@ -83,7 +83,7 @@ class AudTxt:
         cls,
         annot_path: PathLike,
         notated_path: Optional[PathLike] = None,
-    ) -> "Self":
+    ) -> "Self":  # noqa: F821
         """Load annotations from a file
 
         Parameters

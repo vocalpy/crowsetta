@@ -90,7 +90,7 @@ def extract_data_files(user_data_dir: PathLike | None = None):
         user_data_dir = APP_DIRS.user_data_dir
     user_data_dir = pathlib.Path(user_data_dir)
     user_data_dir.mkdir(parents=True, exist_ok=True)
-    for format_name, path_args in DATA.items():
+    for _, path_args in DATA.items():
         # don't use full name `importlib.resources` here
         # because we need to use backport package, not stdlib, on Python 3.8
         source = files(path_args.package).joinpath(path_args.resource)
@@ -230,7 +230,7 @@ def get(format: str, user_data_dir: PathLike | None = None) -> ExampleAnnotFile:
     >>> with example.annot_path as annot_path:
     ...     textgrid = crowsetta.formats.seq.TextGrid.from_file(annot_path)
     """
-    if not format in DATA:
+    if format not in DATA:
         raise ValueError(f"format not recognized: {format}")
 
     if user_data_dir is None:
@@ -251,7 +251,7 @@ def get(format: str, user_data_dir: PathLike | None = None) -> ExampleAnnotFile:
         else:
             print(
                 """Not extracting data. Will return a context manager.\n
-                Use the context manager to get a path to a temporary path 
+                Use the context manager to get a path to a temporary path
                 like in the following example:\n
 
                 >>> example = crowsetta.data.get('timit')

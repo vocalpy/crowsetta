@@ -1,5 +1,6 @@
 """An abstract base class for sequence-like annotation formats"""
 import abc
+from typing import Sequence, Union
 
 from ..base import BaseFormat
 
@@ -41,7 +42,7 @@ class SeqLike(BaseFormat, abc.ABC):
        array([16000, 36000])
     """
 
-    def to_seq(self) -> "Union[crowsetta.Sequence, Sequence[crowsetta.Sequence]]":
+    def to_seq(self) -> "Union[crowsetta.Sequence, Sequence[crowsetta.Sequence]]":  # noqa : F821
         """Converts the annotation to
         a ``crowsetta.Sequence`` instance
         or a python sequence of

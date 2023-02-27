@@ -55,7 +55,7 @@ class NotMat:
     audio_path: pathlib.Path
 
     @classmethod
-    def from_file(cls, annot_path: PathLike) -> "Self":
+    def from_file(cls, annot_path: PathLike) -> "Self":  # noqa: F821
         """load annotations from .not.mat file
 
         Parameters

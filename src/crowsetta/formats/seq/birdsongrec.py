@@ -90,7 +90,7 @@ class BirdsongRec:
     @classmethod
     def from_file(
         cls, annot_path: PathLike, wav_path: Optional[PathLike] = None, concat_seqs_into_songs: bool = True
-    ) -> "Self":
+    ) -> "Self":  # noqa: F821
         """Load BirdsongRecognition annotations from an .xml file.
 
         Parameters
@@ -189,7 +189,7 @@ class BirdsongRec:
         If you need to specify some other location for the ``.wav`` files,
         pass in the ``wavpath`` argument when you first load the annotations:
 
-        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(annot_path, wav_path='./actually/wavs/are/here')  # doctest: +SKIP
+        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(annot_path, wav_path='./actually/wavs/are/here')  # doctest: +SKIP # noqa:  E501
         """
         seqs = []
         for birdsongrec_seq in self.sequences:
@@ -212,6 +212,7 @@ class BirdsongRec:
                         f"To use a fixed sampling rate for all files, pass in a value for the `samplerate` "
                         f"argument. Be aware that this may not be the correct sampling rate for all files.",
                         UserWarning,
+                        stacklevel=2,
                     )
                     samplerate_this_wav = None
             else:
@@ -289,7 +290,7 @@ class BirdsongRec:
         If you need to specify some other location for the ``.wav`` files,
         pass in the ``wavpath`` argument when you first load the annotations:
 
-        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(annot_path, wav_path='./actually/wavs/are/here')  # doctest: +SKIP
+        >>> birdsongrec = crowsetta.formats.BirdsongRec.from_file(annot_path, wav_path='./actually/wavs/are/here')  # doctest: +SKIP # noqa: E501
         """
         seqs = self.to_seq(round_times=round_times, decimals=decimals, samplerate=samplerate)
         wav_filenames = [self.wav_path / birdsongrec_seq.wav_file for birdsongrec_seq in self.sequences]

@@ -109,7 +109,7 @@ class SimpleSeq:
         notated_path: Optional[PathLike] = None,
         columns_map: Optional[Mapping] = None,
         read_csv_kwargs: Optional[Mapping] = None,
-    ) -> "Self":
+    ) -> "Self":  # noqa: F821
         """Load annotations from a file
         in the 'simple-seq' format.
 

@@ -77,7 +77,7 @@ class Raven:
     @classmethod
     def from_file(
         cls, annot_path: PathLike, annot_col: str = "Annotation", audio_path: Optional[PathLike] = None
-    ) -> "Self":
+    ) -> "Self":  # noqa: F821
         """Load annotations from a Raven annotation file,
         created by exporting a Selection Table.
 

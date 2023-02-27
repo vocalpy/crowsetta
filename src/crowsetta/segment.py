@@ -1,4 +1,4 @@
-"""A class that represents a segment of a time series, 
+"""A class that represents a segment of a time series,
 used to annotate animal communication."""
 import warnings
 

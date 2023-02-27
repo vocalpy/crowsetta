@@ -212,7 +212,7 @@ class Sequence:
         # then do type/shape checking on onsets and offsets;
         # also make sure everybody is the same length
         if not (onset_samples is None and offset_samples is None) and not (
-            np.all(onset_samples == None) and np.all(offset_samples == None)
+            np.all(onset_samples == None) and np.all(offset_samples == None)    # noqa: E711
         ):
             onset_samples = column_or_row_or_1d(onset_samples)
             offset_samples = column_or_row_or_1d(offset_samples)
@@ -246,7 +246,7 @@ class Sequence:
                     )
 
         if not (onsets_s is None and offsets_s is None) and not (
-            np.all(onsets_s == None) and np.all(offsets_s == None)
+            np.all(onsets_s == None) and np.all(offsets_s == None)  # noqa: E711
         ):
             onsets_s = column_or_row_or_1d(onsets_s)
             offsets_s = column_or_row_or_1d(offsets_s)
@@ -437,7 +437,7 @@ class Sequence:
             # if value is an array full of Nones, just convert to one None.
             # Use == to do elementwise comparison (so ignore warnings about
             # 'comparison with None performed with equality operators')
-            if np.all(seq_dict[a_key] == None):
+            if np.all(seq_dict[a_key] == None):  # noqa: E711
                 seq_dict[a_key] = None
 
         return seq_dict

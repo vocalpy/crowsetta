@@ -26,9 +26,9 @@ from pandera.typing import Series
 import crowsetta
 from crowsetta.typing import PathLike
 
-ONSET_OFFSET_COLS_ERR = """For onset times and offset times, 
-all values must be specified in at least one unit: 
-seconds (float), or sample number (integer). All rows must be non-null for either 
+ONSET_OFFSET_COLS_ERR = """For onset times and offset times,
+all values must be specified in at least one unit:
+seconds (float), or sample number (integer). All rows must be non-null for either
 'onset_s' and 'offset_s' or 'onset_sample' and 'offset_sample'.
 Both units can also be specified. Conversion between units is not validated.
 """
@@ -307,7 +307,7 @@ class GenericSeq:
     annots: List[crowsetta.Annotation]
 
     @classmethod
-    def from_file(cls, annot_path: PathLike) -> "Self":
+    def from_file(cls, annot_path: PathLike) -> "Self":  # noqa: F821
         """load annotations in 'generic-seq' format from a .csv file
 
         Parameters

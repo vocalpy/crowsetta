@@ -1,4 +1,5 @@
 import abc
+from typing import List, Union
 
 
 class BaseFormat(abc.ABC):
@@ -13,13 +14,16 @@ class BaseFormat(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def from_file(cls) -> "Self":
+    def from_file(cls) -> "Self":  # noqa: F821
         """Loads an annotation from a file
         in a given format.
         """
         ...
 
-    def to_annot(self) -> "Union[crowsetta.Annotation,List[crowsetta.Annotation]]":
+    # type hints here would cause circular imports if not strings
+    # TODO: fix type hinting here (use stubs?)
+    @abc.abstractmethod
+    def to_annot(self) -> "Union[crowsetta.Annotation,List[crowsetta.Annotation]]":  # noqa: F821
         """Converts the instance representing annotations
         loaded from a file into a `crowsetta.Annotation`
         or a list of `crowsetta.Annotation`s,

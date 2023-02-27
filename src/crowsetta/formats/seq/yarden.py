@@ -85,7 +85,7 @@ class SongAnnotationGUI:
     annot_path: pathlib.Path = attr.field(converter=pathlib.Path)
 
     @classmethod
-    def from_file(cls, annot_path: PathLike) -> "Self":
+    def from_file(cls, annot_path: PathLike) -> "Self":  # noqa: F821
         """load annotations from .mat files
         created by SongAnnotationGUI:
         https://github.com/yardencsGitHub/BirdSongBout/tree/master/helpers/GUI

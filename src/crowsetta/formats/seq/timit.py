@@ -68,7 +68,7 @@ class Timit:
     audio_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
-    def from_file(cls, annot_path: PathLike, audio_path: Optional[PathLike] = None) -> "Self":
+    def from_file(cls, annot_path: PathLike, audio_path: Optional[PathLike] = None) -> "Self":  # noqa: F821
         """Load annotations from a TIMIT transcription file
 
         Parameters
@@ -175,6 +175,7 @@ class Timit:
                     f"To use a fixed sampling rate for all files, pass in a value for the `samplerate` "
                     f"argument, but be aware that this may not be the correct sampling rate for some files.",
                     UserWarning,
+                    stacklevel=2,
                 )
                 samplerate = None
 
