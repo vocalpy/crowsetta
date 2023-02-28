@@ -51,12 +51,21 @@ def dev(session: nox.Session) -> None:
 
 
 @nox.session
+def lint(session):
+    """
+    Run the linter.
+    """
+    session.install("pre-commit")
+    session.run("pre-commit", "run", "--all-files", *session.posargs)
+
+
+@nox.session
 def test(session) -> None:
     """
     Run the unit and regular tests.
     """
     session.install(".[test]")
-    session.run("pytest", *session.posargs)
+    session.run("pytest", "-n", "auto", *session.posargs)
 
 
 @nox.session
@@ -66,7 +75,7 @@ def coverage(session) -> None:
     """
     session.install(".[test]", "pytest-cov")
     session.run(
-        "pytest", "--cov=./", "--cov-report=xml", *session.posargs
+        "pytest", "-n", "auto", "--cov=./", "--cov-report=xml", *session.posargs
     )
 
 

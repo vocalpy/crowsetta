@@ -29,11 +29,9 @@
 
 from __future__ import print_function
 
-import re
 import codecs
 import os.path
-
-from sys import stderr
+import re
 from bisect import bisect_left
 
 from .exceptions import TextGridError
@@ -53,14 +51,14 @@ def _getMark(text, short):
 
     # check that the line begins with a valid entry type
     if not short and not re.match(r'^\s*(text|mark) = "', line):
-        raise ValueError('Bad entry: ' + line)
+        raise ValueError("Bad entry: " + line)
 
     # read until the number of double-quotes is even
     while line.count('"') % 2:
         next_line = text.readline()
 
         if not next_line:
-            raise EOFError('Bad entry: ' + line[:20] + '...')
+            raise EOFError("Bad entry: " + line[:20] + "...")
 
         line += next_line
     if short:
@@ -81,21 +79,23 @@ def detectEncoding(f):
     This helper method returns the file encoding corresponding to path f.
     This handles UTF-8, which is itself an ASCII extension, so also ASCII.
     """
-    encoding = 'ascii'
+    encoding = "ascii"
     try:
-        with codecs.open(f, 'r', encoding='utf-16') as source:
+        with codecs.open(f, "r", encoding="utf-16") as source:
             source.readline()  # Read one line to ensure correct encoding
     except UnicodeError:
         try:
-            with codecs.open(f, 'r', encoding='utf-8-sig') as source: #revised utf-8 to utf-8-sig for utf-8 with byte order mark (BOM)  
+            with codecs.open(
+                f, "r", encoding="utf-8-sig"
+            ) as source:  # revised utf-8 to utf-8-sig for utf-8 with byte order mark (BOM)
                 source.readline()  # Read one line to ensure correct encoding
         except UnicodeError:
-            with codecs.open(f, 'r', encoding='ascii') as source:
+            with codecs.open(f, "r", encoding="ascii") as source:
                 source.readline()  # Read one line to ensure correct encoding
         else:
-            encoding = 'utf-8-sig' #revised utf-8 to utf-8-sig for utf-8 with byte order mark (BOM) 
+            encoding = "utf-8-sig"  # revised utf-8 to utf-8-sig for utf-8 with byte order mark (BOM)
     else:
-        encoding = 'utf-16'
+        encoding = "utf-16"
 
     return encoding
 
@@ -112,21 +112,20 @@ class Point(object):
         self.mark = mark
 
     def __repr__(self):
-        return 'Point({0}, {1})'.format(self.time,
-                                        self.mark if self.mark else None)
+        return "Point({0}, {1})".format(self.time, self.mark if self.mark else None)
 
     def __lt__(self, other):
-        if hasattr(other, 'time'):
+        if hasattr(other, "time"):
             return self.time < other.time
-        elif hasattr(other, 'minTime'):
+        elif hasattr(other, "minTime"):
             return self.time < other.minTime
         else:
             return self.time < other
 
     def __gt__(self, other):
-        if hasattr(other, 'time'):
+        if hasattr(other, "time"):
             return self.time > other.time
-        elif hasattr(other, 'maxTime'):
+        elif hasattr(other, "maxTime"):
             return self.time > other.maxTime
         else:
             return self.time > other
@@ -151,11 +150,10 @@ class Point(object):
         0 iff the point is inside the interval (non-inclusively), if you
         need inclusive membership, use Interval.__contains__
         """
-        if hasattr(other, 'time'):
+        if hasattr(other, "time"):
             return cmp(self.time, other.time)
-        elif hasattr(other, 'minTime') and hasattr(other, 'maxTime'):
-            return cmp(self.time, other.minTime) + \
-                   cmp(self.time, other.maxTime)
+        elif hasattr(other, "minTime") and hasattr(other, "maxTime"):
+            return cmp(self.time, other.minTime) + cmp(self.time, other.maxTime)
         else:  # hopefully numerical
             return cmp(self.time, other)
 
@@ -172,7 +170,7 @@ def decode(string):
     """
     # print(string)
     return string
-    return string.decode('string_escape').decode('UTF-8')
+    return string.decode("string_escape").decode("UTF-8")
 
 
 class Interval(object):
@@ -192,8 +190,7 @@ class Interval(object):
         self.strict = True
 
     def __repr__(self):
-        return 'Interval({0}, {1}, {2})'.format(self.minTime, self.maxTime,
-                                                self.mark if self.mark else None)
+        return "Interval({0}, {1}, {2})".format(self.minTime, self.maxTime, self.mark if self.mark else None)
 
     def duration(self):
         """
@@ -202,21 +199,21 @@ class Interval(object):
         return self.maxTime - self.minTime
 
     def __lt__(self, other):
-        if hasattr(other, 'minTime'):
+        if hasattr(other, "minTime"):
             if self.strict and self.overlaps(other):
                 raise (ValueError(self, other))
             return self.minTime < other.minTime
-        elif hasattr(other, 'time'):
+        elif hasattr(other, "time"):
             return self.maxTime < other.time
         else:
             return self.maxTime < other
 
     def __gt__(self, other):
-        if hasattr(other, 'maxTime'):
+        if hasattr(other, "maxTime"):
             if self.strict and self.overlaps(other):
                 raise (ValueError(self, other))
             return self.maxTime > other.maxTime
-        elif hasattr(other, 'time'):
+        elif hasattr(other, "time"):
             return self.minTime > other.time
         else:
             return self.minTime > other
@@ -228,15 +225,14 @@ class Interval(object):
         return self < other or self == other
 
     def __cmp__(self, other):
-        if hasattr(other, 'minTime') and hasattr(other, 'maxTime'):
+        if hasattr(other, "minTime") and hasattr(other, "maxTime"):
             if self.overlaps(other):
                 raise ValueError(self, other)
                 # this returns the two intervals, so user can patch things
                 # up if s/he so chooses
             return cmp(self.minTime, other.minTime)
-        elif hasattr(other, 'time'):  # comparing Intervals and Points
-            return cmp(self.minTime, other.time) + \
-                   cmp(self.maxTime, other.time)
+        elif hasattr(other, "time"):  # comparing Intervals and Points
+            return cmp(self.minTime, other.time) + cmp(self.maxTime, other.time)
         else:
             return cmp(self.minTime, other) + cmp(self.maxTime, other)
 
@@ -245,11 +241,11 @@ class Interval(object):
         This might seem superfluous but not that a ValueError will be
         raised if you compare two intervals to each other...not anymore
         """
-        if hasattr(other, 'minTime') and hasattr(other, 'maxTime'):
+        if hasattr(other, "minTime") and hasattr(other, "maxTime"):
             if self.minTime == other.minTime:
                 if self.maxTime == other.maxTime:
                     return True
-        elif hasattr(other, 'time'):
+        elif hasattr(other, "time"):
             return self.minTime < other.time < self.maxTime
         else:
             return False
@@ -267,18 +263,16 @@ class Interval(object):
         Tests whether self overlaps with the given interval. Symmetric.
         See: http://www.rgrjr.com/emacs/overlap.html
         """
-        return other.minTime < self.maxTime and \
-               self.minTime < other.maxTime
+        return other.minTime < self.maxTime and self.minTime < other.maxTime
 
     def __contains__(self, other):
         """
         Tests whether the given time point is contained in this interval,
         either a numeric type or a Point object.
         """
-        if hasattr(other, 'minTime') and hasattr(other, 'maxTime'):
-            return self.minTime <= other.minTime and \
-                   other.maxTime <= self.maxTime
-        elif hasattr(other, 'time'):
+        if hasattr(other, "minTime") and hasattr(other, "maxTime"):
+            return self.minTime <= other.minTime and other.maxTime <= self.maxTime
+        elif hasattr(other, "time"):
             return self.minTime <= other.time <= self.maxTime
         else:
             return self.minTime <= other <= self.maxTime
@@ -295,17 +289,17 @@ class PointTier(object):
 
     """
 
-    def __init__(self, name=None, minTime=0., maxTime=None):
+    def __init__(self, name=None, minTime=0.0, maxTime=None):
         self.name = name
         self.minTime = minTime
         self.maxTime = maxTime
         self.points = []
 
     def __str__(self):
-        return '<PointTier {0}, {1} points>'.format(self.name, len(self))
+        return "<PointTier {0}, {1} points>".format(self.name, len(self))
 
     def __repr__(self):
-        return 'PointTier({0}, {1})'.format(self.name, self.points)
+        return "PointTier({0}, {1})".format(self.name, self.points)
 
     def __iter__(self):
         return iter(self.points)
@@ -347,10 +341,10 @@ class PointTier(object):
         file indicated by string f
         """
         encoding = detectEncoding(f)
-        with codecs.open(f, 'r', encoding=encoding) as source:
+        with codecs.open(f, "r", encoding=encoding) as source:
             file_type, short = parse_header(source)
-            if file_type != 'TextTier':
-                raise TextGridError('The file could not be parsed as a PointTier as it is lacking a proper header.')
+            if file_type != "TextTier":
+                raise TextGridError("The file could not be parsed as a PointTier as it is lacking a proper header.")
 
             self.minTime = parse_line(source.readline(), short, round_digits)
             self.maxTime = parse_line(source.readline(), short, round_digits)
@@ -366,18 +360,17 @@ class PointTier(object):
         Write the current state into a Praat-format PointTier/TextTier
         file. f may be a file object to write to, or a string naming a
         path for writing
-       """
-        sink = f if hasattr(f, 'write') else codecs.open(f, 'w', 'UTF-8')
+        """
+        sink = f if hasattr(f, "write") else codecs.open(f, "w", "UTF-8")
         print('File type = "ooTextFile"', file=sink)
         print('Object class = "TextTier"\n', file=sink)
 
-        print('xmin = {0}'.format(self.minTime), file=sink)
-        print('xmax = {0}'.format(self.maxTime if self.maxTime \
-                                      else self.points[-1].time), file=sink)
-        print('points: size = {0}'.format(len(self)), file=sink)
-        for (i, point) in enumerate(self.points, 1):
-            print('points [{0}]:'.format(i), file=sink)
-            print('\ttime = {0}'.format(point.time), file=sink)
+        print("xmin = {0}".format(self.minTime), file=sink)
+        print("xmax = {0}".format(self.maxTime if self.maxTime else self.points[-1].time), file=sink)
+        print("points: size = {0}".format(len(self)), file=sink)
+        for i, point in enumerate(self.points, 1):
+            print("points [{0}]:".format(i), file=sink)
+            print("\ttime = {0}".format(point.time), file=sink)
             mark = _formatMark(point.mark)
             print('\tmark = "{0}"'.format(mark), file=sink)
         sink.close()
@@ -402,7 +395,7 @@ class IntervalTier(object):
 
     """
 
-    def __init__(self, name=None, minTime=0., maxTime=None):
+    def __init__(self, name=None, minTime=0.0, maxTime=None):
         self.name = name
         self.minTime = minTime
         self.maxTime = maxTime
@@ -410,11 +403,10 @@ class IntervalTier(object):
         self.strict = True
 
     def __str__(self):
-        return '<IntervalTier {0}, {1} intervals>'.format(self.name,
-                                                          len(self))
+        return "<IntervalTier {0}, {1} intervals>".format(self.name, len(self))
 
     def __repr__(self):
-        return 'IntervalTier({0}, {1})'.format(self.name, self.intervals)
+        return "IntervalTier({0}, {1})".format(self.name, self.intervals)
 
     def __iter__(self):
         return iter(self.intervals)
@@ -456,8 +448,7 @@ class IntervalTier(object):
         """
         i = bisect_left(self.intervals, time)
         if i != len(self.intervals):
-            if self.intervals[i].minTime <= time <= \
-                    self.intervals[i].maxTime:
+            if self.intervals[i].minTime <= time <= self.intervals[i].maxTime:
                 return i
 
     def intervalContaining(self, time):
@@ -476,10 +467,10 @@ class IntervalTier(object):
         file indicated by string f
         """
         encoding = detectEncoding(f)
-        with codecs.open(f, 'r', encoding=encoding) as source:
+        with codecs.open(f, "r", encoding=encoding) as source:
             file_type, short = parse_header(source)
-            if file_type != 'IntervalTier':
-                raise TextGridError('The file could not be parsed as a IntervalTier as it is lacking a proper header.')
+            if file_type != "IntervalTier":
+                raise TextGridError("The file could not be parsed as a IntervalTier as it is lacking a proper header.")
 
             self.minTime = parse_line(source.readline(), short, round_digits)
             self.maxTime = parse_line(source.readline(), short, round_digits)
@@ -507,26 +498,25 @@ class IntervalTier(object):
             output.append(Interval(prev_t, self.maxTime, null))
         return output
 
-    def write(self, f, null=''):
+    def write(self, f, null=""):
         """
         Write the current state into a Praat-format IntervalTier file. f
         may be a file object to write to, or a string naming a path for
         writing
         """
-        sink = f if hasattr(f, 'write') else open(f, 'w')
+        sink = f if hasattr(f, "write") else open(f, "w")
         print('File type = "ooTextFile"', file=sink)
         print('Object class = "IntervalTier"\n', file=sink)
-        print('xmin = {0}'.format(self.minTime), file=sink)
-        print('xmax = {0}'.format(self.maxTime if self.maxTime \
-                                      else self.intervals[-1].maxTime), file=sink)
+        print("xmin = {0}".format(self.minTime), file=sink)
+        print("xmax = {0}".format(self.maxTime if self.maxTime else self.intervals[-1].maxTime), file=sink)
         # compute the number of intervals and make the empty ones
         output = self._fillInTheGaps(null)
         # write it all out
-        print('intervals: size = {0}'.format(len(output)), file=sink)
-        for (i, interval) in enumerate(output, 1):
-            print('intervals [{0}]'.format(i), file=sink)
-            print('\txmin = {0}'.format(interval.minTime), file=sink)
-            print('\txmax = {0}'.format(interval.maxTime), file=sink)
+        print("intervals: size = {0}".format(len(output)), file=sink)
+        for i, interval in enumerate(output, 1):
+            print("intervals [{0}]".format(i), file=sink)
+            print("\txmin = {0}".format(interval.minTime), file=sink)
+            print("\txmax = {0}".format(interval.maxTime), file=sink)
             mark = _formatMark(interval.mark)
             print('\ttext = "{0}"'.format(mark), file=sink)
         sink.close()
@@ -553,18 +543,18 @@ def parse_line(line, short, to_round):
     if '"' in line:
         m = re.match(r'.+? = "(.*)"', line)
         return m.groups()[0]
-    m = re.match(r'.+? = (.*)', line)
+    m = re.match(r".+? = (.*)", line)
     return round(float(m.groups()[0]), to_round)
 
 
 def parse_header(source):
     header = source.readline()  # header junk
     m = re.match(r'File type = "([\w ]+)"', header)
-    if m is None or not m.groups()[0].startswith('ooTextFile'):
-        raise TextGridError('The file could not be parsed as a Praat text file as it is lacking a proper header.')
+    if m is None or not m.groups()[0].startswith("ooTextFile"):
+        raise TextGridError("The file could not be parsed as a Praat text file as it is lacking a proper header.")
 
-    short = 'short' in m.groups()[0]
-    file_type = parse_line(source.readline(), short, '')  # header junk
+    short = "short" in m.groups()[0]
+    file_type = parse_line(source.readline(), short, "")  # header junk
     t = source.readline()  # header junk
     return file_type, short
 
@@ -580,7 +570,7 @@ class TextGrid(object):
 
     """
 
-    def __init__(self, name=None, minTime=0., maxTime=None, strict=True):
+    def __init__(self, name=None, minTime=0.0, maxTime=None, strict=True):
         """
         Construct a TextGrid instance with the given (optional) name
         (which is only relevant for MLF stuff). If file is given, it is a
@@ -594,10 +584,10 @@ class TextGrid(object):
         self.strict = strict
 
     def __str__(self):
-        return '<TextGrid {0}, {1} Tiers>'.format(self.name, len(self))
+        return "<TextGrid {0}, {1} Tiers>".format(self.name, len(self))
 
     def __repr__(self):
-        return 'TextGrid({0}, {1})'.format(self.name, self.tiers)
+        return "TextGrid({0}, {1})".format(self.name, self.tiers)
 
     def __iter__(self):
         return iter(self.tiers)
@@ -656,7 +646,7 @@ class TextGrid(object):
         Remove and return tier at index i (default last). Will raise
         IndexError if TextGrid is empty or index is out of range.
         """
-        return (self.tiers.pop(i) if i else self.tiers.pop())
+        return self.tiers.pop(i) if i else self.tiers.pop()
 
     def read(self, f, round_digits=DEFAULT_TEXTGRID_PRECISION, encoding=None):
         """
@@ -665,10 +655,10 @@ class TextGrid(object):
         """
         if encoding is None:
             encoding = detectEncoding(f)
-        with codecs.open(f, 'r', encoding=encoding) as source:
+        with codecs.open(f, "r", encoding=encoding) as source:
             file_type, short = parse_header(source)
-            if file_type != 'TextGrid':
-                raise TextGridError('The file could not be parsed as a TextGrid as it is lacking a proper header.')
+            if file_type != "TextGrid":
+                raise TextGridError("The file could not be parsed as a TextGrid as it is lacking a proper header.")
             self.minTime = parse_line(source.readline(), short, round_digits)
             self.maxTime = parse_line(source.readline(), short, round_digits)
             source.readline()  # more header junk
@@ -681,7 +671,7 @@ class TextGrid(object):
             for i in range(m):  # loop over grids
                 if not short:
                     source.readline()
-                if parse_line(source.readline(), short, round_digits) == 'IntervalTier':
+                if parse_line(source.readline(), short, round_digits) == "IntervalTier":
                     inam = parse_line(source.readline(), short, round_digits)
                     imin = parse_line(source.readline(), short, round_digits)
                     imax = parse_line(source.readline(), short, round_digits)
@@ -710,53 +700,49 @@ class TextGrid(object):
                         itie.addPoint(Point(jtim, jmrk))
                     self.append(itie)
 
-    def write(self, f, null=''):
+    def write(self, f, null=""):
         """
         Write the current state into a Praat-format TextGrid file. f may
         be a file object to write to, or a string naming a path to open
         for writing.
         """
-        sink = f if hasattr(f, 'write') else codecs.open(f, 'w', 'UTF-8')
+        sink = f if hasattr(f, "write") else codecs.open(f, "w", "UTF-8")
         print('File type = "ooTextFile"', file=sink)
         print('Object class = "TextGrid"\n', file=sink)
-        print('xmin = {0}'.format(self.minTime), file=sink)
+        print("xmin = {0}".format(self.minTime), file=sink)
         # compute max time
         maxT = self.maxTime
         if not maxT:
-            maxT = max([t.maxTime if t.maxTime else t[-1].maxTime \
-                        for t in self.tiers])
-        print('xmax = {0}'.format(maxT), file=sink)
-        print('tiers? <exists>', file=sink)
-        print('size = {0}'.format(len(self)), file=sink)
-        print('item []:', file=sink)
-        for (i, tier) in enumerate(self.tiers, 1):
-            print('\titem [{0}]:'.format(i), file=sink)
+            maxT = max([t.maxTime if t.maxTime else t[-1].maxTime for t in self.tiers])
+        print("xmax = {0}".format(maxT), file=sink)
+        print("tiers? <exists>", file=sink)
+        print("size = {0}".format(len(self)), file=sink)
+        print("item []:", file=sink)
+        for i, tier in enumerate(self.tiers, 1):
+            print("\titem [{0}]:".format(i), file=sink)
             if tier.__class__ == IntervalTier:
                 print('\t\tclass = "IntervalTier"', file=sink)
                 print('\t\tname = "{0}"'.format(tier.name), file=sink)
-                print('\t\txmin = {0}'.format(tier.minTime), file=sink)
-                print('\t\txmax = {0}'.format(maxT), file=sink)
+                print("\t\txmin = {0}".format(tier.minTime), file=sink)
+                print("\t\txmax = {0}".format(maxT), file=sink)
                 # compute the number of intervals and make the empty ones
                 output = tier._fillInTheGaps(null)
-                print('\t\tintervals: size = {0}'.format(
-                    len(output)), file=sink)
-                for (j, interval) in enumerate(output, 1):
-                    print('\t\t\tintervals [{0}]:'.format(j), file=sink)
-                    print('\t\t\t\txmin = {0}'.format(
-                        interval.minTime), file=sink)
-                    print('\t\t\t\txmax = {0}'.format(
-                        interval.maxTime), file=sink)
+                print("\t\tintervals: size = {0}".format(len(output)), file=sink)
+                for j, interval in enumerate(output, 1):
+                    print("\t\t\tintervals [{0}]:".format(j), file=sink)
+                    print("\t\t\t\txmin = {0}".format(interval.minTime), file=sink)
+                    print("\t\t\t\txmax = {0}".format(interval.maxTime), file=sink)
                     mark = _formatMark(interval.mark)
                     print('\t\t\t\ttext = "{0}"'.format(mark), file=sink)
             elif tier.__class__ == PointTier:  # PointTier
                 print('\t\tclass = "TextTier"', file=sink)
                 print('\t\tname = "{0}"'.format(tier.name), file=sink)
-                print('\t\txmin = {0}'.format(tier.minTime), file=sink)
-                print('\t\txmax = {0}'.format(maxT), file=sink)
-                print('\t\tpoints: size = {0}'.format(len(tier)), file=sink)
-                for (k, point) in enumerate(tier, 1):
-                    print('\t\t\tpoints [{0}]:'.format(k), file=sink)
-                    print('\t\t\t\ttime = {0}'.format(point.time), file=sink)
+                print("\t\txmin = {0}".format(tier.minTime), file=sink)
+                print("\t\txmax = {0}".format(maxT), file=sink)
+                print("\t\tpoints: size = {0}".format(len(tier)), file=sink)
+                for k, point in enumerate(tier, 1):
+                    print("\t\t\tpoints [{0}]:".format(k), file=sink)
+                    print("\t\t\t\ttime = {0}".format(point.time), file=sink)
                     mark = _formatMark(point.mark)
                     print('\t\t\t\tmark = "{0}"'.format(mark), file=sink)
         sink.close()
@@ -788,10 +774,10 @@ class MLF(object):
         return iter(self.grids)
 
     def __str__(self):
-        return '<MLF, {0} TextGrids>'.format(len(self))
+        return "<MLF, {0} TextGrids>".format(len(self))
 
     def __repr__(self):
-        return 'MLF({0})'.format(self.grids)
+        return "MLF({0})".format(self.grids)
 
     def __len__(self):
         return len(self.grids)
@@ -803,26 +789,26 @@ class MLF(object):
         return self.grids[i]
 
     def read(self, f, samplerate, round_digits=DEFAULT_MLF_PRECISION):
-        source = open(f, 'r')  # HTK returns ostensible ASCII
+        source = open(f, "r")  # HTK returns ostensible ASCII
 
         source.readline()  # header
         while True:  # loop over text
-            name = re.match(r'\"(.*)\"', source.readline().rstrip())
+            name = re.match(r"\"(.*)\"", source.readline().rstrip())
             if name:
                 name = name.groups()[0]
                 grid = TextGrid(name)
-                phon = IntervalTier(name='phones')
-                word = IntervalTier(name='words')
-                wmrk = ''
-                wsrt = 0.
-                wend = 0.
+                phon = IntervalTier(name="phones")
+                word = IntervalTier(name="words")
+                wmrk = ""
+                wsrt = 0.0
+                wend = 0.0
                 while 1:  # loop over the lines in each grid
                     line = source.readline().rstrip().split()
                     if len(line) == 4:  # word on this baby
                         pmin = round(float(line[0]) / samplerate, round_digits)
                         pmax = round(float(line[1]) / samplerate, round_digits)
                         if pmin == pmax:
-                            raise ValueError('null duration interval')
+                            raise ValueError("null duration interval")
                         phon.add(pmin, pmax, line[2])
                         if wmrk:
                             word.add(wsrt, wend, wmrk)
@@ -832,7 +818,7 @@ class MLF(object):
                     elif len(line) == 3:  # just phone
                         pmin = round(float(line[0]) / samplerate, round_digits)
                         pmax = round(float(line[1]) / samplerate, round_digits)
-                        if line[2] == 'sp' and pmin != pmax:
+                        if line[2] == "sp" and pmin != pmax:
                             if wmrk:
                                 word.add(wsrt, wend, wmrk)
                             wmrk = decode(line[2])
@@ -851,7 +837,7 @@ class MLF(object):
                 source.close()
                 break
 
-    def write(self, prefix=''):
+    def write(self, prefix=""):
         """
         Write the current state into Praat-formatted TextGrids. The
         filenames that the output is stored in are taken from the HTK
@@ -865,6 +851,6 @@ class MLF(object):
         for grid in self.grids:
             (junk, tail) = os.path.split(grid.name)
             (root, junk) = os.path.splitext(tail)
-            my_path = os.path.join(prefix, root + '.TextGrid')
-            grid.write(codecs.open(my_path, 'w', 'UTF-8'))
+            my_path = os.path.join(prefix, root + ".TextGrid")
+            grid.write(codecs.open(my_path, "w", "UTF-8"))
         return len(self.grids)

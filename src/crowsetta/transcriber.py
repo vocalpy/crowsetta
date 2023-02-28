@@ -1,11 +1,11 @@
 import inspect
-from typing import Union
 import warnings
+from typing import Union
 
 
 class Transcriber:
-    """A single class for working with all annotation formats in ``crowsetta``,  
-    making it possible to load multiple files from a single ``Transcriber``, 
+    """A single class for working with all annotation formats in ``crowsetta``,
+    making it possible to load multiple files from a single ``Transcriber``,
     without needing to know the names of classes that represent formats.
 
     converts into ``Annotation`` instances
@@ -25,8 +25,8 @@ class Transcriber:
     -------
     from_file : Loads annotations from a file
     """
-    def __init__(self,
-                 format: 'Union[str, crowsetta.interface.SeqLike, crowsetta.interface.BBoxLike]'):
+
+    def __init__(self, format: "Union[str, crowsetta.interface.SeqLike, crowsetta.interface.BBoxLike]"):  # noqa: F821
         """make a new ``Transcriber``
 
         Parameters
@@ -38,18 +38,12 @@ class Transcriber:
             registered as either `crowsetta.interface.SeqLike`` or ``crowsetta.interface.BBoxLike``.
         """
         # avoid circular imports
-        from . import (
-            formats,
-            interface,
-        )
+        from . import formats, interface
 
         if isinstance(format, str):
             if format not in formats.FORMATS:
-                raise ValueError(
-                    f"Format name '{format}' not recognized."
-                    f"Valid format names:\n{formats.as_list()}"
-                )
-            if format == 'csv':
+                raise ValueError(f"Format name '{format}' not recognized." f"Valid format names:\n{formats.as_list()}")
+            if format == "csv":
                 warnings.warn(
                     "The format 'csv' has been renamed to 'generic-seq', "
                     "and the name 'csv' will stop working in the next version. "
@@ -60,26 +54,22 @@ class Transcriber:
         elif inspect.isclass(format):
             if not issubclass(format, interface.BaseFormat):
                 raise TypeError(
-                    f'Format recognized as a class, but it is not a subclass of ``crowsetta.interface.BaseFormat``.'
-                    f'Please ``register`` the class as a subclass of either ``crowsetta.interface.SeqLike`` or '
-                    f'``crowsetta.interface.BBoxLike``'
+                    "Format recognized as a class, but it is not a subclass of ``crowsetta.interface.BaseFormat``."
+                    "Please ``register`` the class as a subclass of either ``crowsetta.interface.SeqLike`` or "
+                    f"``crowsetta.interface.BBoxLike``. Class was: {format}"
                 )
             _format_class = format
         else:
-            raise ValueError(
-                f"Invalid value for ``format``: {format}"
-            )
+            raise ValueError(f"Invalid value for ``format``: {format}")
         self.format = format
         self._format_class = _format_class
 
     def __repr__(self):
         return f"crowsetta.Transcriber(format='{self.format}')"
 
-    def from_file(self,
-                  annot_path,
-                  *args,
-                  **kwargs
-                  ) -> 'Union[crowsetta.interface.SeqLike,crowsetta.interface.BBoxLike]':
+    def from_file(
+        self, annot_path, *args, **kwargs
+    ) -> "Union[crowsetta.interface.SeqLike,crowsetta.interface.BBoxLike]":  # noqa: F821
         """Load annotations from a file.
 
         Parameters

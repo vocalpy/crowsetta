@@ -1,4 +1,4 @@
-"""module for Audacity LabelTrack 
+"""module for Audacity LabelTrack
 in standard/default format exported to .txt files
 https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
 """
@@ -21,6 +21,7 @@ class AudTxtSchema(pandera.SchemaModel):
     exported to .txt files in the standard format
     https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
     """
+
     start_time: Optional[Series[float]] = pandera.Field()
     end_time: Optional[Series[float]] = pandera.Field()
     label: Series[pd.StringDtype] = pandera.Field(coerce=True)
@@ -38,8 +39,8 @@ class AudTxt:
     exported to .txt files in the standard format
     https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
 
-    The .txt file will have 3 tab-separated columns 
-    that represent the start time, end time, and labels 
+    The .txt file will have 3 tab-separated columns
+    that represent the start time, end time, and labels
     of annotated regions.
 
     Attributes
@@ -67,21 +68,22 @@ class AudTxt:
         that contains a spectrogram generated from audio.
         Optional, default is None.
     """
-    name: ClassVar[str] = 'aud-txt'
-    ext: ClassVar[str] = '.txt'
+
+    name: ClassVar[str] = "aud-txt"
+    ext: ClassVar[str] = ".txt"
 
     start_times: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     end_times: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     labels: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     annot_path: pathlib.Path
-    notated_path: Optional[pathlib.Path] = attr.field(default=None,
-                                                      converter=attr.converters.optional(pathlib.Path))
+    notated_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
-    def from_file(cls,
-                  annot_path: PathLike,
-                  notated_path: Optional[PathLike] = None,
-                  ) -> 'Self':
+    def from_file(
+        cls,
+        annot_path: PathLike,
+        notated_path: Optional[PathLike] = None,
+    ) -> "Self":  # noqa: F821
         """Load annotations from a file
 
         Parameters
@@ -102,21 +104,19 @@ class AudTxt:
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
-        df = pd.read_csv(annot_path, sep='\t', header=None)
-        df.columns = ['start_time', 'end_time', 'label']
+        df = pd.read_csv(annot_path, sep="\t", header=None)
+        df.columns = ["start_time", "end_time", "label"]
         df = AudTxtSchema.validate(df)
 
         return cls(
-            start_times=df['start_time'].values,
-            end_times=df['end_time'].values,
-            labels=df['label'].values,
+            start_times=df["start_time"].values,
+            end_times=df["end_time"].values,
+            labels=df["label"].values,
             annot_path=annot_path,
             notated_path=notated_path,
         )
 
-    def to_seq(self,
-               round_times: bool = True,
-               decimals: int = 3) -> crowsetta.Sequence:
+    def to_seq(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Sequence:
         """Convert this annotation to a ``crowsetta.Sequence``.
 
         Parameters
@@ -154,14 +154,10 @@ class AudTxt:
             onsets_s = self.start_times
             offsets_s = self.end_times
 
-        seq = crowsetta.Sequence.from_keyword(labels=self.labels,
-                                              onsets_s=onsets_s,
-                                              offsets_s=offsets_s)
+        seq = crowsetta.Sequence.from_keyword(labels=self.labels, onsets_s=onsets_s, offsets_s=offsets_s)
         return seq
 
-    def to_annot(self,
-                 round_times: bool = True,
-                 decimals: int = 3) -> crowsetta.Annotation:
+    def to_annot(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Annotation:
         """Convert this annotation to a ``crowsetta.Annotation``.
 
         Parameters
@@ -195,8 +191,7 @@ class AudTxt:
         seq = self.to_seq(round_times, decimals)
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.notated_path, seq=seq)
 
-    def to_file(self,
-                annot_path: PathLike) -> None:
+    def to_file(self, annot_path: PathLike) -> None:
         """save this 'aud-txt' annotation to a .txt file
         in the standard/default Audacity LabelTrack format
 
@@ -206,16 +201,13 @@ class AudTxt:
             path with filename of .csv file that should be saved
         """
         df = pd.DataFrame.from_records(
-            {'start_time': self.start_times,
-             'end_time': self.end_times,
-             'label': self.labels}
+            {"start_time": self.start_times, "end_time": self.end_times, "label": self.labels}
         )
-        df = df[['start_time', 'end_time', 'label']]  # put in correct order
+        df = df[["start_time", "end_time", "label"]]  # put in correct order
         try:
             df = AudTxtSchema.validate(df)
         except pandera.errors.SchemaError as e:
             raise ValueError(
-                f'Annotations produced an invalid dataframe, '
-                f'cannot convert to Audacity LabelTrack .txt file:\n{df}'
+                f"Annotations produced an invalid dataframe, " f"cannot convert to Audacity LabelTrack .txt file:\n{df}"
             ) from e
-        df.to_csv(annot_path, sep='\t', header=False, index=False)
+        df.to_csv(annot_path, sep="\t", header=False, index=False)

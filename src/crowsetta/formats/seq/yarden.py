@@ -25,12 +25,10 @@ def _cast_to_arr(val):
         return val
     else:
         # something unexpected happened
-        raise TypeError(
-            f"Type {type(val)} not recognized when converting annotations to arrays."
-        )
+        raise TypeError(f"Type {type(val)} not recognized when converting annotations to arrays.")
 
 
-VALID_AUDIO_FORMATS = ['wav']
+VALID_AUDIO_FORMATS = ["wav"]
 
 
 def _recursive_stem(path_str):
@@ -44,14 +42,12 @@ def _recursive_stem(path_str):
     """
     name = pathlib.Path(path_str).name
     stem, ext = os.path.splitext(name)
-    ext = ext.replace('.', '')
+    ext = ext.replace(".", "")
     while ext not in VALID_AUDIO_FORMATS:
         new_stem, ext = os.path.splitext(stem)
-        ext = ext.replace('.', '')
+        ext = ext.replace(".", "")
         if new_stem == stem:
-            raise ValueError(
-                f'unable to compute stem of {path_str}'
-            )
+            raise ValueError(f"unable to compute stem of {path_str}")
         else:
             stem = new_stem
     return stem
@@ -80,16 +76,16 @@ class SongAnnotationGUI:
     annot_path : str, pathlib.Path
         Path to .mat file from which annotations were loaded.
     """
-    name: ClassVar[str] = 'yarden'
-    ext: ClassVar[str] = '.mat'
+
+    name: ClassVar[str] = "yarden"
+    ext: ClassVar[str] = ".mat"
 
     annotations: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     audio_paths: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
     annot_path: pathlib.Path = attr.field(converter=pathlib.Path)
 
     @classmethod
-    def from_file(cls,
-                  annot_path: PathLike) -> 'Self':
+    def from_file(cls, annot_path: PathLike) -> "Self":  # noqa: F821
         """load annotations from .mat files
         created by SongAnnotationGUI:
         https://github.com/yardencsGitHub/BirdSongBout/tree/master/helpers/GUI
@@ -108,21 +104,14 @@ class SongAnnotationGUI:
         # where each element is the annotation
         # corresponding to the filename at the same index in the list.
         annot_mat = scipy.io.loadmat(annot_path, squeeze_me=True)
-        audio_paths = annot_mat['keys']
-        annotations = annot_mat['elements']
+        audio_paths = annot_mat["keys"]
+        annotations = annot_mat["elements"]
         if len(audio_paths) != len(annotations):
-            raise ValueError(
-                f'list of filenames and list of annotations in {annot_path} do not have the same length'
-            )
+            raise ValueError(f"list of filenames and list of annotations in {annot_path} do not have the same length")
 
-        return cls(annotations=annotations,
-                   audio_paths=audio_paths,
-                   annot_path=annot_path)
+        return cls(annotations=annotations, audio_paths=audio_paths, annot_path=annot_path)
 
-    def to_seq(self,
-               round_times: bool = True,
-               decimals: int = 3
-               ) -> List[crowsetta.Sequence]:
+    def to_seq(self, round_times: bool = True, decimals: int = 3) -> List[crowsetta.Sequence]:
         """Convert this .not.mat annotation to a ``crowsetta.Sequence``.
 
         Parameters
@@ -155,34 +144,28 @@ class SongAnnotationGUI:
             # This is just weirdness that results from loading complicated data
             # structure in .mat file.
             seq_dict = {}
-            seq_dict['onsets_s'] = annotation['segFileStartTimes'].tolist()
-            seq_dict['offsets_s'] = annotation['segFileEndTimes'].tolist()
-            seq_dict['labels'] = annotation['segType'].tolist()
+            seq_dict["onsets_s"] = annotation["segFileStartTimes"].tolist()
+            seq_dict["offsets_s"] = annotation["segFileEndTimes"].tolist()
+            seq_dict["labels"] = annotation["segType"].tolist()
             # cast all to numpy arrays
-            seq_dict = dict((k, _cast_to_arr(seq_dict[k]))
-                            for k in ['onsets_s', 'offsets_s', 'labels'])
+            seq_dict = dict((k, _cast_to_arr(seq_dict[k])) for k in ["onsets_s", "offsets_s", "labels"])
             # after casting 'labels' to array, convert all values to string
-            seq_dict['labels'] = np.asarray(
-                [str(label) for label in seq_dict['labels']]
-            )
+            seq_dict["labels"] = np.asarray([str(label) for label in seq_dict["labels"]])
 
-            samp_freq = annotation['fs'].tolist()
-            seq_dict['onset_samples'] = np.round(seq_dict['onsets_s'] * samp_freq).astype(int)
-            seq_dict['offset_samples'] = np.round(seq_dict['offsets_s'] * samp_freq).astype(int)
+            samp_freq = annotation["fs"].tolist()
+            seq_dict["onset_samples"] = np.round(seq_dict["onsets_s"] * samp_freq).astype(int)
+            seq_dict["offset_samples"] = np.round(seq_dict["offsets_s"] * samp_freq).astype(int)
 
             if round_times:
-                seq_dict['onsets_s'] = np.around(seq_dict['onsets_s'], decimals=decimals)
-                seq_dict['offsets_s'] = np.around(seq_dict['offsets_s'], decimals=decimals)
+                seq_dict["onsets_s"] = np.around(seq_dict["onsets_s"], decimals=decimals)
+                seq_dict["offsets_s"] = np.around(seq_dict["offsets_s"], decimals=decimals)
 
             seq = crowsetta.Sequence.from_dict(seq_dict)
             seqs.append(seq)
 
         return seqs
 
-    def to_annot(self,
-                 round_times: bool = True,
-                 decimals: int = 3
-                 ) -> List[crowsetta.Annotation]:
+    def to_annot(self, round_times: bool = True, decimals: int = 3) -> List[crowsetta.Annotation]:
         """Convert this .not.mat annotation to a ``crowsetta.Annotation``.
 
         Parameters
@@ -211,9 +194,5 @@ class SongAnnotationGUI:
         seqs = self.to_seq(round_times=round_times, decimals=decimals)
         annots = []
         for audio_path, seq in zip(self.audio_paths, seqs):
-            annots.append(
-                crowsetta.Annotation(annot_path=self.annot_path,
-                                     notated_path=audio_path,
-                                     seq=seq)
-            )
+            annots.append(crowsetta.Annotation(annot_path=self.annot_path, notated_path=audio_path, seq=seq))
         return annots

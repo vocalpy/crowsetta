@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List, Optional
 
 import crowsetta
+
 from .bbox import BBox
 from .sequence import Sequence
 from .typing import PathLike
@@ -39,40 +40,30 @@ class Annotation:
     A ``crowsetta.Annotation`` can have a ``seq``
     or ``bboxes``, but not both.
     """
-    def __init__(self,
-                 annot_path: PathLike,
-                 notated_path: Optional[PathLike] = None,
-                 seq: Optional[Sequence] = None,
-                 bboxes: Optional[List[BBox]] = None):
+
+    def __init__(
+        self,
+        annot_path: PathLike,
+        notated_path: Optional[PathLike] = None,
+        seq: Optional[Sequence] = None,
+        bboxes: Optional[List[BBox]] = None,
+    ):
         if seq is None and bboxes is None:
-            raise ValueError(
-                'an Annotation must have either a ``seq`` or ``bboxes``'
-            )
+            raise ValueError("an Annotation must have either a ``seq`` or ``bboxes``")
 
         if seq is not None and bboxes is not None:
-            raise ValueError(
-                'an Annotation can have either a ``seq``'
-                'or ``bboxes``, but not both.'
-            )
+            raise ValueError("an Annotation can have either a ``seq``" "or ``bboxes``, but not both.")
 
         if seq:
             if not isinstance(seq, crowsetta.Sequence):
-                raise TypeError(
-                    f'``seq`` should be a ``crowsetta.Sequence`` but was: {type(seq)}'
-                )
+                raise TypeError(f"``seq`` should be a ``crowsetta.Sequence`` but was: {type(seq)}")
             self.seq = seq
 
         if bboxes:
             if not isinstance(bboxes, list):
-                raise ValueError(
-                    '``bboxes`` should be a list'
-                )
-            if not all(
-                    [isinstance(bbox, BBox) for bbox in bboxes]
-            ):
-                raise ValueError(
-                    '``bboxes`` should be a list of ``crowsetta.BBox`` instances'
-                )
+                raise ValueError("``bboxes`` should be a list")
+            if not all([isinstance(bbox, BBox) for bbox in bboxes]):
+                raise ValueError("``bboxes`` should be a list of ``crowsetta.BBox`` instances")
             self.bboxes = bboxes
 
         self.annot_path = Path(annot_path)
@@ -82,19 +73,18 @@ class Annotation:
             self.notated_path = notated_path
 
     def __repr__(self):
-        repr_ = f'Annotation(annot_path={repr(self.annot_path)}, notated_path={repr(self.notated_path)}, '
-        if hasattr(self, 'seq'):
-            repr_ += f'seq={self.seq})'
-        elif hasattr(self, 'bboxes'):
-            repr_ += f'bboxes={self.bboxes})'
+        repr_ = f"Annotation(annot_path={repr(self.annot_path)}, notated_path={repr(self.notated_path)}, "
+        if hasattr(self, "seq"):
+            repr_ += f"seq={self.seq})"
+        elif hasattr(self, "bboxes"):
+            repr_ += f"bboxes={self.bboxes})"
         return repr_
 
     def __eq__(self, other):
-        is_annot_and_audio_eq = (self.annot_path == other.annot_path and
-                                 self.notated_path == other.notated_path)
-        if hasattr(self, 'seq') and hasattr(other, 'seq'):
+        is_annot_and_audio_eq = self.annot_path == other.annot_path and self.notated_path == other.notated_path
+        if hasattr(self, "seq") and hasattr(other, "seq"):
             return is_annot_and_audio_eq and self.seq == other.seq
-        elif hasattr(self, 'bboxes') and hasattr(other, 'bboxes'):
+        elif hasattr(self, "bboxes") and hasattr(other, "bboxes"):
             return is_annot_and_audio_eq and self.bboxes == other.bboxes
         else:
             return False

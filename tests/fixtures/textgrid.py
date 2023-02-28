@@ -2,9 +2,7 @@ import pytest
 
 from .data import TEST_DATA_ROOT
 
-TEXTGRID_PATHS = sorted(
-        TEST_DATA_ROOT.glob('wav-textgrid/*.TextGrid')
-    )
+TEXTGRID_PATHS = sorted(TEST_DATA_ROOT.glob("wav-textgrid/*.TextGrid"))
 
 
 @pytest.fixture

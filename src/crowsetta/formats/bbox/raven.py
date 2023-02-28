@@ -22,6 +22,7 @@ class RavenSchema(pandera.SchemaModel):
     loaded from a .txt file, created by exporting a Selection Table
     from Raven.
     """
+
     begin_time_s: Series[float] = pandera.Field()
     end_time_s: Series[float] = pandera.Field()
     low_freq_hz: Series[float] = pandera.Field()
@@ -64,20 +65,19 @@ class Raven:
     audio_path : str. pathlib.Path
         Path to audio file that the Raven .txt file annotates.
     """
-    name: ClassVar[str] = 'raven'
-    ext: ClassVar[str] = ('.txt',)
+
+    name: ClassVar[str] = "raven"
+    ext: ClassVar[str] = (".txt",)
 
     df: pd.DataFrame
     annot_path: pathlib.Path
     annot_col: str
-    audio_path: Optional[pathlib.Path] = attr.field(default=None,
-                                                    converter=attr.converters.optional(pathlib.Path))
+    audio_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
-    def from_file(cls,
-                  annot_path: PathLike,
-                  annot_col: str = 'Annotation',
-                  audio_path: Optional[PathLike] = None) -> 'Self':
+    def from_file(
+        cls, annot_path: PathLike, annot_col: str = "Annotation", audio_path: Optional[PathLike] = None
+    ) -> "Self":  # noqa: F821
         """Load annotations from a Raven annotation file,
         created by exporting a Selection Table.
 
@@ -100,14 +100,11 @@ class Raven:
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
 
         #  assume file is space-separated with no header
-        df = pd.read_csv(annot_path,  sep='\t')
+        df = pd.read_csv(annot_path, sep="\t")
         if len(df) < 1:
-            raise ValueError(
-                f'Cannot load annotations, '
-                f'there are no rows in Raven .txt file:\n{df}'
-            )
+            raise ValueError(f"Cannot load annotations, " f"there are no rows in Raven .txt file:\n{df}")
         columns_map = dict(COLUMNS_MAP)  # copy
-        columns_map.update({annot_col: 'annotation'})
+        columns_map.update({annot_col: "annotation"})
         df.rename(columns=columns_map, inplace=True)
         df = RavenSchema.validate(df)
 
@@ -134,19 +131,15 @@ class Raven:
         """
         bboxes = []
         for begin_time, end_time, low_freq, high_freq, label in zip(
-                self.df.begin_time_s.values,
-                self.df.end_time_s.values,
-                self.df.low_freq_hz.values,
-                self.df.high_freq_hz.values,
-                self.df['annotation'].values,
+            self.df.begin_time_s.values,
+            self.df.end_time_s.values,
+            self.df.low_freq_hz.values,
+            self.df.high_freq_hz.values,
+            self.df["annotation"].values,
         ):
             bboxes.append(
-                    crowsetta.BBox(onset=begin_time,
-                                   offset=end_time,
-                                   low_freq=low_freq,
-                                   high_freq=high_freq,
-                                   label=label)
-                )
+                crowsetta.BBox(onset=begin_time, offset=end_time, low_freq=low_freq, high_freq=high_freq, label=label)
+            )
         return bboxes
 
     def to_annot(self) -> crowsetta.Annotation:
@@ -163,12 +156,9 @@ class Raven:
         >>> annot = raven.to_annot()
         """
         bboxes = self.to_bbox()
-        return crowsetta.Annotation(annot_path=self.annot_path,
-                                    notated_path=self.audio_path,
-                                    bboxes=bboxes)
+        return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.audio_path, bboxes=bboxes)
 
-    def to_file(self,
-                annot_path: PathLike) -> None:
+    def to_file(self, annot_path: PathLike) -> None:
         """make a .txt file that can be read by Raven
         from this annotation
 
@@ -181,6 +171,6 @@ class Raven:
         crowsetta.validation.validate_ext(annot_path, extension=self.ext)
 
         columns_map = {v: k for k, v in COLUMNS_MAP.items()}  # copy
-        columns_map.update({'annotation': self.annot_col})
+        columns_map.update({"annotation": self.annot_col})
         df_out = self.df.rename(columns=columns_map)
-        df_out.to_csv(annot_path, sep='\t', index=False)
+        df_out.to_csv(annot_path, sep="\t", index=False)
