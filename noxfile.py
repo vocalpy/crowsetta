@@ -25,7 +25,7 @@ def build(session: nox.Session) -> None:
     session.run("flit", "build")
 
 
-@nox.session
+@nox.session(python="3.10")
 def dev(session: nox.Session) -> None:
     """
     Sets up a python development environment for the project.
