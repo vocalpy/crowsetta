@@ -1,4 +1,4 @@
-from .audtxt import AudTxt
+from .audseq import AudSeq
 from .birdsongrec import BirdsongRec
 from .generic import GenericSeq
 from .notmat import NotMat
@@ -8,7 +8,7 @@ from .timit import Timit
 from .yarden import SongAnnotationGUI
 
 __all__ = [
-    "AudTxt",
+    "AudSeq",
     "BirdsongRec",
     "GenericSeq",
     "NotMat",

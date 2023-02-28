@@ -5,10 +5,10 @@ import pytest
 import crowsetta
 
 
-def test_audtxt_from_file(an_audtxt_path):
-    scribe = crowsetta.Transcriber(format="aud-txt")
-    audtxt = scribe.from_file(annot_path=an_audtxt_path)
-    assert isinstance(audtxt, crowsetta.formats.seq.AudTxt)
+def test_audtxt_from_file(an_audseq_path):
+    scribe = crowsetta.Transcriber(format="aud-seq")
+    audtxt = scribe.from_file(annot_path=an_audseq_path)
+    assert isinstance(audtxt, crowsetta.formats.seq.AudSeq)
     annot = audtxt.to_annot()
     assert isinstance(annot, crowsetta.Annotation)
 

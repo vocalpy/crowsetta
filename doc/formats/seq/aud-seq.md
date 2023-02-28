@@ -1,8 +1,8 @@
-(aud-txt)=
+(aud-seq)=
 
 # Audacity Label Track .txt files
 
-The `'aud-txt'` format describes 
+The `'aud-seq'` format describes 
 [Audacity label tracks](https://manual.audacityteam.org/man/label_tracks.html) 
 that have been exported to the 
 [standard format](https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format).
@@ -22,4 +22,4 @@ As described on the "standard format" page above:
 > (which will often appear as an arrow in text editors, as shown above). 
 
 Annotations in this format can be loaded with the following class: 
-{py:class}`crowsetta.formats.seq.audtxt.AudTxt`.
+{py:class}`crowsetta.formats.seq.audseq.AudSeq`.

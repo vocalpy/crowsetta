@@ -1,5 +1,5 @@
 from .audbbox import *
-from .audtxt import *
+from .audseq import *
 from .bbox import *
 from .birdsongrec import *
 from .csv import *
