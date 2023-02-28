@@ -124,12 +124,20 @@ through the steps we outlined above.
 ### 1. get your annotation into some variables in Python
 
 Let’s look at this complicated data structure that we have our
-annotation in. The `BatLAB` GUI saves annotation into `annotation.mat` 
-files with two variables:
+annotation in. For this tutorial you'll need the 
+file `bat1_annotation.mat` that you should be able to download 
+from [this link](./bat1_annotation.mat) 
+or by going to 
+<https://github.com/vocalpy/crowsetta/blob/main/doc/howto/bat1_annotation.mat>.
+
+The `BatLAB` GUI saves annotation into these `annotation.mat` 
+files, with two variables in each mat file:
 - `filenames`: a vector where each element is the name of an audio file
 - `annotations`: a `struct` that has a record for each element in `filenames`, 
   and that record is the annotation corresponding 
   to the audio file with the same index in `filenames`
+
+The following snippet will let you load and inspect the data:  
 
 ```{code-cell} ipython3
 from scipy.io import loadmat
