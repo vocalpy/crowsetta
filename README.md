@@ -150,8 +150,26 @@ with the crowsetta tag:
 
 ### Contribute
 
-- Issue Tracker: <https://github.com/vocalpy/crowsetta/issues>
-- Source Code: <https://github.com/vocalpy/crowsetta>
+#### Code of conduct
+
+Please note that this project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.md).
+By participating in this project you agree to abide by its terms.
+
+#### Contributing Guidelines
+
+Below we provide some quick links, 
+but you can learn more about how you can help and give feedback  
+by reading our [Contributing Guide](./CONTRIBUTING.md).
+
+To ask a question about crowsetta, discuss its development, 
+or share how you are using it, 
+please start a new "Q&A" topic on the VocalPy forum 
+with the crowsetta tag:  
+<https://forum.vocalpy.org/>
+
+To report a bug, or to request a feature, 
+please use the issue tracker on GitHub:  
+<https://github.com/vocalpy/crowsetta/issues>
 
 ### CHANGELOG
 You can see project history and work in progress in the [CHANGELOG](./doc/CHANGELOG.md)
