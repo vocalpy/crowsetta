@@ -1,5 +1,7 @@
 """A class that represents a sequence of segments,
-used to annotate animal communication."""
+used to annotate animal acoustic communication."""
+from __future__ import annotations
+
 import numpy as np
 
 from .segment import Segment
@@ -8,7 +10,7 @@ from .validation import _num_samples, check_consistent_length, column_or_row_or_
 
 class Sequence:
     """A class that represents a sequence of segments,
-    used to annotate animal communication.
+    used to annotate animal acoustic communication.
 
     E.g., a human sentence made up of syllables,
     or a bout of birdsong made up of "syllables".
@@ -35,10 +37,24 @@ class Sequence:
     from_dict : like from_keyword, but pass a Python dictionary where keys are keywords
         and values are arguments for those keywords
     to_dict : convert to a dict. The inverse of from_dict.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> import crowsetta
+    >>> onsets_s = np.array([1.0, 3.0, 5.0])
+    >>> offsets_s = np.array(2.0, 4.0, 6.0])
+    >>> labels = np.array(['a', 'a', 'b'])
+    >>> seq = crowsetta.Sequence.from_keyword(labels=labels, onsets_s=onsets_s, offsets_s=offsets_s)
+
+    >>> segments = []
+    >>> for onset, offset, label in zip(onsets_s, offsets_s, labels):
+    ...     segments.append(crowsetta.Segment(onset_s=onset, offset_s=offset, label=label))
+    >>> seq2 = crowsetta.Sequence.from_segments(segments)
     """
 
     def __init__(self, segments, labels, onsets_s=None, offsets_s=None, onset_samples=None, offset_samples=None):
-        """Sequence __init__
+        """Initialize a new ``Sequence`` instance.
 
         Parameters
         ----------
@@ -295,7 +311,8 @@ class Sequence:
 
         Parameters
         ----------
-        segments
+        segments : list
+            Of crowsetta.Segment instances.
 
         Returns
         -------
@@ -373,7 +390,7 @@ class Sequence:
 
     @classmethod
     def from_dict(cls, seq_dict):
-        """returns a Sequence, given a Python dictionary
+        """Returns a Sequence, given a Python dictionary
         where keys of dictionary are arguments to Sequence.from_keyword()
 
         Parameters
@@ -408,12 +425,8 @@ class Sequence:
         # so user doesn't have to grok the concept of 'dictionary unpacking operator'
         return cls.from_keyword(**seq_dict)
 
-    def as_dict(self):
-        """returns sequence as a dictionary
-
-        Parameters
-        ----------
-        None
+    def as_dict(self) -> dict:
+        """Returns sequence as a dictionary
 
         Returns
         -------
