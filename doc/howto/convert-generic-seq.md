@@ -65,7 +65,7 @@ An example of such a format is the Audacity
 exported to .txt files, that you would get if you were to annotate with  
 [region labels](https://manual.audacityteam.org/man/label_tracks.html#type).
 This format is represented by the 
-{class}`crowsetta.formats.seq.AudTxt <crowsetta.formats.seq.audtxt.AudTxt>` 
+{class}`crowsetta.formats.seq.AudSeq <crowsetta.formats.seq.audseq.AudSeq>` 
 class in crowsetta.
 
 As described above,
@@ -115,12 +115,12 @@ Now we load the annotation files.
 import pathlib
 import crowsetta
 
-audtxt_paths = sorted(pathlib.Path('./data/giraudon-et-al-2021/audacity-annotations').glob('*.txt'))
+audseq_paths = sorted(pathlib.Path('./data/giraudon-et-al-2021/audacity-annotations').glob('*.txt'))
 # we make the list of ``Annotation``s "by hand" instead of getting it from a `to_annot` call
 annots = []
-for audtxt_path in audtxt_paths:
+for audseq_path in audseq_paths:
     annots.append(
-        crowsetta.formats.seq.AudTxt.from_file(audtxt_path).to_annot()
+        crowsetta.formats.seq.AudSeq.from_file(audseq_path).to_annot()
     )
 
 print(
