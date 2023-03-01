@@ -15,6 +15,16 @@
         "doc",
         "bug"
       ]
+    },
+    {
+      "login": "shaupert",
+      "name": "Sylvain HAUPERT",
+      "avatar_url": "https://avatars.githubusercontent.com/u/43136040?v=4",
+      "profile": "https://github.com/shaupert",
+      "contributions": [
+        "code",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
