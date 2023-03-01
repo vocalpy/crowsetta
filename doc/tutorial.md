@@ -61,10 +61,10 @@ get a list of those files.
 
 ```{code-cell} ipython3
 import pathlib
-audtxt_paths = sorted(pathlib.Path('./data/giraudon-et-al-2021/audacity-annotations').glob('*.txt'))
+audseq_paths = sorted(pathlib.Path('./data/giraudon-et-al-2021/audacity-annotations').glob('*.txt'))
 
-print(f'There are {len(audtxt_paths)} Audacity LabelTrack .txt files')
-first_five = "\n".join([str(path) for path in audtxt_paths[:5]])
+print(f'There are {len(audseq_paths)} Audacity LabelTrack .txt files')
+first_five = "\n".join([str(path) for path in audseq_paths[:5]])
 print(f'The first five are:\n{first_five}')
 ```
 
@@ -92,14 +92,14 @@ annotation files (methods are functions that “belong” to a class).
 We use the `from_file` method of the `Transcriber` to load the annotations.
 
 ```{code-cell} ipython3
-audtxts = []
+audseqs = []
 
-for audtxt_path in audtxt_paths:
-    audtxts.append(scribe.from_file(audtxt_path))
+for audseq_path in audseq_paths:
+    audseqs.append(scribe.from_file(audseq_path))
 
 
-print(f'There are {len(audtxts)} Audacity LabelTrack annotations')
-print(f'The first one looks like:\n{audtxts[0]}')
+print(f'There are {len(audseqs)} Audacity LabelTrack annotations')
+print(f'The first one looks like:\n{audseqs[0]}')
 ```
 
 ## Using the `to_annot` method to convert annotations into data types we can work with in Python
@@ -118,8 +118,8 @@ for multiple annotated audio files or spectrograms).
 
 ```{code-cell} ipython3
 annots = []
-for audtxt in audtxts:
-    annots.append(scribe.from_file(audtxt_path).to_annot())
+for audseq in audseqs:
+    annots.append(scribe.from_file(audseq_path).to_annot())
 print(f'The first Annotation: {annots[0]}')
 ```
 
@@ -160,8 +160,8 @@ to generic `crowsetta.Annotation`s into a one-liner:
 
 ```{code-cell} ipython3
 annots = []
-for audtxt_path in audtxt_paths:
-    annots.append(scribe.from_file(audtxt_path).to_annot())
+for audseq_path in audseq_paths:
+    annots.append(scribe.from_file(audseq_path).to_annot())
 ```
 
 We didn't do this above, just because we wanted to introduce the methods one-by-one.
@@ -206,8 +206,8 @@ using the `to_seq` method to load each file into a `Sequence`.
 
 ```{code-cell} ipython3
 seqs = []
-for audtxt_path in audtxt_paths:
-    seqs.append(scribe.from_file(audtxt_path).to_seq())
+for audseq_path in audseq_paths:
+    seqs.append(scribe.from_file(audseq_path).to_seq())
 ```
 
 Each sequence-like format has a `to_seq` method, 
@@ -221,9 +221,9 @@ you can get them directly by calling the method yourselves.
 For each annotation file, we should now have a `Sequence`.
 
 ```{code-cell} ipython3
-print("Number of annotation files: ", len(audtxt_paths))
+print("Number of annotation files: ", len(audseq_paths))
 print("Number of Sequences: ", len(seqs))
-if len(audtxt_paths) == len(seqs):
+if len(audseq_paths) == len(seqs):
     print("The number of annotation files is equal to number of sequences.")
 ```
 
