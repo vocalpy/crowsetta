@@ -267,17 +267,25 @@ def get(format: str, user_data_dir: PathLike | None = None) -> ExampleAnnotFile:
 
 
 def available_formats() -> list:
-    """return list of string names
-    of annotation formats.
-    Any of the names can be passed into
-    ``crowsetta.data.get`` to get a path
-    to an annotation file
+    """Return list of string names
+    of annotation formats
+    that have built-in sample data
+    available.
+
+    Any of the names in the returned list
+    can be passed into ``crowsetta.data.get``
+    to get a path to an annotation file
     in that format.
 
     Returns
     -------
     data_list : list
-        of the names of formats
+        List of names of formats
         that have built-in sample data available.
+
+    Examples
+    --------
+    >>> crowsetta.data.available_formats()
+    ['aud-bbox', 'aud-seq', 'birdsong-recognition-dataset', 'generic-seq', 'notmat', 'raven', 'simple-seq', 'textgrid', 'timit']  # noqa
     """
     return list(DATA.keys())
