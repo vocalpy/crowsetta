@@ -4,13 +4,11 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.4
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
-execution:
-  timeout: 120
 ---
 
 (howto-remove-silent-labels-textgrid)=
@@ -56,6 +54,21 @@ We don't want to include these intervals as states in our Markov model,
 because we are only interested in transitions between syllables.
 So, to compute our transition matrix, 
 we need to remove all these intervals with `None` labels.
+
++++
+
+```{admonition} Download this page as a Jupyter notebook!
+To work with this tutorial interactively, 
+we suggest downloading this notebook!
+Click on the download icon in the upper right 
+to download a Markdown file (with '.md' extension) 
+that you can run as a Jupyter notebook 
+after installing Jupyter lab and jupytext.
+```
+
++++
+
+
 
 
 ## Workflow
@@ -299,7 +312,13 @@ def transmat_from_labels(labels: list[np.ndarray],
 +++
 
 The annotations we want to use are in a public project on the [Open Science Framework](osf.io).
-To download the files, we use the Python package [`osfclient`](https://github.com/osfclient/osfclient).
+To download the files, we use the Python package [`osfclient`](https://github.com/osfclient/osfclient). First we make sure it is installed.
+
+```{code-cell} ipython3
+!pip install osfclient
+```
+
+Then we import the package.
 
 ```{code-cell} ipython3
 import osfclient
