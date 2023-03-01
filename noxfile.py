@@ -55,8 +55,11 @@ def lint(session):
     """
     Run the linter.
     """
-    session.install("pre-commit")
-    session.run("pre-commit", "run", "--all-files", *session.posargs)
+    session.install(".[dev]")
+    # run isort first since black disagrees with it
+    session.run("isort", "./src")
+    session.run("black", "./src", "--line-length=120")
+    session.run("flake8", "./src", "--max-line-length", "120", "--exclude", "./src/crowsetta/_vendor")
 
 
 @nox.session
