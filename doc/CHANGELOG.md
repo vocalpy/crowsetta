@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   [#216](https://github.com/NickleDave/crowsetta/pull/216).
   Fixes [#152](https://github.com/NickleDave/crowsetta/issues/152)
   and [#197](https://github.com/NickleDave/crowsetta/issues/197).
+- Add format class for Audacity extended label track format
+  [#226](https://github.com/NickleDave/crowsetta/pull/226).
+  Fixes [#222](https://github.com/NickleDave/crowsetta/issues/222)
+  and [#213](https://github.com/NickleDave/crowsetta/issues/213).
 
 ## Fixed
 - Revise landing page of docs, and some vignettes. 
