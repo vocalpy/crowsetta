@@ -55,7 +55,7 @@ def test_extract_data_files_user_specified(tmp_path):
 
 FORMATS_PARAMETRIZE_ARGNAMES = "format, format_class"
 FORMATS_PARAMETRIZE_ARGVALUES = [
-    ("aud-txt", crowsetta.formats.seq.AudTxt),
+    ("aud-seq", crowsetta.formats.seq.AudSeq),
     ("birdsong-recognition-dataset", crowsetta.formats.seq.BirdsongRec),
     ("generic-seq", crowsetta.formats.seq.GenericSeq),
     ("notmat", crowsetta.formats.seq.NotMat),

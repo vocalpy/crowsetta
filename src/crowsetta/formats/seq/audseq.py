@@ -15,7 +15,7 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-class AudTxtSchema(pandera.SchemaModel):
+class AudSeqSchema(pandera.SchemaModel):
     """A ``pandera.SchemaModel`` that validates ``pandas`` dataframes
     loaded from Audacity Labeltrack annotations
     exported to .txt files in the standard format
@@ -33,7 +33,7 @@ class AudTxtSchema(pandera.SchemaModel):
 
 @crowsetta.interface.SeqLike.register
 @attr.define
-class AudTxt:
+class AudSeq:
     """Class meant to represent
     Audacity Labeltrack annotations
     exported to .txt files in the standard format
@@ -46,7 +46,7 @@ class AudTxt:
     Attributes
     ----------
     name: str
-        Shorthand name for annotation format: ``'aud-txt'``.
+        Shorthand name for annotation format: ``'aud-seq'``.
     ext: str
         Extension of files in annotation format:
         ``'.txt'``
@@ -69,7 +69,7 @@ class AudTxt:
         Optional, default is None.
     """
 
-    name: ClassVar[str] = "aud-txt"
+    name: ClassVar[str] = "aud-seq"
     ext: ClassVar[str] = ".txt"
 
     start_times: np.ndarray = attr.field(eq=attr.cmp_using(eq=np.array_equal))
@@ -90,7 +90,7 @@ class AudTxt:
         ----------
         annot_path : str, pathlib.Path
             Path to an annotation file,
-            with one of the extensions {'.csv', '.txt'}.
+            with '.txt' extension.
         notated_path : str, pathlib.Path
             path to file that ``annot_path`` annotates.
             E.g., an audio file, or an array file
@@ -99,14 +99,14 @@ class AudTxt:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('aud-txt')
-        >>> audtxt = crowsetta.formats.seq.AudTxt.from_file(example.annot_path)
+        >>> example = crowsetta.data.get('aud-seq')
+        >>> audseq = crowsetta.formats.seq.AudSeq.from_file(example.annot_path)
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
         df = pd.read_csv(annot_path, sep="\t", header=None)
         df.columns = ["start_time", "end_time", "label"]
-        df = AudTxtSchema.validate(df)
+        df = AudSeqSchema.validate(df)
 
         return cls(
             start_times=df["start_time"].values,
@@ -135,9 +135,9 @@ class AudTxt:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('aud-txt')
-        >>> audtxt = crowsetta.formats.seq.AudTxt.from_file(example.annot_path)
-        >>> seq = audtxt.to_seq()
+        >>> example = crowsetta.data.get('aud-seq')
+        >>> audseq = crowsetta.formats.seq.AudSeq.from_file(example.annot_path)
+        >>> seq = audseq.to_seq()
 
         Notes
         -----
@@ -176,9 +176,9 @@ class AudTxt:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('aud-txt')
-        >>> audtxt = crowsetta.formats.seq.AudTxt.from_file(example.annot_path)
-        >>> annot = audtxt.to_annot()
+        >>> example = crowsetta.data.get('aud-seq')
+        >>> audseq = crowsetta.formats.seq.AudSeq.from_file(example.annot_path)
+        >>> annot = audseq.to_annot()
 
         Notes
         -----
@@ -192,20 +192,20 @@ class AudTxt:
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.notated_path, seq=seq)
 
     def to_file(self, annot_path: PathLike) -> None:
-        """save this 'aud-txt' annotation to a .txt file
+        """save this 'aud-seq' annotation to a .txt file
         in the standard/default Audacity LabelTrack format
 
         Parameters
         ----------
         annot_path : str, pathlib.Path
-            path with filename of .csv file that should be saved
+            Path with filename of .csv file that should be saved.
         """
         df = pd.DataFrame.from_records(
             {"start_time": self.start_times, "end_time": self.end_times, "label": self.labels}
         )
         df = df[["start_time", "end_time", "label"]]  # put in correct order
         try:
-            df = AudTxtSchema.validate(df)
+            df = AudSeqSchema.validate(df)
         except pandera.errors.SchemaError as e:
             raise ValueError(
                 f"Annotations produced an invalid dataframe, " f"cannot convert to Audacity LabelTrack .txt file:\n{df}"

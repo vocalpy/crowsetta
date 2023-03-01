@@ -1,0 +1,3 @@
+scikit-maad developers. (2018-present).
+Example data file.
+Adapted under BSD License: https://github.com/scikit-maad/scikit-maad/blob/production/LICENSE
