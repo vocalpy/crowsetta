@@ -37,14 +37,6 @@ class RavenSchema(pandera.SchemaModel):
         strict = False
 
 
-COLUMNS_MAP = {
-    "Begin Time (s)": "begin_time_s",
-    "End Time (s)": "end_time_s",
-    "Low Freq (Hz)": "low_freq_hz",
-    "High Freq (Hz)": "high_freq_hz",
-}
-
-
 @crowsetta.interface.BBoxLike.register
 @attr.define
 class Raven:
@@ -68,6 +60,12 @@ class Raven:
 
     name: ClassVar[str] = "raven"
     ext: ClassVar[str] = (".txt",)
+    COLUMNS_MAP: ClassVar[dict] = {
+        "Begin Time (s)": "begin_time_s",
+        "End Time (s)": "end_time_s",
+        "Low Freq (Hz)": "low_freq_hz",
+        "High Freq (Hz)": "high_freq_hz",
+    }
 
     df: pd.DataFrame
     annot_path: pathlib.Path
@@ -103,7 +101,7 @@ class Raven:
         df = pd.read_csv(annot_path, sep="\t")
         if len(df) < 1:
             raise ValueError(f"Cannot load annotations, " f"there are no rows in Raven .txt file:\n{df}")
-        columns_map = dict(COLUMNS_MAP)  # copy
+        columns_map = dict(cls.COLUMNS_MAP)  # copy
         columns_map.update({annot_col: "annotation"})
         df.rename(columns=columns_map, inplace=True)
         df = RavenSchema.validate(df)
@@ -170,7 +168,7 @@ class Raven:
         """
         crowsetta.validation.validate_ext(annot_path, extension=self.ext)
 
-        columns_map = {v: k for k, v in COLUMNS_MAP.items()}  # copy
+        columns_map = {v: k for k, v in self.COLUMNS_MAP.items()}  # copy
         columns_map.update({"annotation": self.annot_col})
         df_out = self.df.rename(columns=columns_map)
         df_out.to_csv(annot_path, sep="\t", index=False)

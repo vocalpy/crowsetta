@@ -6,17 +6,12 @@ import crowsetta.formats
 
 
 class TestRavenSchema:
-    COLUMNS_MAP = {
-        "Begin Time (s)": "begin_time_s",
-        "End Time (s)": "end_time_s",
-        "Low Freq (Hz)": "low_freq_hz",
-        "High Freq (Hz)": "high_freq_hz",
-        "Species": "annotation",
-    }
 
     def test_raven_schema_phn_df(self, a_raven_txt_file):
         df = pd.read_csv(a_raven_txt_file, sep="\t")
-        df.columns = df.columns.map(self.COLUMNS_MAP)
+        columns_map = dict(crowsetta.formats.bbox.Raven.COLUMNS_MAP)  # copy
+        columns_map.update({"Species": "annotation"})
+        df.columns = df.columns.map(columns_map)
         df = crowsetta.formats.bbox.raven.RavenSchema.validate(df)
         # if validation worked, we get back a DataFrame
         assert isinstance(df, pd.DataFrame)
