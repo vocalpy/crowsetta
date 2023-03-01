@@ -60,9 +60,7 @@ class ExampleAnnotFile:
 
 
 DATA = {
-    "aud-bbox": FormatPathArgs(
-        package="crowsetta.data.audbbox", resource="spinetail.txt"
-    ),
+    "aud-bbox": FormatPathArgs(package="crowsetta.data.audbbox", resource="spinetail.txt"),
     "aud-seq": FormatPathArgs(
         package="crowsetta.data.audseq", resource="405_marron1_June_14_2016_69640887.audacity.txt"
     ),

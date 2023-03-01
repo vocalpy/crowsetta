@@ -212,7 +212,7 @@ class Sequence:
         # then do type/shape checking on onsets and offsets;
         # also make sure everybody is the same length
         if not (onset_samples is None and offset_samples is None) and not (
-            np.all(onset_samples == None) and np.all(offset_samples == None)    # noqa: E711
+            np.all(onset_samples == None) and np.all(offset_samples == None)  # noqa: E711
         ):
             onset_samples = column_or_row_or_1d(onset_samples)
             offset_samples = column_or_row_or_1d(offset_samples)

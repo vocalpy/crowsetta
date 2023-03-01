@@ -39,9 +39,9 @@ def txt_to_records(aud_txt_path: PathLike) -> list[dict]:
     loading with ``pandas.read_csv`` then munging, so that we can
     be sure that we can round-trip data without corrupting it.
     """
-    with pathlib.Path(aud_txt_path).open('r') as fp:
+    with pathlib.Path(aud_txt_path).open("r") as fp:
         lines = fp.read().splitlines()
-    lines = [line.split('\t') for line in lines]
+    lines = [line.split("\t") for line in lines]
 
     records = []
     # next line: iterate over lines in groups of 2
@@ -133,6 +133,7 @@ class AudBBox:
     audio_path : str. pathlib.Path
         Path to audio file that the Audacity .txt file annotates.
     """
+
     COLUMNS_MAP: ClassVar[dict] = {
         0: "begin_time_s",
         1: "end_time_s",
@@ -141,18 +142,15 @@ class AudBBox:
         4: "high_freq_hz",
     }
 
-    name: ClassVar[str] = 'aud-bbox'
-    ext: ClassVar[str] = '.txt'
+    name: ClassVar[str] = "aud-bbox"
+    ext: ClassVar[str] = ".txt"
 
     df: pd.DataFrame
     annot_path: pathlib.Path
-    audio_path: Optional[pathlib.Path] = attr.field(default=None,
-                                                    converter=attr.converters.optional(pathlib.Path))
+    audio_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
     @classmethod
-    def from_file(cls,
-                  annot_path: PathLike,
-                  audio_path: Optional[PathLike] = None) -> 'Self':  # noqa: F821
+    def from_file(cls, annot_path: PathLike, audio_path: Optional[PathLike] = None) -> "Self":  # noqa: F821
         """Load annotations from a Audacity annotation file with bbox,
         created by exporting a Selection Table.
 
@@ -199,19 +197,15 @@ class AudBBox:
         """
         bboxes = []
         for begin_time, end_time, label, low_freq, high_freq in zip(
-                self.df.begin_time_s.values,
-                self.df.end_time_s.values,
-                self.df.label.values,
-                self.df.low_freq_hz.values,
-                self.df.high_freq_hz.values,
+            self.df.begin_time_s.values,
+            self.df.end_time_s.values,
+            self.df.label.values,
+            self.df.low_freq_hz.values,
+            self.df.high_freq_hz.values,
         ):
             bboxes.append(
-                    crowsetta.BBox(onset=begin_time,
-                                   offset=end_time,
-                                   low_freq=low_freq,
-                                   high_freq=high_freq,
-                                   label=label)
-                )
+                crowsetta.BBox(onset=begin_time, offset=end_time, low_freq=low_freq, high_freq=high_freq, label=label)
+            )
         return bboxes
 
     def to_annot(self) -> crowsetta.Annotation:
@@ -228,12 +222,9 @@ class AudBBox:
         >>> annot = audacitybbox.to_annot()
         """
         bboxes = self.to_bbox()
-        return crowsetta.Annotation(annot_path=self.annot_path,
-                                    notated_path=self.audio_path,
-                                    bboxes=bboxes)
+        return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.audio_path, bboxes=bboxes)
 
-    def to_file(self,
-                annot_path: PathLike) -> None:
+    def to_file(self, annot_path: PathLike) -> None:
         """Make a .txt file from this annotation
         in extended label track format that can be read by Audacity.
 
@@ -245,5 +236,5 @@ class AudBBox:
         """
         crowsetta.validation.validate_ext(annot_path, extension=self.ext)
         lines = df_to_lines(self.df)
-        with pathlib.Path(annot_path).open('w') as fp:
+        with pathlib.Path(annot_path).open("w") as fp:
             fp.writelines(lines)
