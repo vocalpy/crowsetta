@@ -10,8 +10,8 @@ from crowsetta.segment import Segment
 
     ]
 )
-def test_Segment_from_keyword(kwargs):
-    a_segment = Segment.from_keyword(**kwargs)
+def test_Segment(kwargs):
+    a_segment = Segment(**kwargs)
     for attr in ["label", "onset_s", "offset_s", "onset_sample", "offset_sample"]:
         if attr in kwargs:
             assert hasattr(a_segment, attr)
@@ -34,6 +34,6 @@ def test_Segment_from_keyword(kwargs):
         (dict(label="a", offset_sample=0.177), TypeError),
     ]
 )
-def test_Segment_from_keyword_raises(kwargs, expected_error):
+def test_Segment_raises(kwargs, expected_error):
     with pytest.raises(expected_error):
-        Segment.from_keyword(**kwargs)
+        Segment(**kwargs)

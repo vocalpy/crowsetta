@@ -57,9 +57,3 @@ class Segment(object):
             raise ValueError(f"onset_s specified as {self.onset_s} but offset_s is None")
         if self.onset_s is None and self.offset_s:
             raise ValueError(f"offset_s specified as {self.offset_sample} but onset_s is None")
-
-    @classmethod
-    def from_keyword(cls, label, onset_s=None, offset_s=None, onset_sample=None, offset_sample=None):
-        return cls(
-            label=label, onset_s=onset_s, offset_s=offset_s, onset_sample=onset_sample, offset_sample=offset_sample
-        )

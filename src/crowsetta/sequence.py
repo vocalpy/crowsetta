@@ -377,7 +377,7 @@ class Sequence:
         zipped = zip(labels, onset_samples, offset_samples, onsets_s, offsets_s)
         for label, onset_sample, offset_sample, onset_s, offset_s in zipped:
             segments.append(
-                Segment.from_keyword(
+                Segment(
                     label=label,
                     onset_sample=onset_sample,
                     offset_sample=offset_sample,
