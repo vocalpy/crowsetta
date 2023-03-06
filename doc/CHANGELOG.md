@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-## Added
+### Added
 - Add information on contributing and setting up a development environment
   [#212](https://github.com/NickleDave/crowsetta/pull/212).
   Fixes [#30](https://github.com/NickleDave/crowsetta/issues/30).
@@ -22,7 +22,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Fixes [#222](https://github.com/NickleDave/crowsetta/issues/222)
   and [#213](https://github.com/NickleDave/crowsetta/issues/213).
 
-## Fixed
+### Removed
+- Remove `Segment.from_row` method, no longer used
+  [#232](https://github.com/NickleDave/crowsetta/pull/232).
+  Fixes [#231](https://github.com/NickleDave/crowsetta/issues/231)
+
+### Fixed
 - Revise landing page of docs, and some vignettes. 
   Make other changes to clean up the docs build process 
   [#216](https://github.com/NickleDave/crowsetta/pull/216).
