@@ -21,12 +21,12 @@ class SeqLike(BaseFormat, abc.ABC):
     .. code-block:: python
 
        >>> from crowsetta import Segment, Sequence
-       >>> a_segment = Segment.from_keyword(
+       >>> a_segment = Segment(
        ...     label='a',
        ...     onset_sample=16000,
        ...     offset_sample=32000,
        ...     )
-       >>> another_segment = Segment.from_keyword(
+       >>> another_segment = Segment(
        ...     label='b',
        ...     onset_sample=36000,
        ...     offset_sample=48000,

@@ -24,6 +24,32 @@ class Transcriber:
     Methods
     -------
     from_file : Loads annotations from a file
+
+    Examples
+    --------
+
+    An example of loading a sequence-like format with the ``from_file`` method.
+
+    >>> import crowsetta
+    >>> scribe = crowsetta.Transcriber(format='aud-seq')
+    >>> example = crowsetta.data.get('aud-seq')
+    >>> audseq = scribe.from_file(example.annot_path)
+    >>> annot = audseq.to_annot()
+    >>> annot
+    Annotation(annot_path=PosixPath('/home/pimienta/.local/share/crowsetta/5.0.0rc1/audseq/405_marron1_June_14_2016_69640887.audacity.txt'), notated_path=None, seq=<Sequence with 61 segments>)  # noqa
+
+    An example of loading a bounding box-like format with the ``from_file`` method.
+    Notice this format has a parameter ``annot_col`` we need to specify for it to load correctly.
+    We can pass this additional parameter into the ``from_file`` method
+    as a keyword argument.
+
+    >>> import crowsetta
+    >>> scribe = crowsetta.Transcriber(format='raven')
+    >>> example = crowsetta.data.get('raven')
+    >>> raven = scribe.from_file(example.annot_path, annot_col='Species')
+    >>> annot = raven.to_annot()
+    >>> annot
+    Annotation(annot_path=PosixPath('/home/pimienta/.local/share/crowsetta/5.0.0rc1/raven/Recording_1_Segment_02.Table.1.selections.txt'), notated_path=None, bboxes=[BBox(onset=154.387792767, offset=154.911598217, low_freq=2878.2, high_freq=4049.0, label='EATO'), BBox(onset=167.526598245, offset=168.17302044, low_freq=2731.9, high_freq=3902.7, label='EATO'), BBox(onset=183.609636834, offset=184.097751553, low_freq=2878.2, high_freq=3975.8, label='EATO'), BBox(onset=250.527480604, offset=251.160710509, low_freq=2756.2, high_freq=3951.4, label='EATO'), BBox(onset=277.88724277, offset=278.480895806, low_freq=2707.5, high_freq=3975.8, label='EATO'), BBox(onset=295.52970757, offset=296.110168316, low_freq=2951.4, high_freq=3975.8, label='EATO')])  # noqa
     """
 
     def __init__(self, format: "Union[str, crowsetta.interface.SeqLike, crowsetta.interface.BBoxLike]"):  # noqa: F821
@@ -82,5 +108,31 @@ class Transcriber:
         annotations : class-instance
             an instance of the class referred to by ``self.format``,
             with annotations loaded from ``annot_path``
+
+        Examples
+        --------
+
+        An example of loading a sequence-like format with the ``from_file`` method.
+
+        >>> import crowsetta
+        >>> scribe = crowsetta.Transcriber(format='aud-seq')
+        >>> example = crowsetta.data.get('aud-seq')
+        >>> audseq = scribe.from_file(example.annot_path)
+        >>> annot = audseq.to_annot()
+        >>> annot
+        Annotation(annot_path=PosixPath('/home/pimienta/.local/share/crowsetta/5.0.0rc1/audseq/405_marron1_June_14_2016_69640887.audacity.txt'), notated_path=None, seq=<Sequence with 61 segments>)  # noqa
+
+        An example of loading a bounding box-like format with the ``from_file`` method.
+        Notice this format has a parameter ``annot_col`` we need to specify for it to load correctly.
+        We can pass this additional parameter into the ``from_file`` method
+        as a keyword argument.
+
+        >>> import crowsetta
+        >>> scribe = crowsetta.Transcriber(format='raven')
+        >>> example = crowsetta.data.get('raven')
+        >>> raven = scribe.from_file(example.annot_path, annot_col='Species')
+        >>> annot = raven.to_annot()
+        >>> annot
+        Annotation(annot_path=PosixPath('/home/pimienta/.local/share/crowsetta/5.0.0rc1/raven/Recording_1_Segment_02.Table.1.selections.txt'), notated_path=None, bboxes=[BBox(onset=154.387792767, offset=154.911598217, low_freq=2878.2, high_freq=4049.0, label='EATO'), BBox(onset=167.526598245, offset=168.17302044, low_freq=2731.9, high_freq=3902.7, label='EATO'), BBox(onset=183.609636834, offset=184.097751553, low_freq=2878.2, high_freq=3975.8, label='EATO'), BBox(onset=250.527480604, offset=251.160710509, low_freq=2756.2, high_freq=3951.4, label='EATO'), BBox(onset=277.88724277, offset=278.480895806, low_freq=2707.5, high_freq=3975.8, label='EATO'), BBox(onset=295.52970757, offset=296.110168316, low_freq=2951.4, high_freq=3975.8, label='EATO')])  # noqa
         """
         return self._format_class.from_file(annot_path, *args, **kwargs)

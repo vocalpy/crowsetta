@@ -29,6 +29,20 @@ class BBox:
         Highest frequency bounding sound, typically in Hz.
     label : str
         string label that annotates bounding box
+
+    Examples:
+    ---------
+
+    A toy example of a bounding box-like annotation.
+
+    >>> bbox1 = crowsetta.BBox(label='Pinacosaurus grangeri', onset=1.0, offset=2.0, low_freq=3e3, high_freq=1e4)
+    >>> bbox2 = crowsetta.BBox(label='Pinacosaurus grangeri', onset=3.0, offset=4.0, low_freq=3.25e3, high_freq=1.25e4)
+    >>> bboxes = [bbox1, bbox2]
+    >>> annot = crowsetta.Annotation(notated_path='prebird1.wav', annot_path='prebird1.csv', bboxes=bboxes)
+    >>> print(annot)
+    Annotation(annot_path=PosixPath('prebird1.csv'), notated_path=PosixPath('prebird1.wav'),
+    bboxes=[BBox(onset=1.0, offset=2.0, low_freq=3000.0, high_freq=10000.0, label='Pinacosaurus grangeri'),
+    BBox(onset=3.0, offset=4.0, low_freq=3250.0, high_freq=12500.0, label='Pinacosaurus grangeri')])
     """
 
     onset: float = field(validator=is_positive)
