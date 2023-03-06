@@ -40,12 +40,18 @@ class Sequence:
 
     Examples
     --------
+
+    A sequence with onsets and offsets given in seconds.
+
     >>> import numpy as np
     >>> import crowsetta
     >>> onsets_s = np.array([1.0, 3.0, 5.0])
     >>> offsets_s = np.array(2.0, 4.0, 6.0])
     >>> labels = np.array(['a', 'a', 'b'])
     >>> seq = crowsetta.Sequence.from_keyword(labels=labels, onsets_s=onsets_s, offsets_s=offsets_s)
+
+    The same sequence could also be made with ``crowsetta.Segment`` instances,
+    by calling the ``from_segments`` class method.
 
     >>> segments = []
     >>> for onset, offset, label in zip(onsets_s, offsets_s, labels):

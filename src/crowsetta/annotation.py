@@ -39,6 +39,32 @@ class Annotation:
     -----
     A ``crowsetta.Annotation`` can have a ``seq``
     or ``bboxes``, but not both.
+
+    Examples
+    --------
+
+    A toy example of a sequence-like annotation.
+
+    >>> import numpy as np
+    >>> import crowsetta
+    >>> onsets_s = np.array([1.0, 3.0, 5.0])
+    >>> offsets_s = np.array([2.0, 4.0, 6.0])
+    >>> labels = np.array(['a', 'a', 'b'])
+    >>> seq = crowsetta.Sequence.from_keyword(labels=labels, onsets_s=onsets_s, offsets_s=offsets_s)
+    >>> annot = crowsetta.Annotation(notated_path='bird1.wav', annot_path='bird1.csv', seq=seq)
+    >>> print(annot)
+    Annotation(annot_path=PosixPath('bird1.csv'), notated_path=PosixPath('bird1.wav'), seq=<Sequence with 3 segments>)
+
+    A toy example of a bounding box-like annotation.
+
+    >>> bbox1 = crowsetta.BBox(label='Pinacosaurus grangeri', onset=1.0, offset=2.0, low_freq=3e3, high_freq=1e4)
+    >>> bbox2 = crowsetta.BBox(label='Pinacosaurus grangeri', onset=3.0, offset=4.0, low_freq=3.25e3, high_freq=1.25e4)
+    >>> bboxes = [bbox1, bbox2]
+    >>> annot = crowsetta.Annotation(notated_path='prebird1.wav', annot_path='prebird1.csv', bboxes=bboxes)
+    >>> print(annot)
+    Annotation(annot_path=PosixPath('prebird1.csv'), notated_path=PosixPath('prebird1.wav'),
+    bboxes=[BBox(onset=1.0, offset=2.0, low_freq=3000.0, high_freq=10000.0, label='Pinacosaurus grangeri'),
+    BBox(onset=3.0, offset=4.0, low_freq=3250.0, high_freq=12500.0, label='Pinacosaurus grangeri')])
     """
 
     def __init__(

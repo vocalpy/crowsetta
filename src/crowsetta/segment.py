@@ -24,7 +24,55 @@ class Segment(object):
     used to annotate animal communication.
 
     Typically, a single unit such as a syllable in human speech
-    or a "syllable" in birdsong."""
+    or a "syllable" in birdsong.
+
+    Attributes
+    ----------
+    label: str
+        The string label for the segment.
+    onset_s: float, optional
+        The onset time of the segment, in seconds.
+    offset_s: float, optional
+        The offset time of the segment, in seconds.
+    onset_sample: float, optional
+        The onset time of the segment, in samples
+        (i.e., the index of the onset in the audio).
+    offset_sample: float, optional
+        The offset time of the segment, in samples
+        (i.e., the index of the offset in the audio).
+
+    Notes
+    -----
+    At least one of (onset_s, offset_s)
+    or (onset_sample, offset_sample)
+    must be specified. Both can be specified,
+    but no validation is done by this class
+    to make sure the time in seconds
+    matches the sample number
+    (since this would require the
+    sampling frequency).
+
+    Examples
+    --------
+
+    A segment with onset and offset given in seconds.
+
+    >>> from crowsetta import Segment
+    >>> Segment(label='a', onset_s=1.0, offset_s=2.0)
+    Segment(label='a', onset_s=1.0, offset_s=2.0, onset_sample=None, offset_sample=None)
+
+    A segment with onset and offset given in sample number.
+
+    >>> Segment(label=1, onset_sample=32000, offset_sample=64000)
+    Segment(label='1', onset_s=None, offset_s=None, onset_sample=32000, offset_sample=64000)
+
+    A segment with onset and offset given in both seconds and sample number.
+    Notice we give the label as an integer and it is converted to a string;
+    labels are always strings.
+
+    >>> Segment(label=1, onset_s=1.0, offset_s=2.0, onset_sample=32000, offset_sample=64000)
+    Segment(label='1', onset_s=1.0, offset_s=2.0, onset_sample=32000, offset_sample=64000)
+    """
 
     _FIELDS = ("label", "onset_s", "offset_s", "onset_sample", "offset_sample")
 
