@@ -16,6 +16,13 @@ for module in (bbox, seq):
                 FORMATS[attr.name] = attr
 
 
+__all__ = [
+    'bbox',
+    'FORMATS',
+    'seq'
+]
+
+
 def by_name(name: str) -> Type:
     """Get an annotation class by its string name
 
@@ -63,10 +70,10 @@ def as_list() -> list[str]:
 def register_format(format_class: Type) -> Type:
     """Decorator to register annotation formats.
 
-    Adds class to ``crowsetta.formats``.
+    Adds class to :mod:`crowsetta.formats`.
     The decorator maps the class variable ``name``,
     a string, to the class itself, so that calling
-    ``crowsetta.formats.by_name`` with that string
+    :func:`crowsetta.formats.by_name` with that string
     will return the class.
 
     Parameters
@@ -74,15 +81,16 @@ def register_format(format_class: Type) -> Type:
     format_class : class
         A class that has the required class variables
         and adheres to one of the interfaces
-        defined in ``crowsetta.interface``,
-        either ``SeqLike`` or ``BBoxLike``.
+        defined in :mod:`crowsetta.interface`,
+        either :class:`~crowsetta.interface.seq.SeqLike`
+        or :class:`~crowsetta.interface.bbox.BBoxLike`.
 
     Returns
     -------
     format_class : class
         The same class, unchanged.
         This decorator only adds the class
-        to ``crowsetta.formats.FORMATS``.
+        to :data:`crowsetta.formats.FORMATS`.
     """
     if not issubclass(format_class, interface.seq.SeqLike) and not issubclass(format_class, interface.bbox.BBoxLike):
         raise TypeError(f"format class must be subclass of SeqLike or BBoxLike, but was not: {format_class}")

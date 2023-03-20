@@ -18,8 +18,8 @@ from crowsetta.typing import PathLike
 
 
 class RavenSchema(pandera.SchemaModel):
-    """A ``pandera.SchemaModel`` that validates ``pandas`` dataframes
-    loaded from a .txt file, created by exporting a Selection Table
+    """A :class:`pandera.SchemaModel` that validates :type:`pandas.DataFrame`s
+    loaded from a txt file, created by exporting a Selection Table
     from Raven.
     """
 
@@ -40,7 +40,7 @@ class RavenSchema(pandera.SchemaModel):
 @crowsetta.interface.BBoxLike.register
 @attr.define
 class Raven:
-    """Class that represents .txt annotation files
+    """Class that represents txt annotation files
     from Raven (https://ravensoundsoftware.com/software/),
     created by exporting a Selection Table.
 
@@ -53,9 +53,9 @@ class Raven:
     df : pandas.DataFrame
         with annotations loaded into it
     annot_path : str, pathlib.Path
-        Path to Raven .txt file from which annotations were loaded.
+        Path to Raven txt file from which annotations were loaded.
     audio_path : str. pathlib.Path
-        Path to audio file that the Raven .txt file annotates.
+        Path to audio file that the Raven txt file annotates.
     """
 
     name: ClassVar[str] = "raven"
@@ -82,11 +82,11 @@ class Raven:
         Parameters
         ----------
         annot_path : str, pathlib.Path
-            Path to a .txt file exported from Raven.
+            Path to a txt file exported from Raven.
         annot_col : str
-            name of column that contains annotations
+            Name of column that contains annotations.
         audio_path : str, pathlib.Path
-            Path to audio file that the Raven .txt file annotates.
+            Path to audio file that the Raven txt file annotates.
             Optional, defaults to None.
 
         Examples
@@ -100,7 +100,7 @@ class Raven:
         #  assume file is space-separated with no header
         df = pd.read_csv(annot_path, sep="\t")
         if len(df) < 1:
-            raise ValueError(f"Cannot load annotations, " f"there are no rows in Raven .txt file:\n{df}")
+            raise ValueError(f"Cannot load annotations, " f"there are no rows in Raven txt file:\n{df}")
         columns_map = dict(cls.COLUMNS_MAP)  # copy
         columns_map.update({annot_col: "annotation"})
         df.rename(columns=columns_map, inplace=True)
@@ -114,12 +114,13 @@ class Raven:
         )
 
     def to_bbox(self) -> List[crowsetta.BBox]:
-        """Convert this Raven annotation to a ``list`` of ``crowsetta.Bbox``.
+        """Convert this Raven annotation to a
+        :class:`list` of :class:`crowsetta.Bbox` instances.
 
         Returns
         -------
         bboxes : list
-            of ``crowsetta.BBox``
+            A :class:`list` of :class:`crowsetta.BBox` instances.
 
         Examples
         --------
@@ -141,7 +142,8 @@ class Raven:
         return bboxes
 
     def to_annot(self) -> crowsetta.Annotation:
-        """Convert this Raven annotation to a ``crowsetta.Annotation``.
+        """Convert this Raven annotation to a
+        :class:`crowsetta.Annotation`.
 
         Returns
         -------
@@ -157,13 +159,13 @@ class Raven:
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.audio_path, bboxes=bboxes)
 
     def to_file(self, annot_path: PathLike) -> None:
-        """make a .txt file that can be read by Raven
+        """Make a txt file that can be read by Raven
         from this annotation
 
         Parameters
         ----------
         annot_path : str, pahtlib.Path
-             path including filename where file should be saved.
+             Path including filename where file should be saved.
              Must have extension '.txt'
         """
         crowsetta.validation.validate_ext(annot_path, extension=self.ext)

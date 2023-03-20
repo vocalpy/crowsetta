@@ -6,8 +6,8 @@ from attr.validators import instance_of
 
 
 def convert_int(val):
-    """Converter that converts ``numpy.integer`` to ``int``,
-    returns native Python ``int`` as is, and
+    """Converter that converts :class:`numpy.integer` to :class:`int`,
+    returns native Python :class:`int` as is, and
     raises an error for any other type.
     """
     if hasattr(val, "dtype") and isinstance(val, np.integer):

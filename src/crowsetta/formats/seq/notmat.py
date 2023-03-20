@@ -1,5 +1,5 @@
-"""module with functions that handle .not.mat annotation files
-produced by evsonganaly GUI
+"""Module with functions that handle .not.mat annotation files
+produced by evsonganaly GUI.
 """
 import pathlib
 from typing import ClassVar, Dict, Optional
@@ -81,7 +81,7 @@ class NotMat:
         return cls(annot_path=annot_path, onsets=onsets, offsets=offsets, labels=labels, audio_path=audio_path)
 
     def to_seq(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Sequence:
-        """Convert this .not.mat annotation to a ``crowsetta.Sequence``.
+        """Convert this .not.mat annotation to a :class:`crowsetta.Sequence`.
 
         Parameters
         ----------
@@ -122,7 +122,7 @@ class NotMat:
         return seq
 
     def to_annot(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Annotation:
-        """Convert this .not.mat annotation to a ``crowsetta.Annotation``.
+        """Convert this .not.mat annotation to a :class:`crowsetta.Annotation`.
 
         Parameters
         ----------
@@ -175,11 +175,14 @@ class NotMat:
         samp_freq : int
             Sampling frequency of audio file.
         threshold : int
-            Value above which amplitude is considered part of a segment. default is 5000.
+            Value above which amplitude is considered part of a segment.
+            Default is 5000.
         min_syl_dur : float
-            Minimum duration of a segment. default is 0.02, i.e. 20 ms.
+            Minimum duration of a segment.
+            Default is 0.02, i.e. 20 ms.
         min_silent_dur : float
-            Minimum duration of silent gap between segment. default is 0.002, i.e. 2 ms.
+            Minimum duration of silent gap between segment.
+            Default is 0.002, i.e. 2 ms.
         fname : str, pathlib.Path
             Name of audio file associated with .not.mat,
             will be used as base of name for .not.mat file.

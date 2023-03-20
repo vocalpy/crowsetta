@@ -1,5 +1,5 @@
 """module for Audacity LabelTrack
-in standard/default format exported to .txt files
+in standard/default format exported to txt files
 https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
 """
 import pathlib
@@ -16,9 +16,12 @@ from crowsetta.typing import PathLike
 
 
 class AudSeqSchema(pandera.SchemaModel):
-    """A ``pandera.SchemaModel`` that validates ``pandas`` dataframes
+    """A :class:`pandera.SchemaModel`
+    that validates :type:`pandas.DataFrame`s
     loaded from Audacity Labeltrack annotations
-    exported to .txt files in the standard format
+    exported to txt files in the standard format.
+
+    The standard format is described here:
     https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
     """
 
@@ -36,10 +39,9 @@ class AudSeqSchema(pandera.SchemaModel):
 class AudSeq:
     """Class meant to represent
     Audacity Labeltrack annotations
-    exported to .txt files in the standard format
-    https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
+    exported to txt files in the standard format[1]_.
 
-    The .txt file will have 3 tab-separated columns
+    The txt file will have 3 tab-separated columns
     that represent the start time, end time, and labels
     of annotated regions.
 
@@ -48,25 +50,28 @@ class AudSeq:
     name: str
         Shorthand name for annotation format: ``'aud-seq'``.
     ext: str
-        Extension of files in annotation format:
-        ``'.txt'``
+        Extension of files in annotation format, ``'.txt'``.
     start_times : numpy.ndarray
         Vector of integer sample numbers corresponding
-        to beginning of segments, i.e. onsets
+        to beginning of segments, i.e. onsets.
     end_times : numpy.ndarray
         Vector of integer sample numbers corresponding
-        to ends of segments, i.e. offsets
+        to ends of segments, i.e. offsets.
     labels : numpy.ndarray
         Vector of string labels for segments;
         each element is either a single word,
         or a single phonetic transcription code.
     annot_path : str, pathlib.Path
         Path to file from which annotations were loaded.
-    notated_path : str. pathlib.Path
-        path to file that ``annot_path`` annotates.
+    notated_path : str, pathlib.Path
+        Path to file that ``annot_path`` annotates.
         E.g., an audio file, or an array file
         that contains a spectrogram generated from audio.
         Optional, default is None.
+
+    References
+    ----------
+    .. [1^] https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
     """
 
     name: ClassVar[str] = "aud-seq"
@@ -84,7 +89,7 @@ class AudSeq:
         annot_path: PathLike,
         notated_path: Optional[PathLike] = None,
     ) -> "Self":  # noqa: F821
-        """Load annotations from a file
+        """Load annotations from a file.
 
         Parameters
         ----------
@@ -92,7 +97,7 @@ class AudSeq:
             Path to an annotation file,
             with '.txt' extension.
         notated_path : str, pathlib.Path
-            path to file that ``annot_path`` annotates.
+            Path to file that ``annot_path`` annotates.
             E.g., an audio file, or an array file
             that contains a spectrogram generated from audio.
             Optional, default is None.
@@ -117,12 +122,12 @@ class AudSeq:
         )
 
     def to_seq(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Sequence:
-        """Convert this annotation to a ``crowsetta.Sequence``.
+        """Convert this annotation to a :class:`crowsetta.Sequence`.
 
         Parameters
         ----------
         round_times : bool
-            If True, round onsets_s and offsets_s.
+            If True, round ``onsets_s`` and ``offsets_s``.
             Default is True.
         decimals : int
             Number of decimals places to round floating point numbers to.
@@ -158,7 +163,7 @@ class AudSeq:
         return seq
 
     def to_annot(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Annotation:
-        """Convert this annotation to a ``crowsetta.Annotation``.
+        """Convert this annotation to a :class:`crowsetta.Annotation`.
 
         Parameters
         ----------
@@ -192,13 +197,13 @@ class AudSeq:
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.notated_path, seq=seq)
 
     def to_file(self, annot_path: PathLike) -> None:
-        """save this 'aud-seq' annotation to a .txt file
-        in the standard/default Audacity LabelTrack format
+        """Save this 'aud-seq' annotation to a txt file
+        in the standard/default Audacity LabelTrack format.
 
         Parameters
         ----------
         annot_path : str, pathlib.Path
-            Path with filename of .csv file that should be saved.
+            Path with filename of txt file that should be saved.
         """
         df = pd.DataFrame.from_records(
             {"start_time": self.start_times, "end_time": self.end_times, "label": self.labels}
@@ -208,6 +213,6 @@ class AudSeq:
             df = AudSeqSchema.validate(df)
         except pandera.errors.SchemaError as e:
             raise ValueError(
-                f"Annotations produced an invalid dataframe, " f"cannot convert to Audacity LabelTrack .txt file:\n{df}"
+                f"Annotations produced an invalid dataframe, " f"cannot convert to Audacity LabelTrack txt file:\n{df}"
             ) from e
         df.to_csv(annot_path, sep="\t", header=False, index=False)

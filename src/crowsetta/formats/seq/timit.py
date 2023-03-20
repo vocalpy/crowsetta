@@ -1,4 +1,8 @@
-"""module with functions that handle .phn annotation files from the TIMIT dataset
+"""Module with functions that handle phn annotation files
+from the TIMIT[1]_ dataset.
+
+.. [1] Garofolo, John S., et al. TIMIT Acoustic-Phonetic Continuous Speech Corpus LDC93S1.
+   Web Download. Philadelphia: Linguistic Data Consortium, 1993.
 """
 import pathlib
 import warnings
@@ -16,8 +20,13 @@ from crowsetta.typing import PathLike
 
 
 class TimitTranscriptSchema(pandera.SchemaModel):
-    """A ``pandera.SchemaModel`` that validates ``pandas`` dataframes
-    loaded from a .phn or .wrd file in the TIMIT transcription format.
+    """A :class:`pandera.SchemaModel` that validates :type:`pandas.DataFrame`s
+    loaded from a phn or wrd file in the TIMIT[1]_ transcription format.
+
+    References
+    ----------
+    .. [1] Garofolo, John S., et al. TIMIT Acoustic-Phonetic Continuous Speech Corpus LDC93S1.
+       Web Download. Philadelphia: Linguistic Data Consortium, 1993.
     """
 
     begin_sample: Optional[Series[int]] = pandera.Field()
@@ -33,7 +42,7 @@ class TimitTranscriptSchema(pandera.SchemaModel):
 @attr.define
 class Timit:
     """Class that represents annotations from transcription files in the
-    DARPA TIMIT Acoustic-Phonetic Continuous Speech Corpus (TIMIT)
+    DARPA TIMIT Acoustic-Phonetic Continuous Speech Corpus[1]_.
 
     Attributes
     ----------
@@ -56,6 +65,11 @@ class Timit:
         Path to TIMIT transcription file from which annotations were loaded.
     audio_path : str. pathlib.Path
         Path to audio file that the TIMIT transcription file annotates.
+
+    References
+    ----------
+    .. [1] Garofolo, John S., et al. TIMIT Acoustic-Phonetic Continuous Speech Corpus LDC93S1.
+       Web Download. Philadelphia: Linguistic Data Consortium, 1993.
     """
 
     name: ClassVar[str] = "timit"
@@ -69,7 +83,7 @@ class Timit:
 
     @classmethod
     def from_file(cls, annot_path: PathLike, audio_path: Optional[PathLike] = None) -> "Self":  # noqa: F821
-        """Load annotations from a TIMIT transcription file
+        """Load annotations from a TIMIT[1]_ transcription file.
 
         Parameters
         ----------
@@ -91,6 +105,11 @@ class Timit:
         -----
         Versions of the dataset exist with the extensions
         in capital letters. Some platforms may not have case-sensitive paths.
+
+        References
+        ----------
+        .. [1] Garofolo, John S., et al. TIMIT Acoustic-Phonetic Continuous Speech Corpus LDC93S1.
+           Web Download. Philadelphia: Linguistic Data Consortium, 1993.
         """
         annot_path = pathlib.Path(annot_path)
         # note multiple extensions, both all-uppercase and all-lowercase `.phn` exist,
@@ -122,7 +141,7 @@ class Timit:
     def to_seq(
         self, round_times: bool = True, decimals: int = 3, samplerate: Optional[int] = None
     ) -> crowsetta.Sequence:
-        """Convert this TIMIT annotation to a ``crowsetta.Sequence``.
+        """Convert this TIMIT annotation to a :class:`crowsetta.Sequence`.
 
         Parameters
         ----------
@@ -141,7 +160,7 @@ class Timit:
             tries to open ``audio_path`` and determine
             the actual sampling rate. If this does not work,
             then the ``onsets_s`` and ``offsets_s`` attributes
-            of the ``crowsetta.Sequence`` are left as None.
+            of the :class:`crowsetta.Sequence` are left as None.
 
         Examples
         --------
@@ -198,15 +217,15 @@ class Timit:
     def to_annot(
         self, round_times: bool = True, decimals: int = 3, samplerate: Optional[int] = None
     ) -> crowsetta.Annotation:
-        """Convert this TIMIT annotation to a ``crowsetta.Annotation``.
+        """Convert this TIMIT annotation to a :class:`crowsetta.Annotation`.
 
         Parameters
         ----------
         round_times : bool
-            if True, round onsets_s and offsets_s.
+            If True, round onsets_s and offsets_s.
             Default is True.
         decimals : int
-            number of decimals places to round floating point numbers to.
+            Number of decimals places to round floating point numbers to.
             Only meaningful if round_times is True.
             Default is 3, so that times are rounded to milliseconds.
         samplerate : int
@@ -217,7 +236,7 @@ class Timit:
             tries to open ``audio_path`` and determine
             the actual sampling rate. If this does not work,
             then the ``onsets_s`` and ``offsets_s`` attributes
-            of the ``crowsetta.Sequence`` are left as None.
+            of the :class:`crowsetta.Sequence` are left as None.
 
         Examples
         --------
@@ -241,12 +260,13 @@ class Timit:
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.audio_path, seq=phn_seq)
 
     def to_file(self, annot_path: PathLike) -> None:
-        """make a .phn file from an annotation
+        """Make a phn file in the TIMIT format
+        from this instance.
 
         Parameters
         ----------
         annot_path : str, pahtlib.Path
-             path including filename where file should be saved.
+             Path including filename where file should be saved.
              Must have a valid extension for TIMIT transcription files,
              one of {'.phn', '.PHN', '.wrd', '.WRD'}.
         """
