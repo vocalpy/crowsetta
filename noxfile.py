@@ -78,7 +78,8 @@ def coverage(session) -> None:
     """
     session.install(".[test]", "pytest-cov")
     session.run(
-        "pytest", "-n", "auto", "--cov=./", "--cov-report=xml", *session.posargs
+        # do not run in parallel ("-n", "auto") since this can cause failures on GitHub infra
+        "pytest", "--cov=./", "--cov-report=xml", *session.posargs
     )
 
 
