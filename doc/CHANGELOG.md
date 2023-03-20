@@ -31,6 +31,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Revise landing page of docs, and some vignettes. 
   Make other changes to clean up the docs build process 
   [#216](https://github.com/NickleDave/crowsetta/pull/216).
+- Coerce path-like attributes of `GenericSeq` dataframe schema to be strings.
+  This helps ensure these columns are always native Pandas types
+  [#237](https://github.com/NickleDave/crowsetta/pull/237).
+- Fix how the `crowsetta.Segment` class converts 
+  onset sample and offset sample to int; correctly handle 
+  multiple numpy integer subtypes
+  [#238](https://github.com/NickleDave/crowsetta/pull/238).
 
 ## 4.0.0.post2 -- 2022-06-25
 ### Changed
