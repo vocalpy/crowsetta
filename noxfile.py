@@ -1,6 +1,7 @@
 import os
 import pathlib
 import shutil
+import sys
 
 import nox
 
@@ -43,7 +44,10 @@ def dev(session: nox.Session) -> None:
     # e.g. .venv
     session.run("virtualenv", os.fsdecode(VENV_DIR), silent=True)
 
-    python = os.fsdecode(VENV_DIR.joinpath("bin/python"))
+    if sys.platform.startswith("linux") or sys.platform == "darwin":
+        python = os.fsdecode(VENV_DIR.joinpath("bin/python"))
+    elif sys.platform.startswith("win"):
+        python = os.fsdecode(VENV_DIR.joinpath("Scripts/python.exe"))
 
     # Use the venv's interpreter to install the project along with
     # all it's dev dependencies, this ensures it's installed in the right way
