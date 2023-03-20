@@ -46,8 +46,8 @@ class GenericSeqSchema(pandera.SchemaModel):
     onset_sample: Optional[Series[int]] = pandera.Field()
     offset_sample: Optional[Series[int]] = pandera.Field()
 
-    notated_path: Series[str] = pandera.Field()
-    annot_path: Series[str] = pandera.Field()
+    notated_path: Series[str] = pandera.Field(coerce=True)
+    annot_path: Series[str] = pandera.Field(coerce=True)
     sequence: Series[int] = pandera.Field()
     annotation: Series[int] = pandera.Field()
 
