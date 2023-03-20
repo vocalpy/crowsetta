@@ -23,7 +23,7 @@ that assigns it to a specific class.
 These are sequence-like formats for widely-used applications:
 
 - {ref}`Praat .TextGrid files <textgrid>`
-- {ref}`Audacity label tracks <aud-txt>`
+- {ref}`Audacity label tracks <aud-seq>`
 
 ### general
 

@@ -45,7 +45,7 @@ Such annotations typically include the times when sound events start and stop,
 and labels that assign each sound to some set of classes 
 chosen by the annotator.
 crowsetta has built-in support for many widely used {ref}`formats <formats-index>` 
-such as {ref}`Audacity label tracks <aud-txt>`, 
+such as {ref}`Audacity label tracks <aud-seq>`, 
 {ref}`Praat .TextGrid files <textgrid>`, 
 and {ref}`Raven .txt files <raven>`.
 The images below show examples of the two families of annotation formats 
@@ -137,7 +137,7 @@ With crowsetta, you can:
 * work with your annotations in Python,
   taking advantage of built-in support 
   for many widely used {ref}`formats <formats-index>`
-  such as {ref}`Audacity label tracks <aud-txt>`, 
+  such as {ref}`Audacity label tracks <aud-seq>`, 
   {ref}`Praat .TextGrid files <textgrid>`,
   and {ref}`Raven .txt files <raven>`.
 * work with any format by remembering just one class:  
@@ -156,7 +156,7 @@ With crowsetta, you can:
 <h3>Built-in support for many widely-used formats</h3>
 
 crowsetta has built-in support for many widely used {ref}`formats <formats-index>` 
-such as {ref}`Audacity label tracks <aud-txt>`, 
+such as {ref}`Audacity label tracks <aud-seq>`, 
 {ref}`Praat .TextGrid files <textgrid>`, 
 and {ref}`Raven .txt files <raven>`.
 

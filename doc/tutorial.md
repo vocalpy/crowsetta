@@ -42,7 +42,7 @@ vocalizations, we need some audio files containing vocalizations that
 are annotated.
 
 We download some examples of annotation files in the 
-{ref}`Audacity LabelTrack format <aud-txt>`, 
+{ref}`Audacity LabelTrack format <aud-seq>`, 
 from the dataset 
 ["Labeled songs of domestic canary M1-2016-spring (Serinus canaria)"](https://zenodo.org/record/6521932)
 by Giraudon et al., 2021.
@@ -83,7 +83,7 @@ means, but you do have to know that before you can do anything with a
 and assign it to some variable, like this:
 
 ```{code-cell} ipython3
-scribe = crowsetta.Transcriber(format='aud-txt')
+scribe = crowsetta.Transcriber(format='aud-seq')
 print("scribe is an instance of a", type(scribe))
 ```
 
@@ -128,7 +128,7 @@ or bounding box-lie,
 the `Annotation` will either have a `seq` attribute, 
 short for "Sequence", or a `bbox` attribute, 
 short for "Bounding box".
-Since `'aud-txt'` is a sequence-like format, 
+Since `'aud-seq'` is a sequence-like format, 
 the `Annotation`s have a `seq` attribute:
 
 ```{code-cell} ipython3
@@ -175,12 +175,12 @@ what we really want is some data types
 that make it easier to work with our annotations, 
 and that help us write clean, readable code.
 
-The {ref}`Audacity .txt <aud-txt>` format 
+The {ref}`Audacity .txt <aud-seq>` format 
 we are using in this tutorial above is one of what 
 crowsetta calls a "sequence-like" format, 
 as stated above.
 What this means is that we can convert our 
-each one of our `'aud-txt'` annotations to 
+each one of our `'aud-seq'` annotations to 
 a `Sequence`. 
 Each `Sequence` consists of some number of `Segment`s, i.e., a
 part of the sequence defined by an `onset` and `offset` that has a

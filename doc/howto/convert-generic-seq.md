@@ -91,7 +91,7 @@ we use a loop to load each one and convert it to a
 We use the same dataset we used in the {ref}`tutorial` for this example, 
 ["Labeled songs of domestic canary M1-2016-spring (Serinus canaria)"](https://zenodo.org/record/6521932)
 by Giraudon et al., 2021, 
-annotated with {ref}`Audacity Labeltrack <aud-txt>` files.
+annotated with {ref}`Audacity Labeltrack <aud-seq>` files.
 
 ```{code-cell} ipython3
 cd ..
