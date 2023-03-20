@@ -5,13 +5,13 @@ import numpy as np
 from attr.validators import instance_of
 
 
-def int64_to_int(val):
-    """Converter that converts ``numpy.int64`` to ``int``,
-    returns ``int`` as is, and errors for other values.
+def convert_int(val):
+    """Converter that converts ``numpy.integer`` to ``int``,
+    returns native Python ``int`` as is, and
+    raises an error for any other type.
     """
-    if hasattr(val, "dtype"):
-        if val.dtype == np.int64:
-            return int(val)
+    if hasattr(val, "dtype") and isinstance(val, np.integer):
+        return int(val)
     elif isinstance(val, int):
         return val
     else:
@@ -81,12 +81,12 @@ class Segment(object):
     offset_s = attr.ib(validator=attr.validators.optional(instance_of(float)), default=None)
     onset_sample = attr.ib(
         validator=attr.validators.optional(instance_of(int)),
-        converter=attr.converters.optional(int64_to_int),
+        converter=attr.converters.optional(convert_int),
         default=None,
     )
     offset_sample = attr.ib(
         validator=attr.validators.optional(instance_of(int)),
-        converter=attr.converters.optional(int64_to_int),
+        converter=attr.converters.optional(convert_int),
         default=None,
     )
     asdict = attr.asdict
