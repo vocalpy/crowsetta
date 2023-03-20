@@ -53,7 +53,7 @@ def test_from_keyword_bad_labels_type_raises():
         Sequence.from_keyword(labels=labels, onset_samples=onset_samples, offset_samples=offset_samples)
 
 
-def test_from_keyword__onset_offset_in_seconds():
+def test_from_keyword_onset_offset_in_seconds():
     labels = "abcde"
     onsets_s = np.asarray([0.0, 0.2, 0.4, 0.6, 0.8])
     offsets_s = np.asarray([0.1, 0.3, 0.5, 0.7, 0.9])
@@ -62,7 +62,7 @@ def test_from_keyword__onset_offset_in_seconds():
     assert type(seq.segments) == tuple
 
 
-def test_from_keyword_onset_offset_in_Hertz():
+def test_from_keyword_onset_offset_in_samples():
     labels = "abcde"
     onset_samples = np.asarray([0, 2, 4, 6, 8])
     offset_samples = np.asarray([1, 3, 5, 7, 9])
@@ -82,7 +82,7 @@ def test_from_dict_onset_offset_in_seconds():
     assert type(seq.segments) == tuple
 
 
-def test_from_dict_onset_offset_in_Hertz():
+def test_from_dict_onset_offset_in_samples():
     seq_dict = {
         "labels": "abcde",
         "onset_samples": np.asarray([0, 2, 4, 6, 8]),
@@ -108,17 +108,17 @@ def test_missing_onset_seconds_raises():
         Sequence.from_keyword(labels="abcde", offsets_s=np.asarray([0.0, 0.2, 0.4, 0.6, 0.8]))
 
 
-def test_missing_offset_Hertz_raises():
+def test_missing_offset_samples_raises():
     with pytest.raises(ValueError):
         Sequence.from_keyword(labels="abcde", onset_samples=np.asarray([0, 2, 4, 6, 8]))
 
 
-def test_missing_onset_Hertz_raises():
+def test_missing_onset_samples_raises():
     with pytest.raises(ValueError):
         Sequence.from_keyword(labels="abcde", offset_samples=np.asarray([0, 2, 4, 6, 8]))
 
 
-def test_as_dict_onset_offset_in_Hertz():
+def test_as_dict_onset_offset_in_samples():
     labels = "abcde"
     onset_samples = np.asarray([0, 2, 4, 6, 8])
     offset_samples = np.asarray([1, 3, 5, 7, 9])
