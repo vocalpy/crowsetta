@@ -83,8 +83,10 @@ Here's the steps we'll follow:
 
 For this vignette, we use annotations from the 
 [Bengalese finch song dataset](https://osf.io/r6paq/), 
-by Tachibana and Morita 2021, adapted under 
+by Tachibana and Morita 2021 [^1], adapted under 
 [CC BY 4.0 License](https://creativecommons.org/licenses/by/4.0/).
+
+[^1]: Tachibana, R. O., & Morita, T. (2021). Bengalese finch song dataset. https://doi.org/10.17605/OSF.IO/R6PAQ
 
 +++
 
@@ -97,14 +99,14 @@ and test it with some toy data that you generate.
 We also do this first to help understand what format we're going to need to get our data into below.
 
 Our goal here is to fit a first-order Markov model of the transition probabilities in the song of Bengalese finches. 
-This model has been used in several previous studies[^1][^2], 
-although it was later shown[^3] that such a model does not completely describe the statistics of the song. 
+This model has been used in several previous studies[^2][^3], 
+although it was later shown[^4] that such a model does not completely describe the statistics of the song. 
 In spite of that, a first-order Markov model is very convenient to fit, 
 and can give us a useful first-order approximation (literally!) of singing behavior.
 
-[^1]: Woolley SM, Rubel EW (1997) Bengalese finches lonchura striata domestica depend upon auditory feedback for the maintenance of adult song. J Neurosci 17: 6380–90.
-[^2]: Honda E, Okanoya K (1999) Acoustical and syntactical comparisons between songs of the white-backed munia (lonchura striata) and its domesticated strain, the bengalese finch (lonchura striata var. domestica). Zool Sci 16: 319–326.
-[^3]: Jin DZ, Kozhevnikov AA (2011) A Compact Statistical Model of the Song Syntax in Bengalese Finch. PLOS Computational Biology 7(3): e1001108. https://doi.org/10.1371/journal.pcbi.1001108
+[^2]: Woolley SM, Rubel EW (1997) Bengalese finches lonchura striata domestica depend upon auditory feedback for the maintenance of adult song. J Neurosci 17: 6380–90.
+[^3]: Honda E, Okanoya K (1999) Acoustical and syntactical comparisons between songs of the white-backed munia (lonchura striata) and its domesticated strain, the bengalese finch (lonchura striata var. domestica). Zool Sci 16: 319–326.
+[^4]: Jin DZ, Kozhevnikov AA (2011) A Compact Statistical Model of the Song Syntax in Bengalese Finch. PLOS Computational Biology 7(3): e1001108. https://doi.org/10.1371/journal.pcbi.1001108
 
 To build such a model for Bengalese finch song, 
 we consider the song syllables to be states. 
@@ -140,7 +142,7 @@ when it computes the transition matrix.
 
 ```{note}
 This code is adapted from
-https://github.com/yardencsGitHub/tweetynet/blob/master/article/src/article/bfbehav/sequence.py
+<https://github.com/yardencsGitHub/tweetynet/blob/master/article/src/article/bfbehav/sequence.py>
 under [BSD license](https://github.com/yardencsGitHub/tweetynet/blob/master/LICENSE).
 
 As used for the paper
@@ -414,6 +416,8 @@ project_id = project_url.split('/')[-2]  # -2 because -1 is an empty string from
 We make an instance of the `osfclient` class `OSF` that represents the API, 
 and then use that instance's `project` method to make a `Project` instance 
 that represents the project we want to access programmatically.
+(We suppress the output of this cell, 
+because the progress bar for the downloads creates many lines of text.)
 
 ```{code-cell} ipython3
 osf = osfclient.OSF()
@@ -436,6 +440,7 @@ project_files = [file for file in project_files if file.endswith('TextGrid')]
 The last step before we can clean our data is to fetch the files from the storage.
 
 ```{code-cell} ipython3
+:tags: [hide-cell]
 fetch_files(project, project_files, output_dir='./data')
 ```
 
