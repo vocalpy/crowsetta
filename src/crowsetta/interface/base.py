@@ -25,8 +25,8 @@ class BaseFormat(abc.ABC):
     @abc.abstractmethod
     def to_annot(self) -> "Union[crowsetta.Annotation,List[crowsetta.Annotation]]":  # noqa: F821
         """Converts the instance representing annotations
-        loaded from a file into a `crowsetta.Annotation`
-        or a list of `crowsetta.Annotation`s,
-        that can be used to convert to other formats
+        loaded from a file into a :class:`crowsetta.Annotation`
+        or a :class:`list` of :class:`~crowsetta.Annotation` instances,
+        that can be used to convert to other formats.
         """
         ...

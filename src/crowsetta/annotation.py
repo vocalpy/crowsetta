@@ -18,27 +18,28 @@ class Annotation:
     Attributes
     ----------
     annot_path : str, pathlib.Path
-        path to file from which annotations were loaded
+        Path to file from which annotations were loaded.
     notated_path : str, pathlib.Path
-        path to file that ``annot_path`` annotates.
+        Path to file that ``annot_path`` annotates.
         E.g., an audio file, or an array file
         that contains a spectrogram generated from audio.
         Optional, default is None.
     seq : crowsetta.Sequence
-        a sequence of annotated segments,
+        A sequence of annotated segments,
         each having an onset time, offset time,
-        and label.
+        and label. A :class:`crowsetta.Sequence` instance.
     bboxes : list
-        of ``crowsetta.BBox``,
-        annotated bounding boxes,
+        List of annotated bounding boxes,
         each having an onset time, offset time,
         lowest frequency, highest frequency,
         and label.
+        Each item in the list will be a
+        :class:`crowsetta.BBox` instance.
 
     Notes
     -----
-    A ``crowsetta.Annotation`` can have a ``seq``
-    or ``bboxes``, but not both.
+    A :class:`crowsetta.Annotation` can have either a ``seq``
+    attribute or a ``bboxes`` attribute, but not both.
 
     Examples
     --------

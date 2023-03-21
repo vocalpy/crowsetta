@@ -1,5 +1,5 @@
 """Module for Audacity label tracks
-in extended format, exported to .txt files
+in extended format, exported to txt files
 https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
 """
 from __future__ import annotations
@@ -18,10 +18,10 @@ from crowsetta.typing import PathLike
 
 def txt_to_records(aud_txt_path: PathLike) -> list[dict]:
     """Load a txt file in Audacity extended label track format
-    into records for a `pandas.DataFrame``.
+    into records for a :type:`pandas.DataFrame`.
 
-    Returns a ``list`` of ``dict`` that can be made into a
-    ``DataFrame`` by calling ``pandas.DataFrame.from_records``.
+    Returns a :class:`list` of :class:`dict` that can be made into a
+    :class:`~pandas.DataFrame` by calling :meth:`pandas.DataFrame.from_records`.
 
     Parameters
     ----------
@@ -30,13 +30,13 @@ def txt_to_records(aud_txt_path: PathLike) -> list[dict]:
     Returns
     -------
     records : list
-        Of ``dict``, each ``dict`` a row
-        in the ``DataFrame``.
+        Of :class:`dict`, each :class:`dict` will become
+        a row in the :class:`~pandas.DataFrame`.
 
     Notes
     -----
     We work with Audacity txt files this way, instead of
-    loading with ``pandas.read_csv`` then munging, so that we can
+    loading with :func:`pandas.read_csv` then munging, so that we can
     be sure that we can round-trip data without corrupting it.
     """
     with pathlib.Path(aud_txt_path).open("r") as fp:
@@ -58,29 +58,30 @@ def txt_to_records(aud_txt_path: PathLike) -> list[dict]:
 
 
 def df_to_lines(df: pd.DataFrame) -> list[str]:
-    """Convert a pandas DataFrame to a list of strings
-    that can be saved as a txt file in Audacity extended
+    """Convert a :type:`pandas.DataFrame` to a
+    :class:`list` of :class:`str` that can be saved
+    as a txt file in Audacity extended
     label track format.
 
     This function is (roughly) the inverse of
-    ``crowsetta.formats.bbox.audbbox.txt_to_records``.
+    :func:`crowsetta.formats.bbox.audbbox.txt_to_records`.
 
     Parameters
     ----------
     df : pandas.DataFrame
-        With contents of a .txt file in Audacity extended label track format,
-        after being loaded and parsed by ``crowsetta.formats.bbox.audbbox.audbbox_txt_to_df``
+        With contents of a txt file in Audacity extended label track format,
+        after being loaded and parsed by :func:`crowsetta.formats.bbox.audbbox.audbbox_txt_to_df`
 
     Returns
     -------
     lines : list
         List of strings that can be saved to a text file
-        by calling ``writelines``.
+        by calling :func:`writelines`.
 
     Notes
     -----
     We work with Audacity txt files this way, instead of
-    munging and then calling ``pandas.DataFrame.to_csv``,
+    munging and then calling :meth:`pandas.DataFrame.to_csv`,
     so that we can be sure that we can round-trip data
     without corrupting it.
     """
@@ -96,9 +97,10 @@ def df_to_lines(df: pd.DataFrame) -> list[str]:
 
 
 class AudBBoxSchema(pandera.SchemaModel):
-    """A ``pandera.SchemaModel`` that validates ``pandas`` dataframes
+    """A :class:`pandera.SchemaModel` that
+    validates :mod:`pandas` dataframes
     loaded from Audacity label tracks
-    in extended format, exported to .txt files
+    in extended format, exported to txt files
     https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
     """
 
@@ -117,7 +119,7 @@ class AudBBoxSchema(pandera.SchemaModel):
 @attr.define
 class AudBBox:
     """Class that represents Audacity label tracks
-    in extended format, exported to .txt files
+    in extended format, exported to txt files
     https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
 
     Attributes
@@ -129,9 +131,9 @@ class AudBBox:
     df : pandas.DataFrame
         with annotations loaded into it
     annot_path : str, pathlib.Path
-        Path to Audacity .txt file from which annotations were loaded.
+        Path to Audacity txt file from which annotations were loaded.
     audio_path : str. pathlib.Path
-        Path to audio file that the Audacity .txt file annotates.
+        Path to audio file that the Audacity txt file annotates.
     """
 
     COLUMNS_MAP: ClassVar[dict] = {
@@ -151,15 +153,15 @@ class AudBBox:
 
     @classmethod
     def from_file(cls, annot_path: PathLike, audio_path: Optional[PathLike] = None) -> "Self":  # noqa: F821
-        """Load annotations from a Audacity annotation file with bbox,
+        """Load annotations from an Audacity annotation file with bounding boxes,
         created by exporting a Selection Table.
 
         Parameters
         ----------
         annot_path : str, pathlib.Path
-            Path to a .txt file exported from Audacity bbox.
+            Path to a txt file exported from Audacity bbox.
         audio_path : str, pathlib.Path
-            Path to audio file that the Audacity bbox .txt file annotates.
+            Path to audio file that the Audacity bbox txt file annotates.
             Optional, defaults to None.
 
         Examples
@@ -172,7 +174,7 @@ class AudBBox:
         records = crowsetta.formats.bbox.audbbox.txt_to_records(annot_path)
         df = pd.DataFrame.from_records(records)
         if len(df) < 1:
-            raise ValueError(f"Cannot load annotations, " f"there are no rows in Audacity .txt file:\n{df}")
+            raise ValueError(f"Cannot load annotations, " f"there are no rows in Audacity txt file:\n{df}")
         df = crowsetta.formats.bbox.audbbox.AudBBoxSchema.validate(df)
 
         return cls(
@@ -182,12 +184,13 @@ class AudBBox:
         )
 
     def to_bbox(self) -> List[crowsetta.BBox]:
-        """Convert this Audacity extended label track annotation to a ``list`` of ``crowsetta.Bbox``.
+        """Convert this Audacity extended label track annotation
+        to a :class:`list` of :class:`crowsetta.Bbox`.
 
         Returns
         -------
         bboxes : list
-            of ``crowsetta.BBox``
+            A :class:`list` of :class:`crowsetta.BBox` instances.
 
         Examples
         --------
@@ -209,7 +212,8 @@ class AudBBox:
         return bboxes
 
     def to_annot(self) -> crowsetta.Annotation:
-        """Convert this Audacity bbox annotation to a ``crowsetta.Annotation``.
+        """Convert this Audacity bbox annotation
+        to a :class:`crowsetta.Annotation`.
 
         Returns
         -------
@@ -225,7 +229,7 @@ class AudBBox:
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.audio_path, bboxes=bboxes)
 
     def to_file(self, annot_path: PathLike) -> None:
-        """Make a .txt file from this annotation
+        """Make a txt file from this annotation
         in extended label track format that can be read by Audacity.
 
         Parameters

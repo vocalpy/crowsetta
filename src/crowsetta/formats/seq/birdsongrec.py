@@ -1,4 +1,4 @@
-"""module with functions that handle the following dataset:
+"""Module with functions that handle the following dataset:
 Koumura, T. (2016). BirdsongRecognition (Version 1). figshare.
 https://doi.org/10.6084/m9.figshare.3470165.v1
 https://figshare.com/articles/BirdsongRecognition/3470165
@@ -35,7 +35,7 @@ class BirdsongRec:
     ext: str
         Extension of files in annotation format: ``'.xml'``.
     sequences: list
-        List of ``birdsongrec.Sequence`` instances.
+        List of :class:`birdsongrec.Sequence` instances.
     annot_path: pathlib.Path
         Path to file from which annotations were loaded.
         Typically with filename 'Annotation.xml'.
@@ -70,14 +70,14 @@ class BirdsongRec:
 
     References
     ----------
-    [1] Koumura, T. (2016). BirdsongRecognition (Version 1). figshare.
-    https://doi.org/10.6084/m9.figshare.3470165.v1
-    https://figshare.com/articles/BirdsongRecognition/3470165
+    .. [1] Koumura, T. (2016). BirdsongRecognition (Version 1). figshare.
+       https://doi.org/10.6084/m9.figshare.3470165.v1
+       https://figshare.com/articles/BirdsongRecognition/3470165
 
-    [2] Koumura T., Okanoya K. (2016) Automatic Recognition of Element Classes and
-    Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
-    https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0159188
-    doi:10.1371/journal.pone.0159188
+    .. [2] Koumura T., Okanoya K. (2016) Automatic Recognition of Element Classes and
+       Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
+       https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0159188
+       doi:10.1371/journal.pone.0159188
     """
 
     name: ClassVar[str] = "birdsong-recognition-dataset"
@@ -96,11 +96,11 @@ class BirdsongRec:
         Parameters
         ----------
         annot_path : str, pathlib.Path
-            Path to .xml file from BirdsongRecognition dataset
+            Path to xml file from BirdsongRecognition dataset
             that contains annotations.
         wav_path : str, pathlib.Path
-            Path in which .wav files listed in Annotation.xml file are found.
-            Defaults to a directory `Wave` that is located in the parent directory of
+            Path in which wav files listed in Annotation.xml file are found.
+            Defaults to a directory ``Wave`` that is located in the parent directory of
             the Annotation.xml file, which matches the structure of the dataset from [1]_.
 
             .. code-block:: console
@@ -114,13 +114,17 @@ class BirdsongRec:
                 ...
 
         concat_seqs_into_songs : bool
-            If True, concatenate sequences from xml_file, so that
+            If True, concatenate sequences from ``annot_path``, so that
             one sequence = one song / .wav file. Default is True.
 
         Examples
         --------
         >>> example = crowsetta.data.get('birdsong-recognition-dataset')
         >>> birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
+
+        .. [1] Koumura, T. (2016). BirdsongRecognition (Version 1). figshare.
+           https://doi.org/10.6084/m9.figshare.3470165.v1
+           https://figshare.com/articles/BirdsongRecognition/3470165
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -141,7 +145,7 @@ class BirdsongRec:
         self, round_times: bool = True, decimals: int = 3, samplerate: Optional[int] = None
     ) -> List[crowsetta.Sequence]:
         """Convert this set of ``'birdsong-recognition-dataset'``
-        annotations to a list of ``crowsetta.Sequence`` instances.
+        annotations to a list of :class:`crowsetta.Sequence` instances.
 
         Parameters
         ----------
@@ -160,12 +164,12 @@ class BirdsongRec:
             tries to open each .wav file and determine
             the actual sampling rate. If this does not work,
             then the ``onsets_s`` and ``offsets_s`` attributes
-            of the ``crowsetta.Sequence`` are left as None.
+            of the :class:`crowsetta.Sequence` are left as None.
 
         Returns
         -------
         seqs : list
-            List of ``crowsetta.Sequence``s.
+            A :class:`list` of :class:`crowsetta.Sequence` instances.
 
         Examples
         --------
@@ -242,7 +246,7 @@ class BirdsongRec:
         self, round_times: bool = True, decimals: int = 3, samplerate: Optional[int] = None
     ) -> List[crowsetta.Annotation]:
         """Convert this set of ``'birdsong-recognition-dataset'``
-        annotations to a list of ``crowsetta.Annotation`` instances
+        annotations to a :class:`list` of :class:`crowsetta.Annotation` instances.
 
         Parameters
         ----------
@@ -261,12 +265,12 @@ class BirdsongRec:
             tries to open each .wav file and determine
             the actual sampling rate. If this does not work,
             then the ``onsets_s`` and ``offsets_s`` attributes
-            of the ``crowsetta.Sequence`` are left as None.
+            of the :class:`crowsetta.Sequence` are left as None.
 
         Returns
         -------
         annots : list
-            Of ``crowsetta.Annotation``.
+            A list of :class:`crowsetta.Annotation` instances.
 
         Examples
         --------

@@ -1,8 +1,8 @@
-"""module with functions meant to handle
+"""Module with functions meant to handle
 any simple sequence-like annotation format.
 
-Can be a .csv or .txt file,
-should have 3 columns that represent
+The annotations can be a csv or txt file;
+the format should have 3 columns that represent
 the onset and offset times in seconds
 and the labels of the segments
 in the annotated sequences.
@@ -31,10 +31,11 @@ from crowsetta.typing import PathLike
 
 
 class SimpleSeqSchema(pandera.SchemaModel):
-    """A ``pandera.SchemaModel`` that validates ``pandas`` dataframes
-    loaded from a .csv or .txt file in a 'simple-seq' format.
+    """A :class:`pandera.SchemaModel`
+    that validates :type:`pandas.DataFrame`s
+    loaded from a csv or txt file in a 'simple-seq' format.
 
-    The ``SimpleSeq.from_file`` loads the ``pandas.DataFrame``
+    The :meth:`SimpleSeq.from_file` loads the :type:`pandas.DataFrame`
     and makes any changes needed to get it to this format
     before validation, e.g., changing column names.
     """
@@ -53,10 +54,10 @@ class SimpleSeqSchema(pandera.SchemaModel):
 class SimpleSeq:
     """Class meant to represent any simple sequence-like annotation format.
 
-    Can be a .csv or .txt file;
-    should have 3 columns that represent
-    the onset time, offset time,
-    and labels of the segments
+    The annotations can be a csv or txt file;
+    the format should have 3 columns that represent
+    the onset and offset times in seconds
+    and the labels of the segments
     in the annotated sequences.
 
     The default is to assume
@@ -113,10 +114,10 @@ class SimpleSeq:
         """Load annotations from a file
         in the 'simple-seq' format.
 
-        Can be a .csv or .txt file;
-        should have 3 columns that represent
-        the onset time, offset time,
-        and labels of the segments
+        The annotations can be a csv or txt file;
+        the format should have 3 columns that represent
+        the onset and offset times in seconds
+        and the labels of the segments
         in the annotated sequences.
 
         The default is to assume
@@ -135,7 +136,7 @@ class SimpleSeq:
             Path to an annotation file,
             with one of the extensions {'.csv', '.txt'}.
         notated_path : str, pathlib.Path
-            path to file that ``annot_path`` annotates.
+            Path to file that ``annot_path`` annotates.
             E.g., an audio file, or an array file
             that contains a spectrogram generated from audio.
             Optional, default is None.
@@ -147,10 +148,10 @@ class SimpleSeq:
             Optional, default is None--assumes that
             columns have the standardized names.
         read_csv_kwargs : dict
-            keyword arguments passed to
-            ``pandas.read_csv``. Default is None,
+            Keyword arguments passed to
+            :func:`pandas.read_csv`. Default is None,
             in which case all defaults for
-            ``pandas.read_csv`` will be used.
+            :func:`pandas.read_csv` will be used.
 
         Examples
         --------
@@ -183,7 +184,7 @@ class SimpleSeq:
         )
 
     def to_seq(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Sequence:
-        """Convert this annotation to a ``crowsetta.Sequence``.
+        """Convert this annotation to a :class:`crowsetta.Sequence`.
 
         Parameters
         ----------
@@ -228,7 +229,7 @@ class SimpleSeq:
         return seq
 
     def to_annot(self, round_times: bool = True, decimals: int = 3) -> crowsetta.Annotation:
-        """Convert this annotation to a ``crowsetta.Annotation``.
+        """Convert this annotation to a :class:`crowsetta.Annotation`.
 
         Parameters
         ----------
@@ -266,17 +267,17 @@ class SimpleSeq:
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.notated_path, seq=seq)
 
     def to_file(self, annot_path: PathLike, to_csv_kwargs: Optional[Mapping] = None) -> None:
-        """Save this 'simple-seq' annotation to a .csv file.
+        """Save this 'simple-seq' annotation to a csv file.
 
         Parameters
         ----------
         annot_path : str, pathlib.Path
-            path with filename of .csv file that should be saved
+            Path with filename of csv file that should be saved
         to_csv_kwargs : dict-like
             keyword arguments passed to
-            ``pandas.DataFrame.to_csv``.
+            :meth:`pandas.DataFrame.to_csv`.
             Default is None, in which case
-            defaults for ``pandas.to_csv``
+            defaults for :func:`pandas.to_csv`
             will be used, except ``index``
             is set to False.
         """

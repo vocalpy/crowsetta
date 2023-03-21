@@ -18,25 +18,29 @@ class Sequence:
     Attributes
     ----------
     segments : tuple
-        of Segment objects.
+        A :class:`tuple` of :class:`crowsetta.Segment` instances.
     onset_samples : numpy.ndarray or None
-        of type int, onset of each annotated segment in samples/second
+        Numpy array of type int, onset of each annotated segment in sample number.
     offset_samples : numpy.ndarray or None
-        of type int, offset of each annotated segment in samples/second
+        Numpy array of type int, offset of each annotated segment in sample number.
     onsets_s : numpy.ndarray or None
-        of type float, onset of each annotated segment in seconds
+        Numpy array of type float, onset of each annotated segment in seconds.
     offsets_s : numpy.ndarray or None
-        of type float, offset of each annotated segment in seconds
+        Numpy array of type float, offset of each annotated segment in seconds.
     labels : str, list, or numpy.ndarray
-        of type str, label for each annotated segment
+        Numpy array of type char, label for each annotated segment.
 
     Methods
     -------
-    from_segments : make a Sequence from a list of segments
-    from_keyword : make a Sequence by passing keywords (all arguments except segments)
-    from_dict : like from_keyword, but pass a Python dictionary where keys are keywords
-        and values are arguments for those keywords
-    to_dict : convert to a dict. The inverse of from_dict.
+    from_segments : method
+        Make a :class:`~crowsetta.Sequence` from a :class:`list` of :class:`~crowsetta.Segment`s.
+    from_keyword : method
+        Make a :class:`~crowsetta.Sequence` by passing keywords (all arguments except segments)
+    from_dict : method
+        Like from_keyword, but pass a Python dictionary where keys are keywords
+        and values are arguments for those keywords.
+    to_dict : method
+        Convert to a :class:`dict`. The inverse of :meth:`~crowsetta.Sequence.from_dict`.
 
     Examples
     --------
@@ -50,8 +54,8 @@ class Sequence:
     >>> labels = np.array(['a', 'a', 'b'])
     >>> seq = crowsetta.Sequence.from_keyword(labels=labels, onsets_s=onsets_s, offsets_s=offsets_s)
 
-    The same sequence could also be made with ``crowsetta.Segment`` instances,
-    by calling the ``from_segments`` class method.
+    The same sequence could also be made
+    by calling the :meth:`~crowsetta.Sequence.from_segments` class method.
 
     >>> segments = []
     >>> for onset, offset, label in zip(onsets_s, offsets_s, labels):
@@ -60,22 +64,22 @@ class Sequence:
     """
 
     def __init__(self, segments, labels, onsets_s=None, offsets_s=None, onset_samples=None, offset_samples=None):
-        """Initialize a new ``Sequence`` instance.
+        """Initialize a new :class:`~crowsetta.Sequence` instance.
 
         Parameters
         ----------
-        segments : list or tuple
-            of Segment objects.
+        segments : tuple
+            A :class:`tuple` of :class:`crowsetta.Segment` instances.
         onset_samples : numpy.ndarray or None
-            of type int, onset of each annotated segment in samples/second
+            Numpy array of type int, onset of each annotated segment in sample number.
         offset_samples : numpy.ndarray or None
-            of type int, offset of each annotated segment in samples/second
+            Numpy array of type int, offset of each annotated segment in sample number.
         onsets_s : numpy.ndarray or None
-            of type float, onset of each annotated segment in seconds
+            Numpy array of type float, onset of each annotated segment in seconds.
         offsets_s : numpy.ndarray or None
-            of type float, offset of each annotated segment in seconds
+            Numpy array of type float, offset of each annotated segment in seconds.
         labels : str, list, or numpy.ndarray
-            of type str, label for each annotated segment
+            Numpy array of type char, label for each annotated segment.
         """
         if segments is not None:
             if type(segments) == Segment:
@@ -189,7 +193,7 @@ class Sequence:
 
     @staticmethod
     def _validate_segments_type(segments):
-        """validate that all items in list of segments are Segment"""
+        """Validate that all items in list of segments are Segment"""
         if not all([type(seg) == Segment for seg in segments]):
             raise TypeError(
                 "A Sequence must be made from a list of Segments but not all " "items in the list passed were Segments."
@@ -197,7 +201,7 @@ class Sequence:
 
     @staticmethod
     def _validate_onsets_offsets_labels(onsets_s, offsets_s, onset_samples, offset_samples, labels):
-        """validate onsets, offsets, and labels passed to __init__ or class methods
+        """Validate onsets, offsets, and labels passed to __init__ or class methods
 
         Parameters
         ----------
@@ -313,17 +317,19 @@ class Sequence:
 
     @classmethod
     def from_segments(cls, segments):
-        """construct a Sequence from a list of Segment objects
+        """Construct a :class:`crowsetta.Sequence`
+        from a :class:`list` of :class:`crowsetta.Segment` objects.
 
         Parameters
         ----------
         segments : list
-            Of crowsetta.Segment instances.
+            A :class:`list` of :class:`crowsetta.Segment` instances.
 
         Returns
         -------
-        seq : Sequence
-            instance of Sequence generated using list of segments
+        seq : crowsetta.Sequence
+            A :class:`~crowsetta.Sequence` instance
+            generated using the :class:`list` of :class:`~crowsetta.Segment`s.
         """
         cls._validate_segments_type(segments)
 
@@ -356,7 +362,7 @@ class Sequence:
 
     @classmethod
     def from_keyword(cls, labels, onset_samples=None, offset_samples=None, onsets_s=None, offsets_s=None):
-        """construct a Sequence from keyword arguments
+        """Construct a :class:`crowsetta.Sequence` from keyword arguments
 
         Parameters
         ----------
@@ -371,7 +377,8 @@ class Sequence:
         labels : str, list, or numpy.ndarray
             of type str, label for each annotated segment
 
-        Must specify both onsets and offsets, either in units of Hz or seconds (or both).
+        Must specify both onsets and offsets,
+        either in units of Hz or seconds (or both).
         """
         labels = cls._convert_labels(labels)
 
@@ -396,8 +403,9 @@ class Sequence:
 
     @classmethod
     def from_dict(cls, seq_dict):
-        """Returns a Sequence, given a Python dictionary
-        where keys of dictionary are arguments to Sequence.from_keyword()
+        """Construct a :class:`crowsetta.Sequence`
+        from a :class:`dict` where keys
+        are arguments to :meth:`~crowsetta.Sequence.from_keyword`.
 
         Parameters
         ----------
@@ -414,8 +422,8 @@ class Sequence:
             labels : str, list, or numpy.ndarray
                 of type str, label for each annotated segment
 
-        seq_dict must specify both onsets and offsets, either in units of Hz or seconds
-        (or both).
+        ``seq_dict`` must specify both onsets and offsets,
+        either in units of samples or seconds (or both).
 
         Examples
         --------
@@ -432,7 +440,8 @@ class Sequence:
         return cls.from_keyword(**seq_dict)
 
     def as_dict(self) -> dict:
-        """Returns sequence as a dictionary
+        """Convert this :class:`crowsetta.Sequence`
+        to a :class:`dict`.
 
         Returns
         -------

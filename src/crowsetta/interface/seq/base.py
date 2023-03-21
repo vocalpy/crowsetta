@@ -12,10 +12,10 @@ class SeqLike(BaseFormat, abc.ABC):
     with each segment having an onset time,
     offset time, and a label.
 
-    In terms of code in ``crowsetta``,
+    In terms of code in :mod:`crowsetta`,
     a sequence-like format is any format
     that can be represented as a
-    ``crowsetta.Sequence`` made up of ``crowsetta.Segment``s.
+    :class:`crowsetta.Sequence` made up of :class:`crowsetta.Segment` instances.
     The code block below shows some of the features of these data types.
 
     .. code-block:: python

@@ -1,17 +1,18 @@
 """
-generic format,
+Generic sequence format,
 meant to be an abstraction of
 any sequence-like format.
 
-Consists of ``Annotation``s,
-each with a ``Sequence`` made up
-of ``Segment``s.
+Consists of :class:`crowestta.Annotation`
+instances, each with a :class:`crowsetta.Sequence`
+made up of :class:`crowsetta.Segment`s.
 
 Functions in this module
-load the format from a .csv,
-or write a .csv in the generic format.
-Other formats that convert to ``Annotation``s
-with ``Sequence``s can be converted
+load the format from a csv file,
+or write a csv file in the generic format.
+Other formats that convert to
+:class:`~crowsetta.Annotation`s
+with :class:`~crowsetta.Sequence`s can be converted
 to this format.
 """
 import os
@@ -35,8 +36,9 @@ Both units can also be specified. Conversion between units is not validated.
 
 
 class GenericSeqSchema(pandera.SchemaModel):
-    """``pandera.SchemaModel`` that validates ``pandas`` dataframes
-    loaded from a .csv file  in the ``'generic-seq'`` annotation
+    """A :class: `pandera.SchemaModel` that validates
+    :type:`pandas.DataFrame`s
+    loaded from a csv file  in the ``'generic-seq'`` annotation
     format.
     """
 
@@ -89,20 +91,20 @@ class GenericSeqSchema(pandera.SchemaModel):
 def annot2df(
     annot: Union[crowsetta.Annotation, List[crowsetta.Annotation]], abspath: bool = False, basename: bool = False
 ) -> pd.DataFrame:
-    """Convert sequence-like ``crowsetta.Annotation``
-    to a ``pandas.DataFrame`` in the ``'generic-seq'`` format.
+    """Convert sequence-like :class:`crowsetta.Annotation`
+    to a :type:`pandas.DataFrame` in the ``'generic-seq'`` format.
 
     Parameters
     ----------
     annot : crowsetta.Annotation, or list of Annotations
     csv_path : str, pathlib.Path
-        Path including filename of .csv to write to,
+        Path including filename of csv file to write to,
         will be created (or overwritten if it exists already)
     abspath : bool
-        if True, converts filename for each audio file into absolute path.
+        If True, converts filename for each audio file into absolute path.
         Default is False.
     basename : bool
-        if True, discard any information about path and just use file name.
+        If True, discard any information about path and just use file name.
         Default is False.
 
     Notes
@@ -111,7 +113,7 @@ def annot2df(
     These options are useful when working with multiple copies of files, and for
     reproducibility (so you know which copy of a file you were working with).
     Default for both is False, in which case the filename is saved just as it is passed to
-    this function in a Sequence object.
+    this function in a :class:`crowsetta.Sequence` object.
     """
     if not (isinstance(annot, crowsetta.Annotation) or isinstance(annot, list)):
         raise TypeError("annot must be Annotation or list of Annotations, " f"not type {type(annot)})")
@@ -177,20 +179,20 @@ def annot2csv(
     abspath: bool = False,
     basename: bool = False,
 ) -> None:
-    """write sequence-like ``crowsetta.Annotation``
-    to a .csv file in the ``'generic-seq'`` format
+    """Write sequence-like :class:`crowsetta.Annotation`
+    to a csv file in the ``'generic-seq'`` format
 
     Parameters
     ----------
     annot : crowsetta.Annotation, or list of Annotations
     csv_path : str, pathlib.Path
-        path including filename of .csv to write to,
+        Path including filename of csv file to write to,
         will be created (or overwritten if it exists already)
     abspath : bool
-        if True, converts filename for each audio file into absolute path.
+        If True, converts filename for each audio file into absolute path.
         Default is False.
     basename : bool
-        if True, discard any information about path and just use file name.
+        If True, discard any information about path and just use file name.
         Default is False.
 
     Notes
@@ -206,19 +208,20 @@ def annot2csv(
 
 
 def csv2annot(csv_path: PathLike) -> List[crowsetta.Annotation]:
-    """loads a comma-separated values (csv) file containing annotations
-    for song files, returns contents as a list of Annotation objects
+    """Loads a comma-separated values (csv) file containing annotations
+    for song files, returns contents as a
+    :class:`list` of :class:`crowsetta.Annotation` instances.
 
     Parameters
     ----------
     csv_path : str, pathlib.Path
-        Path to .csv file containing annotations
+        Path to csv file containing annotations
         saved in the ``'generic-seq'`` format.
 
     Returns
     -------
     annot_list : list
-        list of Annotations
+        A :class:`list` of :class:`crowsetta.Annotation` instances.
     """
     df = pd.read_csv(csv_path)
     GenericSeqSchema.validate(df)
@@ -278,27 +281,26 @@ def csv2annot(csv_path: PathLike) -> List[crowsetta.Annotation]:
 @crowsetta.interface.SeqLike.register
 @attr.define
 class GenericSeq:
-    """
-    class that represents annotations from a generic format,
+    """Class that represents annotations from a generic format,
     meant to be an abstraction of
     any sequence-like format.
 
-    Consists of ``Annotation``s,
-    each with a ``Sequence`` made up
-    of ``Segment``s.
+    Consists of :class:`crowsetta.Annotation`s,
+    each with a :class:`crowsetta.Sequence` made up
+    of :class:`crowsetta.Segment`s.
 
-    Other formats that convert to ``Annotation``s
-    with ``Sequence``s can be converted
+    Other formats that convert to :class:`~crowsetta.Annotation`s
+    with :class:`~crowsetta.Sequence`s can be converted
     to this format.
 
     Attributes
     ----------
     name: str
-        shorthand name for annotation format: ``'generic-seq'``
+        Shorthand name for annotation format: ``'generic-seq'``
     ext: str
-        extension of files in annotation format: ``'.csv'``
+        Extension of files in annotation format: ``'.csv'``
     annots : list
-        of ``crowsetta.Annotation`` instances
+        A :class:`list` of :class:`crowsetta.Annotation` instances.
     """
 
     name: ClassVar[str] = "generic-seq"
@@ -308,12 +310,12 @@ class GenericSeq:
 
     @classmethod
     def from_file(cls, annot_path: PathLike) -> "Self":  # noqa: F821
-        """load annotations in 'generic-seq' format from a .csv file
+        """Load annotations in 'generic-seq' format from a csv file.
 
         Parameters
         ----------
         annot_path : str, pathlib.Path
-            Path to .csv file containing annotations
+            Path to csv file containing annotations
             saved in the ``'generic-seq'`` format.
 
         Examples
@@ -324,8 +326,8 @@ class GenericSeq:
         return cls(annots=annots)
 
     def to_seq(self) -> List[crowsetta.Sequence]:
-        """return a list of ``crowsetta.Sequence``,
-        one for every annotation
+        """Return a :class:`list` of :class:`crowsetta.Sequence` instances,
+        one for every annotation.
 
         Examples
         --------
@@ -336,12 +338,12 @@ class GenericSeq:
         return [annot.seq for annot in self.annots]
 
     def to_annot(self) -> List[crowsetta.Annotation]:
-        """returns these ``crowsetta.Annotation`` instances
-        as a list
+        """Returns this set of :class:`crowsetta.Annotation` instances
+        as a :class:`list`.
 
-        This is the same as accessing the list of ``Annotation``
-        instances directly. It is implemented so that this class
-        conforms with the ``SeqLike`` interface.
+        This is the same as accessing the :class:`list` of :class:`crowsetta.Annotation`
+        instances directly. The method is implemented so that this class
+        conforms with the :class:`crowsetta.interface.seq.SeqLike` interface.
 
         Examples
         --------
@@ -352,8 +354,7 @@ class GenericSeq:
         return self.annots
 
     def to_df(self, abspath: bool = False, basename: bool = False) -> pd.DataFrame:
-        """Convert these annotations to a
-        ``pandas.DataFrame``
+        """Convert these annotations to a :type:`pandas.DataFrame`.
 
         abspath : bool
             If True, converts filename for each audio file into absolute path.
@@ -365,13 +366,13 @@ class GenericSeq:
         return annot2df(self.annots, abspath, basename)
 
     def to_file(self, annot_path: PathLike, abspath: bool = False, basename: bool = False) -> None:
-        """Write these annotations to a .csv file
+        """Write these annotations to a csv file
         in ``'generic-seq'`` format.
 
         Parameters
         ----------
         annot_path : str, pathlib.Path
-            Path including filename of .csv to write to,
+            Path including filename of csv file to write to,
             will be created (or overwritten if it exists already)
         abspath : bool
             If True, converts filename for each audio file into absolute path.

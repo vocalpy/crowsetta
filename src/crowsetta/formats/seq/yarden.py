@@ -1,4 +1,4 @@
-"""module for loading annotations from .mat files
+"""Module for loading annotations from .mat files
 created by SongAnnotationGUI:
 https://github.com/yardencsGitHub/BirdSongBout/tree/master/helpers/GUI
 """
@@ -32,7 +32,7 @@ VALID_AUDIO_FORMATS = ["wav"]
 
 
 def _recursive_stem(path_str):
-    """helper function that 'recursively' removes file extensions
+    """Helper function that 'recursively' removes file extensions
     to recover name of an audio file from the name of an array file
 
     i.e. bird1_122213_1534.wav.mat -> i.e. bird1_122213_1534.wav
@@ -68,13 +68,13 @@ class SongAnnotationGUI:
     ext: str
         Extension of files in annotation format: ``'.mat'``.
     annotations : numpy.ndarray
-        ``numpy`` record array where each record is an annotation.
+        A :mod:`numpy` record array where each record is an annotation.
     audio_paths : numpy.ndarray
-        ``numpy`` array where each element is a path to an audio file.
+        A :mod:`numpy` array where each element is a path to an audio file.
         Same length as ``annotations``. Each element in ``annotations``
         is the annotation for the corresponding path in ``audio_paths``.
     annot_path : str, pathlib.Path
-        Path to .mat file from which annotations were loaded.
+        Path to mat file from which annotations were loaded.
     """
 
     name: ClassVar[str] = "yarden"
@@ -86,7 +86,7 @@ class SongAnnotationGUI:
 
     @classmethod
     def from_file(cls, annot_path: PathLike) -> "Self":  # noqa: F821
-        """load annotations from .mat files
+        """Load annotations from mat files
         created by SongAnnotationGUI:
         https://github.com/yardencsGitHub/BirdSongBout/tree/master/helpers/GUI
 
@@ -112,7 +112,11 @@ class SongAnnotationGUI:
         return cls(annotations=annotations, audio_paths=audio_paths, annot_path=annot_path)
 
     def to_seq(self, round_times: bool = True, decimals: int = 3) -> List[crowsetta.Sequence]:
-        """Convert this .not.mat annotation to a ``crowsetta.Sequence``.
+        """Convert this set of annotations to a :class:`list` of
+        :class:`crowsetta.Sequence` instances.
+
+        We assume there is one :class:`~crowsetta.Sequence`
+        per annotated song in the source annotations.
 
         Parameters
         ----------
@@ -127,7 +131,8 @@ class SongAnnotationGUI:
         Returns
         -------
         seqs : list
-            of ``crowsetta.Sequence``, one for each element in ``annotations``.
+            A :class:`list` of :class:`~crowsetta.Sequence` instances,
+            one for each element in ``annotations``.
 
         Notes
         -----
@@ -166,7 +171,7 @@ class SongAnnotationGUI:
         return seqs
 
     def to_annot(self, round_times: bool = True, decimals: int = 3) -> List[crowsetta.Annotation]:
-        """Convert this .not.mat annotation to a ``crowsetta.Annotation``.
+        """Convert this annotation to a :class:`crowsetta.Annotation`.
 
         Parameters
         ----------
@@ -181,7 +186,7 @@ class SongAnnotationGUI:
         Returns
         -------
         annots : list
-            of ``crowsetta.Annotation``
+            A :class:`list` of :class:`crowsetta.Annotation` instances.
 
         Notes
         -----

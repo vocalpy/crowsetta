@@ -12,10 +12,10 @@ class BBoxLike(BaseFormat, abc.ABC):
     for any annotation format
     that can be represented as a set of labeled bounding boxes.
 
-    In terms of code in ``crowsetta``,
+    In terms of code in :mod:`crowsetta`,
     a bounding box-like format is any format
     that can be represented as a
-    collection of ``crowsetta.BBox`` instances.
+    collection of :class:`crowsetta.BBox` instances.
     The code block below shows some of the features of this data type.
 
     .. code-block:: python
@@ -45,8 +45,8 @@ class BBoxLike(BaseFormat, abc.ABC):
 
     def to_bbox(self) -> "Union[crowsetta.BBox, Sequence[crowsetta.BBox]]":  # noqa : F821
         """Converts the annotation to
-        a ``crowsetta.BBox`` instance
-        or a python sequence of
-        ``crowsetta.BBox`` instances.
+        a :class:`crowsetta.BBox` instance
+        or a Python :class:`~typing.Sequence` of
+        :class:`crowsetta.BBox` instances.
         """
         ...

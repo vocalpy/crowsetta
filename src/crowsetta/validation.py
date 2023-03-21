@@ -5,14 +5,15 @@ https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/utils/validatio
 """
 import numbers
 from pathlib import PurePath
-from typing import Union
+from typing import Sequence, Union
 
 import numpy as np
+import numpy.typing as npt
 
 from .typing import PathLike
 
 
-def _num_samples(x):
+def _num_samples(x: npt.ArrayLike) -> int:
     """Return number of samples in array-like x."""
     if not hasattr(x, "__len__") and not hasattr(x, "shape"):
         if hasattr(x, "__array__"):
@@ -32,9 +33,10 @@ def _num_samples(x):
         return len(x)
 
 
-def check_consistent_length(arrays):
+def check_consistent_length(arrays: Sequence[npt.ArrayLike]) -> None:
     """Check that all arrays have consistent first dimensions.
     Checks whether all objects in arrays have the same shape or length.
+
     Parameters
     ----------
     arrays : list or tuple of input objects.
@@ -48,8 +50,9 @@ def check_consistent_length(arrays):
         )
 
 
-def column_or_row_or_1d(y):
-    """Ravel column or row vector or 1d numpy array, else raises an error
+def column_or_row_or_1d(y: npt.NDArray) -> npt.NDArray:
+    """Ravel column or row vector or 1d numpy array,
+    else raises an error
 
     Parameters
     ----------
@@ -67,14 +70,14 @@ def column_or_row_or_1d(y):
 
 
 def validate_ext(file: PathLike, extension: Union[str, tuple]) -> None:
-    """ "check that a file has a valid extension
+    """Check that a file has a valid extension.
 
     Parameters
     ----------
     file : str, pathlib.Path
-        path to a file; string or pathlib.Path
+        Path to a file.
     extension : str, tuple
-        valid file extension(s). tuple must be tuple of strings.
+        Valid file extension(s). Tuple must be tuple of strings.
         Function expects that extensions will be specified with a period,
         e.g. {'.phn', '.PHN'}
     """
@@ -90,10 +93,14 @@ def validate_ext(file: PathLike, extension: Union[str, tuple]) -> None:
         raise TypeError(f"Extension must be str or tuple but type was {type(extension)}")
 
     if not (isinstance(file, str) or isinstance(file, PurePath)):
-        raise TypeError(f"File must be a str or a pathlib.Path, but type of file was {type(file)}.\n" f"File: {file}")
+        raise TypeError(
+            f"File must be a str or a pathlib.Path, but type of file was {type(file)}.\n" f"File: {file}"
+        )
 
     # we need to use `endswith` instead of
     # e.g. comparing with `pathlib.Path.suffix`
     # because suffix won't work for "multi-part" extensions like '.not.mat'
     if not any([str(file).endswith(ext) for ext in extension]):
-        raise ValueError(f"Invalid extension for file: {file}.\n" f"Valid extension(s): '{extension}'")
+        raise ValueError(
+            f"Invalid extension for file: {file}.\n" f"Valid extension(s): '{extension}'"
+        )
