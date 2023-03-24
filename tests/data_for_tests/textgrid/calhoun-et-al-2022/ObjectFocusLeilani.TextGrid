@@ -1,0 +1,116 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 2.169954648526077 
+tiers? <exists> 
+size = 3 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "tones" 
+        xmin = 0 
+        xmax = 2.169954648526077 
+        points: size = 6 
+        points [1]:
+            number = 0.34006953489740466 
+            mark = "L+H*" 
+        points [2]:
+            number = 0.8684574601540942 
+            mark = "L+H*" 
+        points [3]:
+            number = 1.48 
+            mark = "H-" 
+        points [4]:
+            number = 1.53 
+            mark = "\% r" 
+        points [5]:
+            number = 1.9649617261003072 
+            mark = "L+!H*" 
+        points [6]:
+            number = 2.15 
+            mark = "L-L\% " 
+    item [2]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 2.169954648526077 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.08 
+            text = "" 
+        intervals [2]:
+            xmin = 0.08 
+            xmax = 0.23 
+            text = "na" 
+        intervals [3]:
+            xmin = 0.23 
+            xmax = 0.59 
+            text = "amo" 
+        intervals [4]:
+            xmin = 0.59 
+            xmax = 0.63 
+            text = "e" 
+        intervals [5]:
+            xmin = 0.63 
+            xmax = 1.06 
+            text = "Iona" 
+        intervals [6]:
+            xmin = 1.06 
+            xmax = 1.48 
+            text = "le" 
+        intervals [7]:
+            xmin = 1.48 
+            xmax = 1.53 
+            text = "" 
+        intervals [8]:
+            xmin = 1.53 
+            xmax = 2.15 
+            text = "suo\-^" 
+        intervals [9]:
+            xmin = 2.15 
+            xmax = 2.169954648526077 
+            text = "" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "gloss" 
+        xmin = 0 
+        xmax = 2.169954648526077 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.08 
+            text = "" 
+        intervals [2]:
+            xmin = 0.08 
+            xmax = 0.23 
+            text = "PAST" 
+        intervals [3]:
+            xmin = 0.23 
+            xmax = 0.59 
+            text = "carry" 
+        intervals [4]:
+            xmin = 0.59 
+            xmax = 0.63 
+            text = "ERG" 
+        intervals [5]:
+            xmin = 0.63 
+            xmax = 1.06 
+            text = "Iona" 
+        intervals [6]:
+            xmin = 1.06 
+            xmax = 1.48 
+            text = "DET" 
+        intervals [7]:
+            xmin = 1.48 
+            xmax = 1.53 
+            text = "" 
+        intervals [8]:
+            xmin = 1.53 
+            xmax = 2.15 
+            text = "spade" 
+        intervals [9]:
+            xmin = 2.15 
+            xmax = 2.169954648526077 
+            text = "" 

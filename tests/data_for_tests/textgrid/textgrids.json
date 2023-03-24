@@ -1,0 +1,27 @@
+[
+  {
+    "path": "parselmouth/the_north_wind_and_the_sun.bin.TextGrid",
+    "format": "full",
+    "encoding": "bin"
+  },
+  {
+    "path": "parselmouth/the_north_wind_and_the_sun.short.utf8.TextGrid",
+    "format": "short",
+    "encoding": "utf-8"
+  },
+  {
+    "path": "parselmouth/the_north_wind_and_the_sun.short.utf16.TextGrid",
+    "format": "short",
+    "encoding": "utf-16"
+  },
+  {
+    "path": "parselmouth/the_north_wind_and_the_sun.utf8.TextGrid",
+    "format": "full",
+    "encoding": "utf-8"
+  },
+  {
+    "path": "parselmouth/the_north_wind_and_the_sun.utf16.TextGrid",
+    "format": "full",
+    "encoding": "utf-16"
+  }
+]

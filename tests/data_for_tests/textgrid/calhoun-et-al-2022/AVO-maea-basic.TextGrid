@@ -1,0 +1,97 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 2.4360509767904546 
+tiers? <exists> 
+size = 3 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "Tones" 
+        xmin = 0 
+        xmax = 2.4360509767904546 
+        points: size = 5 
+        points [1]:
+            number = 0.4351780385722748 
+            mark = "L+H*" 
+        points [2]:
+            number = 0.6407379583230295 
+            mark = "H-" 
+        points [3]:
+            number = 1.1328819591093477 
+            mark = "L+H*" 
+        points [4]:
+            number = 1.244041566788134 
+            mark = "H-" 
+        points [5]:
+            number = 2.350907447504575 
+            mark = "L+!H-" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "Samoan" 
+        xmin = 0 
+        xmax = 2.4360509767904546 
+        intervals: size = 7 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.051451575248407266 
+            text = "'o" 
+        intervals [2]:
+            xmin = 0.051451575248407266 
+            xmax = 0.6407379583230295 
+            text = "Sione" 
+        intervals [3]:
+            xmin = 0.6407379583230295 
+            xmax = 0.7544662733943284 
+            text = "na" 
+        intervals [4]:
+            xmin = 0.7544662733943284 
+            xmax = 1.244041566788134 
+            text = "tosoa" 
+        intervals [5]:
+            xmin = 1.244041566788134 
+            xmax = 1.3481058803597676 
+            text = "le" 
+        intervals [6]:
+            xmin = 1.3481058803597676 
+            xmax = 1.70760078178904 
+            text = "maea" 
+        intervals [7]:
+            xmin = 1.70760078178904 
+            xmax = 2.4360509767904546 
+            text = "analeila\-^" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "Gloss" 
+        xmin = 0 
+        xmax = 2.4360509767904546 
+        intervals: size = 7 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.051451575248407266 
+            text = "PRES" 
+        intervals [2]:
+            xmin = 0.051451575248407266 
+            xmax = 0.6407379583230295 
+            text = "Sione" 
+        intervals [3]:
+            xmin = 0.6407379583230295 
+            xmax = 0.7544662733943284 
+            text = "PAST" 
+        intervals [4]:
+            xmin = 0.7544662733943284 
+            xmax = 1.244041566788134 
+            text = "pull-ES" 
+        intervals [5]:
+            xmin = 1.244041566788134 
+            xmax = 1.3481058803597676 
+            text = "DET" 
+        intervals [6]:
+            xmin = 1.3481058803597676 
+            xmax = 1.70760078178904 
+            text = "rope" 
+        intervals [7]:
+            xmin = 1.70760078178904 
+            xmax = 2.4360509767904546 
+            text = "earlier" 

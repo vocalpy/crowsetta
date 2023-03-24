@@ -1,0 +1,119 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 2.958565356019844 
+tiers? <exists> 
+size = 3 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "tones" 
+        xmin = 0 
+        xmax = 2.958565356019844 
+        points: size = 7 
+        points [1]:
+            number = 0.37059549624578725 
+            mark = "L+H*" 
+        points [2]:
+            number = 1.096153884398847 
+            mark = "H-/\% r" 
+        points [3]:
+            number = 1.4063260598947809 
+            mark = "L+H*" 
+        points [4]:
+            number = 2.1261538843988466 
+            mark = "H-" 
+        points [5]:
+            number = 2.2861538843988467 
+            mark = "\% r" 
+        points [6]:
+            number = 2.5888843279691103 
+            mark = "!H*" 
+        points [7]:
+            number = 2.8661538843988468 
+            mark = "L-L\% " 
+    item [2]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 2.958565356019844 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.08615388439884694 
+            text = "" 
+        intervals [2]:
+            xmin = 0.08615388439884694 
+            xmax = 0.18615388439884692 
+            text = "na" 
+        intervals [3]:
+            xmin = 0.18615388439884692 
+            xmax = 0.6661538843988469 
+            text = "si'i" 
+        intervals [4]:
+            xmin = 0.6661538843988469 
+            xmax = 1.096153884398847 
+            text = "e" 
+        intervals [5]:
+            xmin = 1.096153884398847 
+            xmax = 1.646153884398847 
+            text = "Leone" 
+        intervals [6]:
+            xmin = 1.646153884398847 
+            xmax = 2.1261538843988466 
+            text = "le" 
+        intervals [7]:
+            xmin = 2.1261538843988466 
+            xmax = 2.2861538843988467 
+            text = "" 
+        intervals [8]:
+            xmin = 2.2861538843988467 
+            xmax = 2.8661538843988468 
+            text = "nofoa" 
+        intervals [9]:
+            xmin = 2.8661538843988468 
+            xmax = 2.958565356019844 
+            text = "" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "gloss" 
+        xmin = 0 
+        xmax = 2.958565356019844 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.08615388439884694 
+            text = "" 
+        intervals [2]:
+            xmin = 0.08615388439884694 
+            xmax = 0.18615388439884692 
+            text = "PAST" 
+        intervals [3]:
+            xmin = 0.18615388439884692 
+            xmax = 0.6661538843988469 
+            text = "carry" 
+        intervals [4]:
+            xmin = 0.6661538843988469 
+            xmax = 1.096153884398847 
+            text = "ERG" 
+        intervals [5]:
+            xmin = 1.096153884398847 
+            xmax = 1.646153884398847 
+            text = "Leone" 
+        intervals [6]:
+            xmin = 1.646153884398847 
+            xmax = 2.1261538843988466 
+            text = "DET" 
+        intervals [7]:
+            xmin = 2.1261538843988466 
+            xmax = 2.2861538843988467 
+            text = "" 
+        intervals [8]:
+            xmin = 2.2861538843988467 
+            xmax = 2.8661538843988468 
+            text = "chair" 
+        intervals [9]:
+            xmin = 2.8661538843988468 
+            xmax = 2.958565356019844 
+            text = "" 

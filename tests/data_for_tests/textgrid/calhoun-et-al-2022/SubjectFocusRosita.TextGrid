@@ -1,0 +1,113 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 2.7965753537583624 
+tiers? <exists> 
+size = 3 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "tones" 
+        xmin = 0 
+        xmax = 2.7965753537583624 
+        points: size = 5 
+        points [1]:
+            number = 0.6820356802492782 
+            mark = "L+H*" 
+        points [2]:
+            number = 1.3120408755082833 
+            mark = "L+H*" 
+        points [3]:
+            number = 1.5048973492232154 
+            mark = "H-" 
+        points [4]:
+            number = 1.8614292922270368 
+            mark = "!H*" 
+        points [5]:
+            number = 2.7748973492232154 
+            mark = "L-L\% " 
+    item [2]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 2.7965753537583624 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.00489734922321533 
+            text = "" 
+        intervals [2]:
+            xmin = 0.00489734922321533 
+            xmax = 0.2248973492232153 
+            text = "sa" 
+        intervals [3]:
+            xmin = 0.2248973492232153 
+            xmax = 0.8948973492232155 
+            text = "fusia" 
+        intervals [4]:
+            xmin = 0.8948973492232155 
+            xmax = 0.9548973492232153 
+            text = "e" 
+        intervals [5]:
+            xmin = 0.9548973492232153 
+            xmax = 1.5048973492232154 
+            text = "Kalolo" 
+        intervals [6]:
+            xmin = 1.5048973492232154 
+            xmax = 1.6048973492232153 
+            text = "le" 
+        intervals [7]:
+            xmin = 1.6048973492232153 
+            xmax = 1.9648973492232156 
+            text = "teine" 
+        intervals [8]:
+            xmin = 1.9648973492232156 
+            xmax = 2.7748973492232154 
+            text = "ananafi" 
+        intervals [9]:
+            xmin = 2.7748973492232154 
+            xmax = 2.7965753537583624 
+            text = "" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "gloss" 
+        xmin = 0 
+        xmax = 2.7965753537583624 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.00489734922321533 
+            text = "" 
+        intervals [2]:
+            xmin = 0.00489734922321533 
+            xmax = 0.2248973492232153 
+            text = "PAST" 
+        intervals [3]:
+            xmin = 0.2248973492232153 
+            xmax = 0.8948973492232155 
+            text = "hug-ES" 
+        intervals [4]:
+            xmin = 0.8948973492232155 
+            xmax = 0.9548973492232153 
+            text = "ERG" 
+        intervals [5]:
+            xmin = 0.9548973492232153 
+            xmax = 1.5048973492232154 
+            text = "Kalolo" 
+        intervals [6]:
+            xmin = 1.5048973492232154 
+            xmax = 1.6048973492232153 
+            text = "DET" 
+        intervals [7]:
+            xmin = 1.6048973492232153 
+            xmax = 1.9648973492232156 
+            text = "girl" 
+        intervals [8]:
+            xmin = 1.9648973492232156 
+            xmax = 2.7748973492232154 
+            text = "yesterday" 
+        intervals [9]:
+            xmin = 2.7748973492232154 
+            xmax = 2.7965753537583624 
+            text = "" 
