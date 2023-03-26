@@ -54,7 +54,7 @@ def dev(session: nox.Session) -> None:
     session.run(python, "-m", "pip", "install", "-e", ".[dev,test,doc]", external=True)
 
 
-@nox.session
+@nox.session(python="3.10")
 def lint(session):
     """
     Run the linter.
