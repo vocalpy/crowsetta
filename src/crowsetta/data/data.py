@@ -71,7 +71,7 @@ DATA = {
     "simple-seq": FormatPathArgs(
         package="crowsetta.data.simple", resource="bl26lb16_190412_0721.20144_annotations.csv"
     ),
-    "textgrid": FormatPathArgs(package="crowsetta.data.textgrid", resource="1179.TextGrid"),
+    "textgrid": FormatPathArgs(package="crowsetta.data.textgrid", resource="AVO-maea-basic.TextGrid"),
     "timit": FormatPathArgs(package="crowsetta.data.timit", resource="sa1.phn"),
 }
 

@@ -1,0 +1,116 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 2.5101360544217686 
+tiers? <exists> 
+size = 3 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "tones" 
+        xmin = 0 
+        xmax = 2.5101360544217686 
+        points: size = 6 
+        points [1]:
+            number = 0.47236102601076596 
+            mark = "L+H*" 
+        points [2]:
+            number = 0.9274509414726307 
+            mark = "L+H*" 
+        points [3]:
+            number = 1.09 
+            mark = "H-" 
+        points [4]:
+            number = 1.5731544340912977 
+            mark = "H*" 
+        points [5]:
+            number = 2.3165473850028255 
+            mark = "L+H-" 
+        points [6]:
+            number = 2.49 
+            mark = "L\% " 
+    item [2]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 2.5101360544217686 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.08 
+            text = "" 
+        intervals [2]:
+            xmin = 0.08 
+            xmax = 0.32 
+            text = "sa" 
+        intervals [3]:
+            xmin = 0.32 
+            xmax = 0.53 
+            text = "'ai" 
+        intervals [4]:
+            xmin = 0.53 
+            xmax = 0.62 
+            text = "e" 
+        intervals [5]:
+            xmin = 0.62 
+            xmax = 1.09 
+            text = "Sione" 
+        intervals [6]:
+            xmin = 1.09 
+            xmax = 1.22 
+            text = "le" 
+        intervals [7]:
+            xmin = 1.22 
+            xmax = 1.8 
+            text = "siamu" 
+        intervals [8]:
+            xmin = 1.8 
+            xmax = 2.49 
+            text = "anapo\-^" 
+        intervals [9]:
+            xmin = 2.49 
+            xmax = 2.5101360544217686 
+            text = "" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "gloss" 
+        xmin = 0 
+        xmax = 2.5101360544217686 
+        intervals: size = 9 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.08 
+            text = "" 
+        intervals [2]:
+            xmin = 0.08 
+            xmax = 0.32 
+            text = "PAST" 
+        intervals [3]:
+            xmin = 0.32 
+            xmax = 0.53 
+            text = "eat" 
+        intervals [4]:
+            xmin = 0.53 
+            xmax = 0.62 
+            text = "ERG" 
+        intervals [5]:
+            xmin = 0.62 
+            xmax = 1.09 
+            text = "Sione" 
+        intervals [6]:
+            xmin = 1.09 
+            xmax = 1.22 
+            text = "DET" 
+        intervals [7]:
+            xmin = 1.22 
+            xmax = 1.8 
+            text = "jam" 
+        intervals [8]:
+            xmin = 1.8 
+            xmax = 2.49 
+            text = "last-night" 
+        intervals [9]:
+            xmin = 2.49 
+            xmax = 2.5101360544217686 
+            text = "" 

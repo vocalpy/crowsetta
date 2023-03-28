@@ -1,4 +1,6 @@
-Hedley, Richard (2016): Data used in PLoS One article 
-"Complexity, Predictability and Time Homogeneity of Syntax 
-in the Songs of Cassin’s Vireo (Vireo cassini)". 
-figshare. Dataset. https://doi.org/10.6084/m9.figshare.3081814.v1
+Sound files and Praat TextGrids accompanying 
+Sasha Calhoun, Corinne Seals, Toaga Alefosio and Niusila Faamanatu-Eteuati,
+ 'Phrasal Prosody of Heritage Speakers of Samoan in Aotearoa New Zealand', 
+ to appear in Rajiv Rao (ed), 
+ The Phonetics and Phonology of Heritage Languages, Cambridge University Press.
+ https://osf.io/bxasd/

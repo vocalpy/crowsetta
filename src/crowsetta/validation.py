@@ -93,14 +93,10 @@ def validate_ext(file: PathLike, extension: Union[str, tuple]) -> None:
         raise TypeError(f"Extension must be str or tuple but type was {type(extension)}")
 
     if not (isinstance(file, str) or isinstance(file, PurePath)):
-        raise TypeError(
-            f"File must be a str or a pathlib.Path, but type of file was {type(file)}.\n" f"File: {file}"
-        )
+        raise TypeError(f"File must be a str or a pathlib.Path, but type of file was {type(file)}.\n" f"File: {file}")
 
     # we need to use `endswith` instead of
     # e.g. comparing with `pathlib.Path.suffix`
     # because suffix won't work for "multi-part" extensions like '.not.mat'
     if not any([str(file).endswith(ext) for ext in extension]):
-        raise ValueError(
-            f"Invalid extension for file: {file}.\n" f"Valid extension(s): '{extension}'"
-        )
+        raise ValueError(f"Invalid extension for file: {file}.\n" f"Valid extension(s): '{extension}'")

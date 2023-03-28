@@ -1,0 +1,135 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 3.623401360544218 
+tiers? <exists> 
+size = 3 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "tones" 
+        xmin = 0 
+        xmax = 3.623401360544218 
+        points: size = 7 
+        points [1]:
+            number = 0.8366300190962462 
+            mark = "L+H*" 
+        points [2]:
+            number = 1.4213284755332714 
+            mark = "L+H*" 
+        points [3]:
+            number = 1.56 
+            mark = "H-" 
+        points [4]:
+            number = 2.043860361504457 
+            mark = "L+!H*" 
+        points [5]:
+            number = 2.78 
+            mark = "\% r" 
+        points [6]:
+            number = 3.144469220680034 
+            mark = "!H*" 
+        points [7]:
+            number = 3.6 
+            mark = "L-L\% " 
+    item [2]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 3.623401360544218 
+        intervals: size = 11 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.06 
+            text = "" 
+        intervals [2]:
+            xmin = 0.06 
+            xmax = 0.46 
+            text = "leai" 
+        intervals [3]:
+            xmin = 0.46 
+            xmax = 0.6 
+            text = "na" 
+        intervals [4]:
+            xmin = 0.6 
+            xmax = 1.02 
+            text = "salu" 
+        intervals [5]:
+            xmin = 1.02 
+            xmax = 1.11 
+            text = "e" 
+        intervals [6]:
+            xmin = 1.11 
+            xmax = 1.56 
+            text = "Moana" 
+        intervals [7]:
+            xmin = 1.56 
+            xmax = 1.67 
+            text = "le" 
+        intervals [8]:
+            xmin = 1.67 
+            xmax = 2.21 
+            text = "malae" 
+        intervals [9]:
+            xmin = 2.21 
+            xmax = 2.78 
+            text = "" 
+        intervals [10]:
+            xmin = 2.78 
+            xmax = 3.6 
+            text = "ananafi" 
+        intervals [11]:
+            xmin = 3.6 
+            xmax = 3.623401360544218 
+            text = "" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "gloss" 
+        xmin = 0 
+        xmax = 3.623401360544218 
+        intervals: size = 11 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.06 
+            text = "" 
+        intervals [2]:
+            xmin = 0.06 
+            xmax = 0.46 
+            text = "no" 
+        intervals [3]:
+            xmin = 0.46 
+            xmax = 0.6 
+            text = "PAST" 
+        intervals [4]:
+            xmin = 0.6 
+            xmax = 1.02 
+            text = "sweep" 
+        intervals [5]:
+            xmin = 1.02 
+            xmax = 1.11 
+            text = "ERG" 
+        intervals [6]:
+            xmin = 1.11 
+            xmax = 1.56 
+            text = "Moana" 
+        intervals [7]:
+            xmin = 1.56 
+            xmax = 1.67 
+            text = "DET" 
+        intervals [8]:
+            xmin = 1.67 
+            xmax = 2.21 
+            text = "courtyard" 
+        intervals [9]:
+            xmin = 2.21 
+            xmax = 2.78 
+            text = "" 
+        intervals [10]:
+            xmin = 2.78 
+            xmax = 3.6 
+            text = "yesterday" 
+        intervals [11]:
+            xmin = 3.6 
+            xmax = 3.623401360544218 
+            text = "" 

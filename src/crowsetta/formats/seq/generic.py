@@ -3,7 +3,7 @@ Generic sequence format,
 meant to be an abstraction of
 any sequence-like format.
 
-Consists of :class:`crowestta.Annotation`
+Consists of :class:`crowsetta.Annotation`
 instances, each with a :class:`crowsetta.Sequence`
 made up of :class:`crowsetta.Segment`s.
 
@@ -134,7 +134,10 @@ def annot2df(
 
     records = []
     for annot_num, annot_ in enumerate(annot):
-        seq_list = [annot_.seq]
+        if isinstance(annot_.seq, crowsetta.Sequence):
+            seq_list = [annot_.seq]
+        elif isinstance(annot_.seq, list):
+            seq_list = annot_.seq
         for seq_num, seq in enumerate(seq_list):
             for segment in seq.segments:
                 row = OrderedDict(

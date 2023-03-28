@@ -1,0 +1,159 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 2.885532879818594 
+tiers? <exists> 
+size = 3 
+item []: 
+    item [1]:
+        class = "TextTier" 
+        name = "tones" 
+        xmin = 0 
+        xmax = 2.885532879818594 
+        points: size = 7 
+        points [1]:
+            number = 0.29923241806936424 
+            mark = "L+H*" 
+        points [2]:
+            number = 0.41 
+            mark = "H-" 
+        points [3]:
+            number = 0.77 
+            mark = "H-" 
+        points [4]:
+            number = 1.1401065371229195 
+            mark = "H*" 
+        points [5]:
+            number = 1.6933852734382882 
+            mark = "?H+!H*" 
+        points [6]:
+            number = 2.4959133414600854 
+            mark = "!H*" 
+        points [7]:
+            number = 2.8656788335520402 
+            mark = "L-L\%      " 
+    item [2]:
+        class = "IntervalTier" 
+        name = "words" 
+        xmin = 0 
+        xmax = 2.885532879818594 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.03081006084705667 
+            text = "" 
+        intervals [2]:
+            xmin = 0.03081006084705667 
+            xmax = 0.17 
+            text = "na" 
+        intervals [3]:
+            xmin = 0.17 
+            xmax = 0.41 
+            text = "alu" 
+        intervals [4]:
+            xmin = 0.41 
+            xmax = 0.77 
+            text = "iona" 
+        intervals [5]:
+            xmin = 0.77 
+            xmax = 0.9155082382226214 
+            text = "e" 
+        intervals [6]:
+            xmin = 0.9155082382226214 
+            xmax = 1.26 
+            text = "pu'e" 
+        intervals [7]:
+            xmin = 1.26 
+            xmax = 1.43 
+            text = "mai" 
+        intervals [8]:
+            xmin = 1.43 
+            xmax = 1.548218080246632 
+            text = "le" 
+        intervals [9]:
+            xmin = 1.548218080246632 
+            xmax = 1.91 
+            text = "maile" 
+        intervals [10]:
+            xmin = 1.91 
+            xmax = 2.21 
+            text = "io" 
+        intervals [11]:
+            xmin = 2.21 
+            xmax = 2.25 
+            text = "i" 
+        intervals [12]:
+            xmin = 2.25 
+            xmax = 2.35 
+            text = "le" 
+        intervals [13]:
+            xmin = 2.35 
+            xmax = 2.87 
+            text = "paka" 
+        intervals [14]:
+            xmin = 2.87 
+            xmax = 2.885532879818594 
+            text = "" 
+    item [3]:
+        class = "IntervalTier" 
+        name = "gloss" 
+        xmin = 0 
+        xmax = 2.885532879818594 
+        intervals: size = 14 
+        intervals [1]:
+            xmin = 0 
+            xmax = 0.03081006084705667 
+            text = "" 
+        intervals [2]:
+            xmin = 0.03081006084705667 
+            xmax = 0.17 
+            text = "PAST" 
+        intervals [3]:
+            xmin = 0.17 
+            xmax = 0.41 
+            text = "go" 
+        intervals [4]:
+            xmin = 0.41 
+            xmax = 0.77 
+            text = "Iona" 
+        intervals [5]:
+            xmin = 0.77 
+            xmax = 0.9155082382226214 
+            text = "TAM" 
+        intervals [6]:
+            xmin = 0.9155082382226214 
+            xmax = 1.26 
+            text = "catch" 
+        intervals [7]:
+            xmin = 1.26 
+            xmax = 1.43 
+            text = "DIR" 
+        intervals [8]:
+            xmin = 1.43 
+            xmax = 1.548218080246632 
+            text = "DET" 
+        intervals [9]:
+            xmin = 1.548218080246632 
+            xmax = 1.91 
+            text = "dog" 
+        intervals [10]:
+            xmin = 1.91 
+            xmax = 2.21 
+            text = "DEM" 
+        intervals [11]:
+            xmin = 2.21 
+            xmax = 2.25 
+            text = "LD" 
+        intervals [12]:
+            xmin = 2.25 
+            xmax = 2.35 
+            text = "DET" 
+        intervals [13]:
+            xmin = 2.35 
+            xmax = 2.87 
+            text = "park" 
+        intervals [14]:
+            xmin = 2.87 
+            xmax = 2.885532879818594 
+            text = "" 

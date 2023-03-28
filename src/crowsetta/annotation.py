@@ -1,6 +1,9 @@
 """A class to represent annotations for a single file."""
+from __future__ import annotations
+
 from pathlib import Path
-from typing import List, Optional
+import reprlib
+from typing import Optional
 
 import crowsetta
 
@@ -24,10 +27,13 @@ class Annotation:
         E.g., an audio file, or an array file
         that contains a spectrogram generated from audio.
         Optional, default is None.
-    seq : crowsetta.Sequence
-        A sequence of annotated segments,
-        each having an onset time, offset time,
-        and label. A :class:`crowsetta.Sequence` instance.
+    seq : crowsetta.Sequence, list
+        A :class:`crowsetta.Sequence` instance,
+        or a list of :class:`crowsetta.Sequence` instances.
+        Each :class:`crowsetta.Sequence` instance
+        represents a sequence of annotated segments,
+        with a segment having an onset time, offset time,
+        and label.
     bboxes : list
         List of annotated bounding boxes,
         each having an onset time, offset time,
@@ -72,8 +78,8 @@ class Annotation:
         self,
         annot_path: PathLike,
         notated_path: Optional[PathLike] = None,
-        seq: Optional[Sequence] = None,
-        bboxes: Optional[List[BBox]] = None,
+        seq: Optional[Sequence | list[Sequence]] = None,
+        bboxes: Optional[list[BBox]] = None,
     ):
         if seq is None and bboxes is None:
             raise ValueError("an Annotation must have either a ``seq`` or ``bboxes``")
@@ -82,8 +88,13 @@ class Annotation:
             raise ValueError("an Annotation can have either a ``seq``" "or ``bboxes``, but not both.")
 
         if seq:
-            if not isinstance(seq, crowsetta.Sequence):
-                raise TypeError(f"``seq`` should be a ``crowsetta.Sequence`` but was: {type(seq)}")
+            if not (
+                    isinstance(seq, crowsetta.Sequence) or
+                    (isinstance(seq, list) and all([isinstance(seq_, crowsetta.Sequence) for seq_ in seq]))
+            ):
+                raise TypeError(
+                    f"``seq`` should be a crowsetta.Sequence or list of Sequences but was: {type(seq)}"
+                )
             self.seq = seq
 
         if bboxes:
@@ -102,9 +113,9 @@ class Annotation:
     def __repr__(self):
         repr_ = f"Annotation(annot_path={repr(self.annot_path)}, notated_path={repr(self.notated_path)}, "
         if hasattr(self, "seq"):
-            repr_ += f"seq={self.seq})"
+            repr_ += f"seq={reprlib.repr(self.seq)})"
         elif hasattr(self, "bboxes"):
-            repr_ += f"bboxes={self.bboxes})"
+            repr_ += f"bboxes={reprlib.repr(self.bboxes)})"
         return repr_
 
     def __eq__(self, other):

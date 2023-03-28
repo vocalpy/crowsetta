@@ -16,11 +16,7 @@ for module in (bbox, seq):
                 FORMATS[attr.name] = attr
 
 
-__all__ = [
-    'bbox',
-    'FORMATS',
-    'seq'
-]
+__all__ = ["bbox", "FORMATS", "seq"]
 
 
 def by_name(name: str) -> Type:
