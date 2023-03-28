@@ -19,8 +19,32 @@ from .parse import parse
 @attr.define
 class TextGrid:
     """Class that represents annotations
-    from TextGrid[1]_ files
-    produced by the application Praat[2]_.
+    from TextGrid [1]_ files
+    produced by the application Praat [2]_.
+
+    This class can load TextGrid files
+    saved by Praat as text files,
+    in either the default format
+    or the "short" format,
+    as described in the specification [1]_.
+    The class can load either UTF-8 or UTF-16 text files.
+    It should detect both the encoding (UTF-8 or UTF-16)
+    and the format (default or "short") automatically.
+
+    The class does not currently parse binary TextGrid files
+    (althoug there is an issue to add this,
+    see https://github.com/vocalpy/crowsetta/issues/242).
+    Please "thumbs up" that issue and comment
+    if you would find this helpful.
+
+    This class can parse both interval tiers
+    and point tiers in TextGrid files,
+    but when converting to a
+    :class:`crowsetta.Annotation` it can only
+    convert :class:`~crowsetta.formats.seq.textgrid.classes.IntervalTier`
+    instances to :class:`crowsetta.Sequence` instances.
+    See the :meth:`~crowsetta.formats.seq.textgrid.TextGrid.to_seq`
+    method for details.
 
     Attributes
     ----------
@@ -79,9 +103,9 @@ class TextGrid:
     IntervalTier(name='Gloss', xmin=0.0, xmax=2.4360509767904546, intervals=[Interval(xmin=0.0, xmax=0.051451575248407266, text='PRES'), Interval(xmin=0.051451575248407266, xmax=0.6407379583230295, text='Sione'), Interval(xmin=0.6407379583230295, xmax=0.7544662733943284, text='PAST'), Interval(xmin=0.7544662733943284, xmax=1.244041566788134, text='pull-ES'), Interval(xmin=1.244041566788134, xmax=1.3481058803597676, text='DET'), Interval(xmin=1.3481058803597676, xmax=1.70760078178904, text='rope'), Interval(xmin=1.70760078178904, xmax=2.4360509767904546, text='earlier')])  # noqa: E501
 
     Calling the :meth:`~crowsetta.formats.seq.TextGrid.to_seq` method
-    with no arguments will convert all the
-    :class:`~crowsetta.formats.seq.textgrid.classes.IntervalTier`s to
-    :class:`~crowsetta.Sequence`s, in the order they appear in the TextGrid.
+    with no arguments will convert all interval tiers
+    :class:`~crowsetta.Sequence` instances,
+    in the order they appear in the TextGrid.
 
     >>> example = crowsetta.data.get('textgrid')
     >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
@@ -89,60 +113,30 @@ class TextGrid:
     [<Sequence with 7 segments>, <Sequence with 7 segments>]
 
     Call the :meth:`~crowsetta.formats.seq.TextGrid.to_seq` method
-    with a ``tier`` arguments to convert a specific
+    with a ``tier`` argument to convert a specific
     :class:`~crowsetta.formats.seq.textgrid.classes.IntervalTier`s to a
-    single :class:`~crowsetta.Sequence`s.
+    single :class:`~crowsetta.Sequence` instance.
 
     >>> example = crowsetta.data.get('textgrid')
     >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
     >>> textgrid.to_seq(tier=2)
     [<Sequence with 7 segments>]
 
-    The :method:`~crowsetta.formats.seq.TextGrid.to_seq`
-    argument ``tier`` has the same semantics as the
-    item access for this class; that is, you can pass in an int
+    When calling :meth:`~crowsetta.formats.seq.TextGrid.to_seq`
+    you can specify the ``tier`` as an int,
     or the name of the tier as a string.
+    I.e., this parameter works the same way
+    as square bracket access to a TextGrid as shown above.
 
     >>> example = crowsetta.data.get('textgrid')
     >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
-    >>> tier1 = textgrid.to_seq(tier=2)
-    >>> tier2 = textgrid.to_seq(tier="Gloss")
-    >>> tier1 == tier2
+    >>> seq1 = textgrid.to_seq(tier=2)
+    >>> seq2 = textgrid.to_seq(tier="Gloss")
+    >>> seq1 == seq2
     True
 
     Notes
     -----
-
-    Formats
-    =======
-    This class can load TextGrid files
-    saved by Praat in the text format,
-    either the default format
-    or the "short" format,
-    as described in the specification[1]_.
-    The class can load either UTF-8 or UTF-16 text files.
-    It should detect both the encoding (UTF-8 or UTF-16)
-    and the format (default or "short") automatically.
-
-    The class does not currently parse binary TextGrid files
-    (althoug there is an issue to add this,
-    see https://github.com/vocalpy/crowsetta/issues/242).
-    Please "thumbs up" that issue and comment
-    if you would find this helpful.
-
-    Converting to crowsetta classes
-    ===============================
-    This class can parse both IntervalTiers
-    and PointTiers in TextGrid files,
-    but when converting to a
-    :class:`crowsetta.Annotation` it can only
-    convert :class:`~crowsetta.formats.seq.textgrid.classes.IntervalTier`s
-    to :class`:crowsetta.Sequence`s.
-    See the :meth:`~crowsetta.formats.seq.textgrid.TextGrid.to_seq`
-    method for details.
-
-    Implementation
-    ==============
     Code for parsing TextGrids is adapted from several sources,
     all under MIT license.
     The main logic in
@@ -164,8 +158,10 @@ class TextGrid:
 
     References
     ----------
-    .. [1]^ https://www.fon.hum.uva.nl/praat/manual/TextGrid_file_formats.html
-    .. [2]^  Boersma, Paul & Weenink, David (2023).
+
+    .. [1] https://www.fon.hum.uva.nl/praat/manual/TextGrid_file_formats.html
+
+    .. [2]  Boersma, Paul & Weenink, David (2023).
        Praat: doing phonetics by computer [Computer program].
        Version 6.3.09, retrieved 2 March 2023 from http://www.praat.org/
     """
@@ -210,11 +206,11 @@ class TextGrid:
         TextGrid(tiers=[PointTier(nam...ark='L+!H-')]), IntervalTier(...aleila\\-^')]), IntervalTier(...t='earlier')])], xmin=0.0, xmax=2.4360509767904546, annot_path=PosixPath('/home/pimienta/.local/share/crowsetta/5.0.0rc2/textgrid/AVO-maea-basic.TextGrid'), audio_path=None)  # noqa: E501
 
         For usage, see the
-        "Examples" section in :class:`crowsetta.formats.seq.TextGrid`.
+        "Examples" section in :class:`crowsetta.formats.seq.textgrid.TextGrid`.
 
         See Also
         --------
-        :class:`crowsetta.formats.seq.TextGrid`
+        :class:`crowsetta.formats.seq.textgrid.TextGrid`
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -313,9 +309,9 @@ class TextGrid:
         Examples
         --------
         Calling the :meth:`~crowsetta.formats.seq.TextGrid.to_seq` method
-        with no arguments will convert all the
-        :class:`~crowsetta.formats.seq.textgrid.classes.IntervalTier`s to
-        :class:`~crowsetta.Sequence`s, in the order they appear in the TextGrid.
+        with no arguments will convert all interval tiers
+        :class:`~crowsetta.Sequence` instances,
+        in the order they appear in the TextGrid.
 
         >>> example = crowsetta.data.get('textgrid')
         >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
@@ -324,24 +320,25 @@ class TextGrid:
 
         Call the :meth:`~crowsetta.formats.seq.TextGrid.to_seq` method
         with a ``tier`` arguments to convert a specific
-        :class:`~crowsetta.formats.seq.textgrid.classes.IntervalTier`s to a
-        single :class:`~crowsetta.Sequence`s.
+        :class:`~crowsetta.formats.seq.textgrid.classes.IntervalTier` to a
+        single :class:`~crowsetta.Sequence`.
 
         >>> example = crowsetta.data.get('textgrid')
         >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
         >>> textgrid.to_seq(tier=2)
         [<Sequence with 7 segments>]
 
-        The :method:`~crowsetta.formats.seq.TextGrid.to_seq`
-        argument ``tier`` has the same semantics as the
-        item access for this class; that is, you can pass in an int
+        When calling :meth:`~crowsetta.formats.seq.TextGrid.to_seq`
+        you can specify the ``tier`` as an int,
         or the name of the tier as a string.
+        I.e., this parameter works the same way
+        as square bracket access to a TextGrid as shown above.
 
         >>> example = crowsetta.data.get('textgrid')
         >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
-        >>> tier1 = textgrid.to_seq(tier=2)
-        >>> tier2 = textgrid.to_seq(tier="Gloss")
-        >>> tier1 == tier2
+        >>> seq1 = textgrid.to_seq(tier=2)
+        >>> seq2 = textgrid.to_seq(tier="Gloss")
+        >>> seq1 == seq2
         True
 
         Notes
@@ -356,8 +353,8 @@ class TextGrid:
             tier_ = self.__getitem__(tier)
             if not isinstance(tier_, IntervalTier):
                 raise ValueError(
-                    f"The specified tier {tier} is not an IntervalTier but a {type(tier_)}."
-                    f"Cannot convert to a sequence"
+                    f"The specified tier ({tier}) is not an interval tier, type is {type(tier_)}."
+                    f"Cannot convert to a crowsetta.Sequence"
                 )
             return self._interval_tier_to_seq(tier_, round_times, decimals)
 
@@ -372,8 +369,8 @@ class TextGrid:
         return seq
 
     def to_annot(self, tier: int | str | None = None, round_times: bool = True, decimals: int = 3) -> crowsetta.Annotation:
-        """Convert an IntervalTier from this TextGrid annotation
-        to a :class:`crowsetta.Annotation`.
+        """Convert interval tier or tiers from this TextGrid annotation
+        to a :class:`crowsetta.Annotation` with a :data:`seq` attribute.
 
         Parameters
         ----------
