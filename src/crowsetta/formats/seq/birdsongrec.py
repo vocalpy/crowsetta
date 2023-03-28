@@ -70,9 +70,11 @@ class BirdsongRec:
 
     References
     ----------
+
     .. [1] Koumura, T. (2016). BirdsongRecognition (Version 1). figshare.
        https://doi.org/10.6084/m9.figshare.3470165.v1
        https://figshare.com/articles/BirdsongRecognition/3470165
+
 
     .. [2] Koumura T., Okanoya K. (2016) Automatic Recognition of Element Classes and
        Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
