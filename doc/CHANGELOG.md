@@ -21,6 +21,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   [#226](https://github.com/NickleDave/crowsetta/pull/226).
   Fixes [#222](https://github.com/NickleDave/crowsetta/issues/222)
   and [#213](https://github.com/NickleDave/crowsetta/issues/213).
+- Add the ability for a crowsetta.Annotation to have multiple sequences
+  [#243](https://github.com/NickleDave/crowsetta/pull/243).
+  Fixes [#42](https://github.com/NickleDave/crowsetta/issues/42).
+- Rewrite TextGrid class to better handle file formats:
+  parse both "short" and default format in either UTF-8 or UTF-16
+  encoding; remove empty intervals from interval tiers by default;
+  can convert multiple interval tiers to a single crowsetta.Annotation 
+  with multiple crowsetta.Sequences
+  [#243](https://github.com/NickleDave/crowsetta/pull/243).
+  Fixes [#241](https://github.com/NickleDave/crowsetta/issues/241)
 
 ### Removed
 - Remove `Segment.from_row` method, no longer used
