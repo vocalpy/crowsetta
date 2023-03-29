@@ -8,18 +8,18 @@ description = "A Python tool to work with any format for annotating animal vocal
 authors = [
     {name = "David Nicholson", email = "nickledave@users.noreply.github.com"}
 ]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 dependencies = [
     "appdirs >=1.4.4",
     "attrs >=19.3.0",
     "evfuncs >=0.3.5",
     "birdsong-recognition-dataset >=0.3.2",
     "importlib-resources >=5.7.1",
-    "numpy >=1.18.1",
+    "numpy >=1.21.0",
     "pandas >= 1.3.5",
     "pandera >= 0.9.0",
-    "scipy >=1.4.1",
-    "SoundFile >=0.10.3",
+    "scipy >=1.7.0",
+    "SoundFile >=0.12.1",
 ]
 version = "5.0.0rc2"
 readme = "README.md"
@@ -29,7 +29,6 @@ classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: Implementation :: CPython',
