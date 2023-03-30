@@ -9,11 +9,13 @@ kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
+mystnb:
+  execution_timeout: 300
 ---
 
-(howto-remove-silent-labels-textgrid)=
+(munging-annotations-textgrid)=
 
-# How to use crowsetta to remove unlabeled intervals from TextGrid annotations
+# Munging annotations from Praat TextGrid files with crowsetta to fit a first-order Markov model of birdsong syntax
 
 A common need when working with annotations 
 for animal vocalizations 
@@ -21,39 +23,12 @@ is to transform them to perform a certain analysis.
 This is a sort of [data munging](https://en.wikipedia.org/wiki/Data_wrangling).
 In this vignette, we provide a simple example of munging annotations to build a model of birdsong syntax.
 
-We will work with a dataset 
-of Bengalese finch song annotated with the 
-[Praat .TextGrid format](https://www.fon.hum.uva.nl/praat/manual/TextGrid_file_formats.html).
+We will work with a 
+[dataset of Bengalese finch song](https://nickledave.github.io/bfsongrepo/)
+annotated in a format used by ["evsonganaly"](https://github.com/NickleDave/evfuncs),
+a MATLAB GUI for annotating song.
 We want to build a matrix of the transition probabilities between syllables in the song, 
 that is, a first-order [Markov model](https://en.wikipedia.org/wiki/Markov_chain).
-But before we can do that, 
-we need to clean the data.
-
-Specifically, we need to remove the labels that Praat gives 
-to all of the silent periods between syllables when it saves a TextGrid file.
-In the terminology of Praat, 
-we need to remove the *intervals* 
-that have empty labels.
-[Praat allows annotators to create multiple *tiers*](https://www.fon.hum.uva.nl/praat/manual/Intro_7__Annotation.html), or
-or levels, of labeling 
-E.g., if we were annotating speech, 
-we could have a tier each for phonemes, syllables, 
-words, and sentences.
-In this example we will work with interval tiers, 
-that consists of a set of *intervals* as the name suggests.
-(There are also point tiers where annotators label single time points.)
-Each interval has a start time, stop time, and label,
-all created by an annotator working with the Praat GUI.
-When the annotator does not assign a label to some interval, 
-then the corresponding TextGrid file will contain an interval with an empty label. 
-Commonly this happens for silent periods between intervals of interest.
-In our case, it happens for every brief (50-100ms) silent gap 
-between the syllables in a Bengalese finch's song.
-These lables become `None` when we load them into crowsetta.
-We don't want to include these intervals as states in our Markov model, 
-because we are only interested in transitions between syllables.
-So, to compute our transition matrix, 
-we need to remove all these intervals with `None` labels.
 
 +++
 
@@ -68,25 +43,22 @@ after installing Jupyter lab and jupytext.
 
 +++
 
-
-
-
 ## Workflow
 
 Here's the steps we'll follow:  
 
 0. Write code for analysis
-1. Download data from Open Science Framework
-2. Load data with crowsetta
-3. Remove `None` labels
-4. Compute transition matrix
+1. Load .not.mat files saved by evsonganaly with crowsetta, and convert to crowsetta Annotations with Sequences
+2. Munge data
+3. Compute transition matrices
 
 For this vignette, we use annotations from the 
-[Bengalese finch song dataset](https://osf.io/r6paq/), 
-by Tachibana and Morita 2021 [^1], adapted under 
+[Bengalese finch song repository](https://nickledave.github.io/bfsongrepo), 
+by Nicholson, Queen, Sober 2017 [^1], adapted under 
 [CC BY 4.0 License](https://creativecommons.org/licenses/by/4.0/).
 
-[^1]: Tachibana, R. O., & Morita, T. (2021). Bengalese finch song dataset. https://doi.org/10.17605/OSF.IO/R6PAQ
+[^1]: Nicholson, D., Queen, J. E., & J. Sober, S. (2017). Bengalese Finch song repository (Version 7).
+figshare. https://doi.org/10.6084/m9.figshare.4805749.v7
 
 +++
 
@@ -309,155 +281,30 @@ def transmat_from_labels(labels: list[np.ndarray],
     return TransitionMatrix(counts=counts, matrix=trans_mat, states=states)
 ```
 
-## 1. Download data from Open Science Framework
+## 1. Load data with crowsetta
 
 +++
 
-The annotations we want to use are in a public project on the [Open Science Framework](osf.io).
-To download the files, we use the Python package [`osfclient`](https://github.com/osfclient/osfclient). First we make sure it is installed.
-
-```{code-cell} ipython3
-!pip install osfclient
-```
-
-Then we import the package.
-
-```{code-cell} ipython3
-import osfclient
-```
-
-We change directories to download into the `./data` directory we have set up for our project, following [good practices](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510#sec009).
+We change directories so we can access the `./data` directory we have set up for our project, following [good practices](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510#sec009).
 
 ```{code-cell} ipython3
 cd ..
 ```
 
-We write a helper function to list the files in a project.
-This function is adapted 
-from the command-line interface of `osfclient`, 
-specifically 
-[the `list` function found in the `osfclient.cli` module]((https://github.com/osfclient/osfclient/blob/411497f67aae457a238f0b91ef864d38d6879918/osfclient/cli.py#L255)).
-(Code is adapted under [BSD license](https://github.com/osfclient/osfclient/blob/master/LICENSE).)
-
-```{code-cell} ipython3
-import os
-
-
-def get_files_list(project):
-    """Get a list all files from all storages for project."""
-    files = []
-
-    for store in project.storages:
-        prefix = store.name
-        for file_ in store.files:
-            path = file_.path
-            if path.startswith('/'):
-                path = path[1:]
-            files.append(
-                os.path.join(prefix, path)
-            )
-    
-    return files
-```
-
-We also write a helper function to download a list of files.
-This function is adapted from the `clone` function of the `osfclient.cli` module,
-found 
-[here](https://github.com/osfclient/osfclient/blob/411497f67aae457a238f0b91ef864d38d6879918/osfclient/cli.py#L147).
-
-```{code-cell} ipython3
-def fetch_files(project, file_paths, output_dir=None, update=True):
-    """Fetch a list of files from an OSF project"""
-    if output_dir is None:
-        output_dir = project.id
-    else:
-        output_dir = os.path.join(output_dir, project.id)
-
-    for store in project.storages:
-        for file_ in store.files:
-            file_path = file_.path
-            if file_path.startswith('/'):
-                file_path = file_path[1:]
-            file_path = os.path.join(store.name, file_path)
-
-            dst_path = os.path.join(output_dir, file_path)
-            if os.path.exists(dst_path) and update:
-                if osfclient.utils.checksum(dst_path) == file_.hashes.get('md5'):
-                    continue
-
-            # do not download if this file is not in the list that we passed in
-            if file_path not in file_paths:
-                print(
-                    f'Not in file_paths, skipping: {file_path}'
-                )
-                continue
-            directory, _ = os.path.split(dst_path)
-            osfclient.utils.makedirs(directory, exist_ok=True)
-
-            with open(dst_path, "wb") as f:
-                print(
-                    f'Downloading: {file_}'
-                )
-                file_.write_to(f)
-```
-
-Now we can use our functions to download *just* the TextGrid files from the project.
-
-To do so, we need the project's ID number. 
-Conveniently, this is the last part of the url for any project, 
-so we can copy the project's url by hand and then get the project ID from it 
-using the Python `String` method `split`.
-
-```{code-cell} ipython3
-project_url = 'https://osf.io/r6paq/'
-project_id = project_url.split('/')[-2]  # -2 because -1 is an empty string from trailing slash
-```
-
-We make an instance of the `osfclient` class `OSF` that represents the API, 
-and then use that instance's `project` method to make a `Project` instance 
-that represents the project we want to access programmatically.
-(We suppress the output of this cell, 
-because the progress bar for the downloads creates many lines of text.)
-
-```{code-cell} ipython3
-osf = osfclient.OSF()
-project = osf.project(project_id)
-```
-
-Now we can get the list of files from the project's public storage, using our first helper function from above.
-
-```{code-cell} ipython3
-project_files = get_files_list(project)
-```
-
-We only want to keep the annotation files, so we filter the list using a 
-[list comprehension](https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions).
-
-```{code-cell} ipython3
-project_files = [file for file in project_files if file.endswith('TextGrid')]
-```
-
-The last step before we can clean our data is to fetch the files from the storage.
-
-```{code-cell} ipython3
-:tags: [hide-cell]
-fetch_files(project, project_files, output_dir='./data')
-```
-
-## 2. Load data with crowsetta
-
-+++
-
-Our TextGrid files are in the output directory we specified when calling our helper function (`'./data`), 
-which made new subdirectories inside of that directory with our project's ID and the file paths from that project: 
-`./data/r6pqa/osfstorage/TextGrid`.
+Our TextGrid files are in a sub-directory, `./data/r6pqa` (the unique ID associated with the OSF project for the dataset).
 
 We get a list of the TextGrid files from that subdirectory using `pathlib`.
+
+To download these files and work with them locally, click the following links:
+{download}`b06_concat_dtw.TextGrid <data/r6paq/b06_concat_dtw.TextGrid>`  
+{download}`b11_concat_dtw.TextGrid<data/r6paq/b11_concat_dtw.TextGrid>`  
+{download}`b17_concat_dtw.TextGrid <data/r6paq/b17_concat_dtw.TextGrid>`  
+{download}`b35_concat_dtw.TextGrid <data/r6paq/b35_concat_dtw.TextGrid>`  
 
 ```{code-cell} ipython3
 import pathlib
 
-downloaded_dir = pathlib.Path('./data/r6paq/osfstorage/TextGrid/')
+downloaded_dir = pathlib.Path('./data/r6paq/')
 ```
 
 We make sure that our paths are `sorted` just in case 
@@ -471,12 +318,12 @@ textgrid_paths = sorted(downloaded_dir.glob('*.TextGrid'))
 We inspect the first four paths just to check that we got what we expect.
 
 ```{code-cell} ipython3
-textgrid_paths[:4]
+textgrid_paths
 ```
 
 Looks like it. 
 
-Each of the files corresponds to all the song from one individual bird. E.g., the file `b01_concat_dtw.TextGrid` contains annotations from the bird with ID "b01" and the file `b03_concat_dtw.TextGrid` contains annotations from the bird with ID "b03".
+Each of the files corresponds to all the song from one individual bird. E.g., the file `b06_concat_dtw.TextGrid` contains annotations from the bird with ID "b06" and the file `b011_concat_dtw.TextGrid` contains annotations from the bird with ID "b11".
 
 We will need to do some book-keeping as we transform our data so we that we're able to fit a model for each bird. Mainly this will involve using Python dictionaries where the bird's ID is the key, and pandas DataFrames where we have the ID in a column.
 
@@ -488,25 +335,26 @@ import crowsetta
 scribe = crowsetta.Transcriber(format='textgrid')
 ```
 
-Some of the files won't load because of overlapping IntervalTiers.  
-We skip those and just load the ones that will.
+Notice below the argument `keep_empty=True`. The parameter `keep_empty` defaults to `False`, but we actually want to keep the unlabeled intervals between syllables, because they will help us divide the song up into bouts, as we will see below.
+
+These are large files (that concatenate annotations across a day of song for each bird) so they take a while to load.
 
 ```{code-cell} ipython3
 textgrids = {}
 
 for textgrid_path in textgrid_paths:
-    try:
-        bird_id = textgrid_path.name.split('_')[0]  # bird ID will be first element from list after split
-        annot = scribe.from_file(textgrid_path)
-        textgrids[bird_id] = annot
-    except ValueError:
-            continue
+    bird_id = textgrid_path.name.split('_')[0]  # bird ID will be first element from list after split
+    annot = scribe.from_file(textgrid_path, keep_empty=True)
+    textgrids[bird_id] = annot
 ```
 
-## 3. Remove `None` labels
+## 2. Munge data
 
-Now we can look at the counts of the different classes of labels.  
-This helps us get an overview of our data before we do anything to it.
+Now we want to munge the data into the format we want to carry out our analysis.
+
+#### Looking at descriptive statistics
+
+A good first thing to do with any new dataset is plot some descriptive statistics to get an overview of the data before we do anything with it. As an example of this, let's look at the counts of the different classes of labels.  
 
 First we convert the TextGrid annotations to `crowsetta.Annotation`s to make them easier to work with.  
 Here we use a dictionary comprehension to transform our `textgrids` dictionary to a dictionary of `crowsetta.Annotation`s.
@@ -528,29 +376,17 @@ counts = Counter(
 print(counts)
 ```
 
-We can see that we have many segments in our sequences that have no labels, 
-these are the ones that give us an empty string, `''`.  
+We can see that we have many segments in our sequences that have the label `'x'`. 
+These are squawky "intro" notes that are sometimes ommitted from models of song syntax.  
 
 In fact this is the most frequent label! 
 (The `collection.Counter` prints its key-value pairs in descending order of value by default.)
 
-These empty string labels in the `crowsetta.Annotation`s are the `IntervalTier`s that have `None` labels, that we want to remove.
-
-To demonstrate this we show the very first interval from the interval tier, and the corresponding label from the first segment of the `crowsetta.Sequence` from the first `crowsetta.Annotation`.
-
-```{code-cell} ipython3
-textgrids['b06'].textgrid[0][0]
-```
-
-```{code-cell} ipython3
-annots['b06'].seq.segments[0].label
-```
-
-We also saw above that the second most common label is `'x'`. 
-These are squawky "intro" notes that are sometimes ommitted from models of song syntax.  
-We will remove those as well when cleaning our data.
+We will remove the squawky "intro" notes for this analysis (this is sometimes called "cleaning" data, although [maybe you shouldn't make your data feel like it's dirty](https://www.jstor.org/stable/10.5749/j.ctvg251hk.26)).
 
 +++
+
+#### Dividing the annotations into song bouts
 
 We want to add states to our model for the beginning and ending of each song bout. 
 To do that with the data we're using here, we need to find the bouts within the annotations somehow, 
@@ -564,7 +400,7 @@ to see what kind of threshold might make sense.
 
 We start by converting the annotations to a `pandas.DataFrame` so we can easily munge and tidy the data. This is one advantage of moving from the Praat TextGrid format to the `'generic-seq'` format built into crowsetta.
 
-One approach would be to put all the annotations in a single DataFrame, adding a column named `'bird ID'` that we'd use to split the DataFrame back up below. But we'll stick with a dictionary to hopefully make it easier to follow. Our new dictionary `dfs` will map each bird ID to a `pandas.DataFrame` made from its annotations.
+One approach would be to put all the annotations in a single DataFrame, adding a column named `'bird ID'` that we'd use to split the DataFrame back up below (a sort of ["long form"](https://en.wikipedia.org/wiki/Tidy_data) DataFrame). But we'll stick with a dictionary to hopefully make the loops a bit easier to follow without inspecting the contents of DataFrames. Our new dictionary `dfs` will map each bird ID to a `pandas.DataFrame` made from its annotations.
 
 ```{code-cell} ipython3
 dfs = {
