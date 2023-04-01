@@ -296,10 +296,9 @@ Our TextGrid files are in a sub-directory, `./data/r6pqa` (the unique ID associa
 We get a list of the TextGrid files from that subdirectory using `pathlib`.
 
 To download these files and work with them locally, click the following links:
-{download}`b06_concat_dtw.TextGrid <data/r6paq/b06_concat_dtw.TextGrid>`  
-{download}`b11_concat_dtw.TextGrid<data/r6paq/b11_concat_dtw.TextGrid>`  
-{download}`b17_concat_dtw.TextGrid <data/r6paq/b17_concat_dtw.TextGrid>`  
-{download}`b35_concat_dtw.TextGrid <data/r6paq/b35_concat_dtw.TextGrid>`  
+{download}`b06_concat_dtw.TextGrid<../data/r6paq/b06_concat_dtw.TextGrid>`  
+{download}`b11_concat_dtw.TextGrid<../data/r6paq/b11_concat_dtw.TextGrid>`
+{download}`b35_concat_dtw.TextGrid<../data/r6paq/b35_concat_dtw.TextGrid>`  
 
 ```{code-cell} ipython3
 import pathlib
