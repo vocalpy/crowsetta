@@ -10,5 +10,5 @@ This section shows you how to use crowsetta for specific tasks.
 howto/howto-user-format
 howto/convert-generic-seq
 howto/convert-simple-seq
-howto/remove-silent-labels-textgrid
+howto/munging-annotations-textgrid
 ```

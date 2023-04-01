@@ -36,7 +36,7 @@ of annotation formats that map directly to machine learning tasks,
 and makes it easy to convert your annotations 
 in widely used formats to these simplified representations.
 
-This vignette shows how to convert {ref}`sequence-like <sequence-like-formats>` annotations 
+This vignette shows how to convert {ref}`sequence-like <formats-seq-like>` annotations 
 to a simplified format that is useful for tasks 
 such as building data sets for machine learning.
 In this vignette, we write an example small Python script
@@ -80,7 +80,7 @@ and the vak library similarly allows for
 ### What types of annotation formats will this work with
 
 The approach shown here will work for a wide array of annotation formats 
-that crowsetta calls {ref}`sequence-like <sequence-like-formats>`,
+that crowsetta calls {ref}`sequence-like <formats-seq-like>`,
 because they can all be represented as a sequence of segments, 
 with each segment having an onset time, offset time, and label.
 
@@ -97,7 +97,7 @@ We use the Audacity format in this vignette.
 ### Downloading the example dataset
 
 We download some examples of annotation files in the 
-{ref}`Audacity LabelTrack format <aud-txt>`, 
+{ref}`Audacity LabelTrack format <aud-seq>`, 
 from the dataset 
 ["Labeled songs of domestic canary M1-2016-spring (Serinus canaria)"](https://zenodo.org/record/6521932)
 by Giraudon et al., 2021.
