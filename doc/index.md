@@ -1,17 +1,14 @@
 ---
-title: crowsetta
 jupytext:
   text_representation:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.13.8
+    jupytext_version: 1.14.5
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
   name: python3
-execution:
-  timeout: 120
 ---
 
 ::::{grid}
@@ -176,8 +173,13 @@ crowsetta.data.extract_data_files()
 import crowsetta
 example = crowsetta.data.get('textgrid')
 a_textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
-print(f"`a_textgrid` is a {type(a_textgrid)}")
-print(f"The first five intervals from the interval tier in `a_textgrid`:\n{a_textgrid.textgrid[0][:5]}")
+print(
+    f"`a_textgrid` is a {type(a_textgrid)}"
+)
+print(
+    "The first five intervals from the interval tier in `a_textgrid`:\n"
+    f"{a_textgrid.tiers[1].intervals[:5]}"
+)
 ```
 
 Instead of writing out the class name, 
