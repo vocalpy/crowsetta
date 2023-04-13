@@ -2,24 +2,41 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-title: crowsetta
-message: >-
-  A tool to work with any format for annotating
-  vocalizations
-type: software
+title: "Crowsetta: A Python tool to work with any format for annotating
+  animal vocalizations and bioacoustics data."
 authors:
-  - given-names: David
-    family-names: Nicholson
-    email: nicholdav@gmail.com
-    affiliation: Emory University
-    orcid: 'https://orcid.org/0000-0002-4261-4719'
+- given-names: David
+  family-names: Nicholson
+  email: nicholdav@gmail.com
+  orcid: 'https://orcid.org/0000-0002-4261-4719'
+contact:
+- family-names: Nicholson
+  given-names: David
+  orcid: "https://orcid.org/0000-0002-4261-4719"
+type: software
 identifiers:
   - type: doi
     value: 10.5281/zenodo.5814012
 repository-code: 'https://github.com/NickleDave/crowsetta'
 url: 'https://crowsetta.readthedocs.io'
 repository-artifact: 'https://pypi.org/project/crowsetta/'
-license: BSD-3-Clause
-commit: d9f97f6fc3a7ae9bb3e3465548d61d3a7484ebbc
-version: 3.4.0
-date-released: '2022-03-26'
+message: If you use this software, please cite our article in the
+  Journal of Open Source Software.
+preferred-citation:
+  authors:
+  - family-names: Nicholson
+    given-names: David
+    orcid: "https://orcid.org/0000-0002-4261-4719"
+  date-published: 2023-04-13
+  doi: 10.21105/joss.05338
+  issn: 2475-9066
+  issue: 84
+  journal: Journal of Open Source Software
+  publisher:
+    name: Open Journals
+  start: 5338
+  title: "Crowsetta: A Python tool to work with any format for
+    annotating animal vocalizations and bioacoustics data."
+  type: article
+  url: "https://joss.theoj.org/papers/10.21105/joss.05338"
+  volume: 8
