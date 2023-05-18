@@ -69,12 +69,6 @@ def birdsongrec2annot(annot_path='Annotation.xml', concat_seqs_into_songs=True,
     else:
         wavpath = Path(wavpath)
 
-    if not wavpath.exists():
-        raise NotADirectoryError(
-            "Value specified for 'wavpath' not recognized as an existing directory."
-            f"\nValue for 'wavpath' was: {wavpath}"
-        )
-
     # `birdsong-recongition-dataset` also has a 'Sequence' class
     # but it is slightly different from the `generic.Sequence` used by `crowsetta`
     seq_list_xml = birdsongrec.parse_xml(annot_path,
@@ -88,11 +82,7 @@ def birdsongrec2annot(annot_path='Annotation.xml', concat_seqs_into_songs=True,
 
         wav_filename = os.path.join(wavpath, seq_xml.wav_file)
         wav_filename = os.path.abspath(wav_filename)
-        if not os.path.isfile(wav_filename):
-            raise FileNotFoundError(
-                f'.wav file {wav_filename} specified in '
-                f'annotation file {annot_path} is not found'
-            )
+
         samp_freq = soundfile.info(wav_filename).samplerate
         onsets_s = np.round(onset_inds / samp_freq, decimals=3)
         offsets_s = np.round(offset_inds / samp_freq, decimals=3)
