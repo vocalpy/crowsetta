@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Fixed
+- Remove exceptions raised by 'birdsong-recognition-dataset' format when `wavpath`
+  directory does not exist or wav files are not found in that directory, 
+  because they prevent a user from loading the annotations unless they have the audio
+  [#254](https://github.com/NickleDave/crowsetta/pull/254).
+
+## 3.4.1 -- 2022-05-14
+### Changed
+- Support Python 3.8-3.10
+  [#165](https://github.com/NickleDave/crowsetta/pull/165).
+
 ## 3.4.0 -- 2022-03-26
 ### Added
 - add a `__repr__` to the `Transcriber` class
