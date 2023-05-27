@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Fixed
+- Fix bug in "generic-seq" format; use validated dataframe 
+  returned by pandera schema, so that "label" column is 
+  coerced to strings
+  [#258](https://github.com/NickleDave/crowsetta/pull/258).
+  Fixes [#257](https://github.com/NickleDave/crowsetta/issues/257).
+
 ## 5.0.0 -- 2023-03-29
 ### Added
 - Add information on contributing and setting up a development environment
