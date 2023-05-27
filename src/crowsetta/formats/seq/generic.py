@@ -227,7 +227,7 @@ def csv2annot(csv_path: PathLike) -> List[crowsetta.Annotation]:
         A :class:`list` of :class:`crowsetta.Annotation` instances.
     """
     df = pd.read_csv(csv_path)
-    GenericSeqSchema.validate(df)
+    df = GenericSeqSchema.validate(df)
 
     annot_list = []
     # tried doing this various ways with `pandas.DataFrame.groupby('annotation')`
