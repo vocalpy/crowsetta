@@ -16,7 +16,7 @@
 [![PyPI Python versions](https://img.shields.io/pypi/pyversions/crowsetta)](https://img.shields.io/pypi/pyversions/crowsetta)
 [![codecov](https://codecov.io/gh/vocalpy/crowsetta/branch/main/graph/badge.svg?token=TXtNTxXKmb)](https://codecov.io/gh/vocalpy/crowsetta)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 crowsetta provides a Pythonic way to work with annotation formats 
@@ -197,6 +197,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="http://tessarhinehart.com"><img src="https://avatars.githubusercontent.com/u/27306428?v=4?s=100" width="100px;" alt="Tessa Rhinehart"/><br /><sub><b>Tessa Rhinehart</b></sub></a><br /><a href="https://github.com/vocalpy/crowsetta/commits?author=rhine3" title="Documentation">📖</a> <a href="https://github.com/vocalpy/crowsetta/issues?q=author%3Arhine3" title="Bug reports">🐛</a> <a href="#userTesting-rhine3" title="User Testing">📓</a> <a href="#ideas-rhine3" title="Ideas, Planning, & Feedback">🤔</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/shaupert"><img src="https://avatars.githubusercontent.com/u/43136040?v=4?s=100" width="100px;" alt="Sylvain HAUPERT"/><br /><sub><b>Sylvain HAUPERT</b></sub></a><br /><a href="https://github.com/vocalpy/crowsetta/commits?author=shaupert" title="Code">💻</a> <a href="#ideas-shaupert" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-shaupert" title="User Testing">📓</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/YannickJadoul"><img src="https://avatars.githubusercontent.com/u/8025744?v=4?s=100" width="100px;" alt="Yannick Jadoul"/><br /><sub><b>Yannick Jadoul</b></sub></a><br /><a href="#ideas-YannickJadoul" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/vocalpy/crowsetta/issues?q=author%3AYannickJadoul" title="Bug reports">🐛</a> <a href="https://github.com/vocalpy/crowsetta/commits?author=YannickJadoul" title="Documentation">📖</a> <a href="#userTesting-YannickJadoul" title="User Testing">📓</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sammlapp"><img src="https://avatars.githubusercontent.com/u/10891273?v=4?s=100" width="100px;" alt="sammlapp"/><br /><sub><b>sammlapp</b></sub></a><br /><a href="#ideas-sammlapp" title="Ideas, Planning, & Feedback">🤔</a></td>
     </tr>
   </tbody>
 </table>
