@@ -133,7 +133,7 @@ def test_to_annot_round_times_false(test_data_root, a_notmat_path):
 
 
 def test_to_file(tmp_path, a_notmat_path):
-    notmat_dict = evfuncs.load_notmat(a_notmat_path)
+    notmat_dict = crowsetta.formats.seq.notmat.load_notmat(a_notmat_path)
 
     notmat = crowsetta.formats.seq.NotMat.from_file(a_notmat_path)
     notmat.to_file(
@@ -145,7 +145,7 @@ def test_to_file(tmp_path, a_notmat_path):
         dst=tmp_path,
     )
     notmat_made_path = tmp_path / (notmat.audio_path.name + ".not.mat")
-    notmat_made = evfuncs.load_notmat(notmat_made_path)
+    notmat_made = crowsetta.formats.seq.notmat.load_notmat(notmat_made_path)
     # can't do assert(new_dict == old_dict)
     # because headers will be different (and we want them to be different)
     for key in ["Fs", "fname", "labels", "onsets", "offsets", "min_int", "min_dur", "threshold", "sm_win"]:
