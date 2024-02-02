@@ -1,16 +1,67 @@
 """Module with functions that handle .not.mat annotation files
 produced by evsonganaly GUI.
 """
+from __future__ import annotations
+
 import pathlib
 from typing import ClassVar, Dict, Optional
 
 import attr
-import evfuncs
 import numpy as np
 import scipy.io
 
 import crowsetta
 from crowsetta.typing import PathLike
+
+
+def load_notmat(filename: PathLike) -> dict:
+    """loads .not.mat files created by evsonganaly (Matlab GUI for labeling song)
+
+    Parameters
+    ----------
+    filename : str
+        name of .not.mat file, can include path
+
+    Returns
+    -------
+    notmat_dict : dict
+        variables from .not.mat files
+
+    Examples
+    --------
+    >>> a_notmat = 'gy6or6_baseline_230312_0808.138.cbin.not.mat'
+    >>> notmat_dict = load_notmat(a_notmat)
+    >>> notmat_dict.keys()
+    dict_keys(['__header__', '__version__', '__globals__', 'Fs', 'fname', 'labels',
+    'onsets', 'offsets', 'min_int', 'min_dur', 'threshold', 'sm_win'])
+
+    Notes
+    -----
+    Basically a wrapper around `scipy.io.loadmat`. Calls `loadmat` with `squeeze_me=True`
+    to remove extra dimensions from arrays that `loadmat` parser sometimes adds.
+
+    Also note that **onsets and offsets from .not.mat files are in milliseconds**.
+    The GUI `evsonganaly` saves onsets and offsets in these units,
+    and we avoid converting them here for consistency and interoperability
+    with Matlab code.
+    """
+    filename = pathlib.Path(filename)
+
+    # have to cast to str and call endswith because 'ext' from Path will just be .mat
+    if str(filename).endswith(".not.mat"):
+        pass
+    elif str(filename).endswith("cbin"):
+        filename = filename.parent.joinpath(filename.name + ".not.mat")
+    else:
+        ext = filename.suffix
+        raise ValueError(f"Filename should have extension .cbin.not.mat or .cbin but extension was: {ext}")
+    notmat_dict = scipy.io.loadmat(filename, squeeze_me=True)
+    # ensure that onsets and offsets are always arrays, not scalar
+    for key in ("onsets", "offsets"):
+        if np.isscalar(notmat_dict[key]):  # `squeeze_me` makes them a ``float``, this will be True in that case
+            value = np.array(notmat_dict[key])[np.newaxis]  # ``np.newaxis`` ensures 1-d array with shape (1,)
+            notmat_dict[key] = value
+    return notmat_dict
 
 
 @crowsetta.interface.SeqLike.register
@@ -70,7 +121,7 @@ class NotMat:
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
-        notmat_dict = evfuncs.load_notmat(annot_path)
+        notmat_dict = load_notmat(annot_path)
         # in .not.mat files saved by evsonganaly,
         # onsets and offsets are in units of ms, have to convert to s
         onsets = notmat_dict["onsets"] / 1000

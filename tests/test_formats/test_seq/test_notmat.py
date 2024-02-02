@@ -1,12 +1,61 @@
 from pathlib import Path, PureWindowsPath
 
-import evfuncs
 import numpy as np
 import pytest
 
 import crowsetta.formats
 
 from .asserts import assert_rounded_correct_num_decimals
+
+
+def test_load_notmat(a_notmat_path):
+    notmat_dict = crowsetta.formats.seq.notmat.load_notmat(a_notmat_path)
+    assert type(notmat_dict) is dict
+    assert 'onsets' in notmat_dict
+    assert type(notmat_dict['onsets']) == np.ndarray
+    assert notmat_dict['onsets'].dtype == float
+    assert 'offsets' in notmat_dict
+    assert type(notmat_dict['offsets']) == np.ndarray
+    assert notmat_dict['offsets'].dtype == float
+    assert 'labels' in notmat_dict
+    assert type(notmat_dict['labels']) == str
+    assert 'Fs' in notmat_dict
+    assert type(notmat_dict['Fs']) == int
+    assert 'fname' in notmat_dict
+    assert type(notmat_dict['fname']) == str
+    assert 'min_int' in notmat_dict
+    assert type(notmat_dict['min_int']) == int
+    assert 'min_dur' in notmat_dict
+    assert type(notmat_dict['min_dur']) == int
+    assert 'threshold' in notmat_dict
+    assert type(notmat_dict['threshold']) == int
+    assert 'sm_win' in notmat_dict
+    assert type(notmat_dict['sm_win']) == int
+
+
+def test_load_notmat_single_annotated_segment(notmat_with_single_annotated_segment):
+    notmat_dict = crowsetta.formats.seq.notmat.load_notmat(notmat_with_single_annotated_segment)
+    assert type(notmat_dict) is dict
+    assert 'onsets' in notmat_dict
+    assert type(notmat_dict['onsets']) == np.ndarray
+    assert notmat_dict['onsets'].dtype == float
+    assert 'offsets' in notmat_dict
+    assert type(notmat_dict['offsets']) == np.ndarray
+    assert notmat_dict['offsets'].dtype == float
+    assert 'labels' in notmat_dict
+    assert type(notmat_dict['labels']) == str
+    assert 'Fs' in notmat_dict
+    assert type(notmat_dict['Fs']) == int
+    assert 'fname' in notmat_dict
+    assert type(notmat_dict['fname']) == str
+    assert 'min_int' in notmat_dict
+    assert type(notmat_dict['min_int']) == int
+    assert 'min_dur' in notmat_dict
+    assert type(notmat_dict['min_dur']) == int
+    assert 'threshold' in notmat_dict
+    assert type(notmat_dict['threshold']) == int
+    assert 'sm_win' in notmat_dict
+    assert type(notmat_dict['sm_win']) == int
 
 
 def test_from_file(a_notmat_path):
@@ -84,7 +133,7 @@ def test_to_annot_round_times_false(test_data_root, a_notmat_path):
 
 
 def test_to_file(tmp_path, a_notmat_path):
-    notmat_dict = evfuncs.load_notmat(a_notmat_path)
+    notmat_dict = crowsetta.formats.seq.notmat.load_notmat(a_notmat_path)
 
     notmat = crowsetta.formats.seq.NotMat.from_file(a_notmat_path)
     notmat.to_file(
@@ -96,7 +145,7 @@ def test_to_file(tmp_path, a_notmat_path):
         dst=tmp_path,
     )
     notmat_made_path = tmp_path / (notmat.audio_path.name + ".not.mat")
-    notmat_made = evfuncs.load_notmat(notmat_made_path)
+    notmat_made = crowsetta.formats.seq.notmat.load_notmat(notmat_made_path)
     # can't do assert(new_dict == old_dict)
     # because headers will be different (and we want them to be different)
     for key in ["Fs", "fname", "labels", "onsets", "offsets", "min_int", "min_dur", "threshold", "sm_win"]:

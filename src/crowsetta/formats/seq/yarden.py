@@ -16,11 +16,11 @@ from crowsetta.typing import PathLike
 
 def _cast_to_arr(val):
     """helper function that casts single elements to 1-d numpy arrays"""
-    if type(val) == int or type(val) == float:
+    if isinstance(val, int) or isinstance(val, float):
         # this happens when there's only one syllable in the file
         # with only one corresponding label
         return np.asarray([val])  # so make it a one-element list
-    elif type(val) == np.ndarray:
+    elif isinstance(val, np.ndarray):
         # this should happen whenever there's more than one label
         return val
     else:

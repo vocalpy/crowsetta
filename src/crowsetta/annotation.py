@@ -1,8 +1,8 @@
 """A class to represent annotations for a single file."""
 from __future__ import annotations
 
-from pathlib import Path
 import reprlib
+from pathlib import Path
 from typing import Optional
 
 import crowsetta
@@ -89,12 +89,10 @@ class Annotation:
 
         if seq:
             if not (
-                    isinstance(seq, crowsetta.Sequence) or
-                    (isinstance(seq, list) and all([isinstance(seq_, crowsetta.Sequence) for seq_ in seq]))
+                isinstance(seq, crowsetta.Sequence)
+                or (isinstance(seq, list) and all([isinstance(seq_, crowsetta.Sequence) for seq_ in seq]))
             ):
-                raise TypeError(
-                    f"``seq`` should be a crowsetta.Sequence or list of Sequences but was: {type(seq)}"
-                )
+                raise TypeError(f"``seq`` should be a crowsetta.Sequence or list of Sequences but was: {type(seq)}")
             self.seq = seq
 
         if bboxes:

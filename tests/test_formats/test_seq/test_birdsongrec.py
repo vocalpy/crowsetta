@@ -1,4 +1,6 @@
 """test functions in birdsongrec module"""
+import os
+
 import numpy as np
 import pytest
 import soundfile
@@ -6,6 +8,102 @@ import soundfile
 import crowsetta
 
 from .asserts import assert_rounded_correct_num_decimals
+
+
+class TestBirdsongRecSyllable:
+    def test_init(self):
+        syl = crowsetta.formats.seq.birdsongrec.BirdsongRecSyllable(position=32000, length=3200, label='0')
+        for attr in ['position', 'length', 'label']:
+            assert hasattr(syl, attr)
+
+    def test_position_not_int_raises(self):
+        with pytest.raises(TypeError):
+            # position should be an int
+            crowsetta.formats.seq.birdsongrec.BirdsongRecSyllable(position=1.5, length=3200, label='0')
+
+    def test_length_not_int_raises(self):
+        with pytest.raises(TypeError):
+            # length should be an int
+            crowsetta.formats.seq.birdsongrec.BirdsongRecSyllable(position=32500, length=2709.3, label='0')
+
+    def test_label_not_str_raises(self):
+        with pytest.raises(TypeError):
+            # label should be a str
+            crowsetta.formats.seq.birdsongrec.BirdsongRecSyllable(position=32500, length=2709.3, label=0)
+
+
+@pytest.fixture
+def syl_list():
+    syl1 = crowsetta.formats.seq.birdsongrec.BirdsongRecSyllable(position=32000, length=3200, label='0')
+    syl2 = crowsetta.formats.seq.birdsongrec.BirdsongRecSyllable(position=64000, length=3200, label='0')
+    syl3 = crowsetta.formats.seq.birdsongrec.BirdsongRecSyllable(position=96000, length=3200, label='0')
+    return [syl1, syl2, syl3]
+
+
+@pytest.fixture
+def birdsongrec_wavfile(birdsong_rec_wav_path):
+    return birdsong_rec_wav_path / '0.wav'
+
+
+class TestBirdsongRecSequence:
+
+    def test_init(self, syl_list, birdsongrec_wavfile):
+        seq = crowsetta.formats.seq.birdsongrec.BirdsongRecSequence(
+            wav_file=birdsongrec_wavfile, position=16000, length=120000, syl_list=syl_list
+        )
+        for attr in ['wav_file', 'position', 'length', 'num_syls', 'syls']:
+            assert hasattr(seq, attr)
+
+    def test_position_not_int_raises(self, syl_list, birdsongrec_wavfile):
+        with pytest.raises(TypeError):
+            # position should be an int
+            crowsetta.formats.seq.birdsongrec.BirdsongRecSequence(
+                wav_file=birdsongrec_wavfile, position=1.5, length=3200, syl_list=syl_list
+            )
+
+    def test_length_not_int_raises(self, syl_list, birdsongrec_wavfile):
+        with pytest.raises(TypeError):
+            # length should be an int
+            crowsetta.formats.seq.birdsongrec.BirdsongRecSequence(
+                wav_file=birdsongrec_wavfile, position=32500, length=2709.3, syl_list=syl_list
+            )
+
+
+def test_parsexml(birdsong_rec_xml_file):
+    seq_list_no_concat = crowsetta.formats.seq.birdsongrec.parse_xml(
+        birdsong_rec_xml_file, concat_seqs_into_songs=False, return_wav_abspath=False, wav_abspath=None
+    )
+    assert all([type(seq) == crowsetta.formats.seq.birdsongrec.BirdsongRecSequence
+                for seq in seq_list_no_concat])
+
+
+def test_parsexml_concat_seq_into_songs(birdsong_rec_xml_file):
+    seq_list_no_concat = crowsetta.formats.seq.birdsongrec.parse_xml(
+        birdsong_rec_xml_file, concat_seqs_into_songs=False, return_wav_abspath=False, wav_abspath=None
+    )
+    seq_list_concat = crowsetta.formats.seq.birdsongrec.parse_xml(
+        birdsong_rec_xml_file, concat_seqs_into_songs=True, return_wav_abspath=False, wav_abspath=None
+    )
+    assert all([type(seq) == crowsetta.formats.seq.birdsongrec.BirdsongRecSequence for seq in seq_list_concat])
+    assert seq_list_no_concat != seq_list_concat
+
+
+def test_parsexml_wav_abspath_none(birdsong_rec_xml_file):
+    # test return_wav_abspath works with wav_abpsath=None
+    seq_list_abspath = crowsetta.formats.seq.birdsongrec.parse_xml(
+        birdsong_rec_xml_file, concat_seqs_into_songs=True, return_wav_abspath=True, wav_abspath=None
+    )
+    for seq in seq_list_abspath:
+        assert os.path.isfile(seq.wav_file)
+
+
+def test_parsexml_wav_abspath(birdsong_rec_xml_file, birdsong_rec_wav_path):
+    # test return_wav_abspath works with wav_abpsath specified
+    seq_list_abspath = crowsetta.formats.seq.birdsongrec.parse_xml(
+        birdsong_rec_xml_file, concat_seqs_into_songs=True, return_wav_abspath=True, wav_abspath=birdsong_rec_wav_path
+    )
+    for seq in seq_list_abspath:
+        assert os.path.isfile(seq.wav_file)
 
 
 @pytest.mark.parametrize(

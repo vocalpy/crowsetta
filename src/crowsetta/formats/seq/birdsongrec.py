@@ -8,17 +8,199 @@ Koumura T, Okanoya K (2016) Automatic Recognition of Element Classes and
 Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
 doi:10.1371/journal.pone.0159188
 """
+from __future__ import annotations
+
+import os
 import pathlib
 import warnings
+import xml.etree.ElementTree as ET
 from typing import ClassVar, List, Optional
 
 import attr
-import birdsongrec
 import numpy as np
 import soundfile
 
 import crowsetta
 from crowsetta.typing import PathLike
+
+
+class BirdsongRecSyllable:
+    """Object that represents a syllable.
+
+    Attributes
+    ----------
+    position : int
+        starting sample number ("frame") within .wav file
+        *** relative to start of sequence! ***
+    length : int
+        duration given as number of samples
+    label : str
+        text representation of syllable as classified by a human
+        or a machine learning algorithm
+    """
+
+    def __init__(self, position: int, length: int, label: str) -> None:
+        if not isinstance(position, int):
+            raise TypeError(f"position must be an int, not type {type(position)}")
+        if not isinstance(length, int):
+            raise TypeError(f"length must be an int, not type {type(length)}")
+        if not isinstance(label, str):
+            raise TypeError(f"label must be a string, not type {type(label)}")
+        self.position = position
+        self.length = length
+        self.label = label
+
+    def __repr__(self):
+        return f"BirdsongRecSyllable(position={self.position}, length={self.length}, label={self.label})"
+
+
+class BirdsongRecSequence:
+    """Class from birdsong-recognition
+    that represents a sequence of syllables.
+
+    Attributes
+    ----------
+    wav_file : string
+        file name of .wav file in which sequence occurs
+    position : int
+        starting sample number within .wav file
+    length : int
+        duration given as number of samples
+    syls : list
+        list of syllable objects that make up sequence
+    seq_spect : spectrogram object
+    """
+
+    def __init__(self, wav_file: PathLike, position: int, length: int, syl_list: list[BirdsongRecSyllable]):
+        if not isinstance(wav_file, (str, pathlib.Path)):
+            raise TypeError(f"wav_file must be a string or pathlib.Path, not type {type(wav_file)}")
+        wav_file = str(wav_file)
+        if not isinstance(position, int):
+            raise TypeError(f"position must be an int, not type {type(position)}")
+        if not isinstance(length, int):
+            raise TypeError(f"length must be an int, not type {type(length)}")
+        if not isinstance(syl_list, list):
+            raise TypeError(f"syl_list must be a list, not type {type(syl_list)}")
+        if not all([isinstance(syl, BirdsongRecSyllable) for syl in syl_list]):
+            raise TypeError("not all elements in syl list are of type BirdsongRecSyllable: " f"{syl_list}")
+        self.wav_file = wav_file
+        self.position = position
+        self.length = length
+        self.num_syls = len(syl_list)
+        self.syls = syl_list
+
+    def __repr__(self):
+        return f"Sequence(wav_file={self.wav_file}, position={self.position}, length={self.length}, syls={self.syls})"
+
+
+def parse_xml(
+    xml_file: PathLike,
+    concat_seqs_into_songs: bool = False,
+    return_wav_abspath: bool = False,
+    wav_abspath: PathLike = None,
+) -> list[BirdsongRecSequence]:
+    """parses Annotation.xml files from the BirdsongRecognition dataset:
+    Koumura, T. (2016). BirdsongRecognition (Version 1). figshare.
+    https://doi.org/10.6084/m9.figshare.3470165.v1
+    https://figshare.com/articles/BirdsongRecognition/3470165
+
+    Parameters
+    ----------
+    xml_file : str
+        filename of .xml file, e.g. 'Annotation.xml'
+    concat_seqs_into_songs : bool
+        if True, concatenate sequences into songs, where each .wav file is a
+        song. Default is False.
+    return_wav_abspath : bool
+        if True, change value for the wav_file field of sequences to absolute path,
+        instead of just the .wav file name (without a path). This option is
+        useful if you need to specify the path to data on your system.
+        Default is False, in which the .wav file name is returned as written in the
+        Annotation.xml file.
+    wav_abspath : str
+        Path to directory in which .wav files are found. Specify this if you have changed
+        the structure of the repository so that the .wav files are no longer in a
+        directory named Wave that's in the same parent directory as the Annotation.xml
+        file. Default is None, in which case the structure just described is assumed.
+
+    Returns
+    -------
+    seq_list : list of BirdsongrecSequence objects
+        if concat_seqs_into_songs is True, then each sequence will correspond to one song,
+        i.e., the annotation for one .wav file
+
+    Examples
+    --------
+    >>> seq_list = parse_xml(xml_file='./Bird0/Annotation.xml', concat_seqs_into_songs=False)
+    >>> seq_list[0]
+    Sequence from 0.wav with position 32000 and length 43168
+
+    Notes
+    -----
+    Parses files that adhere to this XML Schema document:
+    https://github.com/NickleDave/birdsong-recognition-dataset/blob/main/doc/xsd/AnnotationSchema.xsd
+    """
+    if return_wav_abspath:
+        if wav_abspath:
+            if not os.path.isdir(wav_abspath):
+                raise NotADirectoryError(f"return_wav_abspath is True but {wav_abspath} " "is not a valid directory.")
+    tree = ET.ElementTree(file=xml_file)
+    seq_list = []
+    for seq in tree.iter(tag="Sequence"):
+        wav_file = seq.find("WaveFileName").text
+        if return_wav_abspath:
+            if wav_abspath:
+                wav_file = os.path.join(wav_abspath, wav_file)
+            else:
+                # assume .wav file is in Wave directory that's a child to wherever
+                # Annotation.xml file is kept (since this is how the repository is
+                # structured)
+                xml_dirname = os.path.dirname(xml_file)
+                wav_file = os.path.join(xml_dirname, "Wave", wav_file)
+            if not os.path.isfile(wav_file):
+                raise FileNotFoundError("File {wav_file} is not found")
+
+        position = int(seq.find("Position").text)
+        length = int(seq.find("Length").text)
+        syl_list = []
+        for syl in seq.iter(tag="Note"):
+            syl_position = int(syl.find("Position").text)
+            syl_length = int(syl.find("Length").text)
+            label = syl.find("Label").text
+
+            syl_obj = BirdsongRecSyllable(position=syl_position, length=syl_length, label=label)
+            syl_list.append(syl_obj)
+        seq_obj = BirdsongRecSequence(wav_file=wav_file, position=position, length=length, syl_list=syl_list)
+        seq_list.append(seq_obj)
+
+    if concat_seqs_into_songs:
+        song_list = []
+        curr_wav_file = seq_list[0].wav_file
+        new_seq_obj = seq_list[0]
+        for syl in new_seq_obj.syls:
+            syl.position += new_seq_obj.position
+
+        for seq in seq_list[1:]:
+            if seq.wav_file == curr_wav_file:
+                new_seq_obj.length += seq.length
+                new_seq_obj.num_syls += seq.num_syls
+                for syl in seq.syls:
+                    syl.position += seq.position
+                new_seq_obj.syls += seq.syls
+
+            else:
+                song_list.append(new_seq_obj)
+                curr_wav_file = seq.wav_file
+                new_seq_obj = seq
+                for syl in new_seq_obj.syls:
+                    syl.position += new_seq_obj.position
+
+        song_list.append(new_seq_obj)  # to append last song
+
+        return song_list
+
+    else:
+        return seq_list
 
 
 @crowsetta.interface.SeqLike.register
@@ -35,7 +217,7 @@ class BirdsongRec:
     ext: str
         Extension of files in annotation format: ``'.xml'``.
     sequences: list
-        List of :class:`birdsongrec.Sequence` instances.
+        List of :class:`BirdsongRecSequence` instances.
     annot_path: pathlib.Path
         Path to file from which annotations were loaded.
         Typically with filename 'Annotation.xml'.
@@ -85,7 +267,7 @@ class BirdsongRec:
     name: ClassVar[str] = "birdsong-recognition-dataset"
     ext: ClassVar[str] = ".xml"
 
-    sequences: List[birdsongrec.Sequence]
+    sequences: List[BirdsongRecSequence]
     annot_path: pathlib.Path = attr.field(converter=pathlib.Path)
     wav_path: Optional[pathlib.Path] = attr.field(default=None, converter=attr.converters.optional(pathlib.Path))
 
@@ -140,7 +322,7 @@ class BirdsongRec:
 
         # `birdsong-recongition-dataset` has a 'Sequence' class
         # but it is different from a `crowsetta.Sequence`
-        birdsongrec_seqs = birdsongrec.parse_xml(annot_path, concat_seqs_into_songs=concat_seqs_into_songs)
+        birdsongrec_seqs = parse_xml(annot_path, concat_seqs_into_songs=concat_seqs_into_songs)
         return cls(sequences=birdsongrec_seqs, annot_path=annot_path, wav_path=wav_path)
 
     def to_seq(
@@ -161,7 +343,7 @@ class BirdsongRec:
         samplerate : int
             Sampling rate for wave files. Used to convert
             ``position`` and ``length`` attributes of
-            ``birdsongrec.Syllable`` from sample number
+            ``BirdsongrecSyllable`` from sample number
             to seconds. Default is None, in which ths function
             tries to open each .wav file and determine
             the actual sampling rate. If this does not work,
@@ -262,7 +444,7 @@ class BirdsongRec:
         samplerate
             Sampling rate for wave files. Used to convert
             ``position`` and ``length`` attributes of
-            ``birdsongrec.Syllable`` from sample number
+            ``BirdsongRecSyllable`` from sample number
             to seconds. Default is None, in which ths function
             tries to open each .wav file and determine
             the actual sampling rate. If this does not work,
