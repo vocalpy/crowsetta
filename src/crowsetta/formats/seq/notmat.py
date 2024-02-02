@@ -1,6 +1,8 @@
 """Module with functions that handle .not.mat annotation files
 produced by evsonganaly GUI.
 """
+from __future__ import annotations
+
 import pathlib
 from typing import ClassVar, Dict, Optional
 
@@ -12,7 +14,7 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-def load_notmat(filename):
+def load_notmat(filename: PathLike) -> dict:
     """loads .not.mat files created by evsonganaly (Matlab GUI for labeling song)
 
     Parameters
@@ -52,12 +54,10 @@ def load_notmat(filename):
         filename = filename.parent.joinpath(filename.name + ".not.mat")
     else:
         ext = filename.suffix
-        raise ValueError(
-            f"Filename should have extension .cbin.not.mat or .cbin but extension was: {ext}"
-        )
+        raise ValueError(f"Filename should have extension .cbin.not.mat or .cbin but extension was: {ext}")
     notmat_dict = scipy.io.loadmat(filename, squeeze_me=True)
     # ensure that onsets and offsets are always arrays, not scalar
-    for key in ('onsets', 'offsets'):
+    for key in ("onsets", "offsets"):
         if np.isscalar(notmat_dict[key]):  # `squeeze_me` makes them a ``float``, this will be True in that case
             value = np.array(notmat_dict[key])[np.newaxis]  # ``np.newaxis`` ensures 1-d array with shape (1,)
             notmat_dict[key] = value

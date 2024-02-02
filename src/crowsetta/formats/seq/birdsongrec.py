@@ -8,11 +8,13 @@ Koumura T, Okanoya K (2016) Automatic Recognition of Element Classes and
 Boundaries in the Birdsong with Variable Sequences. PLoS ONE 11(7): e0159188.
 doi:10.1371/journal.pone.0159188
 """
+from __future__ import annotations
+
 import os
 import pathlib
 import warnings
-from typing import ClassVar, List, Optional
 import xml.etree.ElementTree as ET
+from typing import ClassVar, List, Optional
 
 import attr
 import numpy as np
@@ -36,13 +38,14 @@ class BirdsongRecSyllable:
         text representation of syllable as classified by a human
         or a machine learning algorithm
     """
-    def __init__(self, position, length, label):
+
+    def __init__(self, position: int, length: int, label: str) -> None:
         if not isinstance(position, int):
-            raise TypeError(f'position must be an int, not type {type(position)}')
+            raise TypeError(f"position must be an int, not type {type(position)}")
         if not isinstance(length, int):
-            raise TypeError(f'length must be an int, not type {type(length)}')
+            raise TypeError(f"length must be an int, not type {type(length)}")
         if not isinstance(label, str):
-            raise TypeError(f'label must be a string, not type {type(label)}')
+            raise TypeError(f"label must be a string, not type {type(label)}")
         self.position = position
         self.length = length
         self.label = label
@@ -67,20 +70,19 @@ class BirdsongRecSequence:
         list of syllable objects that make up sequence
     seq_spect : spectrogram object
     """
-    def __init__(self, wav_file, position, length, syl_list):
 
+    def __init__(self, wav_file: PathLike, position: int, length: int, syl_list: list[BirdsongRecSyllable]):
         if not isinstance(wav_file, (str, pathlib.Path)):
-            raise TypeError(f'wav_file must be a string or pathlib.Path, not type {type(wav_file)}')
+            raise TypeError(f"wav_file must be a string or pathlib.Path, not type {type(wav_file)}")
         wav_file = str(wav_file)
         if not isinstance(position, int):
-            raise TypeError(f'position must be an int, not type {type(position)}')
+            raise TypeError(f"position must be an int, not type {type(position)}")
         if not isinstance(length, int):
-            raise TypeError(f'length must be an int, not type {type(length)}')
+            raise TypeError(f"length must be an int, not type {type(length)}")
         if not isinstance(syl_list, list):
-            raise TypeError(f'syl_list must be a list, not type {type(syl_list)}')
+            raise TypeError(f"syl_list must be a list, not type {type(syl_list)}")
         if not all([type(syl) == BirdsongRecSyllable for syl in syl_list]):
-            raise TypeError('not all elements in syl list are of type BirdsongRecSyllable: '
-                            f'{syl_list}')
+            raise TypeError("not all elements in syl list are of type BirdsongRecSyllable: " f"{syl_list}")
         self.wav_file = wav_file
         self.position = position
         self.length = length
@@ -91,9 +93,12 @@ class BirdsongRecSequence:
         return f"Sequence(wav_file={self.wav_file}, position={self.position}, length={self.length}, syls={self.syls})"
 
 
-
-def parse_xml(xml_file, concat_seqs_into_songs=False, return_wav_abspath=False,
-              wav_abspath=None):
+def parse_xml(
+    xml_file: PathLike,
+    concat_seqs_into_songs: bool = False,
+    return_wav_abspath: bool = False,
+    wav_abspath: PathLike = None,
+) -> list[BirdsongRecSequence]:
     """parses Annotation.xml files from the BirdsongRecognition dataset:
     Koumura, T. (2016). BirdsongRecognition (Version 1). figshare.
     https://doi.org/10.6084/m9.figshare.3470165.v1
@@ -138,12 +143,11 @@ def parse_xml(xml_file, concat_seqs_into_songs=False, return_wav_abspath=False,
     if return_wav_abspath:
         if wav_abspath:
             if not os.path.isdir(wav_abspath):
-                raise NotADirectoryError(f'return_wav_abspath is True but {wav_abspath} '
-                                         'is not a valid directory.')
+                raise NotADirectoryError(f"return_wav_abspath is True but {wav_abspath} " "is not a valid directory.")
     tree = ET.ElementTree(file=xml_file)
     seq_list = []
-    for seq in tree.iter(tag='Sequence'):
-        wav_file = seq.find('WaveFileName').text
+    for seq in tree.iter(tag="Sequence"):
+        wav_file = seq.find("WaveFileName").text
         if return_wav_abspath:
             if wav_abspath:
                 wav_file = os.path.join(wav_abspath, wav_file)
@@ -152,26 +156,21 @@ def parse_xml(xml_file, concat_seqs_into_songs=False, return_wav_abspath=False,
                 # Annotation.xml file is kept (since this is how the repository is
                 # structured)
                 xml_dirname = os.path.dirname(xml_file)
-                wav_file = os.path.join(xml_dirname, 'Wave', wav_file)
+                wav_file = os.path.join(xml_dirname, "Wave", wav_file)
             if not os.path.isfile(wav_file):
-                raise FileNotFoundError('File {wav_file} is not found')
+                raise FileNotFoundError("File {wav_file} is not found")
 
-        position = int(seq.find('Position').text)
-        length = int(seq.find('Length').text)
+        position = int(seq.find("Position").text)
+        length = int(seq.find("Length").text)
         syl_list = []
-        for syl in seq.iter(tag='Note'):
-            syl_position = int(syl.find('Position').text)
-            syl_length = int(syl.find('Length').text)
-            label = syl.find('Label').text
+        for syl in seq.iter(tag="Note"):
+            syl_position = int(syl.find("Position").text)
+            syl_length = int(syl.find("Length").text)
+            label = syl.find("Label").text
 
-            syl_obj = BirdsongRecSyllable(position=syl_position,
-                               length=syl_length,
-                               label=label)
+            syl_obj = BirdsongRecSyllable(position=syl_position, length=syl_length, label=label)
             syl_list.append(syl_obj)
-        seq_obj = BirdsongRecSequence(wav_file=wav_file,
-                           position=position,
-                           length=length,
-                           syl_list=syl_list)
+        seq_obj = BirdsongRecSequence(wav_file=wav_file, position=position, length=length, syl_list=syl_list)
         seq_list.append(seq_obj)
 
     if concat_seqs_into_songs:

@@ -173,7 +173,7 @@ def parse_fp(fp: TextIO, keep_empty: bool = False) -> dict:
     }
 
     tiers = []
-    for i in range(n_tier):
+    for _ in range(n_tier):
         if not is_short:
             fp.readline()  # skip item[\d]: (where \d is some number)
         tier_type = get_str_from_next_line(fp)
@@ -182,7 +182,7 @@ def parse_fp(fp: TextIO, keep_empty: bool = False) -> dict:
         xmax_tier = get_float_from_next_line(fp)
 
         entries = []  # intervals or points depending on tier type
-        for i in range(get_int_from_next_line(fp)):
+        for _ in range(get_int_from_next_line(fp)):
             if not is_short:
                 fp.readline()  # skip intervals [\d]
             if tier_type == INTERVAL_TIER:
@@ -246,7 +246,7 @@ def parse(textgrid_path: str | pathlib.Path, keep_empty: bool = False) -> dict:
     try:
         with textgrid_path.open("r", encoding="utf-16") as fp:
             textgrid_raw = parse_fp(fp, keep_empty)
-    except (UnicodeError, UnicodeDecodeError):
+    except UnicodeError:
         with textgrid_path.open("r", encoding="utf-8") as fp:
             textgrid_raw = parse_fp(fp, keep_empty)
     return textgrid_raw

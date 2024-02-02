@@ -368,7 +368,9 @@ class TextGrid:
 
         return seq
 
-    def to_annot(self, tier: int | str | None = None, round_times: bool = True, decimals: int = 3) -> crowsetta.Annotation:
+    def to_annot(
+        self, tier: int | str | None = None, round_times: bool = True, decimals: int = 3
+    ) -> crowsetta.Annotation:
         """Convert interval tier or tiers from this TextGrid annotation
         to a :class:`crowsetta.Annotation` with a :data:`seq` attribute.
 

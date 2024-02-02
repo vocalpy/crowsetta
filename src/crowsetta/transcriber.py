@@ -121,6 +121,7 @@ class Transcriber:
                     "and the name 'csv' will stop working in the next version. "
                     "Please change any usages of the name 'csv' to 'generic-seq'` now.",
                     FutureWarning,
+                    stacklevel=2,
                 )
             _format_class = formats.by_name(format)
         elif inspect.isclass(format):
