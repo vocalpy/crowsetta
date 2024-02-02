@@ -81,7 +81,7 @@ class BirdsongRecSequence:
             raise TypeError(f"length must be an int, not type {type(length)}")
         if not isinstance(syl_list, list):
             raise TypeError(f"syl_list must be a list, not type {type(syl_list)}")
-        if not all([type(syl) == BirdsongRecSyllable for syl in syl_list]):
+        if not all([isinstance(syl, BirdsongRecSyllable) for syl in syl_list]):
             raise TypeError("not all elements in syl list are of type BirdsongRecSyllable: " f"{syl_list}")
         self.wav_file = wav_file
         self.position = position

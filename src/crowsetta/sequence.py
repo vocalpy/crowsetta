@@ -82,9 +82,9 @@ class Sequence:
             Numpy array of type char, label for each annotated segment.
         """
         if segments is not None:
-            if type(segments) == Segment:
+            if isinstance(segments, Segment):
                 segments = (segments,)
-            elif type(segments) in (list, tuple):
+            elif isinstance(segments, (list, tuple)):
                 segments = tuple(segments)
             else:
                 raise TypeError(
@@ -140,7 +140,7 @@ class Sequence:
             self._offset_samples,
             self._labels,
         ]
-        list_for_hash = [tuple(item.tolist()) if type(item) == np.ndarray else item for item in list_for_hash]
+        list_for_hash = [tuple(item.tolist()) if isinstance(item, np.ndarray) else item for item in list_for_hash]
         tup_for_hash = tuple(list_for_hash)
         return hash(tup_for_hash)
 
@@ -181,9 +181,9 @@ class Sequence:
 
     @staticmethod
     def _convert_labels(labels):
-        if type(labels) == str:
+        if isinstance(labels, str):
             labels = np.asarray(list(labels))
-        elif type(labels) == list or type(labels) == tuple:
+        elif isinstance(labels, list) or isinstance(labels, tuple):
             try:
                 labels = [str(label) for label in labels]
             except ValueError:
@@ -194,7 +194,7 @@ class Sequence:
     @staticmethod
     def _validate_segments_type(segments):
         """Validate that all items in list of segments are Segment"""
-        if not all([type(seg) == Segment for seg in segments]):
+        if not all([isinstance(seg, Segment) for seg in segments]):
             raise TypeError(
                 "A Sequence must be made from a list of Segments but not all " "items in the list passed were Segments."
             )
