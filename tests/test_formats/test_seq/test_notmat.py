@@ -1,6 +1,5 @@
 from pathlib import Path, PureWindowsPath
 
-import evfuncs
 import numpy as np
 import pytest
 
