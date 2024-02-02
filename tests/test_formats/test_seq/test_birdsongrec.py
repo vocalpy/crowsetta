@@ -84,7 +84,7 @@ def test_parsexml_concat_seq_into_songs(birdsong_rec_xml_file):
     seq_list_concat = crowsetta.formats.seq.birdsongrec.parse_xml(
         birdsong_rec_xml_file, concat_seqs_into_songs=True, return_wav_abspath=False, wav_abspath=None
     )
-    assert all([type(seq) == crowsetta.formats.seq.birdsongrec.Sequence for seq in seq_list_concat])
+    assert all([type(seq) == crowsetta.formats.seq.birdsongrec.BirdsongRecSequence for seq in seq_list_concat])
     assert seq_list_no_concat != seq_list_concat
 
 
@@ -97,10 +97,10 @@ def test_parsexml_wav_abspath_none(birdsong_rec_xml_file):
         assert os.path.isfile(seq.wav_file)
 
 
-def test_parsexml_wav_abspath(birdsong_rec_xml_file):
+def test_parsexml_wav_abspath(birdsong_rec_xml_file, birdsong_rec_wav_path):
     # test return_wav_abspath works with wav_abpsath specified
     seq_list_abspath = crowsetta.formats.seq.birdsongrec.parse_xml(
-        birdsong_rec_xml_file, concat_seqs_into_songs=True, return_wav_abspath=True, wav_abspath=wav_abpath
+        birdsong_rec_xml_file, concat_seqs_into_songs=True, return_wav_abspath=True, wav_abspath=birdsong_rec_wav_path
     )
     for seq in seq_list_abspath:
         assert os.path.isfile(seq.wav_file)
