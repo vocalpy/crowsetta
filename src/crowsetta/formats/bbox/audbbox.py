@@ -96,8 +96,12 @@ def df_to_lines(df: pd.DataFrame) -> list[str]:
     return lines
 
 
-class AudBBoxSchema(pandera.SchemaModel):
-    """A :class:`pandera.SchemaModel` that
+class AudBBoxSchema(pandera.DataFrameModel
+
+):
+    """A :class:`pandera.DataFrameModel
+
+` that
     validates :mod:`pandas` dataframes
     loaded from Audacity label tracks
     in extended format, exported to txt files
