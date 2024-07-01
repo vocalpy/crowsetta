@@ -19,8 +19,12 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-class TimitTranscriptSchema(pandera.SchemaModel):
-    """A :class:`pandera.SchemaModel` that validates :type:`pandas.DataFrame`s
+class TimitTranscriptSchema(pandera.DataFrameModel
+
+):
+    """A :class:`pandera.DataFrameModel
+
+` that validates :type:`pandas.DataFrame`s
     loaded from a phn or wrd file in the TIMIT[1]_ transcription format.
 
     References

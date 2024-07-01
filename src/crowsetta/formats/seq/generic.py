@@ -35,8 +35,12 @@ Both units can also be specified. Conversion between units is not validated.
 """
 
 
-class GenericSeqSchema(pandera.SchemaModel):
-    """A :class: `pandera.SchemaModel` that validates
+class GenericSeqSchema(pandera.DataFrameModel
+
+):
+    """A :class: `pandera.DataFrameModel
+
+` that validates
     :type:`pandas.DataFrame`s
     loaded from a csv file  in the ``'generic-seq'`` annotation
     format.

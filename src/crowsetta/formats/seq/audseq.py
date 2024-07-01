@@ -15,8 +15,12 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-class AudSeqSchema(pandera.SchemaModel):
-    """A :class:`pandera.SchemaModel`
+class AudSeqSchema(pandera.DataFrameModel
+
+):
+    """A :class:`pandera.DataFrameModel
+
+`
     that validates :type:`pandas.DataFrame`s
     loaded from Audacity Labeltrack annotations
     exported to txt files in the standard format.

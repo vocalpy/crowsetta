@@ -17,8 +17,12 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-class RavenSchema(pandera.SchemaModel):
-    """A :class:`pandera.SchemaModel` that validates :type:`pandas.DataFrame`s
+class RavenSchema(pandera.DataFrameModel
+
+):
+    """A :class:`pandera.DataFrameModel
+
+` that validates :type:`pandas.DataFrame`s
     loaded from a txt file, created by exporting a Selection Table
     from Raven.
     """
