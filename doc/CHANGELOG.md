@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   fixes `AttributeError` on import after new install
   [#266](https://github.com/NickleDave/crowsetta/pull/266).
   Fixes [#265](https://github.com/NickleDave/crowsetta/issues/265).
+- Change range of Python version supported from 3.9-3.11 to 3.10-3.12
+  [#268](https://github.com/NickleDave/crowsetta/pull/268).
+  Fixes [#267](https://github.com/NickleDave/crowsetta/issues/267).
 
 ## 5.0.2 -- 2024-01-01
 ### Fixed
