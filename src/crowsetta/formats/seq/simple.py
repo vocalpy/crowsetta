@@ -30,9 +30,7 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-class SimpleSeqSchema(pandera.DataFrameModel
-
-):
+class SimpleSeqSchema(pandera.DataFrameModel):
     """A :class:`pandera.DataFrameModel
 
 `
