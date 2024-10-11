@@ -21,7 +21,7 @@ kernelspec:
 :class: sd-fs-3
 
 A Python tool to work with any format for annotating 
-animal vocalizations and bioacoustics data.
+animal sounds and bioacoustics data.
 :::
 
 :::{grid-item}
@@ -35,7 +35,7 @@ animal vocalizations and bioacoustics data.
 ::::
 
 crowsetta provides a Pythonic way to work with annotation formats 
-for animal vocalizations and bioacoustics data. 
+for animal sounds and bioacoustics data. 
 Files in these formats are created by
 applications that enable users to annotate audio and/or spectrograms. 
 Such annotations typically include the times when sound events start and stop, 
@@ -94,7 +94,7 @@ CC0 1.0 License.**
 - Convert your annotations into a format that's needed to train machine learning models
 
 <h3>Who would want to use crowsetta?</h3>
-Anyone that works with animal vocalizations 
+Anyone that works with animal sounds 
 or other bioacoustics data that is annotated in some way.
 Maybe you are a neuroscientist trying to figure out how songbirds learn their song,
 or why mice emit ultrasonic calls. Or maybe you're an ecologist studying dialects of finches
