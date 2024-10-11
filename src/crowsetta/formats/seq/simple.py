@@ -31,9 +31,7 @@ from crowsetta.typing import PathLike
 
 
 class SimpleSeqSchema(pandera.DataFrameModel):
-    """A :class:`pandera.DataFrameModel
-
-`
+    """A :class:`pandera.DataFrameModel`
     that validates :type:`pandas.DataFrame`s
     loaded from a csv or txt file in a 'simple-seq' format.
 
