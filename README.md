@@ -4,7 +4,7 @@
 </div>
 <hr>
 
-## A Python tool to work with any format for annotating animal vocalizations and bioacoustics data
+## A Python tool to work with any format for annotating animal sounds and bioacoustics data
 
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![pyOpenSci](https://tinyurl.com/y22nb8up)](https://github.com/pyOpenSci/software-review/issues/68)
@@ -20,7 +20,7 @@
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 crowsetta provides a Pythonic way to work with annotation formats 
-for animal vocalizations and bioacoustics data. 
+for animal sounds and bioacoustics data. 
 These formats are used, for example, by 
 applications that enable users to annotate audio and/or spectrograms. 
 Such annotations typically include the times when sound events start and stop, 
@@ -75,7 +75,7 @@ CC0 1.0 License.
 ---
 
 Who would want to use crowsetta?
-Anyone that works with animal vocalizations 
+Anyone that works with animal sounds 
 or other bioacoustics data that is annotated in some way.
 Maybe you are a neuroscientist trying to figure out how songbirds learn their song,
 or why mice emit ultrasonic calls. Or maybe you're an ecologist studying dialects of finches
