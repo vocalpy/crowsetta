@@ -172,6 +172,33 @@ class SimpleSeq:
             df = pd.read_csv(annot_path)
 
         if columns_map:
+            if not isinstance(columns_map, dict):
+                raise TypeError(
+                    f"The `columns_map` argument must be a `dict` but type was: {type(dict)}"
+                )
+            if not all(
+                (
+                    isinstance(k, str) and isinstance(v, str)
+                    for k, v in columns_map.items()
+                )
+            ):
+                raise ValueError(
+                    "The `columns_map` argument must be a dict that maps string keys to string values, "
+                    "but not all keys and values were strings."
+                )
+            if not all(
+                v in ("onset_s", "offset_s", "label")
+                for v in columns_map.values()
+            ):
+                invalid_values = [
+                    v
+                    for v in columns_map.values()
+                    if v not in ("onset_s", "offset_s", "label")
+                ]
+                raise ValueError(
+                    f'The `columns_map` argument must map keys (column names in the csv) to these values: ("onset_s", "offset_s", "label"). '
+                    f'The following values are invalid: {invalid_values}'
+                )
             df.columns = [
                 columns_map[column_name] if column_name in columns_map else column_name
                 for column_name in df.columns
