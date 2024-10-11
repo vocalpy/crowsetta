@@ -1,0 +1,4 @@
+Annotation file for spinetail in Audacity extended LabelTrack format.
+Data file used by scikit-maad for testing.
+Adapted under BSD License: https://github.com/scikit-maad/scikit-maad/blob/production/LICENSE
+scikit-maad developers. (2018-present).

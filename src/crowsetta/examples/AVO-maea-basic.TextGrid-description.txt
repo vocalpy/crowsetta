@@ -1,3 +1,4 @@
+TextGrid annotation file from dataset:
 Sound files and Praat TextGrids accompanying 
 Sasha Calhoun, Corinne Seals, Toaga Alefosio and Niusila Faamanatu-Eteuati,
  'Phrasal Prosody of Heritage Speakers of Samoan in Aotearoa New Zealand', 

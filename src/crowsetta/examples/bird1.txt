@@ -1,0 +1,3 @@
+Example of a custom format converted to the GenericSeq format,
+from the crowsetta docs:
+https://crowsetta.readthedocs.io/en/latest/howto/howto-user-format.html

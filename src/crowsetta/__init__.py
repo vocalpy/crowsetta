@@ -1,4 +1,4 @@
-from . import data, interface, typing, validation
+from . import examples, interface, typing, validation
 from .__about__ import (
     __author__,
     __commit__,
@@ -12,6 +12,7 @@ from .__about__ import (
 )
 from .annotation import Annotation
 from .bbox import BBox
+from .examples._examples import example
 from .segment import Segment
 from .sequence import Sequence
 from .transcriber import Transcriber
@@ -50,7 +51,8 @@ __all__ = [
     "SimpleSeq", 
     "Timit", 
     "SongAnnotationGUI",
-    "data",
+    "example",
+    "examples",
     "formats",
     "interface",
     "register_format",
