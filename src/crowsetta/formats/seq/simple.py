@@ -181,7 +181,7 @@ class SimpleSeq:
                 notated_path=notated_path,
             )
 
-        if columns_map:
+        if columns_map is not None:
             if not isinstance(columns_map, dict):
                 raise TypeError(
                     f"The `columns_map` argument must be a `dict` but type was: {type(dict)}"
