@@ -171,6 +171,16 @@ class SimpleSeq:
         else:
             df = pd.read_csv(annot_path)
 
+        if len(df) == 0:
+            # handle empty csv file, fixes https://github.com/vocalpy/crowsetta/issues/264
+            return cls(
+                onsets_s=[],
+                offsets_s=[],
+                labels=[],
+                annot_path=annot_path,
+                notated_path=notated_path,
+            )
+
         if columns_map:
             if not isinstance(columns_map, dict):
                 raise TypeError(
