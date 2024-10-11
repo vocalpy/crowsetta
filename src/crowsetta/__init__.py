@@ -20,6 +20,12 @@ from .transcriber import Transcriber
 # isort: off
 from . import formats
 from .formats import register_format
+from .formats.seq import (
+    AudSeq, BirdsongRec, GenericSeq, NotMat, SimpleSeq, Timit, SongAnnotationGUI
+)
+from .formats.bbox import (
+    AudBBox, Raven
+)
 
 # isort: on
 
