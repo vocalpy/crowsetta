@@ -171,7 +171,10 @@ class SimpleSeq:
             df = pd.read_csv(annot_path)
 
         if columns_map:
-            df.columns = [columns_map[column_name] for column_name in df.columns]
+            df.columns = [
+                columns_map[column_name] if column_name in columns_map else column_name
+                for column_name in df.columns
+            ]
         df = df[["onset_s", "offset_s", "label"]]  # put in correct order
         df = SimpleSeqSchema.validate(df)
 
