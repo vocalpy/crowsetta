@@ -49,6 +49,18 @@
         }
     },
     {
+        "filename": "GO_24860x23748_ltr2_pup3_ch4_4800_m_337_295_fr1_p9_2021-10-02_12-35-01.csv",
+        "description_filename": "GO_24860x23748_ltr2_pup3_ch4_4800_m_337_295_fr1_p9_2021-10-02_12-35-01-description.txt",
+        "format": "simple-seq",
+        "name": "GO",
+        "from_file_kwargs": {
+            "columns_map": {
+                "start_seconds": "onset_s",
+                "stop_seconds": "offset_s"
+            }
+        }
+    },
+    {
         "filename": "AVO-maea-basic.TextGrid",
         "description_filename": "AVO-maea-basic.TextGrid-description.txt",
         "format": "textgrid",

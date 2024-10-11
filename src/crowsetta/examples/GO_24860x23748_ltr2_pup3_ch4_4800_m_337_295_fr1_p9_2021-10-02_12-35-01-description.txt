@@ -1,0 +1,5 @@
+Segmentation of cotton mouse (Peromyscus gossypinus) pup calls in a csv file.
+From the dataset:
+Jourjine, Nicholas et al. (2023).
+Two pup vocalization types are genetically and functionally separable in deer mice [Dataset].
+Dryad. https://doi.org/10.5061/dryad.g79cnp5ts
