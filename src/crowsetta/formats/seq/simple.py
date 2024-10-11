@@ -110,6 +110,7 @@ class SimpleSeq:
         notated_path: Optional[PathLike] = None,
         columns_map: Optional[Mapping] = None,
         read_csv_kwargs: Optional[Mapping] = None,
+        default_label: str = "-"
     ) -> "Self":  # noqa: F821
         """Load annotations from a file
         in the 'simple-seq' format.
@@ -175,6 +176,10 @@ class SimpleSeq:
                 columns_map[column_name] if column_name in columns_map else column_name
                 for column_name in df.columns
             ]
+
+        if "label" not in df.columns:
+            df["label"] = default_label
+
         df = df[["onset_s", "offset_s", "label"]]  # put in correct order
         df = SimpleSeqSchema.validate(df)
 
