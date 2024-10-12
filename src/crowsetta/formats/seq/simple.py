@@ -49,6 +49,10 @@ class SimpleSeqSchema(pandera.DataFrameModel):
         strict = True
 
 
+SIMPLESEQ_COLUMNS = (
+    "onset_s", "offset_s", "label"
+)
+
 @crowsetta.interface.SeqLike.register
 @attr.define
 class SimpleSeq:
@@ -197,13 +201,13 @@ class SimpleSeq:
                     "but not all keys and values were strings."
                 )
             if not all(
-                v in ("onset_s", "offset_s", "label")
+                v in SIMPLESEQ_COLUMNS
                 for v in columns_map.values()
             ):
                 invalid_values = [
                     v
                     for v in columns_map.values()
-                    if v not in ("onset_s", "offset_s", "label")
+                    if v not in SIMPLESEQ_COLUMNS
                 ]
                 raise ValueError(
                     f'The `columns_map` argument must map keys (column names in the csv) to these values: ("onset_s", "offset_s", "label"). '
@@ -217,7 +221,20 @@ class SimpleSeq:
         if "label" not in df.columns:
             df["label"] = default_label
 
-        df = df[["onset_s", "offset_s", "label"]]  # put in correct order
+        if not all([
+            col_name in df.columns
+            for col_name in SIMPLESEQ_COLUMNS
+        ]):
+            raise ValueError(
+                "Annotations loaded from path did not have expected column names. "
+                f"Column names from loaded csv file were: {df.columns.to_list()}\n"
+                f"Expected column names are: {SIMPLESEQ_COLUMNS}\n"
+                f"Please either re-map the column names using the `columns_map` argument, "
+                "or if needed modify the csv file directly. "
+                "Note that you only need to remap the column names that correspond to onset "
+                "times, offset times, and labels; other columns will be ignored."
+            )
+        df = df[list(SIMPLESEQ_COLUMNS)]  # put in correct order
         df = SimpleSeqSchema.validate(df)
 
         return cls(
