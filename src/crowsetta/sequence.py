@@ -180,6 +180,9 @@ class Sequence:
     def __ge__(self, other):
         raise NotImplementedError
 
+    def __len__(self):
+        return self.onsets_s.shape[-1]
+
     @staticmethod
     def _convert_labels(labels):
         if isinstance(labels, str):
