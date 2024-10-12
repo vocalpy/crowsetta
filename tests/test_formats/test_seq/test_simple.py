@@ -116,21 +116,22 @@ def test_to_file(a_simple_csv_path, tmp_path):
     assert filecmp.cmp(a_simple_csv_path, csv_path)
 
 
-def test_empty_annotations(tmpdir):
-    # test fix for https://github.com/vocalpy/crowsetta/issues/264
+@pytest.fixture
+def empty_csv_file_path(tmpdir):
     empty_df = pd.DataFrame.from_records([])
-    # we use a context manager block to work with TemporaryFile before it gets deleted
-    with tempfile.NamedTemporaryFile(
-        dir=tmpdir, suffix=".csv"
-    ) as fp:
-        empty_df.to_csv(fp.name)
-        fp.close()  # on Windows specifically we have to close before we can access, otherwise we get a PermissionsError
-        simple = crowsetta.formats.seq.SimpleSeq.from_file(annot_path=fp.name)
-        assert isinstance(simple, crowsetta.formats.seq.SimpleSeq)
-        for attr in ("onsets_s", "offsets_s", "labels"):
-            assert np.array_equal(
-                getattr(simple, attr), np.array([])
-            )
+    empty_csv_file_path = tmpdir / "empty.csv"
+    empty_df.to_csv(empty_csv_file_path)
+    return empty_csv_file_path
+
+
+def test_empty_annotations(empty_csv_file_path):
+    # test fix for https://github.com/vocalpy/crowsetta/issues/264
+    simple = crowsetta.formats.seq.SimpleSeq.from_file(annot_path=empty_csv_file_path)
+    assert isinstance(simple, crowsetta.formats.seq.SimpleSeq)
+    for attr in ("onsets_s", "offsets_s", "labels"):
+        assert np.array_equal(
+            getattr(simple, attr), np.array([])
+        )
 
 
 def test_columns_map_only_maps_columns(jourjine_et_al_2023_csv_path):
