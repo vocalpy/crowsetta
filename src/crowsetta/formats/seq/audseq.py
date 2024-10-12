@@ -108,7 +108,7 @@ class AudSeq:
     'SIL',    'N',  'SIL',    'A',  'SIL',    'O',  'SIL',    'P',  'SIL',
         'K',  'SIL',    'V',  'SIL',   'J1',   'J2',  'SIL',   'J2',  'SIL',
     'B1',  'SIL',   'B2',    'Q',  'SIL',    'H',    'E']
-    Length: 61, dtype: string, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/405_marron1_June_14_2016_69640887.audacity.txt'), notated_path=None)
+    Length: 61, dtype: string, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/405_marron1_June_14_2016_69640887.audacity.txt'), notated_path=None)  # noqa: E501
 
     References
     ----------
@@ -180,7 +180,7 @@ class AudSeq:
         'SIL',    'N',  'SIL',    'A',  'SIL',    'O',  'SIL',    'P',  'SIL',
             'K',  'SIL',    'V',  'SIL',   'J1',   'J2',  'SIL',   'J2',  'SIL',
         'B1',  'SIL',   'B2',    'Q',  'SIL',    'H',    'E']
-        Length: 61, dtype: string, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/405_marron1_June_14_2016_69640887.audacity.txt'), notated_path=None)
+        Length: 61, dtype: string, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/405_marron1_June_14_2016_69640887.audacity.txt'), notated_path=None)  # noqa: E501
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)

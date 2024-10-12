@@ -196,7 +196,8 @@ class SimpleSeq:
             if not all(v in SIMPLESEQ_COLUMNS for v in columns_map.values()):
                 invalid_values = [v for v in columns_map.values() if v not in SIMPLESEQ_COLUMNS]
                 raise ValueError(
-                    f'The `columns_map` argument must map keys (column names in the csv) to these values: ("onset_s", "offset_s", "label"). '
+                    f"The `columns_map` argument must map keys (column names in the csv) "
+                    'to these values: ("onset_s", "offset_s", "label"). '
                     f"The following values are invalid: {invalid_values}"
                 )
             df.columns = [

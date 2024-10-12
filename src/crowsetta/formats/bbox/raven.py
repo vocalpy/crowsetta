@@ -70,7 +70,7 @@ class Raven:
         2          3  Spectrogram 1        1    183.609637  184.097752       2878.2        3975.8       EATO
         3          4  Spectrogram 1        1    250.527481  251.160711       2756.2        3951.4       EATO
         4          5  Spectrogram 1        1    277.887243  278.480896       2707.5        3975.8       EATO
-        5          6  Spectrogram 1        1    295.529708  296.110168       2951.4        3975.8       EATO, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/Recording_1_Segment_02.Table.1.selections.txt'), annot_col='Species', audio_path=None)
+        5          6  Spectrogram 1        1    295.529708  296.110168       2951.4        3975.8       EATO, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/Recording_1_Segment_02.Table.1.selections.txt'), annot_col='Species', audio_path=None)  # noqa: E501
     """
 
     name: ClassVar[str] = "raven"
@@ -115,7 +115,7 @@ class Raven:
         2          3  Spectrogram 1        1    183.609637  184.097752       2878.2        3975.8       EATO
         3          4  Spectrogram 1        1    250.527481  251.160711       2756.2        3951.4       EATO
         4          5  Spectrogram 1        1    277.887243  278.480896       2707.5        3975.8       EATO
-        5          6  Spectrogram 1        1    295.529708  296.110168       2951.4        3975.8       EATO, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/Recording_1_Segment_02.Table.1.selections.txt'), annot_col='Species', audio_path=None)
+        5          6  Spectrogram 1        1    295.529708  296.110168       2951.4        3975.8       EATO, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/Recording_1_Segment_02.Table.1.selections.txt'), annot_col='Species', audio_path=None)  # noqa: E501
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)

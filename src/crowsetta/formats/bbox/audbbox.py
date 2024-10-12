@@ -161,7 +161,7 @@ class AudBBox:
     14     16.437017   18.730849  CRER  2676.806152   8699.620117
     15     17.159384   17.514231    SP  5688.213379  12714.829102
     16     18.198578   18.502733    SP  5353.612305  12463.878906
-    17     19.073023   19.465889    SP  4349.810059  12296.577148, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/spinetail.txt'), audio_path=None)
+    17     19.073023   19.465889    SP  4349.810059  12296.577148, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/spinetail.txt'), audio_path=None)  # noqa: E501
     """
 
     COLUMNS_MAP: ClassVar[dict] = {
@@ -215,7 +215,7 @@ class AudBBox:
         14     16.437017   18.730849  CRER  2676.806152   8699.620117
         15     17.159384   17.514231    SP  5688.213379  12714.829102
         16     18.198578   18.502733    SP  5353.612305  12463.878906
-        17     19.073023   19.465889    SP  4349.810059  12296.577148, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/spinetail.txt'), audio_path=None)
+        17     19.073023   19.465889    SP  4349.810059  12296.577148, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/spinetail.txt'), audio_path=None)  # noqa: E501
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
