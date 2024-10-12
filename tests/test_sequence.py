@@ -231,3 +231,14 @@ def test_hash():
 def test_seq_is_immutable(a_seq):
     with pytest.raises(TypeError):
         a_seq.labels = np.asarray(["a", "b", "c", "d", "d"])
+
+
+def test_len(list_of_segments):
+    seq = Sequence.from_segments(list_of_segments)
+    seq_len = len(seq)
+    assert seq_len == len(list_of_segments)
+
+
+def test_len_empty_seq():
+    seq = Sequence.from_keyword(onsets_s=[], offsets_s=[], labels=[])
+    assert len(seq) == 0
