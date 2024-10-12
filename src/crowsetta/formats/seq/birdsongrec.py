@@ -241,6 +241,11 @@ class BirdsongRec:
         to convert onset and offset times from sample number to seconds,
         when converting annotations to ``crowsetta.Sequence``.
 
+
+    Examples
+    --------
+    >>> birdsongrec = crowsetta.example('Annotation.xml')
+
     Notes
     -----
     This class uses the Python package ``birdsong-recognition-dataset``
@@ -303,8 +308,8 @@ class BirdsongRec:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('birdsong-recognition-dataset')
-        >>> birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
+        >>> path = crowsetta.example('Annotation.xml', return_path=True)
+        >>> birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(path)
 
         .. [1] Koumura, T. (2016). BirdsongRecognition (Version 1). figshare.
            https://doi.org/10.6084/m9.figshare.3470165.v1
@@ -357,7 +362,7 @@ class BirdsongRec:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('birdsong-recognition-dataset')
+        >>> example = crowsetta.example('birdsong-recognition-dataset')
         >>> birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
         >>> seqs = birdsongrec.to_seq()
 
@@ -458,7 +463,7 @@ class BirdsongRec:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('birdsong-recognition-dataset')
+        >>> example = crowsetta.example('birdsong-recognition-dataset')
         >>> birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
         >>> annots = birdsongrec.to_annot()
 

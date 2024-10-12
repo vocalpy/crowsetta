@@ -54,7 +54,7 @@ class Transcriber:
 
     >>> import crowsetta
     >>> scribe = crowsetta.Transcriber(format='aud-seq')
-    >>> example = crowsetta.data.get('aud-seq')
+    >>> example = crowsetta.example('aud-seq')
     >>> audseq = scribe.from_file(example.annot_path)
     >>> annot = audseq.to_annot()
     >>> annot
@@ -68,7 +68,7 @@ class Transcriber:
 
     >>> import crowsetta
     >>> scribe = crowsetta.Transcriber(format='raven')
-    >>> example = crowsetta.data.get('raven')
+    >>> example = crowsetta.example('raven')
     >>> raven = scribe.from_file(example.annot_path, annot_col='Species')
     >>> annot = raven.to_annot()
     >>> annot
@@ -164,7 +164,7 @@ class Transcriber:
 
         >>> import crowsetta
         >>> scribe = crowsetta.Transcriber(format='aud-seq')
-        >>> example = crowsetta.data.get('aud-seq')
+        >>> example = crowsetta.example('aud-seq')
         >>> audseq = scribe.from_file(example.annot_path)
         >>> annot = audseq.to_annot()
         >>> annot
@@ -180,7 +180,7 @@ class Transcriber:
 
         >>> import crowsetta
         >>> scribe = crowsetta.Transcriber(format='raven')
-        >>> example = crowsetta.data.get('raven')
+        >>> example = crowsetta.example('raven')
         >>> raven = scribe.from_file(example.annot_path, annot_col='Species')
         >>> annot = raven.to_annot()
         >>> annot

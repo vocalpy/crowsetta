@@ -160,8 +160,8 @@ class SimpleSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('simple-seq')
-        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(example.annot_path,
+        >>> path = crowsetta.example('bl26lb16', return_path=True)
+        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(path,
         >>>                                                    columns_map={'start_seconds': 'onset_s',
         >>>                                                                 'stop_seconds': 'offset_s',
         >>>                                                                 'name': 'label'},
@@ -264,8 +264,8 @@ class SimpleSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('simple-seq')
-        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(example.annot_path,
+        >>> path = crowsetta.example('bl26lb16', return_path=True)
+        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(path,
         >>>                                                    columns_map={'start_seconds': 'onset_s',
         >>>                                                                 'stop_seconds': 'offset_s',
         >>>                                                                 'name': 'label'},
@@ -309,8 +309,8 @@ class SimpleSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('simple-seq')
-        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(example.annot_path,
+        >>> path = crowsetta.example('bl26lb1b', return_path=True)
+        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(path,
         >>>                                                    columns_map={'start_seconds': 'onset_s',
         >>>                                                                 'stop_seconds': 'offset_s',
         >>>                                                                 'name': 'label'},

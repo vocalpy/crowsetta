@@ -327,8 +327,9 @@ class GenericSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('generic-seq')
-        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(example.annot_path)"""
+        >>> path = crowsetta.example('bird1.csv', return_path=True)
+        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(path)
+        """
         annots = csv2annot(csv_path=annot_path)
         return cls(annots=annots)
 
@@ -338,8 +339,8 @@ class GenericSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('generic-seq')
-        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(example.annot_path)
+        >>> path = crowsetta.example('bird1.csv', return_path=True)
+        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(path)
         >>> seqs = generic.to_seq()
         """
         return [annot.seq for annot in self.annots]
@@ -354,8 +355,8 @@ class GenericSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('generic-seq')
-        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(example.annot_path)
+        >>> path = crowsetta.example('bird1.csv', return_path=True)
+        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(path)
         >>> annots = generic.to_annot()
         """
         return self.annots
