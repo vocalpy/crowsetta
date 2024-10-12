@@ -61,7 +61,7 @@ including data types, other classes, and modules.
 
 ## Modules
 
-### `crowsetta.data`
+### `crowsetta.examples`
 
 ```{eval-rst}
 .. autosummary::
@@ -69,15 +69,7 @@ including data types, other classes, and modules.
    :template: module.rst
    :recursive:
 
-   crowsetta.data.data
-```
-
-```{note}
-Modules in `crowsetta.data` besides `crowsetta.data.data` 
-contain example data files and a citation,
-e.g., `crowsetta.data.birdsongrec` contains an example 
-file `Annotation.xml` and `citation.txt`.
-For that reason just `crowsetta.data.data` is shown.
+   crowsetta.examples
 ```
 
 ### `crowsetta.interface`
