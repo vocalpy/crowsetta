@@ -4,6 +4,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Make `crowsetta.SimpleSeq.from_file` work with an "empty" csv file,
+  one that has no annotated segments
+  (e.g. because no audio was above threshold for segmenting)
+  [#280](https://github.com/NickleDave/crowsetta/pull/280).
+  Fixes [#264](https://github.com/NickleDave/crowsetta/issues/264).
+- Add `default_label` argument to `crowsetta.SimpleSeq.from_file` 
+  that will add labels to segments in a csv file if there are none
+  [#280](https://github.com/NickleDave/crowsetta/pull/280).
+  Fixes [#271](https://github.com/NickleDave/crowsetta/issues/271).
+- Add example csv file from 
+  [Jourjine et al. 2023 dataset](https://datadryad.org/stash/dataset/doi:10.5061/dryad.g79cnp5ts)
+  [#280](https://github.com/NickleDave/crowsetta/pull/280).
+  Fixes [#274](https://github.com/NickleDave/crowsetta/issues/274).
+- Add how-to showing how to work with unannotated segmentation 
+  in a csv file, using the csv from the Jourjine et al. 2023 dataset
+  [#280](https://github.com/NickleDave/crowsetta/pull/280).
+  Fixes [#275](https://github.com/NickleDave/crowsetta/issues/275).
+
+### Changed
+- Rename `crowsetta.data` to `crowsetta.examples`, 
+  simplify how `crowsetta.example` works 
+  (to be more like `vocalpy.example`)
+  and give all the example annotation files 
+  more specific names so that we can have 
+  multiple examples per annotation format
+  [#280](https://github.com/NickleDave/crowsetta/pull/280).
+  Fixes [#278](https://github.com/NickleDave/crowsetta/issues/278).
+- Import format classes at package level, so we can just type e.g. 
+  `crowsetta.SimpleSeq` instead of `crowsetta.formats.seq.SimpleSeq` 
+  ("flat is better than nested") 
+  [#280](https://github.com/NickleDave/crowsetta/pull/280).
+  Fixes [#273](https://github.com/NickleDave/crowsetta/issues/273).
+
+### Fixed
+- Make `crowsetta.SimpleSeq.from_file` use `columns_map` arg 
+  to rename only columns whose names are keys in the supplied dict, 
+  and ignore other columns in the csv file
+  [#280](https://github.com/NickleDave/crowsetta/pull/280).
+  Fixes [#272](https://github.com/NickleDave/crowsetta/issues/272).
+
+
 ## 5.0.3
 ### Fixed
 - Replace deprecated `pandera.SchemaModel` with `DataFrameModel`,
