@@ -132,6 +132,8 @@ def test_empty_annotations(empty_csv_file_path):
         assert np.array_equal(
             getattr(simple, attr), np.array([])
         )
+    seq = simple.to_seq()
+    assert len(seq) == 0
 
 
 def test_columns_map_only_maps_columns(jourjine_et_al_2023_csv_path):
