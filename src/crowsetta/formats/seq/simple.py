@@ -17,6 +17,7 @@ This format also assumes that each annotation file
 corresponds to one annotated source file,
 i.e. a single audio or spectrogram file.
 """
+
 import pathlib
 from typing import ClassVar, Mapping, Optional
 
@@ -31,9 +32,7 @@ from crowsetta.typing import PathLike
 
 
 class SimpleSeqSchema(pandera.DataFrameModel):
-    """A :class:`pandera.DataFrameModel
-
-`
+    """A :class:`pandera.DataFrameModel`
     that validates :type:`pandas.DataFrame`s
     loaded from a csv or txt file in a 'simple-seq' format.
 
@@ -49,6 +48,9 @@ class SimpleSeqSchema(pandera.DataFrameModel):
     class Config:
         ordered = True
         strict = True
+
+
+SIMPLESEQ_COLUMNS = ("onset_s", "offset_s", "label")
 
 
 @crowsetta.interface.SeqLike.register
@@ -112,6 +114,7 @@ class SimpleSeq:
         notated_path: Optional[PathLike] = None,
         columns_map: Optional[Mapping] = None,
         read_csv_kwargs: Optional[Mapping] = None,
+        default_label: str = "-",
     ) -> "Self":  # noqa: F821
         """Load annotations from a file
         in the 'simple-seq' format.
@@ -157,8 +160,8 @@ class SimpleSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('simple-seq')
-        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(example.annot_path,
+        >>> path = crowsetta.example('bl26lb16', return_path=True)
+        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(path,
         >>>                                                    columns_map={'start_seconds': 'onset_s',
         >>>                                                                 'stop_seconds': 'offset_s',
         >>>                                                                 'name': 'label'},
@@ -172,9 +175,49 @@ class SimpleSeq:
         else:
             df = pd.read_csv(annot_path)
 
-        if columns_map:
-            df.columns = [columns_map[column_name] for column_name in df.columns]
-        df = df[["onset_s", "offset_s", "label"]]  # put in correct order
+        if len(df) == 0:
+            # handle empty csv file, fixes https://github.com/vocalpy/crowsetta/issues/264
+            return cls(
+                onsets_s=[],
+                offsets_s=[],
+                labels=[],
+                annot_path=annot_path,
+                notated_path=notated_path,
+            )
+
+        if columns_map is not None:
+            if not isinstance(columns_map, dict):
+                raise TypeError(f"The `columns_map` argument must be a `dict` but type was: {type(dict)}")
+            if not all((isinstance(k, str) and isinstance(v, str) for k, v in columns_map.items())):
+                raise ValueError(
+                    "The `columns_map` argument must be a dict that maps string keys to string values, "
+                    "but not all keys and values were strings."
+                )
+            if not all(v in SIMPLESEQ_COLUMNS for v in columns_map.values()):
+                invalid_values = [v for v in columns_map.values() if v not in SIMPLESEQ_COLUMNS]
+                raise ValueError(
+                    f"The `columns_map` argument must map keys (column names in the csv) "
+                    'to these values: ("onset_s", "offset_s", "label"). '
+                    f"The following values are invalid: {invalid_values}"
+                )
+            df.columns = [
+                columns_map[column_name] if column_name in columns_map else column_name for column_name in df.columns
+            ]
+
+        if "label" not in df.columns:
+            df["label"] = default_label
+
+        if not all([col_name in df.columns for col_name in SIMPLESEQ_COLUMNS]):
+            raise ValueError(
+                "Annotations loaded from path did not have expected column names. "
+                f"Column names from loaded csv file were: {df.columns.to_list()}\n"
+                f"Expected column names are: {SIMPLESEQ_COLUMNS}\n"
+                f"Please either re-map the column names using the `columns_map` argument, "
+                "or if needed modify the csv file directly. "
+                "Note that you only need to remap the column names that correspond to onset "
+                "times, offset times, and labels; other columns will be ignored."
+            )
+        df = df[list(SIMPLESEQ_COLUMNS)]  # put in correct order
         df = SimpleSeqSchema.validate(df)
 
         return cls(
@@ -204,8 +247,8 @@ class SimpleSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('simple-seq')
-        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(example.annot_path,
+        >>> path = crowsetta.example('bl26lb16', return_path=True)
+        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(path,
         >>>                                                    columns_map={'start_seconds': 'onset_s',
         >>>                                                                 'stop_seconds': 'offset_s',
         >>>                                                                 'name': 'label'},
@@ -249,8 +292,8 @@ class SimpleSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('simple-seq')
-        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(example.annot_path,
+        >>> path = crowsetta.example('bl26lb1b', return_path=True)
+        >>> simple = crowsetta.formats.seq.SimpleSeq.from_file(path,
         >>>                                                    columns_map={'start_seconds': 'onset_s',
         >>>                                                                 'stop_seconds': 'offset_s',
         >>>                                                                 'name': 'label'},

@@ -1,3 +1,5 @@
+Annotation file in the format used by the MatLab GUI evsonganaly.
+From the dataset:
 Nicholson, David; Queen, Jonah E.; J. Sober, Samuel (2017): 
 Bengalese Finch song repository. figshare. Dataset. 
 https://doi.org/10.6084/m9.figshare.4805749.v6

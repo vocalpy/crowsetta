@@ -1,6 +1,7 @@
 """An abstract base class defining the interface
 for any annotation format
 that can be represented as a set of bounding boxes"""
+
 import abc
 from typing import Sequence, Union
 

@@ -1,5 +1,6 @@
 """Data classes used to represent components of TextGrids.
 """
+
 from __future__ import annotations
 
 import numpy as np

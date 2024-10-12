@@ -1,4 +1,5 @@
 """Module with functions for working with Praat TextGrid annotation files"""
+
 from __future__ import annotations
 
 import pathlib
@@ -69,36 +70,31 @@ class TextGrid:
     --------
     Loading the example textgrid
 
-    >>> example = crowsetta.data.get('textgrid')
-    >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+    >>> textgrid = crowsetta.example('AVO-maea-basic')
     >>> print(textgrid)
     TextGrid(tiers=[PointTier(nam...ark='L+!H-')]), IntervalTier(...aleila\\-^')]), IntervalTier(...t='earlier')])], xmin=0.0, xmax=2.4360509767904546, annot_path=PosixPath('/home/pimienta/.local/share/crowsetta/5.0.0rc2/textgrid/AVO-maea-basic.TextGrid'), audio_path=None)  # noqa: E501
 
     Determining the number of tiers in the textgrid
 
-    >>> example = crowsetta.data.get('textgrid')
-    >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+    >>> textgrid = crowsetta.example('AVO-maea-basic')
     >>> len(textgrid)
     3
 
     Getting the names of the tiers in the textgrid
 
-    >>> example = crowsetta.data.get('textgrid')
-    >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+    >>> textgrid = crowsetta.example('AVO-maea-basic')
     >>> textgrid.tier_names
     ['Tones', 'Samoan', 'Gloss']
 
     Getting a tier from the TextGrid by name
 
-    >>> example = crowsetta.data.get('textgrid')
-    >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+    >>> textgrid = crowsetta.example('AVO-maea-basic')
     >>> textgrid['Gloss']
     IntervalTier(name='Gloss', xmin=0.0, xmax=2.4360509767904546, intervals=[Interval(xmin=0.0, xmax=0.051451575248407266, text='PRES'), Interval(xmin=0.051451575248407266, xmax=0.6407379583230295, text='Sione'), Interval(xmin=0.6407379583230295, xmax=0.7544662733943284, text='PAST'), Interval(xmin=0.7544662733943284, xmax=1.244041566788134, text='pull-ES'), Interval(xmin=1.244041566788134, xmax=1.3481058803597676, text='DET'), Interval(xmin=1.3481058803597676, xmax=1.70760078178904, text='rope'), Interval(xmin=1.70760078178904, xmax=2.4360509767904546, text='earlier')])  # noqa: E501
 
     Getting a tier from the TextGrid by index
 
-    >>> example = crowsetta.data.get('textgrid')
-    >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+    >>> textgrid = crowsetta.example('AVO-maea-basic')
     >>> textgrid[2]  # same tier we just got by name
     IntervalTier(name='Gloss', xmin=0.0, xmax=2.4360509767904546, intervals=[Interval(xmin=0.0, xmax=0.051451575248407266, text='PRES'), Interval(xmin=0.051451575248407266, xmax=0.6407379583230295, text='Sione'), Interval(xmin=0.6407379583230295, xmax=0.7544662733943284, text='PAST'), Interval(xmin=0.7544662733943284, xmax=1.244041566788134, text='pull-ES'), Interval(xmin=1.244041566788134, xmax=1.3481058803597676, text='DET'), Interval(xmin=1.3481058803597676, xmax=1.70760078178904, text='rope'), Interval(xmin=1.70760078178904, xmax=2.4360509767904546, text='earlier')])  # noqa: E501
 
@@ -107,8 +103,7 @@ class TextGrid:
     :class:`~crowsetta.Sequence` instances,
     in the order they appear in the TextGrid.
 
-    >>> example = crowsetta.data.get('textgrid')
-    >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+    >>> textgrid = crowsetta.example('AVO-maea-basic')
     >>> textgrid.to_seq()
     [<Sequence with 7 segments>, <Sequence with 7 segments>]
 
@@ -117,8 +112,7 @@ class TextGrid:
     :class:`~crowsetta.formats.seq.textgrid.classes.IntervalTier`s to a
     single :class:`~crowsetta.Sequence` instance.
 
-    >>> example = crowsetta.data.get('textgrid')
-    >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+    >>> textgrid = crowsetta.example('AVO-maea-basic')
     >>> textgrid.to_seq(tier=2)
     [<Sequence with 7 segments>]
 
@@ -128,8 +122,7 @@ class TextGrid:
     I.e., this parameter works the same way
     as square bracket access to a TextGrid as shown above.
 
-    >>> example = crowsetta.data.get('textgrid')
-    >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+    >>> textgrid = crowsetta.example('AVO-maea-basic')
     >>> seq1 = textgrid.to_seq(tier=2)
     >>> seq2 = textgrid.to_seq(tier="Gloss")
     >>> seq1 == seq2
@@ -200,8 +193,8 @@ class TextGrid:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('textgrid')
-        >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+        >>> path = crowsetta.example('AVO-maea-basic', return_path=True)
+        >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(path)
         >>> print(textgrid)
         TextGrid(tiers=[PointTier(nam...ark='L+!H-')]), IntervalTier(...aleila\\-^')]), IntervalTier(...t='earlier')])], xmin=0.0, xmax=2.4360509767904546, annot_path=PosixPath('/home/pimienta/.local/share/crowsetta/5.0.0rc2/textgrid/AVO-maea-basic.TextGrid'), audio_path=None)  # noqa: E501
 
@@ -313,7 +306,7 @@ class TextGrid:
         :class:`~crowsetta.Sequence` instances,
         in the order they appear in the TextGrid.
 
-        >>> example = crowsetta.data.get('textgrid')
+        >>> example = crowsetta.example('textgrid')
         >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
         >>> textgrid.to_seq()
         [<Sequence with 7 segments>, <Sequence with 7 segments>]
@@ -323,7 +316,7 @@ class TextGrid:
         :class:`~crowsetta.formats.seq.textgrid.classes.IntervalTier` to a
         single :class:`~crowsetta.Sequence`.
 
-        >>> example = crowsetta.data.get('textgrid')
+        >>> example = crowsetta.example('textgrid')
         >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
         >>> textgrid.to_seq(tier=2)
         [<Sequence with 7 segments>]
@@ -334,7 +327,7 @@ class TextGrid:
         I.e., this parameter works the same way
         as square bracket access to a TextGrid as shown above.
 
-        >>> example = crowsetta.data.get('textgrid')
+        >>> example = crowsetta.example('textgrid')
         >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
         >>> seq1 = textgrid.to_seq(tier=2)
         >>> seq2 = textgrid.to_seq(tier="Gloss")
@@ -395,7 +388,7 @@ class TextGrid:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('textgrid')
+        >>> example = crowsetta.example('textgrid')
         >>> textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
         >>> annot = textgrid.to_annot()
 

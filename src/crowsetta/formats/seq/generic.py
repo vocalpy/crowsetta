@@ -15,6 +15,7 @@ Other formats that convert to
 with :class:`~crowsetta.Sequence`s can be converted
 to this format.
 """
+
 import os
 from collections import OrderedDict
 from typing import ClassVar, List, Optional, Union
@@ -35,15 +36,13 @@ Both units can also be specified. Conversion between units is not validated.
 """
 
 
-class GenericSeqSchema(pandera.DataFrameModel
-
-):
+class GenericSeqSchema(pandera.DataFrameModel):
     """A :class: `pandera.DataFrameModel
 
-` that validates
-    :type:`pandas.DataFrame`s
-    loaded from a csv file  in the ``'generic-seq'`` annotation
-    format.
+    ` that validates
+        :type:`pandas.DataFrame`s
+        loaded from a csv file  in the ``'generic-seq'`` annotation
+        format.
     """
 
     label: Series[pd.StringDtype] = pandera.Field(coerce=True)
@@ -327,8 +326,9 @@ class GenericSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('generic-seq')
-        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(example.annot_path)"""
+        >>> path = crowsetta.example('bird1.csv', return_path=True)
+        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(path)
+        """
         annots = csv2annot(csv_path=annot_path)
         return cls(annots=annots)
 
@@ -338,8 +338,8 @@ class GenericSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('generic-seq')
-        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(example.annot_path)
+        >>> path = crowsetta.example('bird1.csv', return_path=True)
+        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(path)
         >>> seqs = generic.to_seq()
         """
         return [annot.seq for annot in self.annots]
@@ -354,8 +354,8 @@ class GenericSeq:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('generic-seq')
-        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(example.annot_path)
+        >>> path = crowsetta.example('bird1.csv', return_path=True)
+        >>> generic = crowsetta.formats.seq.GenericSeq.from_file(path)
         >>> annots = generic.to_annot()
         """
         return self.annots

@@ -4,7 +4,7 @@ jupytext:
     extension: .md
     format_name: myst
     format_version: 0.13
-    jupytext_version: 1.14.5
+    jupytext_version: 1.16.4
 kernelspec:
   display_name: Python 3 (ipykernel)
   language: python
@@ -160,19 +160,9 @@ and {ref}`Raven .txt files <raven>`.
 Here is an example of loading an example {ref}`Praat .TextGrid <textgrid>` file:
 
 ```{code-cell} ipython3
-:tags: [remove-cell]
-
-# We make the `user_data_dir` directory ahead of time
-# to avoid triggering a call to `input` prompting the user if it's ok
-# to make that directory
 import crowsetta
-crowsetta.data.extract_data_files()
-```
-
-```{code-cell} ipython3
-import crowsetta
-example = crowsetta.data.get('textgrid')
-a_textgrid = crowsetta.formats.seq.TextGrid.from_file(example.annot_path)
+path = crowsetta.example('AVO-maea-basic', return_path=True)
+a_textgrid = crowsetta.formats.seq.TextGrid.from_file(path)
 print(
     f"`a_textgrid` is a {type(a_textgrid)}"
 )
@@ -187,8 +177,8 @@ each format can also be referred to by a shorthand string name:
 
 ```{code-cell} ipython3
 import crowsetta
-example = crowsetta.data.get('textgrid')
-a_textgrid = crowsetta.formats.by_name('textgrid').from_file(example.annot_path)
+path = crowsetta.example('AVO-maea-basic', return_path=True)
+a_textgrid = crowsetta.formats.by_name('textgrid').from_file(path)
 print(f"`a_textgrid` is a {type(a_textgrid)} (even when we load it with `formats.by_name`)")
 ```
 
@@ -261,9 +251,9 @@ import numpy as np
 import crowsetta
 
 # load an example annotation file
-example = crowsetta.data.get('birdsong-recognition-dataset')
+path = crowsetta.example('Annotation.xml', return_path=True)
 # in the next line we use the class, to make it absolutely clear which format we are working with
-birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(example.annot_path)
+birdsongrec = crowsetta.formats.seq.BirdsongRec.from_file(path)
 annots = birdsongrec.to_annot()  # returns a list of `crowsetta.Annotation`s
 
 syllables_spects = []
@@ -297,23 +287,26 @@ a csv file.
 
 ```{code-cell} ipython3
 import crowsetta
-example = crowsetta.data.get('birdsong-recognition-dataset')
-birdsongrec = crowsetta.formats.by_name('birdsong-recognition-dataset').from_file(example.annot_path)
+path = crowsetta.example('Annotation.xml', return_path=True)
+birdsongrec = crowsetta.formats.by_name('birdsong-recognition-dataset').from_file(path)
 annots = birdsongrec.to_annot(samplerate=32000)  # returns a list of `crowsetta.Annotation`s
 # the 'generic-seq' format can write csv files from `Annotation`s with `Sequence`s.
 generic_seq = crowsetta.formats.by_name('generic-seq')(annots=annots)
 generic_seq.to_file(annot_path='./data/birdsong-rec.csv')
 ```
 
-Here are the first few lines of the .csv created by the snippet above:
+We load the csv into a pandas `DataFrame` to inspect the first few lines.
 
-```{literalinclude} ./data/birdsong-rec.csv
-:language: none
-:lines: 1-5
+```{code-cell} ipython3
+import pandas as pd
+df = pd.read_csv("./data/birdsong-rec.csv")
+
+from IPython.display import display
+display(df.head(10))
 ```
 
-Now that you have that, you can load it into a [pandas](https://pandas.pydata.org/) dataframe 
-or an Excel spreadsheet or an SQL database, or whatever you want.
+Now that you have that csv file, you can load it into a pandas `DataFrame` 
+or an Excel spreadsheet or an SQLite database, or whatever you want.
 
 You might find this useful in any situation where you want to share audio files of
 song and some associated annotations, but you don't want to require the user to

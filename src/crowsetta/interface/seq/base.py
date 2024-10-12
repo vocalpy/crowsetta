@@ -1,4 +1,5 @@
 """An abstract base class for sequence-like annotation formats"""
+
 import abc
 from typing import Sequence, Union
 

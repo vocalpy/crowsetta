@@ -5,6 +5,7 @@ Adapted in part from ``opensoundscape``
 https://github.com/kitzeslab/opensoundscape/blob/master/opensoundscape/annotations.py
 under MIT license
 """
+
 import pathlib
 from typing import ClassVar, List, Optional
 
@@ -17,14 +18,12 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-class RavenSchema(pandera.DataFrameModel
-
-):
+class RavenSchema(pandera.DataFrameModel):
     """A :class:`pandera.DataFrameModel
 
-` that validates :type:`pandas.DataFrame`s
-    loaded from a txt file, created by exporting a Selection Table
-    from Raven.
+    ` that validates :type:`pandas.DataFrame`s
+        loaded from a txt file, created by exporting a Selection Table
+        from Raven.
     """
 
     begin_time_s: Series[float] = pandera.Field()
@@ -60,6 +59,18 @@ class Raven:
         Path to Raven txt file from which annotations were loaded.
     audio_path : str. pathlib.Path
         Path to audio file that the Raven txt file annotates.
+
+        Examples
+        --------
+        >>> raven = crowsetta.example('Recording1')
+        >>> print(raven)
+        Raven(df=   Selection           View  Channel  begin_time_s  end_time_s  low_freq_hz  high_freq_hz annotation
+        0          1  Spectrogram 1        1    154.387793  154.911598       2878.2        4049.0       EATO
+        1          2  Spectrogram 1        1    167.526598  168.173020       2731.9        3902.7       EATO
+        2          3  Spectrogram 1        1    183.609637  184.097752       2878.2        3975.8       EATO
+        3          4  Spectrogram 1        1    250.527481  251.160711       2756.2        3951.4       EATO
+        4          5  Spectrogram 1        1    277.887243  278.480896       2707.5        3975.8       EATO
+        5          6  Spectrogram 1        1    295.529708  296.110168       2951.4        3975.8       EATO, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/Recording_1_Segment_02.Table.1.selections.txt'), annot_col='Species', audio_path=None)  # noqa: E501
     """
 
     name: ClassVar[str] = "raven"
@@ -95,8 +106,16 @@ class Raven:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('raven')
-        >>> raven = crowsetta.formats.bbox.Raven.from_file(example.annot_path)
+        >>> path = crowsetta.example('Recording1', return_path=True)
+        >>> raven = crowsetta.formats.bbox.Raven.from_file(path, annot_col="Species")
+        >>> print(raven)
+        Raven(df=   Selection           View  Channel  begin_time_s  end_time_s  low_freq_hz  high_freq_hz annotation
+        0          1  Spectrogram 1        1    154.387793  154.911598       2878.2        4049.0       EATO
+        1          2  Spectrogram 1        1    167.526598  168.173020       2731.9        3902.7       EATO
+        2          3  Spectrogram 1        1    183.609637  184.097752       2878.2        3975.8       EATO
+        3          4  Spectrogram 1        1    250.527481  251.160711       2756.2        3951.4       EATO
+        4          5  Spectrogram 1        1    277.887243  278.480896       2707.5        3975.8       EATO
+        5          6  Spectrogram 1        1    295.529708  296.110168       2951.4        3975.8       EATO, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/Recording_1_Segment_02.Table.1.selections.txt'), annot_col='Species', audio_path=None)  # noqa: E501
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -128,8 +147,8 @@ class Raven:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('raven')
-        >>> raven = crowsetta.formats.bbox.Raven.from_file(example.annot_path)
+        >>> path = crowsetta.example('Recording1')
+        >>> raven = crowsetta.formats.bbox.Raven.from_file(path)
         >>> bboxes = raven.to_bbox()
         """
         bboxes = []
@@ -155,8 +174,8 @@ class Raven:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('raven')
-        >>> raven = crowsetta.formats.bbox.Raven.from_file(example.annot_path)
+        >>> path = crowsetta.example('Recording1')
+        >>> raven = crowsetta.formats.bbox.Raven.from_file(path)
         >>> annot = raven.to_annot()
         """
         bboxes = self.to_bbox()

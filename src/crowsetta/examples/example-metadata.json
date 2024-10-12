@@ -1,0 +1,74 @@
+[
+    {
+        "filename": "spinetail.txt",
+        "description_filename": "spinetail-description.txt",
+        "format": "aud-bbox"
+    },
+    {
+        "filename": "405_marron1_June_14_2016_69640887.audacity.txt",
+        "description_filename": "405_marron1_June_14_2016_69640887.audacity-description.txt",
+        "format": "aud-seq",
+        "name": "marron1"
+    },
+    {
+        "filename": "Annotation.xml",
+        "description_filename": "Annotation.xml-description.txt",
+        "format": "birdsong-recognition-dataset"
+    },
+    {
+        "filename": "bird1.csv",
+        "description_filename": "bird1.txt",
+        "format": "generic-seq"
+    },
+    {
+        "filename": "gy6or6_baseline_230312_0808.138.cbin.not.mat",
+        "description_filename": "gy6or6_baseline_230312_0808.138.cbin.not-description.txt",
+        "format": "notmat",
+        "name": "gy6or6"
+    },
+    {
+        "filename": "Recording_1_Segment_02.Table.1.selections.txt",
+        "description_filename": "Recording_1_Segment_02.Table.1.selections-description.txt",
+        "format": "raven",
+        "name": "Recording1",
+        "from_file_kwargs": {
+            "annot_col": "Species"
+        }
+    },
+    {
+        "filename": "bl26lb16_190412_0721.20144_annotations.csv",
+        "description_filename": "bl26lb16_190412_0721.20144_annotations-description.txt",
+        "format": "simple-seq",
+        "name": "bl26lb16",
+        "from_file_kwargs": {
+            "columns_map": {
+                "name": "label",
+                "start_seconds": "onset_s",
+                "stop_seconds": "offset_s"
+            }
+        }
+    },
+    {
+        "filename": "GO_24860x23748_ltr2_pup3_ch4_4800_m_337_295_fr1_p9_2021-10-02_12-35-01.csv",
+        "description_filename": "GO_24860x23748_ltr2_pup3_ch4_4800_m_337_295_fr1_p9_2021-10-02_12-35-01-description.txt",
+        "format": "simple-seq",
+        "name": "GO",
+        "from_file_kwargs": {
+            "columns_map": {
+                "start_seconds": "onset_s",
+                "stop_seconds": "offset_s"
+            }
+        }
+    },
+    {
+        "filename": "AVO-maea-basic.TextGrid",
+        "description_filename": "AVO-maea-basic.TextGrid-description.txt",
+        "format": "textgrid",
+        "name": "AVO-maea-basic"
+    },
+    {
+        "filename": "sa1.phn",
+        "description_filename": "sa1-description.txt",
+        "format": "timit"
+    }
+]

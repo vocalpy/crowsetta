@@ -2,6 +2,7 @@
 in extended format, exported to txt files
 https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
 """
+
 from __future__ import annotations
 
 import pathlib
@@ -96,16 +97,14 @@ def df_to_lines(df: pd.DataFrame) -> list[str]:
     return lines
 
 
-class AudBBoxSchema(pandera.DataFrameModel
-
-):
+class AudBBoxSchema(pandera.DataFrameModel):
     """A :class:`pandera.DataFrameModel
 
-` that
-    validates :mod:`pandas` dataframes
-    loaded from Audacity label tracks
-    in extended format, exported to txt files
-    https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
+    ` that
+        validates :mod:`pandas` dataframes
+        loaded from Audacity label tracks
+        in extended format, exported to txt files
+        https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
     """
 
     begin_time_s: Series[float] = pandera.Field(coerce=True)
@@ -138,6 +137,31 @@ class AudBBox:
         Path to Audacity txt file from which annotations were loaded.
     audio_path : str. pathlib.Path
         Path to audio file that the Audacity txt file annotates.
+
+
+    Examples
+    --------
+    >>> audbbox = crowsetta.example('spinetail.txt')
+    >>> print(audbbox)
+    AudBBox(df=    begin_time_s  end_time_s label  low_freq_hz  high_freq_hz
+    0       0.101385    0.367520    SP  6441.064453  12296.577148
+    1       0.506924    3.041545  CRER  2593.156006   8866.920898
+    2       1.203945    1.482753    SP  6608.365234  11543.726562
+    3       2.724718    3.218969    SP  4851.710938  12631.178711
+    4       5.221319    7.869998  CRER  2509.505615   8699.620117
+    5       6.260514    6.666053    SP  5939.163574  12798.478516
+    6       7.946037    8.288210    SP  4600.760254  13049.430664
+    7       8.896519    9.302059    SP  5827.929351  12513.294481
+    8       9.973733   10.353927    SP  4851.710938  13969.581055
+    9      11.329756   13.750319  CRER  2091.254639   9117.871094
+    10     11.773314   12.077469    SP  6106.464355  12296.577148
+    11     12.660432   12.939240    SP  5604.562500  12296.577148
+    12     15.435842   15.879400    SP  4015.209229  13216.730469
+    13     16.170882   16.563748    SP  4098.859375  12463.878906
+    14     16.437017   18.730849  CRER  2676.806152   8699.620117
+    15     17.159384   17.514231    SP  5688.213379  12714.829102
+    16     18.198578   18.502733    SP  5353.612305  12463.878906
+    17     19.073023   19.465889    SP  4349.810059  12296.577148, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/spinetail.txt'), audio_path=None)  # noqa: E501
     """
 
     COLUMNS_MAP: ClassVar[dict] = {
@@ -170,8 +194,28 @@ class AudBBox:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('aud-bbox')
-        >>> audbbox = crowsetta.formats.bbox.AudBBox.from_file(example.annot_path)
+        >>> path = crowsetta.example('spinetail.txt', return_path=True)
+        >>> audbbox = crowsetta.formats.bbox.AudBBox.from_file(path)
+        >>> print(audbbox)
+        AudBBox(df=    begin_time_s  end_time_s label  low_freq_hz  high_freq_hz
+        0       0.101385    0.367520    SP  6441.064453  12296.577148
+        1       0.506924    3.041545  CRER  2593.156006   8866.920898
+        2       1.203945    1.482753    SP  6608.365234  11543.726562
+        3       2.724718    3.218969    SP  4851.710938  12631.178711
+        4       5.221319    7.869998  CRER  2509.505615   8699.620117
+        5       6.260514    6.666053    SP  5939.163574  12798.478516
+        6       7.946037    8.288210    SP  4600.760254  13049.430664
+        7       8.896519    9.302059    SP  5827.929351  12513.294481
+        8       9.973733   10.353927    SP  4851.710938  13969.581055
+        9      11.329756   13.750319  CRER  2091.254639   9117.871094
+        10     11.773314   12.077469    SP  6106.464355  12296.577148
+        11     12.660432   12.939240    SP  5604.562500  12296.577148
+        12     15.435842   15.879400    SP  4015.209229  13216.730469
+        13     16.170882   16.563748    SP  4098.859375  12463.878906
+        14     16.437017   18.730849  CRER  2676.806152   8699.620117
+        15     17.159384   17.514231    SP  5688.213379  12714.829102
+        16     18.198578   18.502733    SP  5353.612305  12463.878906
+        17     19.073023   19.465889    SP  4349.810059  12296.577148, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/spinetail.txt'), audio_path=None)  # noqa: E501
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -198,8 +242,8 @@ class AudBBox:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('aud-bbox')
-        >>> audbbox = crowsetta.formats.bbox.AudBBox.from_file(example.annot_path)
+        >>> path = crowsetta.example('spinetail.txt', return_path=True)
+        >>> audbbox = crowsetta.formats.bbox.AudBBox.from_file(path)
         >>> bboxes = audbbox.to_bbox()
         """
         bboxes = []
@@ -225,9 +269,9 @@ class AudBBox:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('aud-bbox')
-        >>> audacitybbox = crowsetta.formats.bbox.AudBBox.from_file(example.annot_path)
-        >>> annot = audacitybbox.to_annot()
+        >>> path = crowsetta.example('spinetail.txt', return_path=True)
+        >>> audbbox = crowsetta.formats.bbox.AudBBox.from_file(path)
+        >>> annot = audbbox.to_annot()
         """
         bboxes = self.to_bbox()
         return crowsetta.Annotation(annot_path=self.annot_path, notated_path=self.audio_path, bboxes=bboxes)

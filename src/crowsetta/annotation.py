@@ -1,4 +1,5 @@
 """A class to represent annotations for a single file."""
+
 from __future__ import annotations
 
 import reprlib

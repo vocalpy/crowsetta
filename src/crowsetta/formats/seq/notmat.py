@@ -1,6 +1,7 @@
 """Module with functions that handle .not.mat annotation files
 produced by evsonganaly GUI.
 """
+
 from __future__ import annotations
 
 import pathlib
@@ -91,7 +92,7 @@ class NotMat:
 
     Notes
     -----
-    This class uses the Python package ``evfuncs``
+    This class uses code adapted from the Python package ``evfuncs``
     to load the annotations.
     https://github.com/NickleDave/evfuncs
     """
@@ -116,8 +117,8 @@ class NotMat:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('notmat')
-        >>> notmat = crowsetta.formats.seq.NotMat.from_file(example.annot_path)
+        >>> path = crowsetta.example('notmat', return_path=True)
+        >>> notmat = crowsetta.formats.seq.NotMat.from_file(path)
         """
         annot_path = pathlib.Path(annot_path)
         crowsetta.validation.validate_ext(annot_path, extension=cls.ext)
@@ -150,8 +151,8 @@ class NotMat:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('notmat')
-        >>> notmat = crowsetta.formats.seq.NotMat.from_file(example.annot_path)
+        >>> path = crowsetta.example('notmat', return_path=True)
+        >>> notmat = crowsetta.formats.seq.NotMat.from_file(path)
         >>> seq = notmat.to_seq()
 
         Notes
@@ -191,8 +192,8 @@ class NotMat:
 
         Examples
         --------
-        >>> example = crowsetta.data.get('notmat')
-        >>> notmat = crowsetta.formats.seq.NotMat.from_file(example.annot_path)
+        >>> path = crowsetta.example('notmat', return_path=True)
+        >>> notmat = crowsetta.formats.seq.NotMat.from_file(path)
         >>> annot = notmat.to_annot()
 
         Notes
