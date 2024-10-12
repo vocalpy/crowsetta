@@ -15,6 +15,7 @@ Other formats that convert to
 with :class:`~crowsetta.Sequence`s can be converted
 to this format.
 """
+
 import os
 from collections import OrderedDict
 from typing import ClassVar, List, Optional, Union
@@ -35,15 +36,13 @@ Both units can also be specified. Conversion between units is not validated.
 """
 
 
-class GenericSeqSchema(pandera.DataFrameModel
-
-):
+class GenericSeqSchema(pandera.DataFrameModel):
     """A :class: `pandera.DataFrameModel
 
-` that validates
-    :type:`pandas.DataFrame`s
-    loaded from a csv file  in the ``'generic-seq'`` annotation
-    format.
+    ` that validates
+        :type:`pandas.DataFrame`s
+        loaded from a csv file  in the ``'generic-seq'`` annotation
+        format.
     """
 
     label: Series[pd.StringDtype] = pandera.Field(coerce=True)

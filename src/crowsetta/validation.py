@@ -3,6 +3,7 @@
 Some utilities adapted from scikit-learn under BSD 3 License
 https://github.com/scikit-learn/scikit-learn/blob/master/sklearn/utils/validation.py
 """
+
 import numbers
 from pathlib import PurePath
 from typing import Sequence, Union

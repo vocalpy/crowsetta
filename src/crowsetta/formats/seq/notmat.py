@@ -1,6 +1,7 @@
 """Module with functions that handle .not.mat annotation files
 produced by evsonganaly GUI.
 """
+
 from __future__ import annotations
 
 import pathlib

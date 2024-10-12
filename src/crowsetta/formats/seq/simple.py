@@ -17,6 +17,7 @@ This format also assumes that each annotation file
 corresponds to one annotated source file,
 i.e. a single audio or spectrogram file.
 """
+
 import pathlib
 from typing import ClassVar, Mapping, Optional
 
@@ -49,9 +50,8 @@ class SimpleSeqSchema(pandera.DataFrameModel):
         strict = True
 
 
-SIMPLESEQ_COLUMNS = (
-    "onset_s", "offset_s", "label"
-)
+SIMPLESEQ_COLUMNS = ("onset_s", "offset_s", "label")
+
 
 @crowsetta.interface.SeqLike.register
 @attr.define
@@ -114,7 +114,7 @@ class SimpleSeq:
         notated_path: Optional[PathLike] = None,
         columns_map: Optional[Mapping] = None,
         read_csv_kwargs: Optional[Mapping] = None,
-        default_label: str = "-"
+        default_label: str = "-",
     ) -> "Self":  # noqa: F821
         """Load annotations from a file
         in the 'simple-seq' format.
@@ -187,44 +187,26 @@ class SimpleSeq:
 
         if columns_map is not None:
             if not isinstance(columns_map, dict):
-                raise TypeError(
-                    f"The `columns_map` argument must be a `dict` but type was: {type(dict)}"
-                )
-            if not all(
-                (
-                    isinstance(k, str) and isinstance(v, str)
-                    for k, v in columns_map.items()
-                )
-            ):
+                raise TypeError(f"The `columns_map` argument must be a `dict` but type was: {type(dict)}")
+            if not all((isinstance(k, str) and isinstance(v, str) for k, v in columns_map.items())):
                 raise ValueError(
                     "The `columns_map` argument must be a dict that maps string keys to string values, "
                     "but not all keys and values were strings."
                 )
-            if not all(
-                v in SIMPLESEQ_COLUMNS
-                for v in columns_map.values()
-            ):
-                invalid_values = [
-                    v
-                    for v in columns_map.values()
-                    if v not in SIMPLESEQ_COLUMNS
-                ]
+            if not all(v in SIMPLESEQ_COLUMNS for v in columns_map.values()):
+                invalid_values = [v for v in columns_map.values() if v not in SIMPLESEQ_COLUMNS]
                 raise ValueError(
                     f'The `columns_map` argument must map keys (column names in the csv) to these values: ("onset_s", "offset_s", "label"). '
-                    f'The following values are invalid: {invalid_values}'
+                    f"The following values are invalid: {invalid_values}"
                 )
             df.columns = [
-                columns_map[column_name] if column_name in columns_map else column_name
-                for column_name in df.columns
+                columns_map[column_name] if column_name in columns_map else column_name for column_name in df.columns
             ]
 
         if "label" not in df.columns:
             df["label"] = default_label
 
-        if not all([
-            col_name in df.columns
-            for col_name in SIMPLESEQ_COLUMNS
-        ]):
+        if not all([col_name in df.columns for col_name in SIMPLESEQ_COLUMNS]):
             raise ValueError(
                 "Annotations loaded from path did not have expected column names. "
                 f"Column names from loaded csv file were: {df.columns.to_list()}\n"

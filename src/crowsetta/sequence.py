@@ -1,5 +1,6 @@
 """A class that represents a sequence of segments,
 used to annotate animal acoustic communication."""
+
 from __future__ import annotations
 
 import numpy as np

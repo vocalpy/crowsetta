@@ -2,6 +2,7 @@
 in standard/default format exported to txt files
 https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
 """
+
 import pathlib
 from typing import ClassVar, Optional
 
@@ -18,13 +19,13 @@ from crowsetta.typing import PathLike
 class AudSeqSchema(pandera.DataFrameModel):
     """A :class:`pandera.DataFrameModel
 
-`
-    that validates :type:`pandas.DataFrame`s
-    loaded from Audacity Labeltrack annotations
-    exported to txt files in the standard format.
+    `
+        that validates :type:`pandas.DataFrame`s
+        loaded from Audacity Labeltrack annotations
+        exported to txt files in the standard format.
 
-    The standard format is described here:
-    https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
+        The standard format is described here:
+        https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
     """
 
     start_time: Optional[Series[float]] = pandera.Field()
@@ -108,7 +109,7 @@ class AudSeq:
         'K',  'SIL',    'V',  'SIL',   'J1',   'J2',  'SIL',   'J2',  'SIL',
     'B1',  'SIL',   'B2',    'Q',  'SIL',    'H',    'E']
     Length: 61, dtype: string, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/405_marron1_June_14_2016_69640887.audacity.txt'), notated_path=None)
-    
+
     References
     ----------
     .. [1^] https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format

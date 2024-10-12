@@ -18,6 +18,7 @@ and for a citable library with docs see
 https://github.com/hbuschme/TextGridTools
 but note that both of these have a GPL license.
 """
+
 from __future__ import annotations
 
 import pathlib

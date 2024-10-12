@@ -1,6 +1,7 @@
 """A class that represents a bounding box on a spectrogram,
 drawn around animal communication or other sounds.
 """
+
 import attrs
 from attrs import field
 

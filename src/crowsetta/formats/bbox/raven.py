@@ -5,6 +5,7 @@ Adapted in part from ``opensoundscape``
 https://github.com/kitzeslab/opensoundscape/blob/master/opensoundscape/annotations.py
 under MIT license
 """
+
 import pathlib
 from typing import ClassVar, List, Optional
 
@@ -17,14 +18,12 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-class RavenSchema(pandera.DataFrameModel
-
-):
+class RavenSchema(pandera.DataFrameModel):
     """A :class:`pandera.DataFrameModel
 
-` that validates :type:`pandas.DataFrame`s
-    loaded from a txt file, created by exporting a Selection Table
-    from Raven.
+    ` that validates :type:`pandas.DataFrame`s
+        loaded from a txt file, created by exporting a Selection Table
+        from Raven.
     """
 
     begin_time_s: Series[float] = pandera.Field()

@@ -1,4 +1,5 @@
 """Functions that provide example data"""
+
 import importlib.resources
 import json
 import pathlib
@@ -9,13 +10,13 @@ from attr import define
 @define
 class Example:
     """Dataclass that represents an example annotation file.
-    
+
     Attributes
     ----------
     filename : str
         Name of annotation file.
     description_filename: str
-        Name of text file that contains description of 
+        Name of text file that contains description of
         annotation file, including any relevant citations.
     format: str
         Annotation file format.
@@ -24,16 +25,17 @@ class Example:
         Can be specified if the filename is not convenient to type.
         If None, defaults to filename.
     from_file_kwargs : dict, optional
-        Keyword arguments to pass into 
-        :meth:`crowsetta.Transcriber.from_file` 
+        Keyword arguments to pass into
+        :meth:`crowsetta.Transcriber.from_file`
         when loading the annotation file.
         Optional, default is None.
-    
+
     Notes
     -----
-    This dataclass is used to load metadata from 
+    This dataclass is used to load metadata from
     `vocalpy/examples/example-metadata.json`.
     """
+
     filename: str
     path: pathlib.Path
     description: str
@@ -43,12 +45,7 @@ class Example:
 
     @classmethod
     def from_metadata(
-        cls,
-        filename,
-        description_filename,
-        format: str,
-        name: str | None = None,
-        from_file_kwargs: dict | None = None
+        cls, filename, description_filename, format: str, name: str | None = None, from_file_kwargs: dict | None = None
     ):
         """Create a :class:`Example` instance from metadata.
 
@@ -57,7 +54,7 @@ class Example:
         filename : str
             Name of annotation file.
         description_filename: str
-            Name of text file that contains description of 
+            Name of text file that contains description of
             annotation file, including any relevant citations.
         format: str
             Annotation file format.
@@ -66,15 +63,15 @@ class Example:
             Can be specified if the filename is not convenient to type.
             If None, defaults to filename.
         from_file_kwargs : dict, optional
-            Keyword arguments to pass into 
-            :meth:`crowsetta.Transcriber.from_file` 
+            Keyword arguments to pass into
+            :meth:`crowsetta.Transcriber.from_file`
             when loading the annotation file.
             Optional, default is None.
-        
+
         Returns
         -------
         example : Example
-            Instance of :class:`Example` dataclass 
+            Instance of :class:`Example` dataclass
         """
         path = importlib.resources.files("crowsetta.examples").joinpath(filename)
 
@@ -87,36 +84,24 @@ class Example:
         if from_file_kwargs is None:
             from_file_kwargs = {}
 
-        return cls(
-            filename,
-            path,
-            description,
-            format,
-            name,
-            from_file_kwargs
-        )
-    
+        return cls(filename, path, description, format, name, from_file_kwargs)
+
     def load(self):
         import crowsetta
+
         scribe = crowsetta.Transcriber(format=self.format)
-        return scribe.from_file(self.path, **self.from_file_kwargs)        
+        return scribe.from_file(self.path, **self.from_file_kwargs)
 
 
 EXAMPLE_METADATA_JSON_PATH = pathlib.Path(
     importlib.resources.files("crowsetta.examples").joinpath("example-metadata.json")
-    )
+)
 with EXAMPLE_METADATA_JSON_PATH.open("r") as fp:
     ALL_EXAMPLE_METADATA = json.load(fp)
 
-EXAMPLES = [
-    Example.from_metadata(**example_metadata)
-    for example_metadata in ALL_EXAMPLE_METADATA
-]
+EXAMPLES = [Example.from_metadata(**example_metadata) for example_metadata in ALL_EXAMPLE_METADATA]
 
-REGISTRY = {
-    example_.name: example_
-    for example_ in EXAMPLES
-}
+REGISTRY = {example_.name: example_ for example_ in EXAMPLES}
 
 
 def example(name: str, return_path: bool = False):
@@ -130,10 +115,10 @@ def example(name: str, return_path: bool = False):
     return_path : bool
         If ``True``, return the path to the annotation file.
         Default is ``False``.
-        When ``False``, an instance of the class that represents 
+        When ``False``, an instance of the class that represents
         a set of annotations in the format used by the example
         is returned.
-    
+
     Examples
     --------
 
@@ -172,10 +157,10 @@ def example(name: str, return_path: bool = False):
         'K',  'SIL',    'V',  'SIL',   'J1',   'J2',  'SIL',   'J2',  'SIL',
     'B1',  'SIL',   'B2',    'Q',  'SIL',    'H',    'E']
     Length: 61, dtype: string, annot_path=PosixPath('/Users/davidnicholson/Documents/repos/vocalpy/crowsetta/src/crowsetta/examples/405_marron1_June_14_2016_69640887.audacity.txt'), notated_path=None)
-    
-    You can specify ``return_path=True`` to get a ``pathlib.Path`` 
+
+    You can specify ``return_path=True`` to get a ``pathlib.Path``
     instance that points to the file.
-    This can be used with the ``from_file`` method of the 
+    This can be used with the ``from_file`` method of the
     format classes.
 
     >>> patg = crowsetta.example("marron1", return_path=True)
@@ -230,13 +215,14 @@ def example(name: str, return_path: bool = False):
 
 
 def show():
-    """Print the names and descriptions of all 
+    """Print the names and descriptions of all
     example annotation files built into :mod:`crowsetta`"""
     print("Example annotation files built into crowsetta")
     print("=" * 72)
     for example_ in EXAMPLES:
         print(
-            f"Name: {example_.name}\n" 
+            f"Name: {example_.name}\n"
             f"Format name in `crowsetta`: {example_.format}\n"
-            "Description:\n" f"{example_.description}\n"
+            "Description:\n"
+            f"{example_.description}\n"
         )

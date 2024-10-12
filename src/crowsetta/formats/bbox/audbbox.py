@@ -2,6 +2,7 @@
 in extended format, exported to txt files
 https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
 """
+
 from __future__ import annotations
 
 import pathlib
@@ -96,16 +97,14 @@ def df_to_lines(df: pd.DataFrame) -> list[str]:
     return lines
 
 
-class AudBBoxSchema(pandera.DataFrameModel
-
-):
+class AudBBoxSchema(pandera.DataFrameModel):
     """A :class:`pandera.DataFrameModel
 
-` that
-    validates :mod:`pandas` dataframes
-    loaded from Audacity label tracks
-    in extended format, exported to txt files
-    https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
+    ` that
+        validates :mod:`pandas` dataframes
+        loaded from Audacity label tracks
+        in extended format, exported to txt files
+        https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
     """
 
     begin_time_s: Series[float] = pandera.Field(coerce=True)

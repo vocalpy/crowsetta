@@ -1,4 +1,5 @@
 """Module with functions for working with Praat TextGrid annotation files"""
+
 from __future__ import annotations
 
 import pathlib

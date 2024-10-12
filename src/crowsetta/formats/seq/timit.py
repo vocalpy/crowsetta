@@ -4,6 +4,7 @@ from the TIMIT[1]_ dataset.
 .. [1] Garofolo, John S., et al. TIMIT Acoustic-Phonetic Continuous Speech Corpus LDC93S1.
    Web Download. Philadelphia: Linguistic Data Consortium, 1993.
 """
+
 import pathlib
 import warnings
 from typing import ClassVar, Optional
@@ -19,18 +20,16 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-class TimitTranscriptSchema(pandera.DataFrameModel
-
-):
+class TimitTranscriptSchema(pandera.DataFrameModel):
     """A :class:`pandera.DataFrameModel
 
-` that validates :type:`pandas.DataFrame`s
-    loaded from a phn or wrd file in the TIMIT[1]_ transcription format.
+    ` that validates :type:`pandas.DataFrame`s
+        loaded from a phn or wrd file in the TIMIT[1]_ transcription format.
 
-    References
-    ----------
-    .. [1] Garofolo, John S., et al. TIMIT Acoustic-Phonetic Continuous Speech Corpus LDC93S1.
-       Web Download. Philadelphia: Linguistic Data Consortium, 1993.
+        References
+        ----------
+        .. [1] Garofolo, John S., et al. TIMIT Acoustic-Phonetic Continuous Speech Corpus LDC93S1.
+           Web Download. Philadelphia: Linguistic Data Consortium, 1993.
     """
 
     begin_sample: Optional[Series[int]] = pandera.Field()

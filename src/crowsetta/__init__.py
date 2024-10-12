@@ -21,12 +21,8 @@ from .transcriber import Transcriber
 # isort: off
 from . import formats
 from .formats import register_format
-from .formats.seq import (
-    AudSeq, BirdsongRec, GenericSeq, NotMat, SimpleSeq, Timit, SongAnnotationGUI
-)
-from .formats.bbox import (
-    AudBBox, Raven
-)
+from .formats.seq import AudSeq, BirdsongRec, GenericSeq, NotMat, SimpleSeq, Timit, SongAnnotationGUI
+from .formats.bbox import AudBBox, Raven
 
 # isort: on
 
@@ -41,15 +37,15 @@ __all__ = [
     "__uri__",
     "__version__",
     "Annotation",
-    "AudBBox", 
-    "AudSeq", 
+    "AudBBox",
+    "AudSeq",
     "BBox",
-    "BirdsongRec", 
-    "GenericSeq", 
+    "BirdsongRec",
+    "GenericSeq",
     "NotMat",
     "Raven",
-    "SimpleSeq", 
-    "Timit", 
+    "SimpleSeq",
+    "Timit",
     "SongAnnotationGUI",
     "example",
     "examples",
