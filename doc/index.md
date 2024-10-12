@@ -161,7 +161,7 @@ Here is an example of loading an example {ref}`Praat .TextGrid <textgrid>` file:
 
 ```{code-cell} ipython3
 import crowsetta
-path = crowsetta.example('textgrid', return_path=True)
+path = crowsetta.example('AVO-maea-basic', return_path=True)
 a_textgrid = crowsetta.formats.seq.TextGrid.from_file(path)
 print(
     f"`a_textgrid` is a {type(a_textgrid)}"
@@ -177,7 +177,7 @@ each format can also be referred to by a shorthand string name:
 
 ```{code-cell} ipython3
 import crowsetta
-path = crowsetta.example('textgrid', return_path=True)
+path = crowsetta.example('AVO-maea-basic', return_path=True)
 a_textgrid = crowsetta.formats.by_name('textgrid').from_file(path)
 print(f"`a_textgrid` is a {type(a_textgrid)} (even when we load it with `formats.by_name`)")
 ```
@@ -295,15 +295,18 @@ generic_seq = crowsetta.formats.by_name('generic-seq')(annots=annots)
 generic_seq.to_file(annot_path='./data/birdsong-rec.csv')
 ```
 
-Here are the first few lines of the .csv created by the snippet above:
+We load the csv into a pandas `DataFrame` to inspect the first few lines.
 
-```{literalinclude} ./data/birdsong-rec.csv
-:language: none
-:lines: 1-5
+```{code-cell} ipython3
+import pandas as pd
+df = pd.read_csv("./data/birdsong-rec.csv")
+
+from IPython.display import display
+display(df.head(10))
 ```
 
-Now that you have that, you can load it into a [pandas](https://pandas.pydata.org/) dataframe 
-or an Excel spreadsheet or an SQL database, or whatever you want.
+Now that you have that csv file, you can load it into a pandas `DataFrame` 
+or an Excel spreadsheet or an SQLite database, or whatever you want.
 
 You might find this useful in any situation where you want to share audio files of
 song and some associated annotations, but you don't want to require the user to
