@@ -119,9 +119,12 @@ def test_to_file(a_simple_csv_path, tmp_path):
 def test_empty_annotations(tmpdir):
     # test fix for https://github.com/vocalpy/crowsetta/issues/264
     empty_df = pd.DataFrame.from_records([])
-    with tempfile.NamedTemporaryFile(dir=tmpdir, suffix=".csv") as fp:
+    # we use a context manager block to work with TemporaryFile before it gets deleted
+    with tempfile.NamedTemporaryFile(
+        dir=tmpdir, suffix=".csv"
+    ) as fp:
         empty_df.to_csv(fp.name)
-        # we need to do this all in the context manager block, because the TemporaryFile gets deleted after
+        fp.close()  # on Windows specifically we have to close before we can access, otherwise we get a PermissionsError
         simple = crowsetta.formats.seq.SimpleSeq.from_file(annot_path=fp.name)
         assert isinstance(simple, crowsetta.formats.seq.SimpleSeq)
         for attr in ("onsets_s", "offsets_s", "labels"):
