@@ -9,28 +9,24 @@ from typing import ClassVar, Optional
 import attr
 import numpy as np
 import pandas as pd
-import pandera
+import pandera.pandas
 from pandera.typing import Series
 
 import crowsetta
 from crowsetta.typing import PathLike
 
 
-class AudSeqSchema(pandera.DataFrameModel):
-    """A :class:`pandera.DataFrameModel
+class AudSeqSchema(pandera.pandas.DataFrameModel):
+    """A :class:`pandera.DataFrameModel` that validates a :type:`pandas.DataFrame`
+    loaded from Audacity Labeltrack annotations exported to txt files in the standard format.
 
-    `
-        that validates :type:`pandas.DataFrame`s
-        loaded from Audacity Labeltrack annotations
-        exported to txt files in the standard format.
-
-        The standard format is described here:
-        https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
+    The standard format is described here:
+    https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Standard_.28default.29_format
     """
 
-    start_time: Optional[Series[float]] = pandera.Field()
-    end_time: Optional[Series[float]] = pandera.Field()
-    label: Series[pd.StringDtype] = pandera.Field(coerce=True)
+    start_time: Optional[Series[float]] = pandera.pandas.Field()
+    end_time: Optional[Series[float]] = pandera.pandas.Field()
+    label: Series[pd.StringDtype] = pandera.pandas.Field(coerce=True)
 
     class Config:
         ordered = True
@@ -42,7 +38,7 @@ class AudSeqSchema(pandera.DataFrameModel):
 class AudSeq:
     """Class meant to represent
     Audacity Labeltrack annotations
-    exported to txt files in the standard format[1]_.
+    exported to txt files in the standard format [1]_.
 
     The txt file will have 3 tab-separated columns
     that represent the start time, end time, and labels

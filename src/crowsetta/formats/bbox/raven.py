@@ -11,26 +11,23 @@ from typing import ClassVar, List, Optional
 
 import attr
 import pandas as pd
-import pandera
+import pandera.pandas
 from pandera.typing import Series
 
 import crowsetta
 from crowsetta.typing import PathLike
 
 
-class RavenSchema(pandera.DataFrameModel):
-    """A :class:`pandera.DataFrameModel
-
-    ` that validates :type:`pandas.DataFrame`s
-        loaded from a txt file, created by exporting a Selection Table
-        from Raven.
+class RavenSchema(pandera.pandas.DataFrameModel):
+    """A :class:`pandera.pandas.DataFrameModel` that validates a :type:`pandas.DataFrame`
+    loaded from a txt file, created by exporting a Selection Table from Raven.
     """
 
-    begin_time_s: Series[float] = pandera.Field()
-    end_time_s: Series[float] = pandera.Field()
-    low_freq_hz: Series[float] = pandera.Field()
-    high_freq_hz: Series[float] = pandera.Field()
-    annotation: Series[pd.StringDtype] = pandera.Field(coerce=True)
+    begin_time_s: Series[float] = pandera.pandas.Field()
+    end_time_s: Series[float] = pandera.pandas.Field()
+    low_freq_hz: Series[float] = pandera.pandas.Field()
+    high_freq_hz: Series[float] = pandera.pandas.Field()
+    annotation: Series[pd.StringDtype] = pandera.pandas.Field(coerce=True)
 
     class Config:
         # we set strict fo False

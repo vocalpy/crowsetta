@@ -1,6 +1,5 @@
 import filecmp
 import inspect
-import tempfile
 
 import numpy as np
 import pandas as pd
