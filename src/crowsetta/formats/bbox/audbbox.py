@@ -10,7 +10,7 @@ from typing import ClassVar, List, Optional
 
 import attr
 import pandas as pd
-import pandera
+import pandera.pandas
 from pandera.typing import Series
 
 import crowsetta
@@ -97,21 +97,18 @@ def df_to_lines(df: pd.DataFrame) -> list[str]:
     return lines
 
 
-class AudBBoxSchema(pandera.DataFrameModel):
-    """A :class:`pandera.DataFrameModel
-
-    ` that
-        validates :mod:`pandas` dataframes
-        loaded from Audacity label tracks
-        in extended format, exported to txt files
-        https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
+class AudBBoxSchema(pandera.pandas.DataFrameModel):
+    """A :class:`pandera.pandas.DataFrameModel` that
+    validates :mod:`pandas` dataframes loaded from Audacity label tracks
+    in extended format then exported to txt files
+    https://manual.audacityteam.org/man/importing_and_exporting_labels.html#Extended_format_with_frequency_ranges
     """
 
-    begin_time_s: Series[float] = pandera.Field(coerce=True)
-    end_time_s: Series[float] = pandera.Field(coerce=True)
-    label: Series[pd.StringDtype] = pandera.Field(coerce=True)
-    low_freq_hz: Series[float] = pandera.Field(coerce=True)
-    high_freq_hz: Series[float] = pandera.Field(coerce=True)
+    begin_time_s: Series[float] = pandera.pandas.Field(coerce=True)
+    end_time_s: Series[float] = pandera.pandas.Field(coerce=True)
+    label: Series[pd.StringDtype] = pandera.pandas.Field(coerce=True)
+    low_freq_hz: Series[float] = pandera.pandas.Field(coerce=True)
+    high_freq_hz: Series[float] = pandera.pandas.Field(coerce=True)
 
     class Config:
         ordered = True

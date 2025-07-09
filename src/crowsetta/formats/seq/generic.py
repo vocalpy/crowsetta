@@ -22,7 +22,7 @@ from typing import ClassVar, List, Optional, Union
 
 import attr
 import pandas as pd
-import pandera
+import pandera.pandas
 from pandera.typing import Series
 
 import crowsetta
@@ -36,27 +36,24 @@ Both units can also be specified. Conversion between units is not validated.
 """
 
 
-class GenericSeqSchema(pandera.DataFrameModel):
-    """A :class: `pandera.DataFrameModel
-
-    ` that validates
-        :type:`pandas.DataFrame`s
-        loaded from a csv file  in the ``'generic-seq'`` annotation
-        format.
+class GenericSeqSchema(pandera.pandas.DataFrameModel):
+    """A :class: `pandera.pandas.DataFrameModel` that validates
+    a :type:`pandas.DataFrame` loaded from a csv file 
+    in the ``'generic-seq'`` annotation format.
     """
 
-    label: Series[pd.StringDtype] = pandera.Field(coerce=True)
-    onset_s: Optional[Series[float]] = pandera.Field()
-    offset_s: Optional[Series[float]] = pandera.Field()
-    onset_sample: Optional[Series[int]] = pandera.Field()
-    offset_sample: Optional[Series[int]] = pandera.Field()
+    label: Series[pd.StringDtype] = pandera.pandas.Field(coerce=True)
+    onset_s: Optional[Series[float]] = pandera.pandas.Field()
+    offset_s: Optional[Series[float]] = pandera.pandas.Field()
+    onset_sample: Optional[Series[int]] = pandera.pandas.Field()
+    offset_sample: Optional[Series[int]] = pandera.pandas.Field()
 
-    notated_path: Series[str] = pandera.Field(coerce=True)
-    annot_path: Series[str] = pandera.Field(coerce=True)
-    sequence: Series[int] = pandera.Field()
-    annotation: Series[int] = pandera.Field()
+    notated_path: Series[str] = pandera.pandas.Field(coerce=True)
+    annot_path: Series[str] = pandera.pandas.Field(coerce=True)
+    sequence: Series[int] = pandera.pandas.Field()
+    annotation: Series[int] = pandera.pandas.Field()
 
-    @pandera.dataframe_check(error=ONSET_OFFSET_COLS_ERR)
+    @pandera.pandas.dataframe_check(error=ONSET_OFFSET_COLS_ERR)
     def both_onset_s_and_offset_s_if_either(cls, df: pd.DataFrame) -> bool:
         """check that, if one of {'onset_s', 'offset_s'} column is present,
         then both are present"""
@@ -64,8 +61,8 @@ class GenericSeqSchema(pandera.DataFrameModel):
             return all([col in df for col in ("onset_s", "offset_s")])
         else:
             return True
-
-    @pandera.dataframe_check(error=ONSET_OFFSET_COLS_ERR)
+    
+    @pandera.pandas.dataframe_check(error=ONSET_OFFSET_COLS_ERR)
     def both_onset_sample_and_offset_sample_if_either(cls, df: pd.DataFrame) -> bool:
         """check that, if one of {'onset_sample', 'offset_sample'} column is present,
         then both are present"""
@@ -74,7 +71,7 @@ class GenericSeqSchema(pandera.DataFrameModel):
         else:
             return True
 
-    @pandera.dataframe_check(error=ONSET_OFFSET_COLS_ERR)
+    @pandera.pandas.dataframe_check(error=ONSET_OFFSET_COLS_ERR)
     def onset_offset_s_and_ind_are_not_both_missing(cls, df: pd.DataFrame) -> bool:
         """check that at least one of the on/offset column pairs is present:
         either {'onset_s', 'offset_s'} or {'onset_sample', 'offset_sample'}"""

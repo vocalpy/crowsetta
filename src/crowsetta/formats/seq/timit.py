@@ -12,7 +12,7 @@ from typing import ClassVar, Optional
 import attr
 import numpy as np
 import pandas as pd
-import pandera
+import pandera.pandas
 import soundfile
 from pandera.typing import Series
 
@@ -20,21 +20,19 @@ import crowsetta
 from crowsetta.typing import PathLike
 
 
-class TimitTranscriptSchema(pandera.DataFrameModel):
-    """A :class:`pandera.DataFrameModel
+class TimitTranscriptSchema(pandera.pandas.DataFrameModel):
+    """A :class:`pandera.pandas.DataFrameModel` that validates a :type:`pandas.DataFrame`
+    loaded from a phn or wrd file in the TIMIT[1]_ transcription format.
 
-    ` that validates :type:`pandas.DataFrame`s
-        loaded from a phn or wrd file in the TIMIT[1]_ transcription format.
-
-        References
-        ----------
-        .. [1] Garofolo, John S., et al. TIMIT Acoustic-Phonetic Continuous Speech Corpus LDC93S1.
-           Web Download. Philadelphia: Linguistic Data Consortium, 1993.
+    References
+    ----------
+    .. [1] Garofolo, John S., et al. TIMIT Acoustic-Phonetic Continuous Speech Corpus LDC93S1.
+        Web Download. Philadelphia: Linguistic Data Consortium, 1993.
     """
 
-    begin_sample: Optional[Series[int]] = pandera.Field()
-    end_sample: Optional[Series[int]] = pandera.Field()
-    text: Series[pd.StringDtype] = pandera.Field(coerce=True)
+    begin_sample: Optional[Series[int]] = pandera.pandas.Field()
+    end_sample: Optional[Series[int]] = pandera.pandas.Field()
+    text: Series[pd.StringDtype] = pandera.pandas.Field(coerce=True)
 
     class Config:
         ordered = True

@@ -24,16 +24,16 @@ from typing import ClassVar, Mapping, Optional
 import attr
 import numpy as np
 import pandas as pd
-import pandera
+import pandera.pandas
 from pandera.typing import Series
 
 import crowsetta
 from crowsetta.typing import PathLike
 
 
-class SimpleSeqSchema(pandera.DataFrameModel):
-    """A :class:`pandera.DataFrameModel`
-    that validates :type:`pandas.DataFrame`s
+class SimpleSeqSchema(pandera.pandas.DataFrameModel):
+    """A :class:`pandera.pandas.DataFrameModel`
+    that validates a :type:`pandas.DataFrame`
     loaded from a csv or txt file in a 'simple-seq' format.
 
     The :meth:`SimpleSeq.from_file` loads the :type:`pandas.DataFrame`
@@ -41,9 +41,9 @@ class SimpleSeqSchema(pandera.DataFrameModel):
     before validation, e.g., changing column names.
     """
 
-    onset_s: Optional[Series[float]] = pandera.Field()
-    offset_s: Optional[Series[float]] = pandera.Field()
-    label: Series[pd.StringDtype] = pandera.Field(coerce=True)
+    onset_s: Optional[Series[float]] = pandera.pandas.Field()
+    offset_s: Optional[Series[float]] = pandera.pandas.Field()
+    label: Series[pd.StringDtype] = pandera.pandas.Field(coerce=True)
 
     class Config:
         ordered = True
