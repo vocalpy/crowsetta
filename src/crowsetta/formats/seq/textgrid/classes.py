@@ -1,5 +1,4 @@
-"""Data classes used to represent components of TextGrids.
-"""
+"""Data classes used to represent components of TextGrids."""
 
 from __future__ import annotations
 

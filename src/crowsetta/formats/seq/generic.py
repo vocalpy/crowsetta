@@ -38,7 +38,7 @@ Both units can also be specified. Conversion between units is not validated.
 
 class GenericSeqSchema(pandera.pandas.DataFrameModel):
     """A :class: `pandera.pandas.DataFrameModel` that validates
-    a :type:`pandas.DataFrame` loaded from a csv file 
+    a :type:`pandas.DataFrame` loaded from a csv file
     in the ``'generic-seq'`` annotation format.
     """
 
@@ -61,7 +61,7 @@ class GenericSeqSchema(pandera.pandas.DataFrameModel):
             return all([col in df for col in ("onset_s", "offset_s")])
         else:
             return True
-    
+
     @pandera.pandas.dataframe_check(error=ONSET_OFFSET_COLS_ERR)
     def both_onset_sample_and_offset_sample_if_either(cls, df: pd.DataFrame) -> bool:
         """check that, if one of {'onset_sample', 'offset_sample'} column is present,
