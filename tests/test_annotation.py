@@ -70,3 +70,16 @@ def bbox_not_list_raises():
 def bbox_not_list_of_bboxes_raises():
     with pytest.raises(ValueError):
         crowsetta.Annotation(annot_path="./an/annnot.csv", notated_path=None, bboxes=[_ for _ in range(10)])
+
+
+def test_seq_with_no_segments():
+    """Test that an :class:`crowsetta.Annotation`
+    instantiated with a :class:`crowsetta.Sequence` 
+    that has no segments / a length of zero 
+    has a `seq` attribute that points to that Sequence.
+    """
+    # see https://github.com/vocalpy/crowsetta/issues/290
+    seq = crowsetta.Sequence.from_keyword(labels=[], onsets_s=[], offsets_s=[])
+    annot = crowsetta.Annotation(seq=seq, annot_path="./path.csv")
+    assert hasattr(annot, "seq")
+    assert annot.seq == seq
