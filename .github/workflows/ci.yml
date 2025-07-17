@@ -23,5 +23,7 @@ jobs:
           pip install nox
           pip install '.[test]'
           nox --session coverage
-      - name: upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+      - name: Upload coverage reports to Codecov with GitHub Action
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
