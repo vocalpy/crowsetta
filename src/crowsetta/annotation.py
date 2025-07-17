@@ -88,7 +88,7 @@ class Annotation:
         if seq is not None and bboxes is not None:
             raise ValueError("an Annotation can have either a ``seq``" "or ``bboxes``, but not both.")
 
-        if seq:
+        if seq is not None:
             if not (
                 isinstance(seq, crowsetta.Sequence)
                 or (isinstance(seq, list) and all([isinstance(seq_, crowsetta.Sequence) for seq_ in seq]))
@@ -96,7 +96,7 @@ class Annotation:
                 raise TypeError(f"``seq`` should be a crowsetta.Sequence or list of Sequences but was: {type(seq)}")
             self.seq = seq
 
-        if bboxes:
+        if bboxes is not None:
             if not isinstance(bboxes, list):
                 raise ValueError("``bboxes`` should be a list")
             if not all([isinstance(bbox, BBox) for bbox in bboxes]):
