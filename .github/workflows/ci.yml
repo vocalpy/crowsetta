@@ -28,7 +28,7 @@ jobs:
 
       - name: run tests
         run: |
-          uv run nox --session coverage
+          uvx nox --session coverage
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v5
         env:
