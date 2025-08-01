@@ -82,7 +82,7 @@ def coverage(session) -> None:
     session.install(*nox.project.dependency_groups(pyproject, "test"))
     session.install("pytest-cov")
     session.run(
-        "pytest", "-n", "auto", "--cov=./", "--cov-report=xml", *session.posargs
+        "pytest", "-n", "auto", "--cov=crowsetta", "--cov-report=xml", *session.posargs
     )
 
 
