@@ -32,7 +32,7 @@ classifiers = [
     'Programming Language :: Python :: Implementation :: CPython',
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 test = [
     "pytest >=6.2.1",
     "pytest-cov >=2.12.0",
@@ -54,15 +54,20 @@ doc = [
     "sphinxext-opengraph  >=0.5.1",
     "sphinx-tabs >= 3.3.1",
 ]
-dev = [
+lint = [
     'black >=23.1.0',
-    'crowsetta[doc, test]',
     'flake8 >=6.0.0',
-    'flit',
     'isort >=5.12.0',
     'pycln >=2.1.3',
-    'twine',
 ]
+dev = [
+    'twine',
+    {include-group = "lint"},
+    {include-group = "test"},
+    {include-group = "doc"},
+
+]
+
 
 [project.urls]
 Source = "https://github.com/vocalpy/crowsetta"
