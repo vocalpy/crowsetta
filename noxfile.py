@@ -19,20 +19,6 @@ TEST_PYTHONS = [
 ]
 
 
-@nox.session
-def build(session: nox.Session) -> None:
-    """
-    Build an SDist and wheel with ``flit``.
-    """
-
-    dist_dir = DIR.joinpath("dist")
-    if dist_dir.exists():
-        shutil.rmtree(dist_dir)
-
-    session.install(".[dev]")
-    session.run("flit", "build")
-
-
 @nox.session(python=TEST_PYTHONS[1])
 def dev(session: nox.Session) -> None:
     """
@@ -58,7 +44,9 @@ def dev(session: nox.Session) -> None:
 
     # Use the venv's interpreter to install the project along with
     # all it's dev dependencies, this ensures it's installed in the right way
-    session.run(python, "-m", "pip", "install", "-e", ".[dev,test,doc]", external=True)
+    pyproject = nox.project.load_toml("pyproject.toml")
+    session.install(*nox.project.dependency_groups(pyproject, "dev"))
+    session.run(python, "-m", "pip", "install", "-e", ".", external=True)
 
 
 @nox.session(python=TEST_PYTHONS[1])
@@ -66,9 +54,9 @@ def lint(session):
     """
     Run the linter.
     """
-    session.install(".[dev]")
-    # run isort first since black disagrees with it
-    session.run("isort", "./src")
+    pyproject = nox.project.load_toml("pyproject.toml")
+    session.install(*nox.project.dependency_groups(pyproject, "lint"))
+    session.run("isort", "./src")  # run isort first since black disagrees with it
     session.run("black", "./src", "--line-length=120")
     session.run("flake8", "./src", "--max-line-length", "120", "--exclude", "./src/crowsetta/_vendor")
 
@@ -78,7 +66,9 @@ def test(session) -> None:
     """
     Run the unit and regular tests.
     """
-    session.install(".[test]")
+    session.install(".")
+    pyproject = nox.project.load_toml("pyproject.toml")
+    session.install(*nox.project.dependency_groups(pyproject, "test"))
     session.run("pytest", "-n", "auto", *session.posargs)
 
 
@@ -87,9 +77,12 @@ def coverage(session) -> None:
     """
     Run the unit and regular tests, and save coverage report
     """
-    session.install(".[test]", "pytest-cov")
+    session.install(".")
+    pyproject = nox.project.load_toml("pyproject.toml")
+    session.install(*nox.project.dependency_groups(pyproject, "test"))
+    session.install("pytest-cov")
     session.run(
-        "pytest", "-n", "auto", "--cov=./", "--cov-report=xml", *session.posargs
+        "pytest", "-n", "auto", "--cov=crowsetta", "--cov-report=xml", *session.posargs
     )
 
 
@@ -106,7 +99,9 @@ def doc(session: nox.Session) -> None:
     
     Otherwise the docs will be built once using
     """
-    session.install(".[doc]")
+    session.install(".")
+    pyproject = nox.project.load_toml("pyproject.toml")
+    session.install(*nox.project.dependency_groups(pyproject, "doc"))
     if session.posargs:
         if "autobuild" in session.posargs:
             print("Building docs at http://127.0.0.1:8000 with sphinx-autobuild -- use Ctrl-C to quit")
