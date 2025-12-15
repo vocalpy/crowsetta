@@ -13,9 +13,9 @@ nox.options.sessions = ['test', 'coverage']
 
 
 TEST_PYTHONS = [
-    "3.11",
     "3.12",
     "3.13",
+    "3.14",
 ]
 
 
