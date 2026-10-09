@@ -22,7 +22,7 @@ class TestAudSeqSchema:
         audseq_df = pd.read_csv(an_audseq_path, sep="\t", header=None)
         # notice: wrong column name 'stop_time'
         audseq_df.columns = ["start_time", "stop_time", "label"]
-        with pytest.raises(pandera.errors.SchemaError):
+        with pytest.raises(pandera.errors.SchemaErrors):
             crowsetta.formats.seq.audseq.AudSeqSchema.validate(audseq_df)
 
 

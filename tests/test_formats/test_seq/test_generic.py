@@ -62,7 +62,7 @@ class TestGeneralSeqSchema:
     def test_invalid_column_raises(self, csv_with_invalid_fields_in_header):
         """test that invalid column name 'invalid' raises a schema error"""
         invalid_df = pd.read_csv(csv_with_invalid_fields_in_header)
-        with pytest.raises(pandera.errors.SchemaError):
+        with pytest.raises(pandera.errors.SchemaErrors):
             crowsetta.formats.seq.generic.GenericSeqSchema.validate(invalid_df)
 
     def test_onset_s_with_no_offset_s_raises(self, csv_with_onset_s_but_no_offset_s):
@@ -378,7 +378,7 @@ class TestCsv2AnnotFunction:
             crowsetta.formats.seq.generic.csv2annot(csv_path=csv_missing_fields_in_header)
 
     def test_csv2annot_invalid_fields_raises(self, csv_with_invalid_fields_in_header):
-        with pytest.raises(pandera.errors.SchemaError):
+        with pytest.raises(pandera.errors.SchemaErrors):
             crowsetta.formats.seq.generic.csv2annot(csv_path=csv_with_invalid_fields_in_header)
 
 

@@ -19,7 +19,7 @@ class TestTimitTranscriptSchema:
         phn_df = pd.read_csv(a_transcript_path, sep=" ", header=None)
         # notice: wrong column names
         phn_df.columns = ["text", "begin_sample", "end_sample"]
-        with pytest.raises(pandera.errors.SchemaError):
+        with pytest.raises(pandera.errors.SchemaErrors):
             phn_df = crowsetta.formats.seq.timit.TimitTranscriptSchema.validate(phn_df)
 
 

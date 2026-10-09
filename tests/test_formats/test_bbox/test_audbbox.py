@@ -53,7 +53,7 @@ class TestAudBBoxSchema:
         # if we just load the csv directly, it will be invalid
         df = pd.read_csv(an_audbbox_path, sep="\t", header=None)
 
-        with pytest.raises(pandera.errors.SchemaError):
+        with pytest.raises(pandera.errors.SchemaErrors):
             crowsetta.formats.bbox.audbbox.AudBBoxSchema.validate(df)
 
 
