@@ -25,8 +25,8 @@ class RavenSchema(pandera.pandas.DataFrameModel):
 
     begin_time_s: Series[float] = pandera.pandas.Field()
     end_time_s: Series[float] = pandera.pandas.Field()
-    low_freq_hz: Series[float] = pandera.pandas.Field()
-    high_freq_hz: Series[float] = pandera.pandas.Field()
+    low_freq_hz: Series[float] = pandera.pandas.Field(coerce=True)
+    high_freq_hz: Series[float] = pandera.pandas.Field(coerce=True)
     annotation: Series[pd.StringDtype] = pandera.pandas.Field(coerce=True)
 
     class Config:
