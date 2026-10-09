@@ -22,7 +22,7 @@ class TestSimpleSeqSchema:
         simple_df = pd.read_csv(a_simple_csv_path)
         # notice: wrong column names
         simple_df.columns = ["text", "begin_sample", "end_sample"]
-        with pytest.raises(pandera.errors.SchemaError):
+        with pytest.raises(pandera.errors.SchemaErrors):
             simple_df = crowsetta.formats.seq.simple.SimpleSeqSchema.validate(simple_df)
 
 
